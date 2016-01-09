@@ -20,7 +20,8 @@ title: 데이터 과학
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
-
+1. [텍스트 마이닝](text-ming.html)
+1. [지리정보](geo-info.html)
 
 > ## 참고 자료 {.prereq}
 > - [컴퓨터 과학 언플러그드](http://unplugged.xwmooc.org)  
