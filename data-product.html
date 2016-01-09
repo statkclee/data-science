@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: R 파이썬 클라우드</title>
+    <title>Software Carpentry: 데이터 과학</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -26,8 +26,8 @@
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">R 파이썬 클라우드</h1>
-          <h2 class="subtitle">R 사업 모형, 팀 구성, 제품</h2>
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">데이터 제품</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
@@ -35,8 +35,8 @@
 <div class="panel-body">
 <ul>
 <li>데이터 제품 사업 모형을 이해한다.</li>
-<li>데이터 과학 제품 개발 팀을 구성한다.</li>
-<li>외부 제품기반 사업 모델</li>
+<li>데이터 제품 개발 팀과 프로세스를 구성한다.</li>
+<li>데이터 제품을 제공할 웹 아키텍쳐를 이해한다.</li>
 </ul>
 </div>
 </section>
@@ -80,16 +80,10 @@
 <li>데이터 시각화 (Data visualization)</li>
 </ul>
 <p>과거 통계학이 특정 분야 업무지식을 바탕으로 통계/수학적 기법을 적용하던 전통적인 접근방법에 프로그래밍이 특히 강조된다.</p>
-<div class="figure">
-<img src="fig/data-science-conway.png" alt="콘웨이(Drew Conway) 데이터 과학 벤다이어그램" />
-<p class="caption">콘웨이(Drew Conway) 데이터 과학 벤다이어그램</p>
-</div>
+<p><img src="fig/data-product-conway.png" alt="콘웨이(Drew Conway) 데이터 과학 벤다이어그램" width="30%" /></p>
 <h4 id="데이터-과학팀-역량">2.2. 데이터 과학팀 역량</h4>
 <p>훌륭한 데이터 과학 제품을 개발하고, 마케팅/판매, 운영, 소통을 위한 종합적인 역량이 필요하다. 데이터 과학 제품을 개발하기 위해서 개발팀을 구성하는데 컴퓨터 공학 전문가, 수학/통계학 전문가, 그래픽 디자이너, 특정분야 전문가 등 다양한 사람이 필요하다. <a href="Harlan%20Harris,%20Sean%20Murphy,%20Marck%20Vaisman,%20“Analyzing%20the%20Analyzers:%20An%20Introspective%20Survey%20of%20Data%20Scientists%20and%20Their%20Work”,%20O&#39;Reilly,%20June%202013">Harlan Harris, Sean Murphy, Marck Vaisman</a>은 각 개인의 역량과 데이터 과학팀 역량을 시각화하였다.</p>
-<div class="figure">
-<img src="fig/data-science-team.png" alt="데이터 과학팀 역량" />
-<p class="caption">데이터 과학팀 역량</p>
-</div>
+<p><img src="fig/data-product-team.png" alt="데이터 과학팀 역량" width="30%" /></p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
 <h2 id="the-agile-manifesto2"><span class="glyphicon glyphicon-pushpin"></span><a href="Jurney,%20Russell.%20Agile%20Data%20Science:%20Building%20Data%20Analytics%20Applications%20with%20Hadoop.%20%22%20O&#39;Reilly%20Media,%20Inc.%22,%202013.">The Agile Manifesto</a></h2>
@@ -102,11 +96,9 @@
 </div>
 </aside>
 <h3 id="데이터-제품">3. 데이터 제품</h3>
-<p>웹기반 데이터 제품</p>
-<div class="figure">
-<img src="fig/data-science-web-data-product.png" alt="웹기반 데이터 제품" />
-<p class="caption">웹기반 데이터 제품</p>
-</div>
+<p>웹기반 데이터 제품은 기본적으로 클라이언트-서버 아키텍쳐를 가지고 있으며, 최상단에서 보게 되면 웹브라우져 클라이언트가 웹서버에 클라우드 인터넷을 통해서 요청을 하고 서비스를 제공받는 구조로 되어 있다. 특히, 웹서버쪽은 복잡성의 증가에 맞춰 UI를 담당하는 웹서버(Presentation Tier), 비즈니스 로직을 담당하는 앱서버(Logic Tier), 데이터를 저장하는 데이터베이스(Persistence Tier)로 구분되는 3-Tier 아키텍처를 갖는다. 3-Tier 아키텍처를 갖춤으로써 <strong>확장성(스케일링, Scaling)</strong> 에 큰 강점을 갖추게 되었다.</p>
+<p>HTML과 CSS로 UI쪽 프론트엔드(Frontend)를 담당하고, 중간 비즈니스 로직 처리 분야는 점증하는 복잡성에 대응하기 위해 MVC(Model-View-Controller) 디자인 패턴을 따르고, 마지막 MySQL 혹은 MariaDB 로 구현되는 데이터베이스 부분이 마지막으로 위치하게 된다.</p>
+<p><img src="fig/data-product-web-data-product.png" alt="웹기반 데이터 제품" width="50%" /></p>
 <h4 id="데이터-제품-개발-및-운영-프로세스">3.1. 데이터 제품 개발 및 운영 프로세스</h4>
 <p>데이터 제품 개발 순서는 2단계 (Two-Phase) 모형으로 첫번째가 데이터 제품 개발(Development), 두번째가 데이터 제품 운영(Operations)단계로 나눌 수 있다.</p>
 <ol style="list-style-type: decimal">
@@ -123,10 +115,7 @@
 </ul></li>
 </ol>
 <p>이벤트는 다양한 형식으로 생성되는데 센서, 금융 거래, 응용프로그램 사용자 이력, 서버 로그 등이 포함된다. 이벤트를 통해서 생성된 원자료는 수집기(Collector)를 통해서 대용량 저장소, 실시간 스트리밍 데이터 큐로 채집된다. 대용량 저장소는 물리적 저장 위치로 아마죤 S3, 소프트웨어적으로는 하둡 분산 파일시스템(Hadoop Distributed FileSystem, HDFS)에 담겨진다. 하둡이 없었다면 오늘날 빅데이터는 아마 존재하기 어려웠을 것이다. 하둡에 담겨진 대용량 데이터를 처리한 다음 정제된 형태로 분산 문서 저장소에 담겨진다. MongoDB같은 NoSQL시스템을 사용해서 웹응용프로그램이나 다른 서버가 사용할 수 있는 형태로 보관되어 서비스를 제공한다. 응용서버는 Python/Flask나 Ruby/Sinatra 같은 경량 웹프레임워크를 사용해서 웹브라우져 요청이 있을 때 서비스를 제공한다.</p>
-<div class="figure">
-<img src="fig/data-product-development-process.png" alt="데이터 제품 개발 및 운영 프로세스" />
-<p class="caption">데이터 제품 개발 및 운영 프로세스</p>
-</div>
+<p><img src="fig/data-product-development-process.png" alt="데이터 제품 개발 및 운영 프로세스" width="60%" /></p>
 <h4 id="r-데이터-제품-툴-체인tool-chain">3.2. R 데이터 제품 툴 체인(Tool Chain)</h4>
 <p>R언어로 데이터 제품을 만들기 위해서 세가지 툴을 준비해야 한다.<br />
 1. <a href="http://cran.r-project.org/">R</a> : 데이터 분석 엔진이며 자료분석 DSL로 생산성이 높은 데이터 제품 개발 사실상 표준(defacto standard)<br />

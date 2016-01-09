@@ -6,9 +6,7 @@ title: 데이터 과학
 
 ### 데이터 과학
 
-1. 데이터 과학 및 제품 개발 개요
-    - [숫자 (Numbers)](basic-numbers.html)
-
+1. [데이터 제품](data-product.html)
 1. [Shiny 웹앱](shiny-overview.html)
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
