@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">데이터 과학 도커 - R 팩키지</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Hadley Wickham R 패키지 번역 플랫폼을 준비한다.</li>
+<li>데비안 기반으로 RStudio, Hadleyverse를 도커 환경으로 준비한다.</li>
+<li>마크다운으로 한글 번역을 한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="데비안-기반-rstudio-개발-플랫폼">1. 데비안 기반 RStudio 개발 플랫폼</h3>
+<p>데비안과 우분투를 초기 <a href="http://www.rstudio.com/">RStudio</a>에서 도커 환경을 지원했으나, 결국, 용량도 적으면서 오류도 적은 데비안만 도커 이미지로 제공하기로 결정했다. 자세한 사항 <a href="https://github.com/rocker-org/rocker/wiki/FAQ">Why not Ubuntu &amp; Debian flavors?</a> 참조바란다.</p>
+<p>데비안 최신 버젼이 설치된 가상 컴퓨터를 한국에서 가장 가까운 홍콩 데이터센터에 주문해서 설치한다.</p>
+<h4 id="데비안-운영체제-설치된-가상-컴퓨터-준비">1.1. 데비안 운영체제 설치된 가상 컴퓨터 준비</h4>
+<pre class="input"><code>root@r-pkg:~# uname -a</code></pre>
+<pre class="output"><code>Linux r-pkg 3.2.0-4-amd64 #1 SMP Debian 3.2.68-1+deb7u1 x86_64 GNU/Linux</code></pre>
+<h4 id="도커를-설치한다.">1.2. 도커를 설치한다.</h4>
+<p>커널 버젼이 3.1 이상 되기 때문에 바로 <code>wget</code>으로 내려받고 설치한다. 도커는 매우 활발한 공개 소프트웨어 프로젝트기 때문에 가능하면 최신 버젼을 설치한다.</p>
+<pre class="input"><code>root@r-pkg:~# wget -qO- https://get.docker.com/ | sh
+root@r-pkg:~# docker -v</code></pre>
+<pre class="output"><code>Docker version 1.7.0, build 0baf609</code></pre>
+<h4 id="hadleyverse-도커-이미지를-설치한다.">1.3. <code>hadleyverse</code> 도커 이미지를 설치한다.</h4>
+<pre class="input"><code>root@r-pkg:~# docker pull rocker/hadleyverse
+root@r-pkg:~# docker images</code></pre>
+<pre class="output"><code>REPOSITORY           TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+rocker/hadleyverse   latest              a1b2b31f3d17        11 days ago         1.922 GB</code></pre>
+<h4 id="hadleyverse-도커-컨테이너-실행한다.">1.4. <code>hadleyverse</code> 도커 컨테이너 실행한다.</h4>
+<pre class="input"><code>root@r-pkgs:~# docker run -d -p 8787:8787 rocker/hadleyverse</code></pre>
+<h3 id="우분투-기반-rstudio-개발-플랫폼">2. 우분투 기반 RStudio 개발 플랫폼</h3>
+<h4 id="데비안-운영체제-설치된-가상-컴퓨터-준비-1">2.1. 데비안 운영체제 설치된 가상 컴퓨터 준비</h4>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# uname -r</code></pre>
+<pre class="output"><code>Linux r-pkgs-ubuntu 3.13.0-51-generic #84-Ubuntu SMP Wed Apr 15 12:08:34 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
+<h4 id="도커를-설치한다.-1">2.2. 도커를 설치한다.</h4>
+<p>커널 버젼이 3.1 이상 되기 때문에 바로 <code>wget</code>으로 내려받고 설치한다. 도커는 매우 활발한 공개 소프트웨어 프로젝트기 때문에 가능하면 최신 버젼을 설치한다.</p>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# wget -qO- https://get.docker.com/ | sh
+root@r-pkgs-ubuntu:~# docker -v</code></pre>
+<pre class="output"><code>Docker version 1.7.0, build 0baf609</code></pre>
+<h4 id="hadleyverse-도커-이미지를-설치한다.-1">2.3. <code>hadleyverse</code> 도커 이미지를 설치한다.</h4>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker pull rocker/hadleyverse
+root@r-pkgs-ubuntu:~# docker images</code></pre>
+<pre class="output"><code>REPOSITORY           TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+rocker/hadleyverse   latest              a1b2b31f3d17        11 days ago         1.922 GB</code></pre>
+<h4 id="hadleyverse-도커-컨테이너-실행한다.-1">2.4. <code>hadleyverse</code> 도커 컨테이너 실행한다.</h4>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker run -d -p 8787:8787 rocker/hadleyverse</code></pre>
+<p>초기 사용자명과 비밀번호는 Username: <code>rstudio</code>, Password: <code>rstudio</code>다.</p>
+<p>비밀번호 변경은 <code>Tools</code> → <code>Shell</code>을 클릭하고 명령 프롬프트에서 <code>passwd</code>를 타이핑하여 현재 비밀번호와 변경할 비밀번호를 차례로 안내에 맞춰 입력하여 변경한다. 자세한 사항은 <a href="http://statistics.byu.edu/content/how-change-rstudio-password">웹 페이지</a>를 참고한다.</p>
+<p><img src="fig/docker-rocker-rstudio.png" alt="우분투 rocker/hadleyverse RStudio 컨테이너 실행" width="50%" /></p>
+<h3 id="r-pkgs-번역-플랫폼-구축">3. R PKGS 번역 플랫폼 구축</h3>
+<h4 id="r-packages-번역-원본-github에서-가져오기">3.1. R Packages 번역 원본 GitHub에서 가져오기</h4>
+<p><code>File</code> → <code>New Project</code> → <code>Version Contrl</code> → <code>Git</code>을 선택해서 <em>Clone Git Repository</em> 다음 정보를 입력한다.</p>
+<ul>
+<li>Repository URL: https://github.com/statkclee/r-pkgs.git</li>
+<li>Project directory name: r-pkgs</li>
+<li>Create project as subdirecotry of: ~</li>
+</ul>
+<p><strong>Create Project</strong> 버튼을 클릭한다.</p>
+<h4 id="r-packages-번역-원본-pdf책으로-변환">3.2. R Packages 번역 원본 PDF책으로 변환</h4>
+<h5 id="마크다운-latex">3.2.1. 마크다운 → Latex</h5>
+<p>GitHub에서 클론한 프로젝트 디렉토리에서 하위디렉토리로 <strong>book</strong> 디렉토리 밑으로 들어가면 <code>build-book.r</code>, <code>r-packages.tex</code> 파일이 있다. 마크다운으로 작성한 각 장을 <code>build-book.r</code>에서 빌드(build)하고 나서 <code>r-packages.tex</code> 파일에서 PDF 파일로 변환한다.</p>
+<p><code>build-book.r</code>을 실행하면 <code>bookdown</code>이 없다고 오류가 난다.</p>
+<pre class="output"><code>&gt; library(bookdown)
+Error in library(bookdown) : there is no package called ‘bookdown’</code></pre>
+<p><code>install.packages(&quot;bookdown&quot;)</code>은 설치가 되지 않으니 <code>bookdown</code> 팩키지 설치는 <code>devtools::install_github</code>을 이용한다. RStudio 콘솔에서 GitHub에서 직접 <code>devtools::install_github(&quot;hadley/bookdown&quot;)</code> 명령어로 설치한다.</p>
+<pre class="input"><code>&gt; devtools::install_github(&quot;hadley/bookdown&quot;)</code></pre>
+<p><code>lubridate</code> 팩키지가 설치되지 않은 경우 오류가 발생하니 만약 설치가 되어 있지 않다면 사전에 R 콘솔에서 <code>install.packages(&quot;lubridate&quot;)</code> 명령어로 설치한다.</p>
+<pre class="input"><code>&gt; install.packages(&quot;lubridate&quot;)</code></pre>
+<h5 id="latex-pdf">3.2.2. Latex → PDF</h5>
+<p><code>Rendering inst.rmd ... vignettes.rmd</code>를 통해서 Latex 파일로 변환은 되었다. <strong>tex</strong> 디렉토리가 만들어지고 그 내부에 PDF 변환을 위한 준비가 되었다. 하지만, <strong>xelatex: not found</strong> 오류가 난다. <code>xelatex</code>이 설치가 되지 않아서 우분투 쉘에서 <code>apt-get install texlive-xetex</code> 명령을 실행한다.</p>
+<pre class="error"><code>&gt; system(&quot;xelatex -interaction=batchmode r-packages &quot;)
+sh: 1: xelatex: not found
+&gt; system(&quot;xelatex -interaction=batchmode r-packages &quot;)
+sh: 1: xelatex: not found</code></pre>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="rockerhadleyverse-컨테이너-작업"><span class="glyphicon glyphicon-pushpin"></span>rocker/hadleyverse 컨테이너 작업</h3>
+</div>
+<div class="panel-body">
+<p><code>apt-get install texlive-xetex</code> 명령어를 컨테이너 내부에서 실행해야만 한다.</p>
+</div>
+</aside>
+<p><code>docker ps</code> 명령어를 통해서 실행중인 컨테이너 현황을 얻는다.</p>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker ps</code></pre>
+<pre class="output"><code>CONTAINER ID        IMAGE                COMMAND                PORTS                              NAMES
+22655acc7eaa        rocker/hadleyverse   &quot;/usr/bin/supervisor   1410/tcp, 0.0.0.0:8787-&gt;8787/tcp   reverent_feynman</code></pre>
+<p><code>docker exec -it</code> 명령어를 통해서 컨테이너 내부로 들어가 <code>bash</code> 쉘에서 <code>apt-get update</code>, <code>apt-get install texlive-xetex</code> 명령어를 실행한다.</p>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker exec -it 22655acc7eaa bash
+root@22655acc7eaa:/# apt-get update
+root@22655acc7eaa:/# apt-get install texlive-xetex</code></pre>
+<p><img src="fig/docker-r-pkg-eng.png" alt="영문 R Packages PDF 변환" width="50%" /></p>
+<h3 id="한글-latex-환경-설정">4. 한글 laTeX 환경 설정</h3>
+<h4 id="inconsolata-폰트-설치-및-적용">4.1. <code>inconsolata</code> 폰트 설치 및 적용</h4>
+<p><code>inconsolata</code> 폰트를 다운로드 받아서 설치한다.</p>
+<pre class="input"><code>root@22655acc7eaa:~# cd /usr/share/texlive/texmf-dist \
+root@22655acc7eaa:~# wget http://mirrors.ctan.org/install/fonts/inconsolata.tds.zip \
+root@22655acc7eaa:~# unzip inconsolata.tds.zip \
+root@22655acc7eaa:~# rm inconsolata.tds.zip \
+root@22655acc7eaa:~# echo &quot;Map zi4.map&quot; &gt;&gt; /usr/share/texlive/texmf-dist/web2c/updmap.cfg \
+root@22655acc7eaa:~# mktexlsr \
+root@22655acc7eaa:~# updmap-sys</code></pre>
+<p>그리고 나서, <code>r-packages.tex</code> 설정 파일에 주석처리하고, <code>\usepackage{zi4}</code>을 삽입한다.</p>
+<pre class="input"><code>%\setmonofont[Mapping=tex-ansi]{Inconsolata}
+\usepackage{zi4}</code></pre>
+<h4 id="한글-latex-설치">4.2. 한글 LaTeX 설치</h4>
+<pre class="input"><code>root@22655acc7eaa:/# sudo apt-get install texlive-lang-cjk</code></pre>
+<h4 id="한글-폰트-설치">4.3. 한글 폰트 설치</h4>
+<pre class="input"><code>root@22655acc7eaa:/# sudo apt-get install fonts-nanum fonts-nanum-extra fonts-nanum-coding fonts-baekmuk fonts-unfonts-core fonts-unfonts-extra</code></pre>
+<h4 id="r-packages.tex-latex-환경파일-설정">4.4. <code>r-packages.tex</code> Latex 환경파일 설정</h4>
+<p><code>r-packages.tex</code> 파일에 다음 <code>kotex</code> 설정한다. 그리고 <strong>RUN</strong> 실행하면 모든 한글 번역 준비가 완료되었다.</p>
+<pre class="input"><code>\usepackage[hangul]{kotex}
+\kscntformat{chapter}{}{~장}</code></pre>
+<p><img src="fig/docker-r-pkg-kor.png" alt="R 패키지 한글 번역 준비 완료" width="50%" /></p>
+<h4 id="latex-설치">4.4. LaTeX 설치</h4>
+<pre class="input"><code>root@csunplugged:~# apt-get update \
+                    &amp;&amp; apt-get install -y --no-install-recommends \
+                      aspell \
+                      aspell-en \
+                      ghostscript \
+                      imagemagick \
+                      lmodern \
+                      texlive-fonts-recommended \
+                      texlive-humanities \
+                      texlive-latex-extra \
+                      texinfo</code></pre>
+<h3 id="도커-컨테이너-변경사항-저장">5. 도커 컨테이너 변경사항 저장</h3>
+<p><code>docker ps</code> 명령어로 컨테이너 ID를 확인하고 <code>docker commit</code> 명령어로 커밋한다. <code>-m</code> 옵션 플래그로 커밋 메시지를 저고, <code>-a</code> 옵션 플래그로 저자명을 적고, 컨테이너 ID와 <code>22655acc7eaa</code> 저장 메시지를 남긴다.</p>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker ps</code></pre>
+<pre class="output"><code>CONTAINER ID  IMAGE              COMMAND              CREATED           PORTS                              NAMES
+22655acc7eaa  rocker/hadleyverse &quot;/usr/bin/supervisor About an hour ago 1410/tcp, 0.0.0.0:8787-&gt;8787/tcp   reverent_feynman</code></pre>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker commit -m &quot;setup English PDF&quot; -a &quot;Victor Lee&quot; 22655acc7eaa statkclee/r-pkgs:v1</code></pre>
+<pre class="output"><code>9638bfca6ae73cfaf37ca5914137002cf7be0b24f716c7839d7c60f032091769</code></pre>
+<p><code>docker push</code> 명령어와 함께 <code>statkclee/r-pkg</code> 이미지명을 적어주면 도커허브에 올라간다.</p>
+<pre class="input"><code>root@r-pkgs-ubuntu:~# docker push statkclee/r-pkg</code></pre>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

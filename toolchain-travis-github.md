@@ -1,7 +1,7 @@
 ---
 layout: page
-title: R 파이썬 클라우드
-subtitle: 지속적 통합(Continuous Integration, CI)
+title: 데이터 과학
+subtitle: 지속적 통합(CI) - GitHub
 ---
 > ## 학습 목표 {.objectives}
 >
@@ -22,7 +22,6 @@ root@csunplugged:~# travis encrypt -r statkclee/swc-travis GH_TOKEN=6a50cecd7327
 
 
 ~~~ {.output}
-  secure:"Ui9WbONLJG1Q5LwgogG68LKekQq9uH+xRIIbyO+8A+5bh3qkY0UqhKNyr+RNgb0MdrWwOJqROTqTb4aQNvCBQtCRezve+UVk1Oh/WNVp66eh7Sfu63nwQKC+l1FJGnmgPRONbXe/+9i7ZFhbQO+dTZa23W+9KC2YovnpSNKvj7c+oZPcV5zdpV/WCpSe4yJkiLML2JtYNTr15BsQ0mZu5zjgIKtYgOlrdp0tVubaOUmgyMm//J5B7SlABoOIz3+viYPjj9GkNjwlxgKc5DZIteSeaUNusgL6oiTWVI1j4FrKdrFY1CqGpDyRAoXbw1KxRyaYI32stwHcq4R2bLlzkjzvkcwCXwzBtT3E76qFIgdvmyit2mDNB9yrEVmP3KwUqUoYywzr5lIc4J+xSDJ1pancbKEb9WRu7sR1FciNliZA74+HUQvlr3JufPtZo3ApULfwp32lfPOiNPSuNGnjr
-C2W5e+XkLedeYofbWhfcxr79yRpQ5ljAfEbSellBbU61Pfzv7mLP2B3rPKCSRAdhBiK4VBd/27cmjpso7n4v8QEjQRD56Upyu1laMOF3xijgMwBGEeGCIVMOANOP0Ud05X5y/4LHDM6qxXKMKovYfGJ/vd4f8+2CPcF4E9/Dgc72sWCc2CO1QFpc1RURByAaaPI934S/j3w8Pi30o+Tmfs="
+  secure:"Ui9WbONLJG1Q5LwgogG68LKekQq9uH+xRIIbyO+8A+5bh3qkY0UqhKNyr+RNgb0MdrWwOJqROTqTb4aQNvCBQtCRezve+UVk1Oh/WNVp66eh7Sfu63nwQKC+l1FJGnmgPRONbXe/+9i7ZFhbQO+dTZa23W+9KC2YovnpSNKvj7c+oZPcV5zdpV/WCpSe4yJkiLML2JtYNTr15BsQ0mZu5zjgIKtYgOlrdp0tVubaOUmgyMm//J5B7SlABoOyaYI32stwHcq4R2bLlzkjzvkcwCXwzBtT3E76qFIgdvmyit2mDNB9yrEVmP3KwUqUoYywzr5lIc4J+xSDJ1pancbKEb9WRu7sR1FciNliZA74+HUQvlr3JufPtZo3ApULfwp32lfPOiNPSuNGnjrC2W5e+XkLedeYofbWhfcxr79yRpQ5ljAfEbSellBbU61Pfzv7mLP2B3rPKCSRAdhBiK4VBd/27cmjpso7n4v8QEjQRD56Upyu1laMOF3xijgMwBGEeGCIVMOANOP0Ud05X5y/4LHDM6qxXKMKovYfGJ/vd4f8+2CPcF4E9/Dgc72sWCc2CO1QFpc1RURByAaaPI934S/j3w8Pi30o+Tmfs="
 ~~~
 

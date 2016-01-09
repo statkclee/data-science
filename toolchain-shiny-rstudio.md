@@ -1,6 +1,6 @@
 ---
 layout: page
-title: R 파이썬 클라우드
+title: 데이터 과학
 subtitle: RStudio IDE와 Shiny 서버 설치
 ---
 > ## 학습 목표 {.objectives}
@@ -173,7 +173,8 @@ hon -m json.tool
 }
 ~~~
 
-![클라우드 가상 컴퓨터 위에 Shiny 웹서버와 RStudio IDE 설치](fig/shiny-install-overview.png)
+<img src="fig/toolchain-shiny-install-overview.png" alt="클라우드 가상 컴퓨터 위에 Shiny 웹서버와 RStudio IDE 설치" width="50%" />
+
 
 ### 3. Shiny 서버 설치
 
@@ -275,7 +276,7 @@ start: Job is already running: shiny-server
 이제 웹브라우져를 열고 **포트번호(port, 3838)**를 뒤에 `:3838`을 붙여 `http://169.53.232.11:3838/`와 같이 입력하면 
 브라우져 상단에 다음과 같은 메시지가 출력되면 설치가 완료되고 사용준비가 완료된 것이다.
 
-![Shiny 서버 설치 화면](fig/shiny-install.png)
+<img src="fig/toolchain-shiny-install.png" alt="Shiny 서버 설치 화면" width="40%" />
 
 첫 설치 페이지 우측 하단에 `rmarkdown` 설치가 되지 않아 생기는 오류사항은 `R`에서 `install.packages("rmarkdown")`를 통해서 `rmarkdown` 팩키지를 설치해서 해결할 수 있고 다음과 같은 메시지가 보이면 설치가 모두 완료된 것이다.
 
@@ -297,11 +298,11 @@ shinyapps::setAccountInfo(name='xwmooc',
 
 토큰 정보를 `Tools` --> `ShinyApps` --> `Manage Accounts...`에 등록한다.
 
-![RStudio IDE에서 shinyapp.io에 바로 연결하기 위한 토근 환경설정](fig/shiny-shinyapp-io-configuration.png)
+<img src="fig/toolchain-shiny-shinyapp-io-configuration.png" alt="RStudio IDE에서 shinyapp.io에 바로 연결하기 위한 토근 환경설정" width="30%" />
 
 **주의:** Shiny 응용프로그램을 배포하기 위해서 `ui.R`, `server.R`로 응용프로그램이 나눠줘야 한다.
 
-![RStudio IDE에서 shinyapp.io에 개발한 응용프로그램을 바로 배포(Publish App...)](fig/shiny-shinyapp-io-connect-menu.png)
+<img src="fig/toolchain-shiny-shinyapp-io-connect-menu.png" alt="RStudio IDE에서 shinyapp.io에 개발한 응용프로그램을 바로 배포(Publish App...)" width="30%" />
 
 ### 4. `RStudio` 서버 설치
 
@@ -353,4 +354,4 @@ root@shiny-sl:~#
 
 이제 `RStudio`를 사용하기 위해서 `http://169.53.232.11:8787/` 사이트에서 사용자명 `xwmooc`를 넣고 비밀번호를 입력하게 되면 `RStudio`를 사용할 수 있게 된다.
 
-![RStudio IDE 서버 설치 화면](fig/shiny-rstudio-install.png)
+<img src="fig/toolchain-shiny-rstudio-install.png" alt="RStudio IDE 서버 설치 화면" width="30%" />

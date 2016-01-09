@@ -1,7 +1,7 @@
 ---
 layout: page
-title: R 파이썬 클라우드
-subtitle: 지속적 통합(Continuous Integration, CI)
+title: 데이터 과학
+subtitle: 지속적 통합(CI) - Travis
 ---
 > ## 학습 목표 {.objectives}
 >
