@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">도커(Docker) - Dockerfile</h2>
+<blockquote>
+<h2 id="학습-목표">학습 목표</h2>
+<ul>
+<li>Dockerfile 스크립트로 개발환경 구축을 자동화한다.</li>
+<li>정적 웹서비스 xwMOOC 개발 툴체인을 Dockerfile로 시연한다.</li>
+</ul>
+</blockquote>
+<h3 id="docker-compose-설치">1. Docker Compose 설치</h3>
+<p><code>docker-compose</code>를 설치하기 위해서는 <code>docker</code>가 설치되어 있어야 하고, <code>curl</code>이 필요하다.</p>
+<pre class="input"><code>root@docker:~# curl -L https://github.com/docker/compose/releases/download/1.3.0/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose
+root@docker:~# chmod +x /usr/local/bin/docker-compose</code></pre>
+<p>만약 “Permission denied” 오류가 나오면 <code>sudo -i</code>를 실행하고 다시 <code>docker-compose</code> 설치 명령을 실행한다.</p>
+<pre class="input"><code>root@docker:~# docker-compose --version</code></pre>
+<pre class="output"><code>docker-compose version: 1.3.0
+CPython version: 2.7.9
+OpenSSL version: OpenSSL 1.0.1e 11 Feb 2013</code></pre>
+<h3 id="xwmooc-개발-툴체인-설치">2. xwMOOC 개발 툴체인 설치</h3>
+<p><a href="https://hub.docker.com/">도커 허브(Docker Hub)</a> 저장소에서 LAMP, Pandoc, Jekyll, Ruby, RStudio, Shiny 서버를 검색해서 설치한다. 이외에도 자바스크립트를 포함하여 여러 도구가 정적 웹서비스 제공에 필요하다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="xwmooc-개발-툴체인"><span class="glyphicon glyphicon-pushpin"></span>xwMOOC 개발 툴체인</h3>
+</div>
+<div class="panel-body">
+<ol style="list-style-type: decimal">
+<li>한글</li>
+<li>Pandoc</li>
+<li>Jekyll, Ruby</li>
+<li>LAMP</li>
+<li>RStudio, Shiny 서버</li>
+</ol>
+</div>
+</aside>
+<h4 id="한글-우분투-dockerfile-생성">2.1. 한글 우분투 Dockerfile 생성</h4>
+<p>도커 자동화를 위해서 <strong>Dockerfile</strong> 스크립트를 작성한다. 먼저 <code>statkclee/hangul</code> 한글 우분투 이미지를 생성한다. <code>docker build</code>가 생성 명령어가 되고 <code>-t</code>가 이미지명을 부여하게 되고 <code>.</code>은 디폴트 초기설정으로 <code>Dockerfile</code> 스크립트를 지정한다.</p>
+<pre class="input"><code>root@dev:~/hangul# docker build -t statkclee/hangul .</code></pre>
+<pre class="input"><code># xwMOOC 
+FROM ubuntu:14.04
+
+# Hangul Install
+RUN apt-get update &amp;&amp; apt-get install -y \
+    language-pack-ko &amp;&amp; \
+    dpkg-reconfigure locales &amp;&amp; \
+    locale-gen ko_KR.UTF-8 &amp;&amp; \
+    /usr/sbin/update-locale LANG=ko_KR.UTF-8
+
+ENV LANG=ko_KR.UTF-8
+ENV LANGUAGE=ko_KR.UTF-8
+ENV LC_ALL=ko_KR.UTF-8</code></pre>
+<p><code>docker run -it</code> 명령어로 <code>/bin/bash</code>를 실행해서 내부 한글이 되는 컨테이너 내부로 들어가면 한글이 정상적으로 CLI 모드에서 작동되는 것을 확인한다.</p>
+<pre class="input"><code>root@dev:~/hangul# docker run -it statkclee/hangul /bin/bash
+root@2213b3f04bac:/# ls</code></pre>
+<pre class="output"><code>bin   dev  home  lib64  mnt  proc  run   srv  tmp  var
+boot  etc  lib   media  opt  root  sbin  sys  usr  한글.txt
+root@2213b3f04bac:/# cat 한글.txt
+한글 사랑...
+abc...
+123</code></pre>
+<h4 id="pandoc-dockerfile-설치">2.2. Pandoc Dockerfile 설치</h4>
+<p><code>Dockerfile</code>에 <code>Pandoc</code>을 설치한다. 하스칼 플랫폼을 이용한 방법도 있지만, <code>cabal</code>로 설치한다. <code>pandoc</code>을 환경변수 경로명에 추가한다.</p>
+<pre class="input"><code># xwMOOC 작업환경 설정 Dockerfile
+FROM ubuntu:14.04
+
+# Pandoc 설치
+RUN apt-get update &amp;&amp; apt-get install -y \
+    zlib1g-dev \
+    cabal-install
+RUN cabal update &amp;&amp; cabal install \
+    alex \
+    happy \
+    pandoc \
+    pandoc-citeproc
+    
+ENV PATH /root/.cabal/bin:$PATH</code></pre>
+<pre class="input"><code>root@dev:~/hangul# docker images</code></pre>
+<pre class="output"><code>REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+statkclee/pandoc    latest              c731a1b37d60        51 seconds ago      1.342 GB
+statkclee/hangul    latest              b00700f6fe97        About an hour ago   215.3 MB
+ubuntu              14.04               6d4946999d4f        8 days ago          188.3 MB</code></pre>
+<pre class="input"><code>root@dev:~/hangul# docker run -it statkclee/pandoc /bin/bash
+root@418652c231eb:/# pandoc -v</code></pre>
+<pre class="output"><code>pandoc 1.14.0.4
+Compiled with texmath 0.8.2, highlighting-kate 0.6.
+Syntax highlighting is supported for the following languages:
+    abc, actionscript, ada, agda, apache, asn1, asp, awk, bash, bibtex, boo, c,
+    ...
+    yacc, yaml, zsh
+Default user data directory: /root/.pandoc
+Copyright (C) 2006-2015 John MacFarlane
+Web:  http://johnmacfarlane.net/pandoc
+This is free software; see the source for copying conditions.
+There is no warranty, not even for merchantability or fitness for a particular purpose.</code></pre>
+<h4 id="루비ruby와-제킬jekyll-dockerfile-설치">2.3. 루비(Ruby)와 제킬(Jekyll) Dockerfile 설치</h4>
+<p><code>Dockerfile</code>에 <code>Ruby</code>와 <code>jekyll</code>을 <code>Dockerfile</code> 스크립트로 설치한다.</p>
+<pre class="input"><code># Ruby 설치 from https://registry.hub.docker.com/_/ruby/
+# 2.2.2-slim, 2.2-slim, 2-slim, slim (2.2/slim/Dockerfile)
+
+FROM ubuntu:14.04
+
+ENV RUBY_MAJOR 2.2
+ENV RUBY_VERSION 2.2.2
+
+# some of ruby&#39;s build scripts are written in ruby
+# we purge this later to make sure our final image uses what we just built
+RUN buildDeps=&#39; \
+        autoconf \
+        bison \
+        gcc \
+        libbz2-dev \
+        libgdbm-dev \
+        libglib2.0-dev \
+        libncurses-dev \
+        libreadline-dev \
+        libxml2-dev \
+        libxslt-dev \
+        make \
+        ruby \
+    &#39; \
+    &amp;&amp; set -x \
+    &amp;&amp; apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends $buildDeps \
+    &amp;&amp; rm -rf /var/lib/apt/lists/* \
+    &amp;&amp; mkdir -p /usr/src/ruby \
+    &amp;&amp; curl -SL &quot;http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2&quot; \
+        | tar -xjC /usr/src/ruby --strip-components=1 \
+    &amp;&amp; cd /usr/src/ruby \
+    &amp;&amp; autoconf \
+    &amp;&amp; ./configure --disable-install-doc \
+    &amp;&amp; make -j&quot;$(nproc)&quot; \
+    &amp;&amp; make install \
+    &amp;&amp; rm -r /usr/src/ruby \
+    &amp;&amp; apt-get purge -y --auto-remove $buildDeps
+
+# skip installing gem documentation
+RUN echo &#39;gem: --no-rdoc --no-ri&#39; &gt;&gt; &quot;$HOME/.gemrc&quot;
+
+# install things globally, for great justice
+ENV GEM_HOME /usr/local/bundle
+ENV PATH $GEM_HOME/bin:$PATH
+
+ENV BUNDLER_VERSION 1.10.4
+
+RUN gem install bundler --version &quot;$BUNDLER_VERSION&quot; \
+    &amp;&amp; bundle config --global path &quot;$GEM_HOME&quot; \
+    &amp;&amp; bundle config --global bin &quot;$GEM_HOME/bin&quot;
+
+# don&#39;t create &quot;.bundle&quot; in all our apps
+ENV BUNDLE_APP_CONFIG $GEM_HOME
+
+CMD [ &quot;irb&quot; ]
+
+# Jekyll 설치 - 자바스크립트 실행환경(JavaScript Runtime) 필요
+
+RUN apt-get update -qq &amp;&amp; \
+    apt-get install -y nodejs npm &amp;&amp; \
+    npm install -g coffee-script &amp;&amp; \
+    ln -s /usr/bin/nodejs /usr/bin/node
+
+RUN gem install --no-rdoc --no-ri jekyll kramdown
+
+RUN apt-get install -y python-pip
+RUN pip install pandocfilters</code></pre>
+<pre class="input"><code>root@dev:~/hangul# docker images</code></pre>
+<pre class="output"><code>REPOSITORY             TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+statkclee/rubyjekyll   latest              6f4fac65d8c8        7 seconds ago       525.2 MB
+statkclee/ruby         latest              943896407bed        42 minutes ago      376.8 MB
+statkclee/pandoc       latest              c731a1b37d60        11 hours ago        1.342 GB
+statkclee/hangul       latest              b00700f6fe97        13 hours ago        215.3 MB
+ubuntu                 14.04               6d4946999d4f        8 days ago          188.3 MB</code></pre>
+<pre class="input"><code>root@dev:~/hangul# docker run -it statkclee/rubyjekyll /bin/bash
+root@ae5c1183c93b:/# ruby -v</code></pre>
+<pre class="output"><code>ruby 2.2.2p95 (2015-04-13 revision 50295) [x86_64-linux]</code></pre>
+<pre class="input"><code>root@ae5c1183c93b:/# jekyll -v</code></pre>
+<pre class="output"><code>jekyll 2.5.3</code></pre>
+<h3 id="lamp-dockerfile-설치">2.4. LAMP Dockerfile 설치</h3>
+<p>웹서비스 제공을 위해서 LAMP를 설치한다. 환경설정 스크립트는 GitHub 저장소 <a href="https://github.com/tutumcloud/lamp" class="uri">https://github.com/tutumcloud/lamp</a>에서 가져온다. 또한 환경설정 파일은 Dockerfile이 위치한 곳에 함께 두고 설치한다.</p>
+<pre class="input"><code>######################################################
+# 4. LAMP 설치 from https://registry.hub.docker.com/u/tutum/lamp/
+# Git Repo. https://github.com/tutumcloud/lamp
+# 환경설정 파일을 Dockerfile이 위치한 곳에 함께 두고 설치함.
+######################################################
+
+## Install packages
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update &amp;&amp; \
+  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt &amp;&amp; \
+  echo &quot;ServerName localhost&quot; &gt;&gt; /etc/apache2/apache2.conf
+
+## Add image configuration and scripts
+ADD start-apache2.sh /start-apache2.sh
+ADD start-mysqld.sh /start-mysqld.sh
+ADD run.sh /run.sh
+RUN chmod 755 /*.sh
+ADD my.cnf /etc/mysql/conf.d/my.cnf
+ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
+ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
+
+## Remove pre-installed database
+RUN rm -rf /var/lib/mysql/*
+
+## Add MySQL utils
+ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
+RUN chmod 755 /*.sh
+
+## config to enable .htaccess
+ADD apache_default /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
+
+## Configure /app folder with sample app
+RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
+RUN mkdir -p /app &amp;&amp; rm -fr /var/www/html &amp;&amp; ln -s /app /var/www/html
+
+##Enviornment variables to configure php
+ENV PHP_UPLOAD_MAX_FILESIZE 10M
+ENV PHP_POST_MAX_SIZE 10M
+
+## Add volumes for MySQL 
+VOLUME  [&quot;/etc/mysql&quot;, &quot;/var/lib/mysql&quot; ]
+
+EXPOSE 80 3306
+CMD [&quot;/run.sh&quot;]</code></pre>
+<h3 id="xwmooc-dockerfile-설치-파일">2.5. xwMOOC Dockerfile 설치 파일</h3>
+<p>xwMOOC 개발 환경을 Dockerfile 스크립트를 설치한다. xwMOOC 기존 가상컴퓨터 구축에 사용한 파일도 있지만, 이를 재사용하고, <a href="https://hub.docker.com/">도커허브</a> 공식 이미지에 있는 <code>Dockerfile</code>을 받아 <code>ubuntu:14.04</code>에서 출발해서 쌓아올린다.</p>
+<p><img src="fig/docker-xwMOOC-Dockerfile.png" alt="xwMOOC Dockerfile 구성" width="50%" /></p>
+<pre class="input"><code># xwMOOC 작업환경 설정 Dockerfile
+FROM ubuntu:14.04
+
+######################################################
+# 0.한글(Hangul) 설치
+######################################################
+
+RUN apt-get update &amp;&amp; apt-get install -y \
+    language-pack-ko &amp;&amp; \
+    dpkg-reconfigure locales &amp;&amp; \
+    locale-gen ko_KR.UTF-8 &amp;&amp; \
+    /usr/sbin/update-locale LANG=ko_KR.UTF-8
+
+ENV LANG=ko_KR.UTF-8
+ENV LANGUAGE=ko_KR.UTF-8
+ENV LC_ALL=ko_KR.UTF-8
+
+######################################################
+# 1. Pandoc 설치
+######################################################
+
+RUN apt-get update &amp;&amp; apt-get install -y \
+    zlib1g-dev \
+    cabal-install
+RUN cabal update &amp;&amp; cabal install \
+    alex \
+    happy \
+    pandoc \
+    pandoc-citeproc
+
+ENV PATH /root/.cabal/bin:$PATH
+
+######################################################
+# 2. Ruby 설치 from https://registry.hub.docker.com/_/ruby/
+## 2.2.2-slim, 2.2-slim, 2-slim, slim (2.2/slim/Dockerfile)
+######################################################
+
+RUN apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends \
+        bzip2 \
+        ca-certificates \
+        curl \
+        libffi-dev \
+        libgdbm3 \
+        libssl-dev \
+        libyaml-dev \
+        procps \
+        zlib1g-dev \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+ENV RUBY_MAJOR 2.2
+ENV RUBY_VERSION 2.2.2
+
+# some of ruby&#39;s build scripts are written in ruby
+# we purge this later to make sure our final image uses what we just built
+RUN buildDeps=&#39; \
+        autoconf \
+        bison \
+        gcc \
+        libbz2-dev \
+        libgdbm-dev \
+        libglib2.0-dev \
+        libncurses-dev \
+        libreadline-dev \
+        libxml2-dev \
+        libxslt-dev \
+        make \
+        ruby \
+    &#39; \
+    &amp;&amp; set -x \
+    &amp;&amp; apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends $buildDeps \
+    &amp;&amp; rm -rf /var/lib/apt/lists/* \
+    &amp;&amp; mkdir -p /usr/src/ruby \
+    &amp;&amp; curl -SL &quot;http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2&quot; \
+        | tar -xjC /usr/src/ruby --strip-components=1 \
+    &amp;&amp; cd /usr/src/ruby \
+    &amp;&amp; autoconf \
+    &amp;&amp; ./configure --disable-install-doc \
+    &amp;&amp; make -j&quot;$(nproc)&quot; \
+    &amp;&amp; make install \
+    &amp;&amp; rm -r /usr/src/ruby \
+    &amp;&amp; apt-get purge -y --auto-remove $buildDeps
+
+# skip installing gem documentation
+RUN echo &#39;gem: --no-rdoc --no-ri&#39; &gt;&gt; &quot;$HOME/.gemrc&quot;
+
+# install things globally, for great justice
+ENV GEM_HOME /usr/local/bundle
+ENV PATH $GEM_HOME/bin:$PATH
+
+ENV BUNDLER_VERSION 1.10.4
+
+RUN gem install bundler --version &quot;$BUNDLER_VERSION&quot; \
+    &amp;&amp; bundle config --global path &quot;$GEM_HOME&quot; \
+    &amp;&amp; bundle config --global bin &quot;$GEM_HOME/bin&quot;
+
+# don&#39;t create &quot;.bundle&quot; in all our apps
+ENV BUNDLE_APP_CONFIG $GEM_HOME
+
+CMD [ &quot;irb&quot; ]
+
+######################################################
+# 3. Jekyll 설치 - 자바스크립트 실행환경(JavaScript Runtime) 필요
+######################################################
+
+RUN apt-get update -qq &amp;&amp; \
+    apt-get install -y nodejs npm &amp;&amp; \
+    npm install -g coffee-script &amp;&amp; \
+    ln -s /usr/bin/nodejs /usr/bin/node
+
+RUN gem install --no-rdoc --no-ri jekyll kramdown
+
+RUN apt-get install -y python-pip
+RUN pip install pandocfilters
+
+######################################################
+# 4. LAMP 설치 from https://registry.hub.docker.com/u/tutum/lamp/
+# Git Repo. https://github.com/tutumcloud/lamp
+# 환경설정 파일을 Dockerfile이 위치한 곳에 함께 두고 설치함.
+######################################################
+
+## Install packages
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update &amp;&amp; \
+  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt &amp;&amp; \
+  echo &quot;ServerName localhost&quot; &gt;&gt; /etc/apache2/apache2.conf
+
+## Add image configuration and scripts
+ADD start-apache2.sh /start-apache2.sh
+ADD start-mysqld.sh /start-mysqld.sh
+ADD run.sh /run.sh
+RUN chmod 755 /*.sh
+ADD my.cnf /etc/mysql/conf.d/my.cnf
+ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
+ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
+
+## Remove pre-installed database
+RUN rm -rf /var/lib/mysql/*
+
+## Add MySQL utils
+ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
+RUN chmod 755 /*.sh
+
+## config to enable .htaccess
+ADD apache_default /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
+
+## Configure /app folder with sample app
+RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
+RUN mkdir -p /app &amp;&amp; rm -fr /var/www/html &amp;&amp; ln -s /app /var/www/html
+
+##Enviornment variables to configure php
+ENV PHP_UPLOAD_MAX_FILESIZE 10M
+ENV PHP_POST_MAX_SIZE 10M
+
+## Add volumes for MySQL 
+VOLUME  [&quot;/etc/mysql&quot;, &quot;/var/lib/mysql&quot; ]
+
+EXPOSE 80 3306
+CMD [&quot;/run.sh&quot;]
+
+
+######################################################
+# 5. 공통 개발 도구 
+######################################################
+
+RUN apt-get install -y \
+    git \
+    libxml2-dev \
+    python \
+    build-essential \
+    make \
+    gcc \
+    python-dev \
+    locales \
+    python-pip</code></pre>
+<h3 id="도커허브-푸쉬push">3. 도커허브 푸쉬(Push)</h3>
+<p>작업한 이미지를 도커허브에 마치 GitHub에 작업 산출물을 저장하듯이 클라우드에 저장한다. 이를 위해서 먼저 도커 이미지의 <strong>사용자명/이미지명</strong> 형식에 맞춰 태그를 줘야 한다. 처음 도커허브에 푸쉬하는 경우 사용자명, 비밀번호, 전자우편주소를 확인한다.</p>
+<pre class="input"><code>root@dev:~/hangul# docker push statkclee/xwmooc
+The push refers to a repository [statkclee/xwmooc] (len: 1)
+c731xxxxxxx: Image push failed
+
+Please login prior to push:
+Username: statkclee
+Password:
+Email: gildong@gmail.com</code></pre>
+<pre class="output"><code>WARNING: login credentials saved in /root/.docker/config.json
+Login Succeeded
+The push refers to a repository [statkclee/xwmooc] (len: 1)
+c731a1b37d60: Image already exists
+5f9029e97976: Image successfully pushed
+de53599479e9: Image successfully pushed
+b00700f6fe97: Pushing     32 B/32 B
+b00700f6fe97: Image successfully pushed
+c722f35f2615: Pushing     32 B/32 B
+c722f35f2615: Image successfully pushed
+8af0d14f5f9a: Image successfully pushed
+5cb1a6663b55: Image successfully pushed
+6d4946999d4f: Image already exists
+9fd3c8c9af32: Image successfully pushed
+435050075b3f: Image successfully pushed
+428b411c28f0: Buffering to Disk
+428b411c28f0: Image successfully pushed
+Digest: sha256:c36cfc4b0c9467c3be9af5f9ff4e095960033cd7301d9c5a08e512f8c92d62fb</code></pre>
+<p><strong>태그가 없는 <none> 이미지 삭제</strong></p>
+<pre class="input"><code>root@dev:~# docker rmi $(docker images | awk &#39;/^&lt;none&gt;/ {print $3}&#39;)</code></pre>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

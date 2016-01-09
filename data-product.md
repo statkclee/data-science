@@ -104,8 +104,15 @@ HTML과 CSS로 UI쪽 프론트엔드(Frontend)를 담당하고, 중간 비즈니
 R언어로 데이터 제품을 만들기 위해서 세가지 툴을 준비해야 한다.  
 1. [R](http://cran.r-project.org/) : 데이터 분석 엔진이며 자료분석 DSL로 생산성이 높은 데이터 제품 개발 사실상 표준(defacto standard)  
 2. [RStudio](http://www.rstudio.com/) : `R` 기반 통합개발환경(IDE, Integrated Development Environment)   
-3. [Shiny 서버](http://shiny.rstudio.com/) : `R` 과 `RStudio`로 반응형 웹응용프로그램 개발 및 운영 플랫폼.
+3. [Shiny 서버](http://shiny.rstudio.com/) : `R` 과 `RStudio`로 반응형 웹응용프로그램 개발 및 운영 플랫폼.  
 
 
+### 4. 데이터 제품 개발 핵심 구성요소
+ 
+- Bootstrap, jQuery, HTML5, CSS 프로트엔트를 구축
+- 웹서비스 제공을 위한 LAMP 아키텍처를 도입
+- Shiny 서버와 RStudio IDE로 응용프로그램을 개발
+- 제킬(Jekyll)로 정적 웹 콘텐츠 부분을 구축
 
+<img src="fig/data-science-app-architecture.png" alt="데이터 제품 핵심 구성요소" width="60%" />
 

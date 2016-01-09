@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: R 파이썬 클라우드</title>
+    <title>Software Carpentry: 데이터 과학</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -26,8 +26,8 @@
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h1 class="title">R 파이썬 클라우드</h1>
-          <h2 class="subtitle">R과 데이터 조작(Manipulation)</h2>
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">데이터 다루기</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
@@ -282,10 +282,7 @@ raw
 </tr>
 </table>
 <p>자료분석을 위해서 자료를 데이터셋의 형태로 구성을 해야한다. 데이터셋이 중요한 이유는 자료를 분석하기 위해서 다양한 형태의 개별 자료를 통합적으로 분석하기 위해서다. 이를 위해서 리스트 자료구조로 일단 모으게 된다. 예를 들어 개인 신용분석을 위해서는 개인의 소득, 부채, 성별, 학력 등등의 숫자형, 문자형, 요소(Factor)형 등의 자료를 데이터셋에 담아야 한다. 특히 변수와-관측값 (Variable-Observation) 형식의 자료를 분석하기 위해서는 데이터프레임(<code>data.frame</code>)을 자주 사용한다. 데이터프레임은 모든 변수에 대해서 관측값이 같은 길이를 갖도록 만들어 놓은 것이다.</p>
-<div class="figure">
-<img src="fig/data-science-list-dataframe.png" alt="리스트와 데이터프레임" />
-<p class="caption">리스트와 데이터프레임</p>
-</div>
+<p><img src="fig/data-handling-list-dataframe.png" alt="리스트와 데이터프레임" width="50%" /></p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
 <h4 id="자료형-확인"><span class="glyphicon glyphicon-pushpin"></span>자료형 확인</h4>
@@ -328,10 +325,7 @@ d 1      factor numeric</code></pre>
 <p>그 외에도 다양한 팩키지(package)를 파이썬과 마찬가지로 제공하여 R을 선택하는 순간 자료 분석, 모형, 제품화에 대해 강력한 무기를 손에 넣게 된다.</p>
 <p>특히 <code>SQL</code>을 통해서 <strong>데이터 조작(Data Manipulation)</strong>에 대한 개념 잡고 <code>쉘(shell)</code>을 통한 작업 자동화 개념을 익히고, 패키지를 사용하면 추구하는 바를 신속하고 정확하게 달성할 수 있다.</p>
 <h4 id="hadley-자료분석-체계">2.5. Hadley 자료분석 체계</h4>
-<div class="figure">
-<img src="fig/data-science-had.png" alt="Hadley Wickham이 제시한 자료분석 체계" />
-<p class="caption">Hadley Wickham이 제시한 자료분석 체계</p>
-</div>
+<p><img src="fig/data-handling-hadley-wickham.png" alt="Hadley Wickham이 제시한 자료분석 체계" width="57%" /></p>
 <p><strong><a href="http://www.had.co.nz/">Hadley Wickham</a></strong>은 <code>tidyr</code>을 사용하여 자료 정제하고 자료변환을 위해서 <code>dplyr</code>을 사용하고 그래픽 문법(glammar of graphics)에 따라 <code>ggvis</code>로 시각화하고 R의 다양한 모형화를 이용한 자료분석 체계도를 제안한다.</p>
 <p>시각화(Visualization)는 데이터에 대한 통찰력(insight)과 탄성, 놀라움을 줄 수 있지만, 확장성(Scalability)은 떨어진다. 왜냐하면, 사람이 데이터 분석 루프에 포함되기 때문에 확장 및 자동화에 한계가 있다. 반대로 모형(Model)은 자동화와 확장성에는 장점이 있지만, 주어진 모형틀안에서 이루어지기 때문에 통찰력, 놀라움, 탄성을 주지는 못하는 아쉬움이 있다.</p>
 <h4 id="dplyr">2.6. dplyr</h4>

@@ -1,7 +1,7 @@
 ---
 layout: page
-title: R 파이썬 클라우드
-subtitle: R과 데이터 조작(Manipulation)
+title: 데이터 과학
+subtitle: 데이터 다루기
 ---
 > ## 학습 목표 {.objectives}
 >
@@ -344,7 +344,8 @@ R은 6가지 기본 벡터 자료 저장 형식을 가지고 있다. 이와는 �
 
 자료분석을 위해서 자료를 데이터셋의 형태로 구성을 해야한다. 데이터셋이 중요한 이유는 자료를 분석하기 위해서 다양한 형태의 개별 자료를 통합적으로 분석하기 위해서다. 이를 위해서 리스트 자료구조로 일단 모으게 된다. 예를 들어 개인 신용분석을 위해서는 개인의 소득, 부채, 성별, 학력 등등의 숫자형, 문자형, 요소(Factor)형 등의 자료를 데이터셋에 담아야 한다. 특히 변수와-관측값 (Variable-Observation) 형식의 자료를 분석하기 위해서는 데이터프레임(``data.frame``)을 자주 사용한다. 데이터프레임은 모든 변수에 대해서 관측값이 같은 길이를 갖도록 만들어 놓은 것이다. 
 
-![리스트와 데이터프레임](fig/data-science-list-dataframe.png)
+<img src="fig/data-handling-list-dataframe.png" alt="리스트와 데이터프레임" width="50%" />
+
 
 
 > #### 자료형 확인 {.callout}
@@ -405,7 +406,8 @@ R을 사용하는 방법 중 하나는 반복을 통해 한번에 하나씩 연�
 
 #### 2.5. Hadley 자료분석 체계
 
-![Hadley Wickham이 제시한 자료분석 체계](fig/data-science-had.png)
+<img src="fig/data-handling-hadley-wickham.png" alt="Hadley Wickham이 제시한 자료분석 체계" width="57%" />
+
 
 **[Hadley Wickham](http://www.had.co.nz/)**은 `tidyr`을 사용하여 자료 정제하고 자료변환을 위해서 `dplyr`을 사용하고 그래픽 문법(glammar of graphics)에 따라 `ggvis`로 시각화하고 R의 다양한 모형화를 이용한 자료분석 체계도를 제안한다. 
 
