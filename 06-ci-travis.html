@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: R 파이썬 클라우드</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">R 파이썬 클라우드</h1>
+          <h2 class="subtitle">지속적 통합(Continuous Integration, CI)</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>지속적 통합이 소프트웨어 개발 속도를 높이는지 이해한다.</li>
+<li>지속적 통합 효익을 이해한다.</li>
+<li>지속적 통합 서버를 구현한다.</li>
+<li>지속적 통합 서버를 호스팅하는 몇가지 선택사항을 식별한다.</li>
+</ul>
+</div>
+</section>
+<p>테스트 실행을 가능하면 쉽게 만들기 위해서, 많은 소프트웨어 개발 팀에서 <strong>지속적 통합(continuous integration, CI)</strong>로 알려진 전략을 구사한다. 이름에서 함축적으로 나타나듯이, 지속적 통합은 테스트 묶음(test sutie)을 개발 과정과 통합한다. 변경 사항이 저장소에 전달될 때마다, 지속적 통합 시스템은 코드를 빌드하고 점검한다.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="사고-실험-본인이-작성한-소프트웨어가-동료-컴퓨터에도-작동할까"><span class="glyphicon glyphicon-pencil"></span>사고 실험 : 본인이 작성한 소프트웨어가 동료 컴퓨터에도 작동할까?</h2>
+</div>
+<div class="panel-body">
+<p>본인이 맥 OSX에서 소프트웨어를 개발한다고 가정하자. 지난주, 연구실 동료를 도와서 리눅스 컴퓨터에서 코드를 빌드하고 실행했다. 그후 일부 변경을 했다.</p>
+<ol style="list-style-type: decimal">
+<li>휴가에서 돌아와서 저장소를 갱신했다면, 소프트웨어가 여전히 잘 동작할 것으로 어떻게 확신할 수 있을까?</li>
+<li>컴퓨터에서 다시 빌드해서 정상적으로 돌아갈 때까지, 그 과정이 얼마나 오래 걸릴까?</li>
+</ol>
+</div>
+</section>
+<p>연구실에서 벌어지는 전형적인 사례다. 해당 컴퓨터에서 다시 빌드할 때까지 동료 컴퓨터에 정상적으로 동작하는지 모른다. 만약 빌드 시스템을 갖고 있다면, 저장소를 갱신하고, 코드를 다시 빌드하고, 테스트를 실행하는데 몇분 걸린다. 만약 빌드 시스템이 없다면, 신규 변경사항이 호환되어 정상 동작하는지만 아는데 오후 전체 시간이 걸릴 수 있다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="컴퓨터가-작업을-수행하게-한다."><span class="glyphicon glyphicon-pushpin"></span>컴퓨터가 작업을 수행하게 한다.</h2>
+</div>
+<div class="panel-body">
+<p>과학자는 창의적 통찰, 개념 이해, 비판적 분석(critical analysis), 커피 마시기를 잘한다. 컴퓨터는 시킨 일(instruction)을 수행하는데 능숙하다. 과학이 재미있으려면, 과학자가 컴퓨터에 작업을 주고 커피를 마시러 가야 한다.</p>
+<p>지속적 통합 서버는 방금 언급한 것을 할 수 있다. 주어진 명령을 따라서, 지속적 통합 서버는 다음을 수행할 수 있다:</p>
+<ul>
+<li>저장소에서 신규 코드를 가져 나온다.</li>
+<li>지원되는 운영체제 시스템 인스턴스를 활성화 (예, 다양한 버젼의 OSX, 리눅스, 윈도우 등)</li>
+<li>다른 소프트웨어 버젼 인스턴를 활성화 (예, 파이썬 2.7, 파이썬 3.0)</li>
+<li>빌드와 테스트 스크립트 실행</li>
+<li>오류 점검</li>
+<li>실행 결과 보고서로 작성</li>
+</ul>
+</div>
+</aside>
+<p>서버가 수행하는 첫번째 단계는 저장소에서 코드를 가져 나오는 것여서, (자체 CI 서버를 구축하거나 갖지 않는다면) 지속적 통합 서버가 사용할 수 있도록 코드를 넣어둔다.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="github에-mean-이름으로-git-저장소를-설정한다."><span class="glyphicon glyphicon-pencil"></span>GitHub에 <code>mean</code> 이름으로 Git 저장소를 설정한다.</h2>
+</div>
+<div class="panel-body">
+<p>GitHub 저장소에 <code>mean.py</code>, <code>test_mean.py</code> 파일이 콘텐츠가 될 수 있다.</p>
+<ol style="list-style-type: decimal">
+<li>GitHub에 가서 <a href="https://github.com/new">create a repository</a> 에서 <code>mean</code> 이름으로 저장소를 생성한다.</li>
+<li>저장소를 클론한다. (<code>git clone https://github.com:yourusername/mean</code>)</li>
+<li><code>mean.py</code>, <code>test_mean.py</code> 파일을 로컬 컴퓨터 디렉토리에 복사한다.</li>
+<li><code>add</code>, <code>commit</code>, <code>push</code> 명령어를 사용해서 GitHub에 <code>mean.py</code>, <code>test_mean.py</code> 파일을 넣는다.</li>
+</ol>
+</div>
+</section>
+<h2 id="명령instructions-전달">명령(Instructions) 전달</h2>
+<p>평균 함수 작업은 코드와 테스트로 구성된다. 코드와 테스트를 저장소에 복사하고 저장소에 지속적 통합을 추가한다.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="서버-설정-사항-결정하기"><span class="glyphicon glyphicon-pencil"></span>서버 설정 사항 결정하기</h2>
+</div>
+<div class="panel-body">
+<p>자체로 빌드 시스템이 필요없는데 사유는 파이썬은 컴파일이 필요 없기 때문이다.</p>
+<ol style="list-style-type: decimal">
+<li>그럼 무엇이 필요할까?</li>
+<li><code>requirements.txt</code> 파일에 소프트웨어 의존성(dependencies)을 적는다.</li>
+<li>사실, 거슬러 올라가서 버젼관리를 하면 좋지 않을까?</li>
+</ol>
+</div>
+</section>
+<h3 id="travis_ci">Travis_CI</h3>
+<p><a href="https://travis-ci.org/">트래비스(Travis)</a>는 지속적 통합 서버 호스팅 플랫폼이다. 루비 개발 뿐만 아니라 파이썬 과학 커뮤니티에서 일반적으로 사용된다.</p>
+<blockquote>
+<h2 id="travis-ci-계정-설정">Travis-CI 계정 설정</h2>
+<p>트래비스를 사용하려면, 필요한 것은 계정인데 무료다.</p>
+<ol style="list-style-type: decimal">
+<li>자원자가 트래비스 계정을 신청해야 한다.</li>
+<li>트래비스 웹사이트 안내 절차에 따라 트래비스 계정과 GitHub을 연결한다.</li>
+</ol>
+</blockquote>
+<p>저장소 <code>.travis.yml</code> 파일에 Travis-CI 저장소를 빌드하고 테스트하는 의도를 담아 트래비스에 전달한다. 이번 목적으로 <code>.travis.yml</code> 파일은 매우 단순한 내용을 담고 있다:</p>
+<pre><code>language: python
+python:
+  - &quot;2.6&quot;
+  - &quot;2.7&quot;
+  - &quot;3.2&quot;
+  - &quot;3.3&quot;
+  - &quot;3.4&quot;
+  - &quot;nightly&quot;
+# command to install dependencies
+install:
+  - &quot;pip install -r requirements.txt&quot;
+# command to run tests
+script: nosetests</code></pre>
+<p><code>pip</code> 파이썬 패키지 관리자가 <code>requirements.txt</code> 파일을 어떻게 사용하는지 알 수 있다. <code>requirements.txt</code> 파일에 필요한 모든 파이썬 패키지 목록을 작성하는 것이 관례다. 만약 <code>nose</code>, <code>numpy</code>, <code>pymol</code>이 필요하면, <code>requirements.txt</code> 파일은 다음과 같을 것이다:</p>
+<pre><code>nose
+numpy
+pymol</code></pre>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2 id="travis.yml-파일-추가"><span class="glyphicon glyphicon-pencil"></span><code>.travis.yml</code> 파일 추가</h2>
+</div>
+<div class="panel-body">
+<ol style="list-style-type: decimal">
+<li><code>.travis.yml</code> 파일을 저장소에 추가한다.</li>
+<li>커밋하고 푸쉬한다.</li>
+<li><a href="https://travis-ci.org/">CI 서버</a>에 진행사항을 점검한다.</li>
+</ol>
+</div>
+</section>
+<h2 id="지속적-통합-호스팅">지속적 통합 호스팅</h2>
+<p>트래비스를 예제로 살펴봤는데 이유는 GitHub과 연동되어 구동하기 매우 쉽기 때문이다. 리눅스에 기반한 많은 기능을 구현할 수 있지만, 현재로는 다른 플랫폼에 대한 구현은 잘 이루어지고 있지 않다. 필요에 따라 다음 서비스를 고려해보는 것도 좋다.</p>
+<ul>
+<li><a href="http://buildbot.net/">buildbot</a></li>
+<li><a href="http://www.cdash.org/">CDash</a></li>
+<li><a href="https://jenkins-ci.org/">Jenkins</a></li>
+</ul>
+<blockquote>
+<h2 id="주요점" class="keypoints">주요점</h2>
+<ul>
+<li>서버가 자동으로 테스트 실행을 한다.</li>
+<li>테스트 실행은 GitHub 풀 요청에 의해 촉발된다.</li>
+<li>CI는 여러 플랫폼에 빌드, 테스트를 수행한다.</li>
+<li><code>.travis.yml</code> 파일에 <code>travis-ci</code> 서버 빌드 환경설정 정보를 적는다.</li>
+<li>많은 CI 서버가 무료로 널려있다.</li>
+</ul>
+</blockquote>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
