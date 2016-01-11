@@ -40,6 +40,22 @@
 </section>
 <p><a href="https://en.wikipedia.org/wiki/Cartography">지도학(Cartography)</a>는 지도를 제작하는 방식이다.</p>
 <p>특정한 목적에 따라 특수한 주제 혹은 내용만을 나타내어 그린 지도를 <a href="https://ko.wikipedia.org/wiki/지도의_종류">주제도(Thematic Map)</a>라고 한다. 어느 시점에서의 일기 상황을 나타낸 기상도, 운전할 때 쓰이는 도로도, 항해할 때 쓰이는 해도, 통계값을 지도에 그려 넣은 통계 지도 등이 좋은 사례다.</p>
+<h3 id="지리정보-파일shp">지리정보 파일(SHP)</h3>
+<p>대한민국 센서스용 행정구역경계(시군구) 자료는 <a href="http://sgis.kostat.go.kr/html/index.html">통계지리정보서비스</a> 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 <em>자료신청</em> → <em>자료제공목록</em>을 참조한다.</p>
+<p>혹은 <a href="http://www.gadm.org/">GADM</a> 데이터베이스에서 <em>Country</em>에서 **South Korea<em>을 선택하고, </em>File Format<em>에서 </em>Shapefile*을 선택하여 다운로드한다.</p>
+<ul>
+<li><a href="http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp">통계지역경계</a></li>
+<li><a href="http://www.gadm.org/country">Global Administrative Areas</a></li>
+<li><a href="https://github.com/southkorea/southkorea-maps">팀 포퐁 GitHub</a></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">FILEMAP <span class="op">=</span> {
+    <span class="st">&#39;shp&#39;</span>: [(<span class="st">&#39;skorea-shp.zip&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip&#39;</span>)],
+    <span class="co">&#39;kmz&#39;</span>: [(<span class="st">&#39;skorea.kmz&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/kmz/KOR_adm0.kmz&#39;</span>),
+            (<span class="st">&#39;skorea-provinces.kmz&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/kmz/KOR_adm1.kmz&#39;</span>),
+            (<span class="st">&#39;skorea-municipalities.kmz&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/kmz/KOR_adm2.kmz&#39;</span>)],
+    <span class="co">&#39;r&#39;</span>  : [(<span class="st">&#39;skorea.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm0.RData&#39;</span>),
+            (<span class="st">&#39;skorea-provinces.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm1.RData&#39;</span>),
+            (<span class="st">&#39;skorea-municipalities.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData&#39;</span>)]</code></pre></div>
 <h3 id="주제도thematic-map">주제도(Thematic Map)</h3>
 <h4 id="choropleth-map">Choropleth map</h4>
 <p>Unclassed Maps Classed Maps</p>

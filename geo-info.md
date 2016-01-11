@@ -11,7 +11,26 @@ subtitle: 지리정보 시각화
 
 특정한 목적에 따라 특수한 주제 혹은 내용만을 나타내어 그린 지도를 [주제도(Thematic Map)](https://ko.wikipedia.org/wiki/지도의_종류)라고 한다.  어느 시점에서의 일기 상황을 나타낸 기상도, 운전할 때 쓰이는 도로도, 항해할 때 쓰이는 해도, 통계값을 지도에 그려 넣은 통계 지도 등이 좋은 사례다.
 
+### 지리정보 파일(SHP)
 
+대한민국 센서스용 행정구역경계(시군구) 자료는 [통계지리정보서비스](http://sgis.kostat.go.kr/html/index.html) 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 *자료신청* &rarr; *자료제공목록*을 참조한다. 
+
+혹은 [GADM](http://www.gadm.org/) 데이터베이스에서 *Country*에서 **South Korea*을 선택하고, *File Format*에서 *Shapefile*을 선택하여 다운로드한다.
+
+- [통계지역경계](http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp)
+- [Global Administrative Areas](http://www.gadm.org/country)
+- [팀 포퐁 GitHub](https://github.com/southkorea/southkorea-maps)
+
+~~~ {.python}
+FILEMAP = {
+    'shp': [('skorea-shp.zip','http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip')],
+    'kmz': [('skorea.kmz','http://biogeo.ucdavis.edu/data/gadm2/kmz/KOR_adm0.kmz'),
+            ('skorea-provinces.kmz','http://biogeo.ucdavis.edu/data/gadm2/kmz/KOR_adm1.kmz'),
+            ('skorea-municipalities.kmz','http://biogeo.ucdavis.edu/data/gadm2/kmz/KOR_adm2.kmz')],
+    'r'  : [('skorea.RData','http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm0.RData'),
+            ('skorea-provinces.RData','http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm1.RData'),
+            ('skorea-municipalities.RData','http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData')]
+~~~
 
 ### 주제도(Thematic Map)
 
