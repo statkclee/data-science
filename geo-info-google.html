@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">지리정보 시각화 - 구글</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>구글 지리정보 툴체인을 활용한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="googlevis-1-plotgooglemaps">GoogleVis <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> , plotGoogleMaps</h3>
+<p><strong>데이터셋</strong> : 전세계 원자력 발전소 위치 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <strong>방법 1</strong> : <code>GoogleVis</code> 에 위도:경도 형식으로 자료를 준비해서 넣어준다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;googleVis&quot;</span>)
+<span class="kw">library</span>(googleVis)
+
+NucData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;./Nuclear power stations worldwide.csv&quot;</span>)
+NucData$Location &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;,&quot;</span>,<span class="st">&quot;:&quot;</span>, NucData$Location)
+<span class="kw">require</span>(googleVis)
+placeNames &lt;-<span class="st"> </span><span class="kw">as.character</span>(NucData$Name)
+plotData&lt;-<span class="kw">data.frame</span>(<span class="dt">name=</span>placeNames,<span class="dt">latLong=</span><span class="kw">unlist</span>(NucData$Location))
+sites &lt;-<span class="st"> </span><span class="kw">gvisMap</span>(plotData,<span class="dt">locationvar=</span><span class="st">&quot;latLong&quot;</span>,<span class="dt">tipvar=</span><span class="st">&quot;name&quot;</span>, 
+               <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">displayMode =</span> <span class="st">&quot;Markers&quot;</span>, <span class="dt">mapType=</span><span class="st">&#39;normal&#39;</span>, <span class="dt">colorAxis =</span> <span class="st">&quot;{colors:[&#39;red&#39;, &#39;grey&#39;]}&quot;</span>,
+                            <span class="dt">useMapTypeControl=</span><span class="ot">TRUE</span>, <span class="dt">enableScrollWheel=</span><span class="st">&#39;TRUE&#39;</span>))
+<span class="kw">plot</span>(sites)</code></pre></div>
+<p><strong>데이터셋</strong> : Meuse 강 데이터 <strong>방법 2</strong> : <code>plotGoogleMaps</code> 팩키지 활용</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;plotGoogleMaps&quot;</span>)
+<span class="kw">library</span>(plotGoogleMaps)
+
+<span class="kw">data</span>(meuse)
+<span class="kw">coordinates</span>(meuse)&lt;-<span class="er">~</span>x+y <span class="co"># convert to SPDF</span>
+<span class="kw">proj4string</span>(meuse) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="st">&#39;+init=epsg:28992&#39;</span>)
+<span class="co"># Adding Coordinate Referent Sys.</span>
+<span class="co"># Create web map of Point data</span>
+m&lt;-<span class="kw">plotGoogleMaps</span>(meuse,<span class="dt">filename=</span><span class="st">&#39;myMap1.htm&#39;</span>)
+<span class="co"># Plotting another map with icons as pie chart</span>
+m&lt;-<span class="kw">segmentGoogleMaps</span>(meuse, <span class="dt">zcol=</span><span class="kw">c</span>(<span class="st">&#39;zinc&#39;</span>,<span class="st">&#39;dist.m&#39;</span>),
+                     <span class="dt">mapTypeId=</span><span class="st">&#39;ROADMAP&#39;</span>, <span class="dt">filename=</span><span class="st">&#39;myMap4.htm&#39;</span>,
+                     <span class="dt">colPalette=</span><span class="kw">c</span>(<span class="st">&#39;#E41A1C&#39;</span>,<span class="st">&#39;#377EB8&#39;</span>), <span class="dt">strokeColor=</span><span class="st">&#39;black&#39;</span>)</code></pre></div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://diggdata.in/post/51396519384/plotting-geo-spatial-data-on-google-maps-in-r">Plotting geo-spatial data on Google Maps in R</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.google.com/fusiontables/exporttable?query=select%20*%20from%201u4krB7NJ0Ppwzcd5h7uwOak3Reja4A7yVFIklw">Nuclear Power plants</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
