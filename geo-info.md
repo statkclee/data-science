@@ -32,6 +32,96 @@ FILEMAP = {
             ('skorea-municipalities.RData','http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData')]
 ~~~
 
+#### R 데이터 가져오기
+
+R로 데이터를 불러와야만 자료분석을 시작이 시작된다.  전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 [statmethods.net](http://www.statmethods.net/input/importingdata.html) 사이트에 소개되어 있다.
+
+- CSV : `.csv` 파일
+- Excel : `.xlsx` 파일
+- 통계 팩키지
+    - SPSS : `.por` 파일
+    - SAS : `xpt` 파일
+    - 미니탭 : `.mtp` 파일
+
+다양한 데이터를 R로 불러와서 작업하는 방법은 [Datacamp 블로그](http://blog.datacamp.com/)와 [r-bloggers](http://www.r-bloggers.com/)에서 확인이 가능하다.
+
+- [This R Data Import Tutorial Is Everything You Need](http://blog.datacamp.com/r-data-import-tutorial/)
+- [Importing Data Into R – Part Two](http://www.r-bloggers.com/importing-data-into-r-part-two/)
+
+##### GIS 데이터
+
+지리정보시스템(GIS) 데이터 처리를 위한 기본 R 팩키지를 설치한다.
+
+[rgdal](http://www.rdocumentation.org/packages/rgdal), [raster](http://www.rdocumentation.org/packages/raster), [sp](http://www.rdocumentation.org/packages/sp)를 3종세트로 GIS 데이터 처리를 시작해 본다.
+
+~~~ {.r}
+install.packages("raster") # Geographic data analysis and modeling
+install.packages("rgdal") # Bindings for the Geospatial Data Abstraction Library
+install.packages("sp") # Classes and Methods for Spatial Data
+~~~
+
+~~~ {.r}
+#===========================
+# 필요한 라이브러리를 메모리에 적재한다.
+#===========================
+library("sp ", "rgdal", "raster")
+
+#===========================
+# 지리정보 데이터 정보
+# ㄴ 원본 .sph 데이터: http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip
+#===========================
+
+
+#===========================
+# 작업 디렉토리를 생성한다.
+#===========================
+localDir <- 'KOR_GIS_data'
+if (!file.exists(localDir)) {
+    dir.create(localDir)
+}
+
+#===========================
+# 데이터를 불러와서 압축을 푼다.
+#===========================
+url <- 'http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip'
+file <- paste(localDir,basename(url),sep='/')
+if (!file.exists(file)) {
+    download.file(url, file)
+    unzip(file,exdir=localDir)
+}
+
+# list.files(localDir)
+
+#===========================
+# 계층을 설정하고, 내부정보를 살펴본다.
+#===========================
+
+# .shp 파일에서 파일 확장자를 제거한 계층명칭이된다.
+layer_KOR_adm0 <- "KOR_adm0"  
+layer_KOR_adm1 <- "KOR_adm1"  
+layer_KOR_adm2 <- "KOR_adm2"  
+
+# 데이터를 불러온다.
+KOR_adm0_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm0) 
+KOR_adm1_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm1) 
+KOR_adm2_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm2) 
+
+#class(KOR_adm0_projected)
+#slotNames(KOR_adm0_projected)
+
+# 행정구역 정보 시각화
+par(mfrow=c(1,3))
+plot(KOR_adm0_projected)
+plot(KOR_adm1_projected)
+plot(KOR_adm2_projected)
+~~~
+
+<img src="fig/korea-admin-level.png" alt="대한민국 행정구역" width="70%" /> 
+
+[Using R - Working with Geospatial Data](http://mazamascience.com/WorkingWithData/?p=1277)
+[Raster Data in R - The Basics](http://neondataskills.org/R/Raster-Data-In-R/)
+
+
 ### 주제도(Thematic Map)
 
 #### Choropleth map

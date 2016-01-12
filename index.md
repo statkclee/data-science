@@ -22,7 +22,7 @@ title: 데이터 과학
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
 1. [텍스트 마이닝](text-ming.html)
 1. [지리정보](geo-info.html)
-    -[구글](geo-info-google.html)
+    - [구글](geo-info-google.html)
 
 > ## 참고 자료 {.prereq}
 > - [컴퓨터 과학 언플러그드](http://unplugged.xwmooc.org)  
