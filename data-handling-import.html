@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">데이터 다루기</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>R로 다양한 데이터를 가져온다.</li>
+</ul>
+</div>
+</section>
+<p><img src="fig/rstudio-data-import.png" alt="RStuio 데이터 가져오기" width="50%" /></p>
+<h3 id="공공데이터-출처">공공데이터 출처</h3>
+<p>공공데이터는 과거 로컬디스크에서 <code>. csv</code>, <code>.xlsx</code>, SAS, SPSS, 미니탭 등 형식 파일로 제공되었으나, SQL 데이터베이스에 ODBC, JDBC, DBI 등 인터페이스를 통해 직접 접근하여 데이터를 뽑아올 수도 있고, 인터넷 웹을 통해 XML, JSON 등의 형식으로 받아올 수도 있다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="공공데이터-출처-형식"><span class="glyphicon glyphicon-pushpin"></span>공공데이터 출처 형식</h3>
+</div>
+<div class="panel-body">
+<ul>
+<li>로컬 디스크: <code>. csv</code>, <code>.xlsx</code>, SAS, SPSS, 미니탭</li>
+<li>데이터베이스: SQL</li>
+<li>웹 인터넷: XML, JSON</li>
+</ul>
+</div>
+</aside>
+<h4 id="로컬-데이터">1. 로컬 데이터</h4>
+<p>전통적으로 많이 활용하는 방식으로 <code>. csv</code>, <code>.xlsx</code>, SAS, SPSS, 미니탭 등 다양한 파일 형식에 담긴 정보를 R에서 <code>readr</code>, <code>readxl</code>, <code>haven</code> 팩키지를 활용하여 R에서 분석할 수 있는 R 데이터프레임으로 불러온다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="로컬-디스크-파일-r로-가져오기ingest"><span class="glyphicon glyphicon-pushpin"></span>로컬 디스크 파일 R로 가져오기(Ingest)</h3>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>readr</code>: <code>. csv</code>, <code>.txt</code>, 등 텍스트 파일</li>
+<li><code>readxl</code>: <code>.xls</code>, <code>.xlsx</code> 엑셀 파일</li>
+<li><code>haven</code>: <code>sas7bdat</code>, <code>.sav</code> SAS, SPSS 파일</li>
+</ul>
+</div>
+</aside>
+<h4 id="데이터베이스sql">2. 데이터베이스(SQL)</h4>
+<p>데이터베이스에서 R로 데이터를 불러오는 방식은 기본적으로 <code>DBI</code>, <code>RODBC</code> 등 팩키지를 불러와서 적재한다. 목표 데이터베이스에 연결하고, SQL 쿼리를 데이터베이스에 던져 결과를 얻어와서 데이터프레임에 저장한다. 데이터 정합성 검사를 하고 모든 것이 정상적이면 데이터베이스 연결을 끊어 자원을 반납한다.</p>
+<h5 id="데이터베이스-연결-작업흐름">데이터베이스 연결 작업흐름</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1) DBI 팩키지 불러오기</span>
+<span class="kw">library</span>(DBI)
+<span class="co"># 2) 특정 데이터베이스 연결</span>
+db &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(RPostgres::<span class="kw">Postgres</span>(), user, pass, ...)
+db &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(RMySQL::<span class="kw">MySQL</span>(), user, pass, ...)
+db &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(RSQLite::<span class="kw">SQLite</span>(), path)
+<span class="co"># 3) SQL 쿼리</span>
+<span class="kw">dbGetQuery</span>(db, <span class="st">&quot;SELECT * FROM mtcars&quot;</span>)
+<span class="co"># 4) 연결 끊기</span>
+<span class="kw">dbDisconnect</span>(db)</code></pre></div>
+<h5 id="rstats-db">rstats-db</h5>
+<p>GitHub에 <a href="http://github.com/rstats-db/">rstats-db</a> 저장소에는 <em>MySQL</em>, <em>Postgres</em>, <em>SQLite</em> 등 다양한 데이터베이스에 연결해서 R로 데이터를 가져오는 팩키지가 개발되고 있다. <code>library</code> 함수보다 <code>devtools</code> 함수를 사용해서 연관된 팩키지를 설치하여 데이터를 가져올 필요가 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># http://github.com/rstats-db/</span>
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/DBI&quot;</span>)
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/RPostgres&quot;</span>)
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/RMySQL&quot;</span>)
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/RSQLite&quot;</span>)</code></pre></div>
+<h4 id="웹-인터넷-데이터">3. 웹 인터넷 데이터</h4>
+<p>최근에 많은 공공데이터가 웹인터넷을 통해 배포되고 있다. XML, JSON이 많이 사용되고 있다. 특히, XML, JSON은 API를 통해 제공되는 정형화된 데이터로 통용되며, 그렇지 않고 데이터가 제공되는 경우 HTML 페이지를 웹스크래핑해서 데이터를 퍼온다.</p>
+<p>XML <code>libxml2</code>에 대응되는 <code>xml2</code> 팩키지를 사용하고, JSON의 경우, <code>jsonlite</code> 팩키지를 사용한다. API를 통해 데이터가 제공되지 않는 경우, <code>rvest</code> 팩키지를 통해 HTML 페이지 데이터를 긁어온다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="웹-인터넷-r-팩키지"><span class="glyphicon glyphicon-pushpin"></span>웹 인터넷 R 팩키지</h3>
+</div>
+<div class="panel-body">
+<ul>
+<li>XML : <code>library(xml2)</code>, 활성도가 높지 않는 <code>rjson</code>, <code>RJSONIO</code>는 권장하지 않는다.</li>
+<li>JSON: <code>library(jsonlite)</code>, 과거 <code>XML</code> 팩키지에 대한 대안</li>
+<li>HTML: <code>library(rvest)</code>, <code>rvest</code>는 파이썬 뷰티풀숩(Beautiful Soup)에 해당</li>
+</ul>
+</div>
+</aside>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

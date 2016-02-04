@@ -20,6 +20,7 @@ title: 데이터 과학
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
 1. [데이터 다루기](data-handling.html)
+    - [데이터 가져오기](data-handling-import.html)
     - [엑셀](data-handling-excel.html)
 1. [텍스트 마이닝](text-ming.html)
 1. [지리정보](geo-info.html)
