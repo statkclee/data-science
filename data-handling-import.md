@@ -103,3 +103,7 @@ API를 통해 데이터가 제공되지 않는 경우, `rvest` 팩키지를 통�
 > - JSON: `library(jsonlite)`, 과거 `XML` 팩키지에 대한 대안
 > - HTML: `library(rvest)`, `rvest`는 파이썬 뷰티풀숩(Beautiful Soup)에 해당
 
+
+### 참고자료
+
+- [Getting your data into R](https://www.rstudio.com/resources/webinars/getting-your-data-into-r/)
