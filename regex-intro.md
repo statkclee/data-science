@@ -25,7 +25,7 @@ subtitle: 정규표현식 소개
 다음에 시각화해서 동일한 표정보를 표현한 파일이 있다.
 두다지 도움이 되지 않는 탭과 공백을 파일 각 행별로 달리 표현한 방법에 주의한다.
 
-<img src="fig/regex-intro-notebook-2.png" alt="" width="50%" />
+<img src="fig/regex-intro-notebook-1-metachars.png" alt="" width="50%" />
 
 > ### 탭 vs. 공백 {.callout}
 > 
@@ -58,7 +58,7 @@ subtitle: 정규표현식 소개
 
 또다른 공책을 살펴보자:
 
-<img src="fig/regex-intro-notebook-3.png" alt="" width="50%" />
+<img src="fig/regex-intro-notebook-2.png" alt="" width="50%" />
 
 명백하게 이번 공책은 앞선 것과 매우 다르다.
 슬래쉬를 구분자로 사용하고 있다.
