@@ -16,7 +16,7 @@ subtitle: 정규표현식 소개
 담겨있다. 문제는 파일 각각이 다른 방식으로 형태가 달리 기록되어 있다는 점이다.
 첫번째 기록지 예제가 다음에 나와 있다.
 
-<img src="fig/regex-intro-notebook-1.png" alt="" width="50%" />
+<img src="fig/regex-intro-notebook-1.png" alt="" width="45%" />
 
 탭문자가 각 행에 담긴 필드 정보를 칼럼으로 구분하고 있다.
 `Site` 지점명에는 공백이 들어 있고, 날짜는 국제표준형식으로 기록되어 있다: 
