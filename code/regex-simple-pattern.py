@@ -40,5 +40,17 @@ print '\n ----------------'
 print match.group(1), match.group(2), match.group(3)
 print match.group(0)
 
+def show_groups(pattern, text):
+    m = re.search(pattern, text)
+    if m is None:
+        print 'NO MATCH'
+        return
+    for i in range(1, 1 + len(m.groups())):
+        print '%2d: %s' % (i, m.group(i))
+
+show_groups('(.+)/(.+)/(.+)', '//')
+show_groups('(.+)/(.+) (.+), (.+)/(.+)',
+            'Davison/May 22, 2010/1721.3')
+        
 
 

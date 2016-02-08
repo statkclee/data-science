@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">연산자</h2>
+<h3 id="연산자">연산자</h3>
+<p>측정치로 되돌아가 보자. Notebook 1 파일에는 장소, 날짜, 그리고 구분자로 탭으로 구부된 악마레벨이 기록되어 있다. 일부 장소명(site)에는 공백이 있고, 날짜(date)는 YYYY-MM-DD 국제표준형식으로 되어 있다. 하지만, Notebook 2 파일에 필드는 슬래쉬 구분자로 구분되고, 해당 월 정보를 숫자 대신에 영문월이 사용되어 있다. 좀더 보면, 일부 월명칭이 문자 세자리인 반면, 다른 월명칭은 네자리고, 날짜는 한자리 혹은 두자리로 기록되어 있다.</p>
+<h3 id="단순한-문자열-연산을-사용하면-재빨리-싫증나는-노가다가-된다.">단순한 문자열 연산을 사용하면 재빨리 싫증나는 노가다가 된다.</h3>
+<p>Notebook 2 파일에서 데이터를 추출하는 정규표현식 사용법을 살펴보기 전에, 단순한 문자열 연산으로 동일한 작업을 수행하는 법을 살펴보자. 레코드가 <code>'Davison/May 22, 2010/1721.3'</code> 처럼 보인다면, 슬래쉬를 구분자로 사용해서 장소, 일자, 측정값 필드로 쪼갤 수 있다. 그리고 나서, 월,일,연도로 쪼개는데 공백을 사용하고 나서, 일자에 콤마가 있는 경우 콤마를 제거한다(일부 측정값의 경우 날짜 다음뒤에 콤마가 없다).</p>
+<p>이런 방식으로 문제를 해결하는 것이 <strong>절차적(procedural)</strong> 방식으로 <a href="https://en.wikipedia.org/wiki/Procedural_programming">절차적 프로그래밍(procedural programming)</a>에 기반하고 있다: 컴퓨터에게 정답을 얻는데 단계별로 수행해야 되는 절차를 명세해서 전달한다. 이와는 대조적으로 정규표현식은 <strong>선언적(declarative)</strong> 방식으로 <a href="https://en.wikipedia.org/wiki/Declarative_programming">선언적 프로그래밍(declarative programming)</a>: “이것이 원하는 것이다” 선언하고, 컴퓨터가 연산하는 방식을 알아내도록 한다.</p>
+<p>훌륭한 정의는 다른 문자를 대신해서 문자를 정의하는 것에 달려있다. 문자열을 나열해서 명시적으로 정의하는 것은 큰 도움이 되지 못한다. 따라서, 일반적인 패턴을 정의하는 뭔가가 필요하다. 이 지점이 정규표현식에 연산자가 도움이 되는 곳이다.</p>
+<h3 id="정규표현식을-단순화하는데-연산자로-패턴을-명세한다.">정규표현식을 단순화하는데 연산자로 패턴을 명세한다.</h3>
+<p>연산자는 정규표현식에 있어 밥과 김치같이 가장 기본적인 구성요소다. 연산자는 단순히 보면 다른 패턴 (종종 가변길이를 갖는)문자를 명세하는 문자다.</p>
+<p>앞서 연산자 활용을 살펴봤다. 다수 GUI 찾기 기능 혹은 명령-라인 와일드카드에서 친숙한 <code>*</code> 연산자가 매우 흔한 활용 사례다. <code>\s</code> 같은 문자열 조합도 또한 연산자.</p>
+<p>다음에 퀴즈가 하나 있다. <code>txt/files/file.txt</code> 텍스트 파일에서 <code>txt/files/(*.txt)</code> 패턴을 사용하려고 하면 결과는 어떨까?</p>
+<ol style="list-style-type: decimal">
+<li><code>file.txt</code> 파일을 매칭한다.</li>
+<li>문자열 전체를 매칭한다.</li>
+<li>절대로 동작하지 않는다 (정규표현식이 패턴을 컴파일하지 않는다)</li>
+</ol>
+<p>놀랍게도, 정답은 <code>3</code> 이다. 정규표현식이 패턴을 컴파일하지 않는데, 이유는 <code>.</code>와 <code>*</code>은 GUI 검색상자처럼 동일한 것을 의미하는 연산자는 아니고, 정규표현식을 생성할 때 갓차(gotcha)<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>의 원천이 된다.</p>
+<h3 id="연산자-사용하기">연산자 사용하기</h3>
+<p>데이터를 파싱하는 첫번째 시도는 <code>*</code> 연산자를 사용하는 것이다. <code>*</code> 연산자는 후위 연산자(postfix operator)로 “연산자 앞에 오는 패턴에 대한 0 혹은 그 이상 반복”을 의미한다. 예를 들어, <code>a*</code>는 <code>a</code> 문자 혹은 그 이상 <code>a</code>문자를 매칭한다. 반면에, <code>.*</code>는 (빈 문자열을 포함해서) 임의 연속된 문자를 매칭한다. 이유는 <code>.</code>이 임의 문자를 매칭하고, <code>*</code>이 반복되기 때문이다. <code>.*</code>로 매칭되는 문자가 모두 같을 필요는 <em>없다</em>: 매칭규칙이 “점에 대해 문자를 매칭하고 나서 0번 혹은 그 이상 패칭을 반복하는 것”이 아니라, 오히려 “0번 혹은 그 이상 어떤 문자든 매칭하라”는 의미이기 때문이다.</p>
+<p>다음에 <code>.*</code>를 사용한 간단한 매칭 테스트가 나와 있다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">match <span class="op">=</span> re.search(<span class="st">&#39;(.*)/(.*)/(.*)&#39;</span>,
+                  <span class="co">&#39;Davison/May 22, 2010/1721.3&#39;</span>)
+<span class="bu">print</span> match.group(<span class="dv">1</span>)
+<span class="bu">print</span> match.group(<span class="dv">2</span>)
+<span class="bu">print</span> match.group(<span class="dv">3</span>)</code></pre></div>
+<p>전체 패턴이 매칭되려면, 슬래쉬 <code>/</code>가 정확하게 줄맞춰 있어야 된다. 왜냐하면, ’/’은 그자체로 매칭되기 때문이다. 이 제약조건으로 <code>.*</code>를 세번 사용해서 사이트명, 날짜, 측정값을 매칭할 수 있다. 물론, 결과는 다음과 같다:</p>
+<pre class="output"><code>Davison
+May 22, 2010
+1271.3</code></pre>
+<p>불행하게도, 너무나도 사용자를 배려하지 않았다. 출력결과 각 그룹집단마다 꺾쇠 괄호를 쳐서 매칭된 것을 보기 쉽게하고 나서, <code>'//'</code> 문자열에 동일한 패턴을 매칭하자.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">match <span class="op">=</span> re.search(<span class="st">&#39;(.*)/(.*)/(.*)&#39;</span>,
+                  <span class="co">&#39;//&#39;</span>)
+<span class="bu">print</span> <span class="st">&#39;[&#39;</span> <span class="op">+</span> match.group(<span class="dv">1</span>) <span class="op">+</span> <span class="st">&#39;]&#39;</span>
+<span class="bu">print</span> <span class="st">&#39;[&#39;</span> <span class="op">+</span> match.group(<span class="dv">2</span>) <span class="op">+</span> <span class="st">&#39;]&#39;</span>
+<span class="bu">print</span> <span class="st">&#39;[&#39;</span> <span class="op">+</span> match.group(<span class="dv">3</span>) <span class="op">+</span> <span class="st">&#39;]&#39;</span></code></pre></div>
+<pre class="output"><code>[]
+[]
+[]</code></pre>
+<p>작성된 패턴이 위와 같은 적법하지 않는 레코드에 매칭시키고 싶지는 않다. (“Fail early, fail often” 원칙을 기억하라) 하지만, <code>.*</code> 패턴은 빈 문자열도 매칭할 수 있는데, 이유는 문자가 0번 출현해도 적용되기 때문이다.</p>
+<p><code>*</code> 대신에 <code>+</code>로 변형해서 시도해 보자. <code>+</code>도 후위 연산자로 “하나 혹은 그이상” 의미를 담고 있다. 즉, 후위연산자 앞에 오는 패턴이 적어도 1회 매칭되어야만 된다.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">match <span class="op">=</span> re.search(<span class="st">&#39;(.+)/(.+)/(.+)&#39;</span>,
+                  <span class="co">&#39;//&#39;</span>)
+<span class="bu">print</span> match</code></pre></div>
+<pre><code>None</code></pre>
+<p>보시다시피, <code>(.+)/(.+)/(.+)</code> 패턴은 슬래쉬만 담긴 문자열은 매칭하지 <em>않는다</em>. 왜냐하면, 슬래쉬 다음에 혹은 앞에, 사이에 문자가 없기 때문이다. 다시 거슬러 올라가서 적법한 데이터에 적용시키면, 올바르게 작업하는 것처럼 보인다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span> re.search(<span class="st">&#39;(.+)/(.+)/(.+)&#39;</span>,
+                <span class="co">&#39;Davison/May 22, 2010/1721.3&#39;</span>)
+<span class="bu">print</span> <span class="st">&#39;[&#39;</span> <span class="op">+</span> m.group(<span class="dv">1</span>) <span class="op">+</span> <span class="st">&#39;]&#39;</span>
+<span class="bu">print</span> <span class="st">&#39;[&#39;</span> <span class="op">+</span> m.group(<span class="dv">2</span>) <span class="op">+</span> <span class="st">&#39;]&#39;</span>
+<span class="bu">print</span> <span class="st">&#39;[&#39;</span> <span class="op">+</span> m.group(<span class="dv">3</span>) <span class="op">+</span> <span class="st">&#39;]&#39;</span></code></pre></div>
+<pre class="output"><code>[Davison]
+[May 22, 2010]
+[1721.3]</code></pre>
+<p>문자열 다수에 많은 패턴을 패칭할 예정이라, 함수로 작성해서 패턴을 텍스트에 적용시키고, 매칭되는지 되지 않는지 출력하고 나서, 매칭되는 것이 있다면 매칭되는 그룹집단을 출력한다.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> show_groups(pattern, text):
+    m <span class="op">=</span> re.search(pattern, text)
+    <span class="cf">if</span> m <span class="op">is</span> <span class="va">None</span>:
+        <span class="bu">print</span> <span class="st">&#39;NO MATCH&#39;</span>
+        <span class="cf">return</span>
+    <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">1</span> <span class="op">+</span> <span class="bu">len</span>(m.groups())):
+        <span class="bu">print</span> <span class="st">&#39;</span><span class="sc">%2d</span><span class="st">: </span><span class="sc">%s</span><span class="st">&#39;</span> <span class="op">%</span> (i, m.group(i))</code></pre></div>
+<p>방금 전에 사용한 레코드 두개에 대해 작성한 함수를 테스트해 본다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">show_groups(<span class="st">&#39;(.+)/(.+)/(.+)&#39;</span>,
+            <span class="co">&#39;Davison/May 22, 2010/1721.3&#39;</span>)</code></pre></div>
+<pre class="output"><code>1: Davison
+2: May 22, 2010
+3: 1721.3</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">show_groups(<span class="st">&#39;(.+)/(.+)/(.+)&#39;</span>,
+            <span class="co">&#39;//&#39;</span>)</code></pre></div>
+<pre class="output"><code>NO MATCH</code></pre>
+<p>좋아요: 정규표현식을 사용해서 장소명, 날짜 측정값을 추출했으면, 패턴을 더 추가해서 날짜에 대해 날짜를 더 쪼개는 것은 어떤가요?</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">show_groups(<span class="st">&#39;(.+)/(.+) (.+), (.+)/(.+)&#39;</span>,
+            <span class="co">&#39;Davison/May 22, 2010/1721.3&#39;</span>)</code></pre></div>
+<pre class="output"><code>1: Davison
+2: May
+3: 22
+4: 2010
+5: 1721.3</code></pre>
+<p>하지만, 잠시만: 왜 동작하지 않을까요?</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">show_groups(<span class="st">&#39;(.+)/(.+) (.+), (.+)/(.+)&#39;</span>,
+            <span class="co">&#39;Davison/May 22 2010/1721.3&#39;</span>)</code></pre></div>
+<pre class="output"><code>None</code></pre>
+<p>문제는 매칭하려는 문자열이 날짜 뒤에 콤마가 없기 때문이다. 패턴에 이런 경우가 있어서, 매칭이 실패했다.</p>
+<p>이 문제를 해결하는데 <code>*</code>를 콤마 뒤에 넣는 패턴을 작성할 수 있지만, 데이터에 연속된 콤마도 매칭하게 되서 원하는 바는 아니다. 대신에, 또다른 후위 연산자 <code>?</code> 물음표를 사용한다. <code>?</code>는 “바로 앞에 오는 것이 0회 혹은 1회”라는 의미를 갖는다. 이를 달리 말하면, 물음표 앞에 오는 패턴은 선택옵션이 된다. 테스트를 다시 돌리면, 두 경우 모두에 정답이 도출된다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># 데이터에 콤마가 있는 경우</span>
+show_groups(<span class="st">&#39;(.+)/(.+) (.+),? (.+)/(.+)&#39;</span>,
+            <span class="co">&#39;Davison/May 22, 2010/1721.3&#39;</span>)</code></pre></div>
+<pre class="output"><code>1: Davison
+2: May
+3: 22
+4: 2010
+5: 1721.3</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># 데이터에 콤마가 없는 경우</span>
+show_groups(<span class="st">&#39;(.+)/(.+) (.+),? (.+)/(.+)&#39;</span>,
+            <span class="co">&#39;Davison/May 22 2010/1721.3&#39;</span>)</code></pre></div>
+<pre class="output"><code>1: Davison
+2: May
+3: 22
+4: 2010
+5: 1721.3</code></pre>
+<p>패턴을 좀더 엄격하게 작성해 보자. 다음 레코드는 매칭하고 싶지 <em>않다</em>:</p>
+<pre class="output"><code>Davison/May 22, 201/1721.3</code></pre>
+<p>누군가 연도를 잘못 타이핑해서, 4자리 대신에 3자리를 입력했다. (만일 이 기록이 맞다면, 물리학과 타이머신을 사용했을 수도 있다) 정확하세 숫자 4자리를 매칭하는 패턴을 강제하는데 연속해서 점을 네개 찍는다.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">(.<span class="op">+</span>)<span class="op">/</span>(.<span class="op">+</span>) (.<span class="op">+</span>),? (....)<span class="op">/</span>(.<span class="op">+</span>)</code></pre></div>
+<p>하지만, 상기 패턴방식은 가독성에 있어 장점이 없다. 대신에, 점 뒤에 <code>{}</code> 괄호 내부에 숫자 <code>4</code>를 넣자:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">(.<span class="op">+</span>)<span class="op">/</span>(.<span class="op">+</span>) (.<span class="op">+</span>),? (.{<span class="dv">4</span>})<span class="op">/</span>(.<span class="op">+</span>)</code></pre></div>
+<p>정규표현식에서, 괄호 사이 숫자는 “정확하게 해당 숫자만큼 패턴을 매칭”하라는 의미가 된다. <code>.</code>은 임의 문자를 매칭하고, <code>.{4}</code>는 “임의 문자 4회 매칭”하라를 의미한다.</p>
+<p>테스트를 더 수행해 보자. 다음에 날짜가 올바르거나 손상된 레코드가 일부 있다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">tests <span class="op">=</span> (
+    <span class="st">&#39;Davison/May , 2010/1721.3&#39;</span>,
+    <span class="co">&#39;Davison/May 2, 2010/1721.3&#39;</span>,
+    <span class="co">&#39;Davison/May 22, 2010/1721.3&#39;</span>,
+    <span class="co">&#39;Davison/May 222, 2010/1721.3&#39;</span>,
+    <span class="co">&#39;Davison/May 2, 201/1721.3&#39;</span>,
+    <span class="co">&#39;Davison/ 22, 2010/1721.3&#39;</span>,
+    <span class="co">&#39;/May 22, 2010/1721.3&#39;</span>,
+    <span class="co">&#39;Davison/May 22, 2010/&#39;</span>
+)</code></pre></div>
+<p>그리고, 올바른 모든 레코드는 매칭해야 하지만, 훼손된 모든 레코드는 매칭을 하면 안된다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">pattern <span class="op">=</span> <span class="st">&#39;(.+)/(.+) (.{1,2}),? (.</span><span class="sc">{4}</span><span class="st">)/(.+)&#39;</span></code></pre></div>
+<p>연도에 대해 숫자 4자리를 예상하고 있고, 일자에 대해 1자리 혹은 2자리만 허용하고 있는데 이유는 표현식 <code>{M,N}</code>은 M번부터 N번까지 패턴을 매칭하기 때문이다.</p>
+<p>테스트 데이터에 상기 패턴을 매칭하면, 레코드 3개가 매칭된다:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">show_matches(pattern, tests)</code></pre></div>
+<pre class="output"><code>** Davison/May , 2010/1721.3
+** Davison/May 2, 2010/1721.3
+** Davison/May 22, 2010/1721.3
+   Davison/May 222, 2010/1721.3
+   Davison/May 2, 201/1721.3
+   Davison/ 22, 2010/1721.3
+   /May 22, 2010/1721.3
+   Davison/May 22, 2010/</code></pre>
+<p>두번째와 세번째 매칭은 이해가 간다:<code>May 2</code> 와 <code>May 22</code>은 둘다 적법하다. 하지만, 날짜가 없는 <code>May</code> 모두를 왜 상기 패턴이 매칭할까? 테스트 사례를 좀더 자세히 살펴보자:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">show_groups(<span class="st">&#39;(.+)/(.+) (.{1,2}),? (.</span><span class="sc">{4}</span><span class="st">)/(.+)&#39;</span>,
+            <span class="co">&#39;Davison/May , 2010/1721.3&#39;</span>)</code></pre></div>
+<pre class="output"><code>1: Davison
+2: May
+3: ,
+4: 2010
+5: 1721.3</code></pre>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Gotcha_(programming)">Gotcha (programming)</a> 프로그래밍에서 갓차는 적법한 구성체로 문서에 기술된 대로 동작하지만, 실수를 유발하고 직관에 반대되는 결과를 가져온다.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
