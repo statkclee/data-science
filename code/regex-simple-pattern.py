@@ -51,6 +51,9 @@ def show_groups(pattern, text):
 show_groups('(.+)/(.+)/(.+)', '//')
 show_groups('(.+)/(.+) (.+), (.+)/(.+)',
             'Davison/May 22, 2010/1721.3')
+
+m = re.search('(wo.+d)', "How much wood, would a woodchuck chuck?")
+print m.group(1)
         
 
 
