@@ -28,7 +28,6 @@ title: 데이터 과학
     - [연산자](regex-operators.html)
     - [작동원리](regex-under-the-hood.html)
     - [추가 패턴](regex-more-pattern.html)
-    - [추가 도구](regex-more-tools.html)
     - [한가지 더](regex-last-wrinkle.html)
     - [요약](regex-wrapup.html)
 1. [텍스트 마이닝](text-ming.html)
