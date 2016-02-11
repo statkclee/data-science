@@ -6,7 +6,9 @@ subtitle: 정규표현식
 
 > ## 학습에 들어가기 전 {.prereq}
 >
-> *  기본적인 프로그래밍 개념을 이미 이해하고 있고, 
+> * 본 정규표현식 교재는 [Software Carpentry](http://software-carpentry.org/) 
+> [Regular Expression](http://swcarpentry.github.io/v4/regexp/index.html)을 번역한 것입니다.
+> * 기본적인 프로그래밍 개념을 이미 이해하고 있고, 
 > 파이썬 기본구성요소에 친숙하거나 신속히 숙달할 수 있음을 가정한다.
 
 
