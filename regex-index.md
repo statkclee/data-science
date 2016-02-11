@@ -33,3 +33,17 @@ subtitle: 정규표현식
 - [참고문헌 사례](regex-last-wrinkle.html)
 - [요약](regex-wrapup.html)
 
+### 소프트웨어 카펜트리 V4 동영상
+
+| 소개 및 간단한 패턴  | 연산자 | 동작원리 |
+|:------------------------------------------------------------------:|:------------------------------------------------------------------:|:------------------------------------------------------------------:|
+| <iframe width="250" src="https://www.youtube.com/embed/c-Ov1JUMDv4" frameborder="0" allowfullscreen></iframe> | <iframe width="250" src="https://www.youtube.com/embed/G7_HnivvnyE" frameborder="0" allowfullscreen></iframe> | <iframe width="250" src="https://www.youtube.com/embed/iixnLh55wp0" frameborder="0" allowfullscreen></iframe> |
+
+| 추가 패턴  | 참고문헌 사례 | 
+|:------------------------------------------------------------------:|:------------------------------------------------------------------:|
+| <iframe width="250" src="https://www.youtube.com/embed/FgxQyukp39A" frameborder="0" allowfullscreen></iframe> | <iframe width="250" src="https://www.youtube.com/embed/RGN5tS-2Zmo" frameborder="0" allowfullscreen></iframe> |
+
+
+
+
+
