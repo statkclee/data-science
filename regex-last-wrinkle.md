@@ -190,14 +190,208 @@ print re.search('cite{([^}]+)}', 'a \\cite{ X} b \\cite{Y } c').groups()
 ~~~
 
 
+좋은 소식은 프로그램이 정상적으로 동작한다는데 있다. 나쁜 소식은 공백도 `findall` 함수에 의해 함께 저장된다는 점이다.
+이점은 분명히 원하는 바는 아니다.
+`string.strip` 함수를 사용한 후에 깔끔하게 정리할 수도 있지만, 대신에 패턴을 변경시켜 보자:
 
 
+~~~ {.python}
+print re.findall('cite{\\s*([^}]+)\\s*}', 'a \\cite{ X} b \\cite{Y } c')
+~~~
+
+~~~ {.output}
+['X', 'Y ']
+~~~
+
+기억을 상기하면, `'\s'` 은 화이트스페이스 문자 집합에 대한 축약이다.
+따라서, `'\s*'` 을 사용하게되면, 여는 괄호 다음에 혹은 닫는 괄호 앞에 바로 위치하는 공백을 0회 혹은 그이상 매칭한다.
+(그리고, 파이썬 문자열에 역슬래쉬로 `'\\s'` 작성해야만 된다).
+하지만, 'Y' 다음에 공백은 여전히 매칭된 텍스트에 반환되어 나오고 있다.
+
+다시 한번, 문제는 정규표현식이 탐욕적이라는 점에 있다:
+'Y' 다음에 공백은 닫는 괄호가 아니라서, 부정된 문자집합에 매칭되어,
+반환되는 문자열에 포함된다.
+꼬리쪽 공백을 매칭하기로 되어있던 `'\s'` 이 문자 0개에 대해 매칭되게 된다.
+원하는 바는 아니지만, 적법하다.
+
+`'\b'`을 사용해서 단어에서 단어가 아닌 문자로 넘어가는 것을 정리하는 매칭을 만들자:
+
+~~~ {.python}
+print re.findall('cite{\\s*\\b([^}]+)\\b\\s*}', 'a \\cite{ X} b \\cite{Y } c')
+~~~
+
+~~~ {.output}
+['X', 'Y']
+~~~
+
+잘 동작한다!
+마지막 예제를 검사하자: 파워포이트에 여전히 'X' 앞에 공백이 있다.
+첫번째 원하지 않는 공백 앞에 그리고 마지막에 `'\b'` 을 변경사항으로 넣는다.
+괄호 라벨 주변 괄호도 단어가 아닌 문자라서, 임의 여는 혹은 꼬리에 붙는 공백이 없을 때도 
+패턴이 매칭된다.
+
+마지막 장애물은 단일 괄호짝 내부에 있는 라벨 다수를 처리하는 것이다.
+지금까지 만든 패턴은 라벨이 두개 혹은 그 이상 되는 경우 확장되지 않는다.
+단지 콤마 다음에 공백을 처리할 뿐이다. 하지만, 라벨 모두를 단일 텍스트 덩어리로 반환은 한다.
+
+~~~ {.python}
+print re.findall('cite{\\s*\\b([^}]+)\\b\\s*}', '\\cite{X,Y} ')
+~~~
+
+~~~ {.output}
+['X,Y']
+~~~
+
+~~~ {.python}
+print re.findall('cite{\\s*\\b([^}]+)\\b\\s*}', '\\cite{X, Y, Z} ')
+~~~
+
+~~~ {.output}
+['X, Y, Z']
+~~~
+
+실제로 콤마에서 모든 것을 끊게 되는 패턴을 작성할 수도 있지만,
+정규표현식 라이브러리의 매우 고급 기능을 필요로 한다.
+대신에, 라벨 다수를 구분하는데 또다른 기본 함수(`re.split`)를 사용한다.
+`re.split` 함수는 `string.split` 함수와 동일한 작업을 수행한다.
+하지만, 사촌과 달리 패턴이 매칭하는 모든 것을 구분한다.
+
+동작방법을 시연하는 최선의 방법은 최초 생성하려했던 함수에 작성하는 것이다.
+테스트 데이터를 포함하는 뼈대에서 시작해보자. 
+뼈대는 함수로 아무 작업도 수행하지 않고(하지만 실패하지도 않음), 
+함수를 호출하는 코드가 몇줄 있고 결과를 화면에 출력한다:
+
+~~~ {.python}
+def get_citations(text):
+    '''Return the set of all citation tags found in a block of text.'''
+    return set() # to be done
+
+if __name__ == '__main__':
+    test = '''\
+Granger's work on graphs \cite{dd-gr2007,gr2009},
+particularly ones obeying Snape's Inequality
+\cite{ snape87 } (but see \cite{quirrell89}),
+has opened up new lines of research.  However,
+studies at Unseen University \cite{stibbons2002,
+stibbons2008} highlight several dangers.'''
+
+    print get_citations(test)
+~~~
+
+~~~ {.output}
+set([])
+~~~
+
+이제 함수를 작성해보자.
+가독성 증진을 위해서, 상단에 패턴을 두고 기억이 잘되는 명칭을 부여한다.
+함수 내부에, 첫번째 패턴과 매칭되는 인용 모두를 뽑아내고 나서,
+선택옵션 공백을 갖는 콤마를 갖는 앞뒤 모든 결과 각각을 쪼갠다. 
+결과 모두를 집합으로 우겨넣어 결과를 반환한다.
+매칭되는 것이 전혀 발견되지 않으면, 집합은 공집합이 된다.
 
 
+~~~ {.python}
+p_cite = 'cite{\\s*\\b([^}]+)\\b\\s*}'
+p_split = '\\s*,\\s*'
+
+def get_citations(text):
+    '''Return the set of all citation tags found in a block of text.'''
+
+    result = set()
+    match = re.findall(p_cite, text)
+    if match:
+        for citation in match:
+            cites = re.split(p_split, citation)
+            for c in cites:
+                result.add(c)
+
+    return result
+~~~
+
+함수를 좀더 효율적으로 만드는데 정규표현식 라이브러리에서 몇가지 기법을 사용할 수도 있다.
+정규표현식을 유한상태기계로 바꿔서 반복적으로 사용하는 대신에,
+정규표현식을 컴파일하고 나서 결과로 도출된 객체를 저장한다:
+
+~~~ {.python}
+p_cite = re.compile('cite{\\s*\\b([^}]+)\\b\\s*}')
+p_split = re.compile('\\s*,\\s*')
+
+def get_citations(text):
+    '''Return the set of all citation tags found in a block of text.'''
+
+    result = set()
+    match = p_cite.findall(text)
+    if match:
+        for citations in match:
+            label_list = p_split.split(citations)
+            for label in label_list:
+                result.add(label)
+
+    return result
+~~~
+
+상기 객체는 `search` , `findall` 같이 라이브러리에서 사용되고 있는 
+동일한 함수명과 같은 메쏘드를 갖는다.
+하지만 동일한 패턴을 반복해서 사용한다면, 컴파일 한번 하고 컴파일된 객체를
+재사용하는 것이 훨씬 더 빠르다.
+
+잠시 살펴봤듯이, 변경에 필요한 것은 매우 적다:
+텍스트 형식으로 표현식을 저장하는 대신에,
+컴파일하고 나서, 정규표현식 라이브러리에서 최상단 함수를 호출하는 대신에,
+저장된 객체에 속한 메쏘드를 호출한다.
+실행결과는 10 여줄 코드로 추출된, 모든 인용집합이다.
+
+~~~ {.python}
+import re import
+
+CITE = 'cite{\\s*\\b([^}]+)\\b\\s*}'
+SPLIT = '\\s*,\\s*'
+
+def get_citations(text):
+  '''Return the set of all citation tags found in a block of text.'''
+  result = set()
+  match = CITE.findall(text)
+  if match: if
+    for citations in for match:
+      label_list = SPLIT.split(citations)
+    for label in for label_list:
+      result.add(label)
+  return result
+
+if __name__ == '__main__':
+    test = '''\
+Granger's work on graphs \cite{dd-gr2007,gr2009},
+particularly ones obeying Snape's Inequality
+\cite{ snape87 } (but see \cite{quirrell89}),
+has opened up new lines of research.  However,
+studies at Unseen University \cite{stibbons2002,
+stibbons2008} highlight several dangers.'''
+
+    print get_citations(test)
+~~~
+
+~~~ {.output}
+set(['gr2009', 'stibbons2002', 'dd-gr2007', 'stibbons2008',
+     'snape87', 'quirrell89'])
+~~~
 
 
+마지막으로, 정규표현식을 컴파일하게 되면, 주석을 추가하는데 *상세 모드(verbose mode)*를 사용함으로써
+더 이해하기 쉽게 만들 수 있다. 상세모드는 정규표현식의 주석과 화이트스페이스를 무시하도록 파이썬에 전달한다.
+이를 통해 다음과 같은 패턴을 작성하게 된다:
 
+~~~ {.python}
+p_cite = '''
+    cite{          # start with literal 'cite{'
+    \\s*           # then some optional spaces
+    \\b            # up to a start-of-word boundary
+    ([^}]+)        # then anything that isn't a closing '}'
+    \\b            # then an end-of-word boundary
+    \\s*           # and some more optional spaces
+    }              # and the closing '}'
+'''
+matcher = re.compile(p_cite, re.VERBOSE)
+~~~
 
-
-
+위와 같이 패턴을 문서화하게 되면 정규표현식 패턴을 고치기 쉽고, 확장하기 쉽게 만들게 된다.
 
