@@ -33,6 +33,8 @@ title: 데이터 과학
 1. [텍스트 마이닝](text-ming.html)
 1. [지리정보](geo-info.html)
     - [구글](geo-info-google.html)
+1. [SNS](sns-intro.html)
+
 
 > ## 참고 자료 {.prereq}
 > - [컴퓨터 과학 언플러그드](http://unplugged.xwmooc.org)  
