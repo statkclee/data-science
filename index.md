@@ -15,6 +15,8 @@ title: 데이터 과학
         - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
+1. RStudio
+    - [RStudio 활용 코드작성](rstudio-writing-code.html)
 1. [Shiny 웹앱](shiny-overview.html)
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
