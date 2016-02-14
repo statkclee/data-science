@@ -34,10 +34,181 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>RStudio IDE 활용 코드 작성</li>
+<li>RStudio IDE 개발환경을 살펴본다.</li>
+<li>RStudio 자주 활용하는 단축키를 숙지한다.</li>
 </ul>
 </div>
 </section>
+<h3 id="rstudio에서-가장-많이-사용하는-단축키-1-2">RStudio에서 가장 많이 사용하는 단축키 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p><a href="https://ko.wikipedia.org/wiki/통합_개발_환경">통합개발환경(Integrated Development Environment, IDE)</a>은 소프트웨어를 개발할 때, 코딩, 디버깅, 컴파일, 배포 등 프로그램 개발과 관련된 모든 작업을 하나의 통합된 개발환경에서 작업할 수 있도록 환경을 제공하는 소프트웨어다. RStudio는 데이터 과학 언어 R을 위한 특화된 통합 개발환경을 제공하고 있다.</p>
+<p><img src="fig/rstudio-IDE-cheatsheet.png" alt="RStudio IDE" width="57%" /></p>
+<blockquote>
+<p>키보드 특수키 설정 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> {.callout}</p>
+<ul>
+<li>⌘ : Command (명령키, <code>&amp;#8984;</code>)</li>
+<li>^ : Control (컨트롤키, <code>&amp;#94;</code>) 혹은 ✲ (윈도) ⎈ (리눅스)</li>
+<li>⎇ : Alt (알트키, <code>&amp;#9095;</code>)</li>
+<li>⏎ : Enter (엔터키, <code>&amp;#9166;</code>)</li>
+<li>⇧ : Shift (쉬프트키, <code>&amp;#8679;</code>)</li>
+<li>⌥ : Option (옵션키, <code>&amp;#8997;</code>)</li>
+<li>↹ : Tab (탭키, <code>&amp;#8633;</code>)</li>
+<li>↑ : Upwards Arrow (윗쪽 화살표, <code>&amp;#8593;</code>)</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th align="center">단축키</th>
+<th align="center">윈도우</th>
+<th align="center">맥</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">마지막 명령어</td>
+<td align="center">↑</td>
+<td align="center">↑</td>
+</tr>
+<tr class="even">
+<td align="center">마지막 매칭 명령어</td>
+<td align="center">^ + ↑</td>
+<td align="center">⌘ + ↑</td>
+</tr>
+<tr class="odd">
+<td align="center">자동 탭완성</td>
+<td align="center">↹</td>
+<td align="center">↹</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">—- <strong>실행</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">선택영역 실행</td>
+<td align="center">^ + ⏎</td>
+<td align="center">⌘ + ⏎</td>
+</tr>
+<tr class="even">
+<td align="center">Source</td>
+<td align="center">^ + ⇧ + S</td>
+<td align="center">⌘ + ⇧ + S</td>
+</tr>
+<tr class="odd">
+<td align="center">Source + 메아리(Echo)</td>
+<td align="center">^ + ⇧ + ⏎</td>
+<td align="center">⌘ + ⇧ + ⏎</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">—- <strong>화면 전환</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">코딩 패널창 전환</td>
+<td align="center">^ + 1</td>
+<td align="center">^ + 1</td>
+</tr>
+<tr class="even">
+<td align="center">콘솔 패널창 전환</td>
+<td align="center">^ + 2</td>
+<td align="center">^ + 2</td>
+</tr>
+<tr class="odd">
+<td align="center"></td>
+<td align="center">—- <strong>코딩 단축키</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center"><code>&lt;-</code></td>
+<td align="center">⎇ + -</td>
+<td align="center">⌥ + -</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>%&gt;%</code></td>
+<td align="center">^ + ⇧ + M</td>
+<td align="center">⌘ + ⌥ + M</td>
+</tr>
+<tr class="even">
+<td align="center">주석처리</td>
+<td align="center">^ + ⇧ + C</td>
+<td align="center">^ + ⌥ + C</td>
+</tr>
+<tr class="odd">
+<td align="center">주석제거</td>
+<td align="center">^ + ⇧ + /</td>
+<td align="center">^ + ⌥ + /</td>
+</tr>
+<tr class="even">
+<td align="center">실행취소</td>
+<td align="center">^ + Z</td>
+<td align="center">⌘ + Z</td>
+</tr>
+<tr class="odd">
+<td align="center">다시 실행</td>
+<td align="center">^ + ⇧ + Z</td>
+<td align="center">⌘ + ⇧ + Z</td>
+</tr>
+<tr class="even">
+<td align="center">단축키 참조</td>
+<td align="center">⎇ + ⇧ + Z</td>
+<td align="center">⌥ + ⇧ + Z</td>
+</tr>
+<tr class="odd">
+<td align="center">다중커서</td>
+<td align="center">^ +⎇ + ↑</td>
+<td align="center">^ + ⌥ + ↑</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">^ +⎇ + ↓</td>
+<td align="center">^ + ⌥ + ↓</td>
+</tr>
+<tr class="odd">
+<td align="center"></td>
+<td align="center">^ +⎇ + 클릭</td>
+<td align="center">^ + ⌥ + 클릭</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">—- <strong>찾기 및 바꾸기</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">줄 찾아가기</td>
+<td align="center">⇧ + ⎇ + G</td>
+<td align="center">⌘ + ⇧ + ⌥ + G</td>
+</tr>
+<tr class="even">
+<td align="center">찾기 바꾸기</td>
+<td align="center">^ + F</td>
+<td align="center">⌘ + F</td>
+</tr>
+<tr class="odd">
+<td align="center">파일에서 찾기</td>
+<td align="center">^ + ⇧ + F</td>
+<td align="center">⌘ + ⇧ + F</td>
+</tr>
+<tr class="even">
+<td align="center">모두 접기</td>
+<td align="center">⎇ + O</td>
+<td align="center">⌘ + ⌥ + O</td>
+</tr>
+<tr class="odd">
+<td align="center">모두 펴기</td>
+<td align="center">⎇ + ⇧ + O</td>
+<td align="center">⌘ + ⌥ + ⇧ + O</td>
+</tr>
+</tbody>
+</table>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.rstudio.com/resources/webinars/rstudio-essentials-webinar-series-part-1/">Programming Part 1 (Writing code in RStudio)</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf">RStudio IDE Cheat Sheet</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://xahlee.info/comp/unicode_computing_symbols.html">Unicode: Keyboard Symbols ⌘ ↵ ⇥ ⌫ ↓ ☾ ⎋</a><a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
         </div>
       </div>
       </article>
