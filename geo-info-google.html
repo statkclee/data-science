@@ -34,38 +34,40 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>구글 지리정보 툴체인을 활용한다.</li>
+<li>한국지명을 지리정보(위도, 경도)로 변환한다.</li>
+<li><code>leaflet</code> 팩키지를 활용하여 지리정보를 시각화한다.</li>
 </ul>
 </div>
 </section>
-<h3 id="googlevis-1-plotgooglemaps">GoogleVis <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> , plotGoogleMaps</h3>
-<p><strong>데이터셋</strong> : 전세계 원자력 발전소 위치 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <strong>방법 1</strong> : <code>GoogleVis</code> 에 위도:경도 형식으로 자료를 준비해서 넣어준다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;googleVis&quot;</span>)
-<span class="kw">library</span>(googleVis)
+<h3 id="한국지명을-지리정보로-변환">한국지명을 지리정보로 변환</h3>
+<h4 id="구글-지도정보-api">구글 지도정보 API</h4>
+<p>한국지명을 전달하면 위도, 경도 정보를 반환하는 API로 <a href="https://developers.google.com/maps/?hl=ko">구글 지도 API</a>를 사용한다. <code>library(ggmap)</code> 팩키지를 불러오면 <code>geocode</code> 함수가 지명을 받아 위도, 경도 정보를 반환한다.</p>
+<p><img src="fig/geo-googleapi.png" alt="Google 지도 API" width="50%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggmap)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">geocode</span>(<span class="kw">enc2utf8</span>(<span class="st">&quot;속초&quot;</span>), <span class="dt">source=</span><span class="st">&#39;google&#39;</span>)</code></pre></div>
+<pre><code>FALSE        lon      lat
+FALSE 1 128.5918 38.20701</code></pre>
+<p>주소정보를 함께 출력하고자할 경우 <code>output=&quot;latlona&quot;</code> 선택옵션을 추가한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#geocode(enc2utf8(&quot;속초&quot;), source=&#39;google&#39;, output=&quot;latlona&quot;)</span>
+<span class="kw">geocode</span>(<span class="kw">enc2utf8</span>(<span class="st">&quot;속초&amp;language=ko&quot;</span>), <span class="dt">source=</span><span class="st">&#39;google&#39;</span>, <span class="dt">output=</span><span class="st">&quot;latlona&quot;</span>)</code></pre></div>
+<pre><code>FALSE        lon      lat                address
+FALSE 1 128.5918 38.20701 대한민국 강원도 속초시</code></pre>
+<p><code>&quot;속초&quot;</code>를 <code>geocode</code> 함수 인자로 넣은 경우와 <code>&quot;속초&amp;language=ko&quot;</code> 넣어 함께 넘긴 경우 한글주소로 출력되게 한다.</p>
+<h4 id="다수-한글지명을-구글-지도-api-에-넘겨-위경도-정보-받아오기">다수 한글지명을 구글 지도 API 에 넘겨 위경도 정보 받아오기</h4>
+<p><code>mutate_geocode</code> 함수를 사용해서 위경도 정보를 일괄적으로 받아와서 R 객체로 저장한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">city=</span><span class="kw">c</span>(<span class="st">&quot;속초&quot;</span>, <span class="st">&quot;강릉&quot;</span>, <span class="st">&quot;양양&quot;</span>, <span class="st">&quot;간성&quot;</span>), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+df.yd &lt;-<span class="st"> </span>df %&gt;%<span class="st"> </span><span class="kw">mutate_geocode</span>(city)</code></pre></div>
+<p>영동지방 4개 지역에 대한 정보를 받아온다. 받아온 정보를 <code>df.yd</code> 데이터프레임에 저장하고 이를 활용하여 구글지도에 시각화를 한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">youngdongMap &lt;-<span class="st"> </span><span class="kw">qmap</span>(<span class="kw">enc2utf8</span>(<span class="st">&quot;속초&quot;</span>), <span class="dt">zoom =</span> <span class="dv">8</span>, <span class="dt">maptype =</span> <span class="st">&quot;toner-lite&quot;</span>)
 
-NucData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;./Nuclear power stations worldwide.csv&quot;</span>)
-NucData$Location &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;,&quot;</span>,<span class="st">&quot;:&quot;</span>, NucData$Location)
-<span class="kw">require</span>(googleVis)
-placeNames &lt;-<span class="st"> </span><span class="kw">as.character</span>(NucData$Name)
-plotData&lt;-<span class="kw">data.frame</span>(<span class="dt">name=</span>placeNames,<span class="dt">latLong=</span><span class="kw">unlist</span>(NucData$Location))
-sites &lt;-<span class="st"> </span><span class="kw">gvisMap</span>(plotData,<span class="dt">locationvar=</span><span class="st">&quot;latLong&quot;</span>,<span class="dt">tipvar=</span><span class="st">&quot;name&quot;</span>, 
-               <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">displayMode =</span> <span class="st">&quot;Markers&quot;</span>, <span class="dt">mapType=</span><span class="st">&#39;normal&#39;</span>, <span class="dt">colorAxis =</span> <span class="st">&quot;{colors:[&#39;red&#39;, &#39;grey&#39;]}&quot;</span>,
-                            <span class="dt">useMapTypeControl=</span><span class="ot">TRUE</span>, <span class="dt">enableScrollWheel=</span><span class="st">&#39;TRUE&#39;</span>))
-<span class="kw">plot</span>(sites)</code></pre></div>
-<p><strong>데이터셋</strong> : Meuse 강 데이터 <strong>방법 2</strong> : <code>plotGoogleMaps</code> 팩키지 활용</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;plotGoogleMaps&quot;</span>)
-<span class="kw">library</span>(plotGoogleMaps)
-
-<span class="kw">data</span>(meuse)
-<span class="kw">coordinates</span>(meuse)&lt;-<span class="er">~</span>x+y <span class="co"># convert to SPDF</span>
-<span class="kw">proj4string</span>(meuse) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="st">&#39;+init=epsg:28992&#39;</span>)
-<span class="co"># Adding Coordinate Referent Sys.</span>
-<span class="co"># Create web map of Point data</span>
-m&lt;-<span class="kw">plotGoogleMaps</span>(meuse,<span class="dt">filename=</span><span class="st">&#39;myMap1.htm&#39;</span>)
-<span class="co"># Plotting another map with icons as pie chart</span>
-m&lt;-<span class="kw">segmentGoogleMaps</span>(meuse, <span class="dt">zcol=</span><span class="kw">c</span>(<span class="st">&#39;zinc&#39;</span>,<span class="st">&#39;dist.m&#39;</span>),
-                     <span class="dt">mapTypeId=</span><span class="st">&#39;ROADMAP&#39;</span>, <span class="dt">filename=</span><span class="st">&#39;myMap4.htm&#39;</span>,
-                     <span class="dt">colPalette=</span><span class="kw">c</span>(<span class="st">&#39;#E41A1C&#39;</span>,<span class="st">&#39;#377EB8&#39;</span>), <span class="dt">strokeColor=</span><span class="st">&#39;black&#39;</span>)</code></pre></div>
+youngdongMap +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data =</span> df.yd, <span class="kw">aes</span>(lon,lat), <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<div class="figure">
+<img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" />
+<p class="caption">plot of chunk unnamed-chunk-4</p>
+</div>
+<p>GoogleVis <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, 전세계 원자력 발전소 위치 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <div class="footnotes">
 <hr />
 <ol>
