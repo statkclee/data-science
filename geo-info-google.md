@@ -12,7 +12,7 @@ mainfont: NanumGothic
 
 > ## 학습 목표 {.objectives}
 >
-> *  한국지명을 지리정보(위도, 경도)로 변환한다.
+> *  한국지명을 지리정보(위도, 경도)로 변환한다. [^geoCodingWithR]
 > * `leaflet` 팩키지를 활용하여 지리정보를 시각화한다.
 
 ### 한국지명을 지리정보로 변환
@@ -72,7 +72,7 @@ youngdongMap + geom_point(data = df.yd, aes(lon,lat), size = 2, colour="blue")
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
 
-
+### `leaflet` 팩키지 
 
 
 GoogleVis [^googlevis],  전세계 원자력 발전소 위치 [^powerplant]
@@ -80,3 +80,4 @@ GoogleVis [^googlevis],  전세계 원자력 발전소 위치 [^powerplant]
 
 [^googlevis]: [Plotting geo-spatial data on Google Maps in R](http://diggdata.in/post/51396519384/plotting-geo-spatial-data-on-google-maps-in-r)
 [^powerplant]: [Nuclear Power plants](https://www.google.com/fusiontables/exporttable?query=select%20*%20from%201u4krB7NJ0Ppwzcd5h7uwOak3Reja4A7yVFIklw)
+[^geoCodingWithR]: [GeoCoding with R](http://lumiamitie.github.io/r/geocoding-with-r-02/)

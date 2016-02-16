@@ -7,14 +7,7 @@ title: 데이터 과학
 ### 데이터 과학
 
 1. [데이터 제품](data-product.html)
-1. 데이터 과학 툴체인
-    - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)
-    - [도커(Docker) 기초](toolchain-docker-basic.html)
-        - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
-        - [데이터 과학 도커 - R](toolchain-docker-r.html)  
-        - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
-    - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
-    - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
+    - [공공 데이터 제품](data-product-civic-hacking.html)
 1. RStudio
     - [RStudio 활용 코드작성](rstudio-writing-code.html)
 1. [Shiny 웹앱](shiny-overview.html)
@@ -37,6 +30,14 @@ title: 데이터 과학
 1. [지리정보](geo-info.html)
     - [구글](geo-info-google.html)
 1. [SNS](sns-intro.html)
+1. 데이터 과학 툴체인
+    - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)
+    - [도커(Docker) 기초](toolchain-docker-basic.html)
+        - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
+        - [데이터 과학 도커 - R](toolchain-docker-r.html)  
+        - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
+    - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
+    - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
 
 
 > ## 참고 자료 {.prereq}
