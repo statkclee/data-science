@@ -1,0 +1,73 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 데이터테이블
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+> ## 학습 목표 {.objectives}
+>
+> * dplyr 과 hflights 팩키지 [^data-camp-dplyr]
+
+### 데이터 분석 시작
+
+`dplyr`, `hflights` 팩키지를 불러와서 `head`와 `summary` 명령어로 데이터를 살펴본다.
+
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+library(dplyr)
+library(hflights)
+head(hflights)
+summary(hflights)
+```
+
+### 데이터프레임을 데이터테이블로 변환
+
+`tbl_df` 함수를 사용해서 데이터프레임(data.frame)을 데이터테이블(data.table)로 변환한다. 
+데이터테이블은 내부를 살펴보면 데이터프레임을 기본으로 개발자 관점에서 더욱 쉽고, 빠르고, 직관적으로
+데이터를 처리할 수 있는 자료형이다.
+
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+hflights <- tbl_df(hflights)
+
+hflights
+
+carriers <- hflights$UniqueCarrier
+```
+
+### 변수값 재부호화(recoding)
+
+데이터 작업 중에 가장 많이 수행하는 작업 중 하나가 변수내부 값을 다른 값으로 재부호화하는 것이다.
+예를 들어, `남자`를 `Male`, `여자`를 `Female`처럼 한국어를 영어로 재부호화하거나,
+`KO`를 `한국`, `CN`을 `중국`처럼 코드화된 것을 개발자가 이해하기 새롭게 재부호화하는 것이다.
+`car` 라이브러리 `recode` 함수 등 다양한 재부호화 함수가 존재한다. 
+
+데이터프레임의 재부호화하는 방법을 살펴보자. 초간략 코드화된 항공사 코드를 개발자가 이해하기 쉬운
+코드로 바꿔보자.
+
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continental", 
+         "DL" = "Delta", "OO" = "SkyWest", "UA" = "United", "US" = "US_Airways", 
+         "WN" = "Southwest", "EV" = "Atlantic_Southeast", "F9" = "Frontier", 
+         "FL" = "AirTran", "MQ" = "American_Eagle", "XE" = "ExpressJet", "YV" = "Mesa")
+hflights$UniqueCarrier <- lut[hflights$UniqueCarrier]         
+glimpse(hflights)
+```
+
+결과를 일별하는데 `glimpse` 함수가 요긴하게 사용될 수 있다.
+또다른 사례로 운항취소 코드를 개발자가 이애하기 쉬운 코드로 재부호화해보자.
+
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+lut = c("A"="carrier", "B"="weather", "C"="FFA", "D"="security","E"="not cancelled")
+
+hflights$CancellationCode <- lut[hflights$CancellationCode]
+
+glimpse(hflights)
+```
+
+
+[^data-camp-dplyr]: [Data Manipulation in R with dplyr](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial)

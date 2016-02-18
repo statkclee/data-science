@@ -19,6 +19,8 @@ title: 데이터 과학
     - [데이터 깔끔화(tidy)](data-handling-tidy.html)
     - [엑셀](data-handling-excel.html)
     - [시간데이터](data-handling-timendate.html)
+    - [데이터테이블](data-handling-datatable.html)
+    - [데이터분석을 위한 파이프라인](data-handling-pipeline.html)
 1. [정규표현식](regex-index.html)
     - [정규표현식 소개](regex-intro.html)
     - [간단한 패턴](regex-simple-pattern.html)
