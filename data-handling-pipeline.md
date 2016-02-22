@@ -1,19 +1,7 @@
----
-layout: page
-title: 데이터 과학
-subtitle: 데이터분석을 위한 파이프라인
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
+
 
 > ## 학습 목표 {.objectives}
 >
@@ -43,7 +31,8 @@ source("tools/chunk-options.R")
 
 `mtcars` 데이터셋을 파이프를 통해 데이터를 깔끔하게 정리하는 것과 기존 전통적 방식으로 개발된 코드를 비교해 보자.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+~~~{.r}
 library(magrittr)
 
 car_data <- 
@@ -52,28 +41,40 @@ car_data <-
   aggregate(. ~ cyl, data = ., FUN = . %>% mean %>% round(2)) %>%
   transform(kpl = mpg %>% multiply_by(0.4251)) %>%
   print
-```
+~~~
+
+
+
+~~~{.output}
+FALSE   cyl   mpg   disp     hp drat   wt  qsec   vs   am gear carb       kpl
+FALSE 1   4 25.90 108.05 111.00 3.94 2.15 17.75 1.00 1.00 4.50 2.00 11.010090
+FALSE 2   6 19.74 183.31 122.29 3.59 3.12 17.98 0.57 0.43 3.86 3.43  8.391474
+FALSE 3   8 15.10 353.10 209.21 3.23 4.00 16.77 0.00 0.14 3.29 3.50  6.419010
+
+~~~
 
 전통적인 R코드는 본인이 작성하지 않았다면 해독하기가 만만치 않고, 괄호가 많다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide"}
+
+~~~{.r}
 car_data <- 
   transform(aggregate(. ~ cyl, 
                       data = subset(mtcars, hp > 100), 
                       FUN = function(x) round(mean(x, 2))), 
             kpl = mpg*0.4251)
-```
+~~~
 
 결국 읽기 어렵고 이해하기 힘든 함수 조합을 가독성 높은 순열(sequence)로 변환하는 역할을 한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide", eval=FALSE}
+
+~~~{.r}
 x %>% f(y)
 # f(x, y)
 x %>% f(z, .)
 # f(z, x)
 x %>% f(y) %>% g(z)
 # g(f(x, y), z)
-```
+~~~
 
 ### 데이터 분석을 위한 파이프라인 팩키지 모음
 
@@ -89,7 +90,8 @@ x %>% f(y) %>% g(z)
 
 ### 1. 깔끔한 데이터 `tidyr`
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+~~~{.r}
 library(tidyr)
 library(readr)
 library(dplyr, warn.conflicts = FALSE)
@@ -98,22 +100,120 @@ library(curl)
 # 데이터 가져오기
 tb <- tbl_df(read_csv(url("https://raw.githubusercontent.com/hadley/tidyr/master/vignettes/tb.csv")))
 tb
+~~~
 
+
+
+~~~{.output}
+FALSE Source: local data frame [5,769 x 22]
+FALSE 
+FALSE     iso2  year   m04  m514  m014 m1524 m2534 m3544 m4554 m5564   m65    mu
+FALSE    (chr) (int) (int) (int) (int) (int) (int) (int) (int) (int) (int) (int)
+FALSE 1     AD  1989    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+FALSE 2     AD  1990    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+FALSE 3     AD  1991    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+FALSE 4     AD  1992    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+FALSE 5     AD  1993    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+FALSE 6     AD  1994    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+FALSE 7     AD  1996    NA    NA     0     0     0     4     1     0     0    NA
+FALSE 8     AD  1997    NA    NA     0     0     1     2     2     1     6    NA
+FALSE 9     AD  1998    NA    NA     0     0     0     1     0     0     0    NA
+FALSE 10    AD  1999    NA    NA     0     0     0     1     1     0     0    NA
+FALSE ..   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
+FALSE Variables not shown: f04 (int), f514 (int), f014 (int), f1524 (int), f2534
+FALSE   (int), f3544 (int), f4554 (int), f5564 (int), f65 (int), fu (int)
+
+~~~
+
+
+
+~~~{.r}
 # 자료분석을 위한 형태로 변형한다.
 tb2 <- tb %>%
   gather(demographic, n, m04:fu, na.rm = TRUE)
 tb2
+~~~
 
+
+
+~~~{.output}
+FALSE Source: local data frame [35,750 x 4]
+FALSE 
+FALSE     iso2  year demographic     n
+FALSE    (chr) (int)       (chr) (int)
+FALSE 1     AD  2005         m04     0
+FALSE 2     AD  2006         m04     0
+FALSE 3     AD  2008         m04     0
+FALSE 4     AE  2006         m04     0
+FALSE 5     AE  2007         m04     0
+FALSE 6     AE  2008         m04     0
+FALSE 7     AG  2007         m04     0
+FALSE 8     AL  2005         m04     0
+FALSE 9     AL  2006         m04     1
+FALSE 10    AL  2007         m04     0
+FALSE ..   ...   ...         ...   ...
+
+~~~
+
+
+
+~~~{.r}
 # 변수를 성별과 연령으로 쪼갠다.
 tb3 <- tb2 %>%
   separate(demographic, c("sex", "age"), 1)
 tb3
+~~~
 
+
+
+~~~{.output}
+FALSE Source: local data frame [35,750 x 5]
+FALSE 
+FALSE     iso2  year   sex   age     n
+FALSE    (chr) (int) (chr) (chr) (int)
+FALSE 1     AD  2005     m    04     0
+FALSE 2     AD  2006     m    04     0
+FALSE 3     AD  2008     m    04     0
+FALSE 4     AE  2006     m    04     0
+FALSE 5     AE  2007     m    04     0
+FALSE 6     AE  2008     m    04     0
+FALSE 7     AG  2007     m    04     0
+FALSE 8     AL  2005     m    04     0
+FALSE 9     AL  2006     m    04     1
+FALSE 10    AL  2007     m    04     0
+FALSE ..   ...   ...   ...   ...   ...
+
+~~~
+
+
+
+~~~{.r}
 tb4 <- tb3 %>%
   rename(country = iso2) %>%
   arrange(country, year, sex, age)
 tb4
-```
+~~~
+
+
+
+~~~{.output}
+FALSE Source: local data frame [35,750 x 5]
+FALSE 
+FALSE    country  year   sex   age     n
+FALSE      (chr) (int) (chr) (chr) (int)
+FALSE 1       AD  1996     f   014     0
+FALSE 2       AD  1996     f  1524     1
+FALSE 3       AD  1996     f  2534     1
+FALSE 4       AD  1996     f  3544     0
+FALSE 5       AD  1996     f  4554     0
+FALSE 6       AD  1996     f  5564     1
+FALSE 7       AD  1996     f    65     0
+FALSE 8       AD  1996     m   014     0
+FALSE 9       AD  1996     m  1524     0
+FALSE 10      AD  1996     m  2534     0
+FALSE ..     ...   ...   ...   ...   ...
+
+~~~
 
 ### 2. 변환 `dplyr`
 
@@ -134,7 +234,8 @@ tb4
 
 모형은 알려진 패턴을 제거하는데 탁월하다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+
+~~~{.r}
 library(tidyr)
 library(dplyr)
 library(ggplot2)
@@ -163,7 +264,7 @@ tx <- tx %>%
 ggplot(tx, aes(date, resid)) +
   geom_line(aes(group = city), alpha = 1/5) + 
   geom_line(stat = "summary", fun.y = "mean", colour = "red")
-```
+~~~
 
 ### 5. 빅데이터 
 
