@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">데이터 변환(dplyr)</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>데이터프레임과 동일하지만, <code>tbl</code>로 작업을 일원화한다.</li>
+<li>선행 작업 프로세스 <code>tidyr</code>을 받아 <code>dplyr</code>로 작업한다.</li>
+<li><code>dplyr</code> 데이터 작업 동사 5개를 활용한다.</li>
+<li>다수 데이터셋에 다양한 병합(join) 작업을 수행한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="rstudio와-hadley-자료분석-체계">1. RStudio와 Hadley 자료분석 체계</h3>
+<p><strong><a href="http://www.had.co.nz/">Hadley Wickham</a></strong>은 <code>tidyr</code>을 사용하여 자료 정제하고 자료변환을 위해서 <code>dplyr</code>을 사용하고 그래픽 문법(glammar of graphics)에 따라 <code>ggvis</code>로 시각화하고 R의 다양한 모형화를 이용한 자료분석 체계도를 제안하였고, 최근에는 <code>broom</code> 팩키지를 통해 R 모형에서 반환하는 결과값을 재활용할 수 있는 툴체인도 제안하고 있다.</p>
+<p>시각화(Visualization)는 데이터에 대한 통찰력(insight)과 탄성, 놀라움을 줄 수 있지만, 확장성(Scalability)은 떨어진다. 왜냐하면, 사람이 데이터 분석 루프에 포함되기 때문에 확장 및 자동화에 한계가 있다. 반대로 모형(Model)은 자동화와 확장성에는 장점이 있지만, 주어진 모형틀안에서 이루어지기 때문에 통찰력, 놀라움, 탄성을 주지는 못하는 아쉬움이 있다.</p>
+<h4 id="dplyr">1.1. <code>dplyr</code></h4>
+<p><a href="http://cran.r-project.org/web/packages/dplyr/dplyr.pdf">dplyr</a> 패키지는 데이터프레임(data.frame) 자료처리를 위한 차세대 <code>plyr</code> 패키지다. 다음 6가지 함수가 핵심 함수로 SQL 기본 기능과 유사성이 높다. 따라서, 기존 다양한 자료처리 방식을 직관적이고 빠르며 효율적인 dplyr 패키지 함수로 생산성을 높여본다.</p>
+<ul>
+<li>filter (관측점 필터링) : 특정 기준을 만족하는 행을 추출한다.</li>
+<li>select (변수 선택하기) : 변수명으로 특정 칼럼을 추출한다.</li>
+<li>arrange (다시 정렬하기) : 행을 다시 정렬한다.</li>
+<li>mutate (변수 추가하기) : 새로운 변수를 추가한다.</li>
+<li>summarise (변수를 값으로 줄이기) : 변수를 값(스칼라)으로 요약한다.</li>
+</ul>
+<pre class="input"><code>df &lt;- data.frame( 
+  color = c(&quot;blue&quot;, &quot;black&quot;, &quot;blue&quot;, &quot;blue&quot;, &quot;black&quot;), 
+  value = 1:5) </code></pre>
+<h5 id="관측점obervation-필터링해서-선택하기-filter">1.1.1. 관측점(obervation) 필터링해서 선택하기 (filter)</h5>
+<table>
+<thead>
+<tr class="header">
+<th align="left">전통적 R 코드</th>
+<th align="left"><code>dplyr</code> R 코드</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>df[df$var01==3 &amp; df$var02$==7]</code></td>
+<td align="left"><code>filter(df, var01==3, var02==7)</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="input"><code>filter(df, color == &quot;blue&quot;)
+filter(df, value %in% c(1, 4))</code></pre>
+<h5 id="특정-변수-선택하기-select">1.1.2. 특정 변수 선택하기 (select)</h5>
+<table>
+<thead>
+<tr class="header">
+<th align="left">전통적 R 코드</th>
+<th align="left"><code>dplyr</code> R 코드</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>df[, c(&quot;var01&quot;,&quot;var02&quot;)]</code></td>
+<td align="left"><code>select(df, var01)</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="input"><code>select(df, color)
+select(df, -color)</code></pre>
+<h5 id="다시-정렬하기-arrange">1.1.3. 다시 정렬하기 (arrange)</h5>
+<table>
+<thead>
+<tr class="header">
+<th align="left">전통적 R 코드</th>
+<th align="left"><code>dplyr</code> R 코드</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>df[order(df$var01, df$var02)</code></td>
+<td align="left"><code>arrange(df, var01, var02)</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="input"><code>arrange(df, color)
+arrange(df, desc(color))</code></pre>
+<h5 id="새변수-생성하기-mutate">1.1.4. 새변수 생성하기 (mutate)</h5>
+<table>
+<thead>
+<tr class="header">
+<th align="left">전통적 R 코드</th>
+<th align="left"><code>dplyr</code> R 코드</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>df$new &lt;- df$var01/df$var02</code></td>
+<td align="left"><code>df &lt;- mutate(df, new=var01/var02)</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="input"><code>mutate(df, double = 2 * value)
+mutate(df, double = 2 * value, quadruple = 2 * double)</code></pre>
+<h5 id="변수-요약하기-summarize">1.1.5. 변수 요약하기 (summarize)</h5>
+<table style="width:44%;">
+<colgroup>
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">전통적 R 코드</th>
+<th align="left"><code>dplyr</code> R 코드</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>aggregate(df$value, list(var01=df$var01), mean)</code></td>
+<td align="left"><code>group_by(df, var01) %.% summarize(totalvalue = sum(value))</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="input"><code>summarise(df, total = sum(value))
+by_color &lt;- group_by(df, color) 
+summarise(by_color, total = sum(value))</code></pre>
+<h3 id="dplyr-예제-데이터셋">2. <code>dplyr</code> 예제 데이터셋</h3>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
