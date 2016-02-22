@@ -1,4 +1,14 @@
-# 데이터 과학
+---
+layout: page
+title: 데이터 과학
+subtitle: 지리정보 시각화 - 구글
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
 
 > ## 학습 목표 {.objectives}
 >

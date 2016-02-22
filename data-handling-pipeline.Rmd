@@ -10,6 +10,11 @@ output:
 mainfont: NanumGothic
 ---
 
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+```
+
 > ## 학습 목표 {.objectives}
 >
 > * 데이터 분석용 파이프라인을 이핸한다. [^data-pipeline]
@@ -61,7 +66,7 @@ car_data <-
 
 결국 읽기 어렵고 이해하기 힘든 함수 조합을 가독성 높은 순열(sequence)로 변환하는 역할을 한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide"}
+``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide", eval=FALSE}
 x %>% f(y)
 # f(x, y)
 x %>% f(z, .)

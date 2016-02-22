@@ -10,6 +10,10 @@ output:
 mainfont: NanumGothic
 ---
 
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+```
 > ## 학습 목표 {.objectives}
 >
 > * dplyr 과 hflights 팩키지 [^data-camp-dplyr]
