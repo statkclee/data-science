@@ -23,6 +23,12 @@ source("tools/chunk-options.R")
 
 시각화(Visualization)는 데이터에 대한 통찰력(insight)과 탄성, 놀라움을 줄 수 있지만, 확장성(Scalability)은 떨어진다. 왜냐하면, 사람이 데이터 분석 루프에 포함되기 때문에 확장 및 자동화에 한계가 있다. 반대로 모형(Model)은 자동화와 확장성에는 장점이 있지만, 주어진 모형틀안에서 이루어지기 때문에 통찰력, 놀라움, 탄성을 주지는 못하는 아쉬움이 있다. 
 
+> ### `dplyr` 목표 {.callout}
+>
+> 1. 데이터를 소프트웨어로 작업하기 적합하게 만든다.  
+> 2. 데이터를 쉽게 까볼 수 있게 한다.
+
+
 #### 1.1. `dplyr`
 
 [dplyr](http://cran.r-project.org/web/packages/dplyr/dplyr.pdf) 패키지는 데이터프레임(data.frame) 자료처리를 위한 차세대 `plyr` 패키지다. 다음 6가지 함수가 핵심 함수로 SQL 기본 기능과 유사성이 높다. 따라서, 기존 다양한 자료처리 방식을 직관적이고 빠르며 효율적인 dplyr 패키지 함수로 생산성을 높여본다.
@@ -100,6 +106,7 @@ summarise(by_color, total = sum(value))
 
 ### 2. `dplyr` 예제 데이터셋
  
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
 
-
+```
 
