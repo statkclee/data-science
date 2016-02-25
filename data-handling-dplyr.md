@@ -303,7 +303,7 @@ filter(storms, wind >= 50)
 filter(storms, wind >= 50, storm %in% c("Alberto", "Alex", "Allison"))
 ~~~
 
-#### `filter()` 내장 함수
+#### `filter()` R 논리 연산자
 
 |  비교연산자 `?Comparison` | 설명 | 논리 연산자 `?base::Logic` | 설명 |
 |-------------|------|------------------------|-------------|
@@ -353,7 +353,7 @@ mutate(storms, ratio = pressure / wind)
 mutate(storms, ratio = pressure / wind, inverse = ratio^-1)
 ~~~
 
-#### 유용한 `filter()` 내장 함수
+#### 유용한 `mutate()` 내장 함수
 
 |  함수명 |  설명 |
 |-------------|----------------------|

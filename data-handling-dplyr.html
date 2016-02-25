@@ -704,7 +704,7 @@ summarise(by_color, total = sum(value))</code></pre>
 </section>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(storms, wind &gt;=<span class="st"> </span><span class="dv">50</span>)
 <span class="kw">filter</span>(storms, wind &gt;=<span class="st"> </span><span class="dv">50</span>, storm %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Alberto&quot;</span>, <span class="st">&quot;Alex&quot;</span>, <span class="st">&quot;Allison&quot;</span>))</code></pre></div>
-<h4 id="filter-내장-함수"><code>filter()</code> 내장 함수</h4>
+<h4 id="filter-r-논리-연산자"><code>filter()</code> R 논리 연산자</h4>
 <table>
 <thead>
 <tr class="header">
@@ -886,7 +886,7 @@ summarise(by_color, total = sum(value))</code></pre>
 </section>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mutate</span>(storms, <span class="dt">ratio =</span> pressure /<span class="st"> </span>wind)
 <span class="kw">mutate</span>(storms, <span class="dt">ratio =</span> pressure /<span class="st"> </span>wind, <span class="dt">inverse =</span> ratio^-<span class="dv">1</span>)</code></pre></div>
-<h4 id="유용한-filter-내장-함수">유용한 <code>filter()</code> 내장 함수</h4>
+<h4 id="유용한-mutate-내장-함수">유용한 <code>mutate()</code> 내장 함수</h4>
 <table>
 <thead>
 <tr class="header">
