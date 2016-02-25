@@ -1,4 +1,14 @@
-# 데이터 과학
+---
+layout: page
+title: 데이터 과학
+subtitle: 데이터분석을 위한 파이프라인
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
 
 
 
@@ -285,4 +295,4 @@ ggplot(tx, aes(date, resid)) +
 
 
 [^data-pipeline]: [Pipelines for data analysis in R](https://www.rstudio.com/resources/webinars/pipelines-for-data-analysis-in-r/)
-[^magrittr-vignette](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)
+[^magrittr-vignette]: [Library magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)

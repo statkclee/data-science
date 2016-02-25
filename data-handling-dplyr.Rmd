@@ -5,8 +5,8 @@ subtitle: 데이터 변환(dplyr)
 ---
 
 ```{r, include=FALSE}
-#setwd("~/swc/data-science")
-setwd("~/docs/data-science")
+setwd("~/swc/data-science")
+#setwd("~/docs/data-science")
 source("tools/chunk-options.R")
 ````
 
@@ -107,10 +107,6 @@ summarise(by_color, total = sum(value))
 
 ### 2. `tidyr` 예제 데이터셋
  
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
-
-<<<<<<< HEAD
-=======
 
 ``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 # install.packages("devtools")
@@ -121,7 +117,6 @@ library(EDAWR)
 ?cases 
 ?tb
 library(tidyr)
->>>>>>> 5577534f93d61b64ac4728bffadb24512ad4ee96
 ```
 
 
@@ -138,6 +133,7 @@ library(tidyr)
 > | US      | 15000 | 14000  | 13000 |
 >
 > **변경후 (Long 형식, 기계 중심)** 
+>
 > | country | year | n     |
 > |---------|------|-------|
 > |      FR | 2011 | 7000  |
@@ -201,6 +197,7 @@ spread(pollution, size, amount)
 > |  Arthur |    45 |     1010 | 1996-06-17 |
 >
 > **변경후 (쪼개진 변수)** 
+>
 > |   storm | wind | pressure | year | month | day |
 > |---------|------|----------|------|-------|-----|
 > | Alberto |  110 |     1007 | 2000 |    08 |  03 |
@@ -229,6 +226,7 @@ unite(storms2, "date", year, month, day, sep = "-")
 > `select()`를 사용한다. `-`, `:` 연산자도 사용가능하다.
 > 
 > **변경전** 
+>
 > |   storm |  wind| pressure |       date |
 > |---------|------|----------|------------|
 > | Alberto |   110|     1007 | 2000-08-03 |
@@ -239,6 +237,7 @@ unite(storms2, "date", year, month, day, sep = "-")
 > |  Arthur |    45|     1010 | 1996-06-17 |
 > 
 >  **변경후(변수 선택)** 
+>
 > |   storm | pressure| 
 > |---------|---------| 
 > | Alberto |     1007| 
@@ -276,6 +275,7 @@ select(storms, wind:date)
 > `filter()`를 사용한다.
 > 
 > **변경전** 
+>
 > |   storm |  wind| pressure |       date |
 > |---------|------|----------|------------|
 > | Alberto |   110|     1007 | 2000-08-03 |
@@ -288,6 +288,7 @@ select(storms, wind:date)
 >  **변경후(관측점 선택)** 
 >
 > **변경후** 
+>
 > |   storm |  wind| pressure |       date |
 > |---------|------|----------|------------|
 > | Alberto |   110|     1007 | 2000-08-03 |
@@ -322,6 +323,7 @@ filter(storms, wind >= 50, storm %in% c("Alberto", "Alex", "Allison"))
 > `mutate()`를 사용한다.
 > 
 > **변경전** 
+>
 > |   storm |  wind| pressure |       date |
 > |---------|------|----------|------------|
 > | Alberto |   110|     1007 | 2000-08-03 |
@@ -414,6 +416,7 @@ pollution %>% summarise(mean = mean(amount), sum = sum(amount), n = n())
 > `arrange()` 함수를 사용한다.
 >
 > **변경전** 
+>
 > |   storm |  wind| pressure |       date |
 > |---------|------|----------|------------|
 > | Alberto |   110|     1007 | 2000-08-03 |
