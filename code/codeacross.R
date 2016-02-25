@@ -22,6 +22,9 @@ pollution$amount[2,4,6]
 
 # 깔끔한 데이터란... tidyr
 library(tidyr)
+install.packages("tidyr")
+cases
+
 gather(cases, year, n, 2:4, -country)
 gather(cases, year, n, `2011`:`2013`, -country)
 gather(cases, year, n, `2011`:`2013`)
