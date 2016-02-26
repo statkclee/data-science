@@ -6,16 +6,55 @@ subtitle: 데이터 시각화(ggplot2, ggvis)
 
 
 ```{r, include=FALSE}
-#setwd("~/swc/data-science")
-#setwd("~/docs/data-science")
 source("tools/chunk-options.R")
 ````
 
-> ## 학습 목표 [^ggplot2-webinar] {.objectives}
->
-> * 
+```{r, echo=FALSE, purl=FALSE}
+knitr::opts_chunk$set(fig.keep='last')
+```
 
-[^ggplot2-webinar]: [The Grammar and Graphics of Data Science](https://www.rstudio.com/resources/webinars/the-grammar-and-graphics-of-data-science/)
+```{r setup, echo=FALSE, purl=FALSE}
+source("setup.R")
+```
+
+> ## 학습 목표 [^data-carpentry-ggplot2] {.objectives}
+>
+> * `ggplot2` 팩키지로 데이터를 시각화한다. 
+
+[^data-carpentry-ggplot2]: [Data Carpentry R lessons on ecology](http://www.datacarpentry.org/R-ecology/)
+
+
+### `ggplot2`로 시각화를 하는 이유
+
+R에 기본적으로 시각화를 위한 다양한 기능이 존재하지만, `ggplot2`가 기본으로 제공되는 R 시각화 기능 위에 더욱 강력한 기능을 제공한다.
+기본적인 R 기능도 상대적으로 다른 소프트웨어 서비스나 제품과 비교가 되지 않을 정도록 강력하다. 이런 점에서 R은 참 겸손하다는 생각이 든다.
+
+
+
+```{r}
+# plotting package
+library(ggplot2)
+# piping / chaining
+library(magrittr)
+# modern dataframe manipulations
+library(dplyr)
+```
+
+Load data directly from figshare.
+
+```{r}
+surveys_raw <- read.csv("http://files.figshare.com/1919744/surveys.csv")
+```
+
+`surveys.csv` data contains some measurements of the animals caught in plots.
+
+## Data cleaning and preparing for plotting
+
+Let's look at the summary
+
+```{r}
+summary(surveys_raw)
+```
 
 
 ### 참고자료
