@@ -7,15 +7,14 @@ subtitle: 데이터 시각화(ggplot2, ggvis)
 
 ```{r, include=FALSE}
 source("tools/chunk-options.R")
+knitr::opts_chunk$set(fig.keep='last')
 ````
 
-```{r, echo=FALSE, purl=FALSE}
-knitr::opts_chunk$set(fig.keep='last')
-```
 
-```{r setup, echo=FALSE, purl=FALSE}
-source("setup.R")
-```
+
+# ```{r setup, echo=FALSE, purl=FALSE}
+# source("setup.R")
+# ```
 
 > ## 학습 목표 [^data-carpentry-ggplot2] {.objectives}
 >
@@ -29,7 +28,7 @@ source("setup.R")
 R에 기본적으로 시각화를 위한 다양한 기능이 존재하지만, `ggplot2`가 기본으로 제공되는 R 시각화 기능 위에 더욱 강력한 기능을 제공한다.
 기본적인 R 기능도 상대적으로 다른 소프트웨어 서비스나 제품과 비교가 되지 않을 정도록 강력하다. 이런 점에서 R은 참 겸손하다는 생각이 든다.
 
-
+### 기본 데이터 준비
 
 ```{r}
 # plotting package
