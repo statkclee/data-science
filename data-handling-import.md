@@ -5,20 +5,21 @@ output:
     keep_md: yes
   pdf_document:
     latex_engine: xelatex
-subtitle: 데이터 다루기
+subtitle: 데이터 가져오기 
 layout: page
 mainfont: NanumGothic
-
 ---
 
 
 
-> ## 학습 목표 {.objectives}
+
+> ## 학습 목표 [^import-webinar] {.objectives}
 >
 > * R로 다양한 원천자료를 가져온다.
 > * 로컬디스크, 데이터베이스, 웹 인터넷 데이터 출처를 이해한다.
 > * 활성도가 높은 R 팩키지를 취사선택하여 데이터 가져오기 프로세스를 정형화한다. 
 
+[^import-webinar]: [Getting your data into R](https://www.rstudio.com/resources/webinars/getting-your-data-into-r/)
 
 
 <img src="fig/rstudio-data-import.png" alt="RStuio 데이터 가져오기" width="50%" />
@@ -105,5 +106,3 @@ API를 통해 데이터가 제공되지 않는 경우, `rvest` 팩키지를 통�
 
 
 ### 참고자료
-
-- [Getting your data into R](https://www.rstudio.com/resources/webinars/getting-your-data-into-r/)

@@ -8,22 +8,23 @@ title: 데이터 과학
 
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
-1. RStudio
-    - [RStudio 활용 코드작성](rstudio-writing-code.html)
-1. [Shiny 웹앱](shiny-overview.html)
-    - [Shiny 웹앱 개발](shiny-app.html)    
-    - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
-    - [Shiny 프론트엔트 개발](shiny-frontend.html)
 1. [데이터 정제](data-handling.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
-    - [데이터 깔끔화(tidy)](data-handling-tidy.html)
+    - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
     - [데이터 변환(dplyr)](data-handling-dplyr.html)
+    - [데이터 시각화(ggplot2, ggvis)](data-handling-ggplot2.html)
+1. [RStudio](rstudio.html)
+    - [RStudio 활용 코드작성](rstudio-writing-code.html)
     - [시간데이터](data-handling-timendate.html)
     - [데이터테이블](data-handling-datatable.html)
     - [SQL](data-handling-sql.html)    
     - [엑셀](data-handling-excel.html)
     - [R 이전 교육자료(2015)](data-handling-old.html)
+1. [Shiny 웹앱](shiny-overview.html)
+    - [Shiny 웹앱 개발](shiny-app.html)    
+    - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
+    - [Shiny 프론트엔트 개발](shiny-frontend.html)
 1. [정규표현식](regex-index.html)
     - [정규표현식 소개](regex-intro.html)
     - [간단한 패턴](regex-simple-pattern.html)
@@ -47,6 +48,7 @@ title: 데이터 과학
 
 
 > ## 참고 자료 {.prereq}
+> 
 > - [컴퓨터 과학 언플러그드](http://unplugged.xwmooc.org)  
 > - [리보그](http://reeborg.xwmooc.org)  
 >      - [러플](http://rur-ple.xwmooc.org)  
@@ -56,6 +58,6 @@ title: 데이터 과학
 >     - [소프트웨어 카펜트리 5.2](http://swcarpentry.xwmooc.org)
 > - [R 팩키지](http://r-pkgs.xwmooc.org/)
 > - [통계적 사고](http://think-stat.xwmooc.org/)
-> - [$100 오픈 컴퓨터](http://computer.xwmooc.org/)
->     - [IoT 라즈베리파이](http://raspberry-pi.xwmooc.org/)
-
+> - [IoT 라즈베리파이](http://raspberry-pi.xwmooc.org/)
+>     - [$100 오픈 컴퓨터](http://computer.xwmooc.org/)   
+>     - [$100 오픈 슈퍼컴퓨터](http://computers.xwmooc.org/)

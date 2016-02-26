@@ -1,0 +1,21 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 데이터 시각화(ggplot2, ggvis)
+---
+
+
+```{r, include=FALSE}
+#setwd("~/swc/data-science")
+#setwd("~/docs/data-science")
+source("tools/chunk-options.R")
+````
+
+> ## 학습 목표 [^ggplot2-webinar] {.objectives}
+>
+> * 
+
+[^ggplot2-webinar]: [The Grammar and Graphics of Data Science](https://www.rstudio.com/resources/webinars/the-grammar-and-graphics-of-data-science/)
+
+
+### 참고자료

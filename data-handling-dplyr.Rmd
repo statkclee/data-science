@@ -4,19 +4,22 @@ title: 데이터 과학
 subtitle: 데이터 변환(dplyr)
 ---
 
+
 ```{r, include=FALSE}
 setwd("~/swc/data-science")
 #setwd("~/docs/data-science")
 source("tools/chunk-options.R")
 ````
 
-> ## 학습 목표 {.objectives}
+> ## 학습 목표 [^wrangling-webinar] {.objectives}
 >
 > * 데이터프레임과 동일하지만, `tbl`로 작업을 일원화한다. 
 > * 선행 작업 프로세스 `tidyr`을 받아 `dplyr`로 작업한다.
 > * `dplyr` 데이터 작업 동사 5개를 활용한다.
 > * 다수 데이터셋에 다양한 병합(join) 작업을 수행한다.
 
+
+[^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
 
 ### 1. RStudio와 Hadley 자료분석 체계
 
@@ -510,5 +513,6 @@ anti_join(songs, artists, by = "name")
 1. 구문
 1. 기능 
 
+### 참고자료
 
 [^dt-dplyr-comparison]: [data.table vs dplyr: can one do something well the other can't or does poorly?](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly)

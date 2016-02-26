@@ -1,13 +1,16 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 데이터 깔끔화(tidy)
+subtitle: 데이터 깔끔화(tidyr) 
 ---
-> ## 학습 목표 {.objectives}
+> ## 학습 목표 [^wrangling-webinar] {.objectives}
 >
 > * RStudio IDE 개발환경을 살펴본다.
 > * RStudio 자주 활용하는 단축키를 숙지한다.
 
+
+
+[^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
 
 ### 데이터 깔끔화 [^tidy-data]
 
@@ -221,5 +224,6 @@ Tidy-input      --> 함수  f(x)  --> Tidy-output
 
 ### 깔끔한 데이터 작업흐름도 [^tidy-workflow]
 
+### 참고자료
 
 [^tidy-workflow]: [broom: a package for tidying statistical models into data frames](http://www.r-bloggers.com/broom-a-package-for-tidying-statistical-models-into-data-frames/)

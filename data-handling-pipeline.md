@@ -13,9 +13,12 @@ mainfont: NanumGothic
 
 
 
-> ## 학습 목표 {.objectives}
+> ## 학습 목표 [^pipeline-webinar] {.objectives}
 >
-> * 데이터 분석용 파이프라인을 이핸한다. [^data-pipeline]
+> * 데이터 분석용 파이프라인을 이핸한다. 
+
+
+[^pipeline-webinar]: [Pipelines for data analysis in R](https://www.rstudio.com/resources/webinars/pipelines-for-data-analysis-in-r/)
 
 ### 데이터 분석 파이프라인
 
@@ -293,6 +296,6 @@ ggplot(tx, aes(date, resid)) +
 2. 작은 데이터 문제로 쪼개서 분할 정복 (9%)
 3. 더이상 어찌할 수 없는 큰 문제 데이터 (1%)
 
+### 참고자료
 
-[^data-pipeline]: [Pipelines for data analysis in R](https://www.rstudio.com/resources/webinars/pipelines-for-data-analysis-in-r/)
 [^magrittr-vignette]: [Library magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)

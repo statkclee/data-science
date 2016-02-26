@@ -30,7 +30,7 @@
           <h2 class="subtitle">데이터 변환(dplyr)</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
-<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+<h2 id="학습-목표-wrangling-webinar"><span class="glyphicon glyphicon-certificate"></span>학습 목표 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
 </div>
 <div class="panel-body">
 <ul>
@@ -1199,7 +1199,7 @@ pollution %&gt;%<span class="st"> </span><span class="kw">ungroup</span>()  </co
 <span class="kw">inner_join</span>(songs, artists, <span class="dt">by =</span> <span class="st">&quot;name&quot;</span>)
 <span class="kw">semi_join</span>(songs, artists, <span class="dt">by =</span> <span class="st">&quot;name&quot;</span>)
 <span class="kw">anti_join</span>(songs, artists, <span class="dt">by =</span> <span class="st">&quot;name&quot;</span>)</code></pre></div>
-<h3 id="data.table과-dplyr-비교-dt-dplyr-comparison"><code>data.table</code>과 <code>dplyr</code> 비교 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<h3 id="data.table과-dplyr-비교-dt-dplyr-comparison"><code>data.table</code>과 <code>dplyr</code> 비교 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
 <p><code>data.table</code>과 <code>dplyr</code>은 데이터 변환작업을 수행하지만, 다음 관점에서 살펴볼 필요가 있다.</p>
 <ol style="list-style-type: decimal">
 <li>속도</li>
@@ -1207,10 +1207,12 @@ pollution %&gt;%<span class="st"> </span><span class="kw">ungroup</span>()  </co
 <li>구문</li>
 <li>기능</li>
 </ol>
+<h3 id="참고자료">참고자료</h3>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly">data.table vs dplyr: can one do something well the other can’t or does poorly?</a><a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p><a href="https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/">Data wrangling with R and RStudio</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly">data.table vs dplyr: can one do something well the other can’t or does poorly?</a><a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
         </div>
