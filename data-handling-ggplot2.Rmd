@@ -2,6 +2,12 @@
 layout: page
 title: 데이터 과학
 subtitle: 데이터 시각화(ggplot2, ggvis)
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
 
 
@@ -59,7 +65,7 @@ summary(surveys.dat)
 각 변수마다 결측치가 있어 이를 한땀 한땀 정성스럽게 결측정보를 제거하는 대신에 `dplyr` 파이프 연산자를 사용하여
 일괄적으로 처리한다.
 
-```{r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
 surveys.complete <- surveys.dat %>%
                     filter(species_id != "") %>%       # species_id 결측값 제거
                     filter(!is.na(weight)) %>%          # weight 결측값 제거
@@ -72,7 +78,7 @@ surveys.complete <- surveys.dat %>%
 내부인자로 `sort=TRUE` 를 넣어서 내림차순으로 정렬한다. 
 
 
-```{r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
 species.counts <- surveys.complete %>%
   group_by(species_id) %>%
   tally(sort=TRUE)
@@ -82,7 +88,7 @@ tail(species.counts)
 
 개체수가 10개 미만인 종을 제거하고, 시각화를 위한 기본 데이터셋 준비를 완료한다.
 
-```{r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
 frequent.species <- species.counts %>%
                     filter(n >= 10) %>%
                     select(species_id)
@@ -95,7 +101,7 @@ surveys.complete <- surveys.complete %>%
 
 `weight`를 예측변수 `x` 위치에 두고, 종속변수 `hindfoot_length`를 `y`에 두고 R 기본 시각화 산점도를 도식화해 보자.
 
-```{r base-plot}
+``` {r base-plot}
 plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length)
 ```
 
@@ -250,43 +256,103 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, group = sex)) +
 >   geom_line() + facet_wrap(~ species_id)
 > ```
-
+>
 > - 논문출판으로 흰색 배경이 좀더 가독성을 좋게 한다.
 > ` theme_bw()` 함수를 사용해서 흰색 배경을 적용한다.
-
-```{r facet-by-species-and-sex-white-bg}
-ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, group = sex)) +
-  geom_line() + facet_wrap(~ species_id) + theme_bw()
-``` 
-
-> - 종대신에 성별로 색상을 입혀서 그래프 가독성을 좋게 만들 수 있다.
-> (종은 이미 별도 그래프로 시각화되어서, 더 잘 식별하게 만들 필요는 없다.)
-
-
-```{r facet-by-species-and-sex-colored}
-ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
-  geom_line() + facet_wrap(~ species_id) + theme_bw()
-```
-
-> - 연도에 걸쳐 각 종별로 평균 체중을 시각화한다.
-
-```{r average-weight-timeseries}
-yearly.weight <- surveys.complete %>%
-                 group_by(year, species_id, sex) %>%
-                 summarise(avg_weight = mean(weight, na.rm = TRUE))
-ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
-  geom_line() + theme_bw()
-```
-
-> - 시각화를 왜 이런 단계를 밟아서 도식화 절차를 거친다고 생각하는가?
-> - 수컷과 암컷 체중이 상당히 차이가 나서 성별로 별도 시각화를 수행한다.
-
-```{r average-weight-time-facet_sex}
-ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
-  geom_line() + facet_wrap(~ sex) + theme_bw()
-```
-
-
+> 
+> ```{r facet-by-species-and-sex-white-bg}
+> ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, group = sex)) +
+>   geom_line() + facet_wrap(~ species_id) + theme_bw()
+> ``` 
+> 
+> > - 종대신에 성별로 색상을 입혀서 그래프 가독성을 좋게 만들 수 있다.
+> > (종은 이미 별도 그래프로 시각화되어서, 더 잘 식별하게 만들 필요는 없다.)
+> 
+> 
+> ```{r facet-by-species-and-sex-colored}
+> ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
+>   geom_line() + facet_wrap(~ species_id) + theme_bw()
+> ```
+> 
+> > - 연도에 걸쳐 각 종별로 평균 체중을 시각화한다.
+> 
+> ```{r average-weight-timeseries}
+> yearly.weight <- surveys.complete %>%
+>                  group_by(year, species_id, sex) %>%
+>                  summarise(avg_weight = mean(weight, na.rm = TRUE))
+> ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
+>   geom_line() + theme_bw()
+> ```
+> 
+> > - 시각화를 왜 이런 단계를 밟아서 도식화 절차를 거친다고 생각하는가?
+> > - 수컷과 암컷 체중이 상당히 차이가 나서 성별로 별도 시각화를 수행한다.
+> 
+> ```{r average-weight-time-facet_sex}
+> ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
+>   geom_line() + facet_wrap(~ sex) + theme_bw()
+> ```
+> 지금까지 시각화 결과가 상당히 좋았지만, 아직 출판하기에는 많이 부족하다.
+> 시각화 산출물 결과를 향상할 수 있는 다른 방법은 무엇이 있을까?
+> `ggplot2` [컨닝쪽지(cheat sheet)](https://www.rstudio.com/wp-content/uploads/2015/08/ggplot2-cheatsheet.pdf)를 
+> 참조하고, 적어도 세가지 아이디어를 적어본다.
+> 
+> `x`축과 `y`축에 'year'와 'n' 보다 더 많은 정보를 전달하도록 변경하고, 그래프에 제목을 추가한다.
+> 
+> ```{r number_species_year_with_right_labels}
+> ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
+>   geom_line() +
+>   facet_wrap(~ species_id) +
+>   labs(title = 'Observed species in time',
+>        x = 'Year of observation',
+>        y = 'Number of species') + theme_bw()
+> ``` 
+> 
+> 이제 좀더 나아져서 훨씬 더 많은 정보를 주는 `x`, `y` 축 명칭으로 바꿨지만, 가독성이 떨어지고 있다.
+> 글자 크기를 변경하고 글자체도 변경한다.
+> 
+> ```{r number_species_year_with_right_labels_xfont_size}
+> ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
+>   geom_line() +
+>   facet_wrap(~ species_id) +
+>   labs(title = 'Observed species in time',
+>        x = 'Year of observation',
+>        y = 'Number of species') +
+>   theme(text=element_text(size=16, family="Arial")) + theme_bw()
+> ```
+> 
+> 조작을 한 다음에, `x` 축이 여전히 적절한 가독성을 전달하고 있지 않음을 볼 수 있다.
+> 라벨 방향을 변경해서 서로 겹쳐지지 않도록 수평 혹은 수직방향으로 바꾼다.
+> 90도 각도를 사용하거나, 대각선 방향으로 라벨방향을 변경하도록 적절한 각도로 바꾸는 실험을 진행한다. 
+> 
+> ```{r number_species_year_with_right_labels_xfont_orientation}
+> ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
+>     geom_line() +
+>     facet_wrap(~ species_id) +
+>     theme_bw() +
+>     theme(axis.text.x = element_text(colour="grey20", size=12, angle=90, hjust=.5, vjust=.5),
+>           axis.text.y = element_text(colour="grey20", size=12),
+>           text=element_text(size=16, family="Arial")) +
+>     labs(title = 'Observed species in time',
+>          x = 'Year of observation',
+>          y = 'Number of species')
+> ```
+> 
+> 이제, 라벨을 키워서 가독성이 더 좋아졌지만, 개선할 여지는 남아 있다.
+> 시간을 5분만 더 들여서 더 나은 시각화 산출물을 만들어 내도록 하나 혹은 두가지 작업을 시도해 본다.
+> `ggplot2` 컨닝 쪽지를 사용해서, 상기 시각화 산출물에 적용할  영감을 받아본다.
+> 
+> 다음에 몇가지 생각난 것이 있다:
+> 
+> - 선 두께를 변경할 수 있는지 살펴본다.
+> - 범례(legend) 명칭을 변경할 방법을 살펴본다. 범례 라벨은 어떤가?
+> - 외양을 좋게 하는데 다른 색상 팔레트를 사용한다. (http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/)
+> 
+> 완벽한 시각화 산출물이 도출되면, 선호하는 그림파일 형식으로 저장한다.
+> 그림 폭과 높이를 지정해서 크기를 쉽게 변경한다.
+> 
+> ```{r number_species_year_with_right_labels_xfont_save, eval=FALSE}
+> ggsave("observed_species_in_time.png", width=15, height=10)
+> ```
 
 
 > ### `Error in plot.new() : figure margins too large` 시각화 문제 해결 {.callout}
