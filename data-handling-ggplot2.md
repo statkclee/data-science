@@ -54,6 +54,36 @@ surveys.dat <- read_csv("http://files.figshare.com/1919744/surveys.csv")
 summary(surveys.dat)
 ~~~
 
+
+
+~~~{.output}
+   record_id         month             day             year     
+ Min.   :    1   Min.   : 1.000   Min.   : 1.00   Min.   :1977  
+ 1st Qu.: 8888   1st Qu.: 4.000   1st Qu.: 9.00   1st Qu.:1984  
+ Median :17775   Median : 6.000   Median :16.00   Median :1990  
+ Mean   :17775   Mean   : 6.474   Mean   :16.11   Mean   :1990  
+ 3rd Qu.:26662   3rd Qu.: 9.000   3rd Qu.:23.00   3rd Qu.:1997  
+ Max.   :35549   Max.   :12.000   Max.   :31.00   Max.   :2002  
+                                                                
+    plot_id      species_id            sex            hindfoot_length
+ Min.   : 1.0   Length:35549       Length:35549       Min.   : 2.00  
+ 1st Qu.: 5.0   Class :character   Class :character   1st Qu.:21.00  
+ Median :11.0   Mode  :character   Mode  :character   Median :32.00  
+ Mean   :11.4                                         Mean   :29.29  
+ 3rd Qu.:17.0                                         3rd Qu.:36.00  
+ Max.   :24.0                                         Max.   :70.00  
+                                                      NA's   :4111   
+     weight      
+ Min.   :  4.00  
+ 1st Qu.: 20.00  
+ Median : 37.00  
+ Mean   : 42.67  
+ 3rd Qu.: 48.00  
+ Max.   :280.00  
+ NA's   :3266    
+
+~~~
+
 #### 1 단계 - 결측값 제거
 
 데이터셋에 일부 결측정보가 `summary` 실행결과를 보여주고 있어, 이를 제거한다. 
@@ -83,6 +113,22 @@ species.counts <- surveys.complete %>%
 tail(species.counts)
 ~~~
 
+
+
+~~~{.output}
+FALSE Source: local data frame [6 x 2]
+FALSE 
+FALSE   species_id     n
+FALSE        (chr) (int)
+FALSE 1         PH    31
+FALSE 2         PI     8
+FALSE 3         RO     8
+FALSE 4         OX     5
+FALSE 5         PX     2
+FALSE 6         RX     2
+
+~~~
+
 개체수가 10개 미만인 종을 제거하고, 시각화를 위한 기본 데이터셋 준비를 완료한다.
 
 
@@ -104,7 +150,7 @@ surveys.complete <- surveys.complete %>%
 plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length)
 ~~~
 
-<img src="img/R-ecology-base-plot-1.png" title="plot of chunk base-plot" alt="plot of chunk base-plot" style="display: block; margin: auto;" />
+<img src="fig/base-plot-1.png" title="plot of chunk base-plot" alt="plot of chunk base-plot" style="display: block; margin: auto;" />
 
 ### `ggplot2` 팩키지로 시각화
 
@@ -140,7 +186,7 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point()
 ~~~
 
-<img src="img/R-ecology-first-ggplot-1.png" title="plot of chunk first-ggplot" alt="plot of chunk first-ggplot" style="display: block; margin: auto;" />
+<img src="fig/first-ggplot-1.png" title="plot of chunk first-ggplot" alt="plot of chunk first-ggplot" style="display: block; margin: auto;" />
 
 > #### 주의 사항 {.callout}
 >
@@ -157,7 +203,7 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point(alpha=0.1)
 ~~~
 
-<img src="img/R-ecology-first-ggplot-alpha-1.png" title="plot of chunk first-ggplot-alpha" alt="plot of chunk first-ggplot-alpha" style="display: block; margin: auto;" />
+<img src="fig/first-ggplot-alpha-1.png" title="plot of chunk first-ggplot-alpha" alt="plot of chunk first-ggplot-alpha" style="display: block; margin: auto;" />
 
 - 색상을 추가한다.
 
@@ -167,7 +213,7 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point(alpha=0.1, color = "blue")
 ~~~
 
-<img src="img/R-ecology-first-ggplot-alpha-color-1.png" title="plot of chunk first-ggplot-alpha-color" alt="plot of chunk first-ggplot-alpha-color" style="display: block; margin: auto;" />
+<img src="fig/first-ggplot-alpha-color-1.png" title="plot of chunk first-ggplot-alpha-color" alt="plot of chunk first-ggplot-alpha-color" style="display: block; margin: auto;" />
 
 ### 상자 그림
 
@@ -179,7 +225,7 @@ ggplot(data = surveys.complete, aes(x = species_id,  y = weight)) +
                    geom_boxplot()
 ~~~
 
-<img src="img/R-ecology-boxplot-1.png" title="plot of chunk boxplot" alt="plot of chunk boxplot" style="display: block; margin: auto;" />
+<img src="fig/boxplot-1.png" title="plot of chunk boxplot" alt="plot of chunk boxplot" style="display: block; margin: auto;" />
 
 상자그림에 점을 추가해서, 특이한 관측점과 많이 관측된 측정값을 볼 수 있다.
 
@@ -190,7 +236,7 @@ ggplot(data = surveys.complete, aes(x = species_id, y = weight)) +
                    geom_boxplot(alpha = 0)
 ~~~
 
-<img src="img/R-ecology-boxplot-with-points-1.png" title="plot of chunk boxplot-with-points" alt="plot of chunk boxplot-with-points" style="display: block; margin: auto;" />
+<img src="fig/boxplot-with-points-1.png" title="plot of chunk boxplot-with-points" alt="plot of chunk boxplot-with-points" style="display: block; margin: auto;" />
 
 상기 시각화 산출물에서 상자그림이 지터 계층 위에 놓인 방식에 주목한다.
 `geoms` 순서를 조정하고, 투명도를 조절해 플롯에 계층을 쌓는 방식을 제어한다.
@@ -220,7 +266,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n)) +
                   geom_line()
 ~~~
 
-<img src="img/R-ecology-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
 
 불행하게도, 상기 그래프는 원하는 바가 아닌데, 이유는 모든 종에 대해 데이터를 시각화하게 명령어를 전송했기 때문이다.
 `species_id`로 시각화한 데이터를 쪼갠 후에 `ggplot` 명령어로 시각화하게 한다.
@@ -231,7 +277,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id)) +
   geom_line()
 ~~~
 
-<img src="img/R-ecology-unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
 색상을 추가하게 되면, 그래프에서 개체를 식별하게 된다.
 
@@ -241,7 +287,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id, color = sp
   geom_line()
 ~~~
 
-<img src="img/R-ecology-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
 
 ###  측면보여주기(faceting)
 
@@ -255,7 +301,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
   geom_line() + facet_wrap(~species_id)
 ~~~
 
-<img src="img/R-ecology-first-facet-1.png" title="plot of chunk first-facet" alt="plot of chunk first-facet" style="display: block; margin: auto;" />
+<img src="fig/first-facet-1.png" title="plot of chunk first-facet" alt="plot of chunk first-facet" style="display: block; margin: auto;" />
 
 관측된 각 개체 성별에 따라 그래프에 직선을 쪼개고자 한다.
 이 작업을 수행하려면, 성별로 그룹을 만들어 데이터프레임에 개수를 세어야 된다.
@@ -290,7 +336,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ species_id)
 > ~~~
 > 
-> <img src="img/R-ecology-facet-by-species-and-sex-1.png" title="plot of chunk facet-by-species-and-sex" alt="plot of chunk facet-by-species-and-sex" style="display: block; margin: auto;" />
+> <img src="fig/facet-by-species-and-sex-1.png" title="plot of chunk facet-by-species-and-sex" alt="plot of chunk facet-by-species-and-sex" style="display: block; margin: auto;" />
 >
 > - 논문출판으로 흰색 배경이 좀더 가독성을 좋게 한다.
 > ` theme_bw()` 함수를 사용해서 흰색 배경을 적용한다.
@@ -301,7 +347,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ species_id) + theme_bw()
 > ~~~
 > 
-> <img src="img/R-ecology-facet-by-species-and-sex-white-bg-1.png" title="plot of chunk facet-by-species-and-sex-white-bg" alt="plot of chunk facet-by-species-and-sex-white-bg" style="display: block; margin: auto;" />
+> <img src="fig/facet-by-species-and-sex-white-bg-1.png" title="plot of chunk facet-by-species-and-sex-white-bg" alt="plot of chunk facet-by-species-and-sex-white-bg" style="display: block; margin: auto;" />
 > 
 > > - 종대신에 성별로 색상을 입혀서 그래프 가독성을 좋게 만들 수 있다.
 > > (종은 이미 별도 그래프로 시각화되어서, 더 잘 식별하게 만들 필요는 없다.)
@@ -313,7 +359,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ species_id) + theme_bw()
 > ~~~
 > 
-> <img src="img/R-ecology-facet-by-species-and-sex-colored-1.png" title="plot of chunk facet-by-species-and-sex-colored" alt="plot of chunk facet-by-species-and-sex-colored" style="display: block; margin: auto;" />
+> <img src="fig/facet-by-species-and-sex-colored-1.png" title="plot of chunk facet-by-species-and-sex-colored" alt="plot of chunk facet-by-species-and-sex-colored" style="display: block; margin: auto;" />
 > 
 > > - 연도에 걸쳐 각 종별로 평균 체중을 시각화한다.
 > 
@@ -326,7 +372,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + theme_bw()
 > ~~~
 > 
-> <img src="img/R-ecology-average-weight-timeseries-1.png" title="plot of chunk average-weight-timeseries" alt="plot of chunk average-weight-timeseries" style="display: block; margin: auto;" />
+> <img src="fig/average-weight-timeseries-1.png" title="plot of chunk average-weight-timeseries" alt="plot of chunk average-weight-timeseries" style="display: block; margin: auto;" />
 > 
 > > - 시각화를 왜 이런 단계를 밟아서 도식화 절차를 거친다고 생각하는가?
 > > - 수컷과 암컷 체중이 상당히 차이가 나서 성별로 별도 시각화를 수행한다.
@@ -337,7 +383,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ sex) + theme_bw()
 > ~~~
 > 
-> <img src="img/R-ecology-average-weight-time-facet_sex-1.png" title="plot of chunk average-weight-time-facet_sex" alt="plot of chunk average-weight-time-facet_sex" style="display: block; margin: auto;" />
+> <img src="fig/average-weight-time-facet_sex-1.png" title="plot of chunk average-weight-time-facet_sex" alt="plot of chunk average-weight-time-facet_sex" style="display: block; margin: auto;" />
 > 지금까지 시각화 결과가 상당히 좋았지만, 아직 출판하기에는 많이 부족하다.
 > 시각화 산출물 결과를 향상할 수 있는 다른 방법은 무엇이 있을까?
 > `ggplot2` [컨닝쪽지(cheat sheet)](https://www.rstudio.com/wp-content/uploads/2015/08/ggplot2-cheatsheet.pdf)를 
@@ -355,7 +401,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >        y = 'Number of species') + theme_bw()
 > ~~~
 > 
-> <img src="img/R-ecology-number_species_year_with_right_labels-1.png" title="plot of chunk number_species_year_with_right_labels" alt="plot of chunk number_species_year_with_right_labels" style="display: block; margin: auto;" />
+> <img src="fig/number_species_year_with_right_labels-1.png" title="plot of chunk number_species_year_with_right_labels" alt="plot of chunk number_species_year_with_right_labels" style="display: block; margin: auto;" />
 > 
 > 이제 좀더 나아져서 훨씬 더 많은 정보를 주는 `x`, `y` 축 명칭으로 바꿨지만, 가독성이 떨어지고 있다.
 > 글자 크기를 변경하고 글자체도 변경한다.
@@ -371,7 +417,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   theme(text=element_text(size=16, family="Arial")) + theme_bw()
 > ~~~
 > 
-> <img src="img/R-ecology-number_species_year_with_right_labels_xfont_size-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_size" alt="plot of chunk number_species_year_with_right_labels_xfont_size" style="display: block; margin: auto;" />
+> <img src="fig/number_species_year_with_right_labels_xfont_size-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_size" alt="plot of chunk number_species_year_with_right_labels_xfont_size" style="display: block; margin: auto;" />
 > 
 > 조작을 한 다음에, `x` 축이 여전히 적절한 가독성을 전달하고 있지 않음을 볼 수 있다.
 > 라벨 방향을 변경해서 서로 겹쳐지지 않도록 수평 혹은 수직방향으로 바꾼다.
@@ -391,7 +437,7 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >          y = 'Number of species')
 > ~~~
 > 
-> <img src="img/R-ecology-number_species_year_with_right_labels_xfont_orientation-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_orientation" alt="plot of chunk number_species_year_with_right_labels_xfont_orientation" style="display: block; margin: auto;" />
+> <img src="fig/number_species_year_with_right_labels_xfont_orientation-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_orientation" alt="plot of chunk number_species_year_with_right_labels_xfont_orientation" style="display: block; margin: auto;" />
 > 
 > 이제, 라벨을 키워서 가독성이 더 좋아졌지만, 개선할 여지는 남아 있다.
 > 시간을 5분만 더 들여서 더 나은 시각화 산출물을 만들어 내도록 하나 혹은 두가지 작업을 시도해 본다.
