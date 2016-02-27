@@ -37,6 +37,7 @@ title: 데이터 과학
 1. [지리정보](geo-info.html)
     - [구글](geo-info-google.html)
 1. [SNS](sns-intro.html)
+1. [R 인코딩](encoding.html)
 1. 데이터 과학 툴체인
     - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
