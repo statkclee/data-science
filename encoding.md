@@ -51,7 +51,7 @@ subtitle: R 인코딩
 이런 연속된 바이트 일부에 "현재 라인은 여기서 종료" 라는 의미가 담겨진다.
 이러한 표현법으로 일본 전통 단시 하이쿠를 다시 표현하면 다음과 같다.
 
-<img src="fig/encoding-variable-width.png" alt="변동폭 텍스트 배열" width="50%" />
+<img src="fig/encoding-variable-width.png" alt="변동폭 텍스트 배열" width="70%" />
 
 회색칸이 "행의 끝(end of line)"을 의미한다.
 이런 표기법이 더 유연하고, 공간을 덜 낭비하지만, N번째 행 앞으로 뒤로 건너뛰는 것은 더 어렵다.
