@@ -11,10 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-``` {r, include=FALSE}
-source("tools/chunk-options.R")
-#source("setup.R")
-```
+
 
 
 > ## 학습 목표 [^data-carpentry-ggplot2] {.objectives}
@@ -34,7 +31,8 @@ R에 기본적으로 시각화를 위한 다양한 기능이 존재하지만, `g
 
 ### 데이터 다운로드와 시각화 툴체인 준비
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+~~~{.r}
 # read_csv로 csv 파일을 불러 읽어온다.
 library(readr)
 # 시각화를 위한 ggplot2 팩키지를 불러 읽어온다. 
@@ -43,7 +41,7 @@ library(ggplot2)
 library(dplyr)
 # 데이터를 불러온다.
 surveys.dat <- read_csv("http://files.figshare.com/1919744/surveys.csv")
-```
+~~~
 
 [figshare](https://figshare.com/)[^figshare-wired] 사이트에서 데이터를 가져온다. `surveys.csv` 데이터는 포획된 동물에 관한 측정정보가 담겨 있다.
 
@@ -51,9 +49,10 @@ surveys.dat <- read_csv("http://files.figshare.com/1919744/surveys.csv")
 
 다운로드 받은 데이터에 대한 요약정보를 `summary` 함수를 사용해서 살펴본다.
 
-``` {r}
+
+~~~{.r}
 summary(surveys.dat)
-```
+~~~
 
 #### 1 단계 - 결측값 제거
 
@@ -61,12 +60,13 @@ summary(surveys.dat)
 각 변수마다 결측치가 있어 이를 한땀 한땀 정성스럽게 결측정보를 제거하는 대신에 `dplyr` 파이프 연산자를 사용하여
 일괄적으로 처리한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+~~~{.r}
 surveys.complete <- surveys.dat %>%
                     filter(species_id != "") %>%       # species_id 결측값 제거
                     filter(!is.na(weight)) %>%          # weight 결측값 제거
                     filter(!is.na(hindfoot_length))     # hindfoot_length 결측값 제거
-```
+~~~
 #### 2 단계 - 미미한 자료 제거
 
 개체수가 적은 종이 많아서, 개체수 기준 10 보다 적은 종은 제거하기로 한다.
@@ -74,32 +74,37 @@ surveys.complete <- surveys.dat %>%
 내부인자로 `sort=TRUE` 를 넣어서 내림차순으로 정렬한다. 
 
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+~~~{.r}
 species.counts <- surveys.complete %>%
   group_by(species_id) %>%
   tally(sort=TRUE)
 
 tail(species.counts)
-```
+~~~
 
 개체수가 10개 미만인 종을 제거하고, 시각화를 위한 기본 데이터셋 준비를 완료한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+~~~{.r}
 frequent.species <- species.counts %>%
                     filter(n >= 10) %>%
                     select(species_id)
 
 surveys.complete <- surveys.complete %>%
            filter(species_id %in% frequent.species$species_id)
-```
+~~~
 
 #### 기본 R 시각화 기능 활용
 
 `weight`를 예측변수 `x` 위치에 두고, 종속변수 `hindfoot_length`를 `y`에 두고 R 기본 시각화 산점도를 도식화해 보자.
 
-``` {r base-plot}
+
+~~~{.r}
 plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length)
-```
+~~~
+
+<img src="img/R-ecology-base-plot-1.png" title="plot of chunk base-plot" alt="plot of chunk base-plot" style="display: block; margin: auto;" />
 
 ### `ggplot2` 팩키지로 시각화
 
@@ -114,23 +119,28 @@ plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length)
 
 - `data` 인자로 특정 데이터프레임과 플롯을 묶어 연결시킨다.
 
-```{r, eval=FALSE}
+
+~~~{.r}
 ggplot(data = surveys.complete)
-```
+~~~
 
 - 미적 요소를 `aes` 로 정의해서, 플롯축에 데이터 변수를 매핑하고, 크기, 모양, 색상 등을 시각화한다. 
 
-```{r, eval=FALSE}
+
+~~~{.r}
 ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length))
-``` 
+~~~
 
 - 데이터에 대한 시각적 표현(점, 선, 막대 등)을 하는데 `geoms` 을 사용해서 플롯에 반영한다. 
 플롯에 `geoms`를 추가하는데 `+` 연산자를 사용한다::
 
-```{r first-ggplot}
+
+~~~{.r}
 ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point()
-``` 
+~~~
+
+<img src="img/R-ecology-first-ggplot-1.png" title="plot of chunk first-ggplot" alt="plot of chunk first-ggplot" style="display: block; margin: auto;" />
 
 > #### 주의 사항 {.callout}
 >
@@ -141,34 +151,46 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
 
 - 투명도(transparaency, alpha)를 추가한다.
 
-```{r first-ggplot-alpha}
+
+~~~{.r}
 ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point(alpha=0.1)
-``` 
+~~~
+
+<img src="img/R-ecology-first-ggplot-alpha-1.png" title="plot of chunk first-ggplot-alpha" alt="plot of chunk first-ggplot-alpha" style="display: block; margin: auto;" />
 
 - 색상을 추가한다.
 
-```{r first-ggplot-alpha-color}
+
+~~~{.r}
 ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point(alpha=0.1, color = "blue")
-``` 
+~~~
+
+<img src="img/R-ecology-first-ggplot-alpha-color-1.png" title="plot of chunk first-ggplot-alpha-color" alt="plot of chunk first-ggplot-alpha-color" style="display: block; margin: auto;" />
 
 ### 상자 그림
 
 각 종별로 체중 분포를 시각화한다.
 
-```{r boxplot}
+
+~~~{.r}
 ggplot(data = surveys.complete, aes(x = species_id,  y = weight)) +
                    geom_boxplot()
-```
+~~~
+
+<img src="img/R-ecology-boxplot-1.png" title="plot of chunk boxplot" alt="plot of chunk boxplot" style="display: block; margin: auto;" />
 
 상자그림에 점을 추가해서, 특이한 관측점과 많이 관측된 측정값을 볼 수 있다.
 
-```{r boxplot-with-points}
+
+~~~{.r}
 ggplot(data = surveys.complete, aes(x = species_id, y = weight)) +
                    geom_jitter(alpha = 0.3, color = "tomato") +
                    geom_boxplot(alpha = 0)
-```
+~~~
+
+<img src="img/R-ecology-boxplot-with-points-1.png" title="plot of chunk boxplot-with-points" alt="plot of chunk boxplot-with-points" style="display: block; margin: auto;" />
 
 상기 시각화 산출물에서 상자그림이 지터 계층 위에 놓인 방식에 주목한다.
 `geoms` 순서를 조정하고, 투명도를 조절해 플롯에 계층을 쌓는 방식을 제어한다.
@@ -183,34 +205,43 @@ ggplot(data = surveys.complete, aes(x = species_id, y = weight)) +
 이 작업을 수행하기 위해서는 먼저 데이터를 그룹집단화하고, 각 그룹마다 해당 레코드 개수를 센다.
 
 
-```{r}
+
+~~~{.r}
 yearly.counts <- surveys.complete %>%
                  group_by(year, species_id) %>%
                  tally
-```
+~~~
 
 `x`축에 연도, `y` 축에 개수를 놓고 직선으로 시간에 따라 경과한 정보를 시각화한다.
 
-```{r}
+
+~~~{.r}
 ggplot(data = yearly.counts, aes(x = year, y = n)) +
                   geom_line()
-```
+~~~
+
+<img src="img/R-ecology-unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
 
 불행하게도, 상기 그래프는 원하는 바가 아닌데, 이유는 모든 종에 대해 데이터를 시각화하게 명령어를 전송했기 때문이다.
 `species_id`로 시각화한 데이터를 쪼갠 후에 `ggplot` 명령어로 시각화하게 한다.
 
-```{r}
+
+~~~{.r}
 ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id)) +
   geom_line()
-```
+~~~
+
+<img src="img/R-ecology-unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
 색상을 추가하게 되면, 그래프에서 개체를 식별하게 된다.
 
-```{r}
+
+~~~{.r}
 ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id, color = species_id)) +
   geom_line()
+~~~
 
-```
+<img src="img/R-ecology-unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
 
 ###  측면보여주기(faceting)
 
@@ -218,10 +249,13 @@ ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id, color = sp
 그래프 하나를 다수 그래프로 쪼갤 수 있다. 예를 들어, 각 종마다 시계열 그래프를 별도로 
 도식화할 수 있다.
 
-```{r first-facet}
+
+~~~{.r}
 ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
   geom_line() + facet_wrap(~species_id)
-``` 
+~~~
+
+<img src="img/R-ecology-first-facet-1.png" title="plot of chunk first-facet" alt="plot of chunk first-facet" style="display: block; margin: auto;" />
 
 관측된 각 개체 성별에 따라 그래프에 직선을 쪼개고자 한다.
 이 작업을 수행하려면, 성별로 그룹을 만들어 데이터프레임에 개수를 세어야 된다.
@@ -232,61 +266,78 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >  
 > 
 > 
-> ```{r}
+> 
+> ~~~{.r}
 > sex_values = c("F", "M")
 > surveys.complete <- surveys.complete %>%
 >            filter(sex %in% sex_values)
-> ```
+> ~~~
 > 
 > - 연도(`year`), 개체 신원정보(`special_id`), 성(`sex`) 별로 그룹을 만든다.
 >
-> ```{r}
+> 
+> ~~~{.r}
 > yearly.sex.counts <- surveys.complete %>%
 >                      group_by(year, species_id, sex) %>%
 >                      tally
-> ```
+> ~~~
 >
 > - (개별 그래프 내부에) 성별로 쪼개는 측면보여주기 플롯을 생성한다.
 >
-> ```{r facet-by-species-and-sex}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, group = sex)) +
 >   geom_line() + facet_wrap(~ species_id)
-> ```
+> ~~~
+> 
+> <img src="img/R-ecology-facet-by-species-and-sex-1.png" title="plot of chunk facet-by-species-and-sex" alt="plot of chunk facet-by-species-and-sex" style="display: block; margin: auto;" />
 >
 > - 논문출판으로 흰색 배경이 좀더 가독성을 좋게 한다.
 > ` theme_bw()` 함수를 사용해서 흰색 배경을 적용한다.
 > 
-> ```{r facet-by-species-and-sex-white-bg}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, group = sex)) +
 >   geom_line() + facet_wrap(~ species_id) + theme_bw()
-> ``` 
+> ~~~
+> 
+> <img src="img/R-ecology-facet-by-species-and-sex-white-bg-1.png" title="plot of chunk facet-by-species-and-sex-white-bg" alt="plot of chunk facet-by-species-and-sex-white-bg" style="display: block; margin: auto;" />
 > 
 > > - 종대신에 성별로 색상을 입혀서 그래프 가독성을 좋게 만들 수 있다.
 > > (종은 이미 별도 그래프로 시각화되어서, 더 잘 식별하게 만들 필요는 없다.)
 > 
 > 
-> ```{r facet-by-species-and-sex-colored}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
 >   geom_line() + facet_wrap(~ species_id) + theme_bw()
-> ```
+> ~~~
+> 
+> <img src="img/R-ecology-facet-by-species-and-sex-colored-1.png" title="plot of chunk facet-by-species-and-sex-colored" alt="plot of chunk facet-by-species-and-sex-colored" style="display: block; margin: auto;" />
 > 
 > > - 연도에 걸쳐 각 종별로 평균 체중을 시각화한다.
 > 
-> ```{r average-weight-timeseries}
+> 
+> ~~~{.r}
 > yearly.weight <- surveys.complete %>%
 >                  group_by(year, species_id, sex) %>%
 >                  summarise(avg_weight = mean(weight, na.rm = TRUE))
 > ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
 >   geom_line() + theme_bw()
-> ```
+> ~~~
+> 
+> <img src="img/R-ecology-average-weight-timeseries-1.png" title="plot of chunk average-weight-timeseries" alt="plot of chunk average-weight-timeseries" style="display: block; margin: auto;" />
 > 
 > > - 시각화를 왜 이런 단계를 밟아서 도식화 절차를 거친다고 생각하는가?
 > > - 수컷과 암컷 체중이 상당히 차이가 나서 성별로 별도 시각화를 수행한다.
 > 
-> ```{r average-weight-time-facet_sex}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
 >   geom_line() + facet_wrap(~ sex) + theme_bw()
-> ```
+> ~~~
+> 
+> <img src="img/R-ecology-average-weight-time-facet_sex-1.png" title="plot of chunk average-weight-time-facet_sex" alt="plot of chunk average-weight-time-facet_sex" style="display: block; margin: auto;" />
 > 지금까지 시각화 결과가 상당히 좋았지만, 아직 출판하기에는 많이 부족하다.
 > 시각화 산출물 결과를 향상할 수 있는 다른 방법은 무엇이 있을까?
 > `ggplot2` [컨닝쪽지(cheat sheet)](https://www.rstudio.com/wp-content/uploads/2015/08/ggplot2-cheatsheet.pdf)를 
@@ -294,19 +345,23 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 > 
 > `x`축과 `y`축에 'year'와 'n' 보다 더 많은 정보를 전달하도록 변경하고, 그래프에 제목을 추가한다.
 > 
-> ```{r number_species_year_with_right_labels}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
 >   geom_line() +
 >   facet_wrap(~ species_id) +
 >   labs(title = 'Observed species in time',
 >        x = 'Year of observation',
 >        y = 'Number of species') + theme_bw()
-> ``` 
+> ~~~
+> 
+> <img src="img/R-ecology-number_species_year_with_right_labels-1.png" title="plot of chunk number_species_year_with_right_labels" alt="plot of chunk number_species_year_with_right_labels" style="display: block; margin: auto;" />
 > 
 > 이제 좀더 나아져서 훨씬 더 많은 정보를 주는 `x`, `y` 축 명칭으로 바꿨지만, 가독성이 떨어지고 있다.
 > 글자 크기를 변경하고 글자체도 변경한다.
 > 
-> ```{r number_species_year_with_right_labels_xfont_size}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
 >   geom_line() +
 >   facet_wrap(~ species_id) +
@@ -314,13 +369,16 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >        x = 'Year of observation',
 >        y = 'Number of species') +
 >   theme(text=element_text(size=16, family="Arial")) + theme_bw()
-> ```
+> ~~~
+> 
+> <img src="img/R-ecology-number_species_year_with_right_labels_xfont_size-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_size" alt="plot of chunk number_species_year_with_right_labels_xfont_size" style="display: block; margin: auto;" />
 > 
 > 조작을 한 다음에, `x` 축이 여전히 적절한 가독성을 전달하고 있지 않음을 볼 수 있다.
 > 라벨 방향을 변경해서 서로 겹쳐지지 않도록 수평 혹은 수직방향으로 바꾼다.
 > 90도 각도를 사용하거나, 대각선 방향으로 라벨방향을 변경하도록 적절한 각도로 바꾸는 실험을 진행한다. 
 > 
-> ```{r number_species_year_with_right_labels_xfont_orientation}
+> 
+> ~~~{.r}
 > ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, group = sex)) +
 >     geom_line() +
 >     facet_wrap(~ species_id) +
@@ -331,7 +389,9 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >     labs(title = 'Observed species in time',
 >          x = 'Year of observation',
 >          y = 'Number of species')
-> ```
+> ~~~
+> 
+> <img src="img/R-ecology-number_species_year_with_right_labels_xfont_orientation-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_orientation" alt="plot of chunk number_species_year_with_right_labels_xfont_orientation" style="display: block; margin: auto;" />
 > 
 > 이제, 라벨을 키워서 가독성이 더 좋아졌지만, 개선할 여지는 남아 있다.
 > 시간을 5분만 더 들여서 더 나은 시각화 산출물을 만들어 내도록 하나 혹은 두가지 작업을 시도해 본다.
@@ -346,9 +406,10 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 > 완벽한 시각화 산출물이 도출되면, 선호하는 그림파일 형식으로 저장한다.
 > 그림 폭과 높이를 지정해서 크기를 쉽게 변경한다.
 > 
-> ```{r number_species_year_with_right_labels_xfont_save, eval=FALSE}
+> 
+> ~~~{.r}
 > ggsave("observed_species_in_time.png", width=15, height=10)
-> ```
+> ~~~
 
 
 > ### `Error in plot.new() : figure margins too large` 시각화 문제 해결 {.callout}
