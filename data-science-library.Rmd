@@ -25,7 +25,6 @@ source("tools/chunk-options.R")
 
 ``` {r message=FALSE, warning=FALSE, comment=FALSE}
 .libPaths()
-.libPaths("~/myPackages")
 ```
 
 `[1] "C:/Users/KwangChun/Documents/R/win-library/3.2"` 디렉토리는 
@@ -33,6 +32,8 @@ source("tools/chunk-options.R")
 `[2] "C:/Program Files/R/R-3.2.3/library"` 디렉토리에는 
 기본 팩키지와 유틸리티가 나타나 있다.
 
+
+`.Rprofile` 파일에 `.libPaths("C:/Users/xwMOOC/Rpackages")`를 추가해서 팩키지를 한 곳에 몰아 관리할 수도 있다.
 
 
 
