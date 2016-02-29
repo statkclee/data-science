@@ -10,7 +10,9 @@ output:
 mainfont: NanumGothic
 ---
 
-
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+```
 
 > ## 학습 목표 {.objectives}
 >
@@ -36,40 +38,19 @@ mainfont: NanumGothic
 
 [^kor-lonlat]: [대한민국의 위도와 경도를 알고 싶어요](http://tip.daum.net/question/3092152)
 
-
-~~~{.r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
 # 위치를 지정한다.
 krLocation <- c(124.11, 33.06, 131.52, 43.00) #좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도
 southKrLocation <- c(125.04, 33.06, 131.52, 38.27)
 #krLocation <- c(lon=126, lat=37) # 대한민국 서울
 krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, toner, watercolor
-~~~
-
-
-
-~~~{.output}
-FALSE Error in eval(expr, envir, enclos): 함수 "get_map"를 찾을 수 없습니다
-
-~~~
-
-
-
-~~~{.r}
 ggmap(krMap)
-~~~
-
-
-
-~~~{.output}
-FALSE Error in eval(expr, envir, enclos): 함수 "ggmap"를 찾을 수 없습니다
-
-~~~
+```
 
 `googlemap`이 위도경도 지도중앙, `stamen`, `openstreetmap`, `cloudmade`는 
 위도경도 상자표기를 권장한다.
 
-
-~~~{.r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, toner, watercolor
 ggmap(krMap)
 
@@ -84,7 +65,7 @@ ggmap(krMap)
 
 krMap <- get_map(location=krLocation, source="google", maptype="roadmap", crop=FALSE) #terrain, satellite, roadmap, hybrid
 ggmap(krMap)
-~~~
+```
 
 krMap <- get_map(location=krLocation, source="google", maptype="hybrid", crop=FALSE) #terrain, satellite, roadmap, hybrid
 ggmap(krMap)
@@ -103,24 +84,13 @@ R 저장소 최신 버젼을 다운로드 받는 경우.
 #### 설치된 팩키지 검색방법 [^statmethods-packages]
 
 
-
-~~~{.r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 library()
-~~~
+```
 
-
-~~~{.r}
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
 search()
-~~~
-
-
-
-~~~{.output}
-FALSE [1] ".GlobalEnv"        "package:knitr"     "package:stats"    
-FALSE [4] "package:graphics"  "package:grDevices" "package:utils"    
-FALSE [7] "package:datasets"  "Autoloads"         "package:base"
-
-~~~
+```
 
 [^statmethods-packages]: [Statmethods - Packages](http://www.statmethods.net/interface/packages.html)
 

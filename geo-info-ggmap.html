@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-16', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">지리정보 시각화 - ggmap</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>ggmap</code></li>
+</ul>
+</div>
+</section>
+<p>대한민국 경도범위는 124 – 132, 위도범위는 33 – 43 이다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="대한민국-위도와-경도-kor-lonlat"><span class="glyphicon glyphicon-pushpin"></span>대한민국 위도와 경도 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+</div>
+<div class="panel-body">
+<h4 id="대한민국-전체">대한민국 전체</h4>
+<ul>
+<li>극동: 경상북도 울릉군의 독도 동단 동경 131° 52′20“,</li>
+<li>극서: 평안북도 용천군 신도면 마안도 서단 동경 124° 11′45&quot;</li>
+<li>극남: 제주도 남제주군 대정읍 마라도 남단 북위 33° 06′40&quot;</li>
+<li>극북: 함경북도 온성군 남양면 북단 북위 43° 00′35&quot;</li>
+</ul>
+<h4 id="북한-제외">북한 제외</h4>
+<ul>
+<li>극동: 경상북도 울릉군의 독도(獨島)로 동경 131° 52′,</li>
+<li>극서: 전라남도 신안군의 소흑산도(小黑山島)로 동경 125° 04′,</li>
+<li>극북: 강원도 고성군 현내면 송현진으로 북위 38° 27′,</li>
+<li>극남: 제주도 남제주군 마라도(馬羅島)로 북위 33° 06′이다.</li>
+</ul>
+</div>
+</aside>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 위치를 지정한다.</span>
+krLocation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">124.11</span>, <span class="fl">33.06</span>, <span class="fl">131.52</span>, <span class="fl">43.00</span>) <span class="co">#좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도</span>
+southKrLocation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">125.04</span>, <span class="fl">33.06</span>, <span class="fl">131.52</span>, <span class="fl">38.27</span>)
+<span class="co">#krLocation &lt;- c(lon=126, lat=37) # 대한민국 서울</span>
+krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;toner&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span></code></pre></div>
+<pre class="output"><code>FALSE Error in eval(expr, envir, enclos): 함수 &quot;get_map&quot;를 찾을 수 없습니다
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggmap</span>(krMap)</code></pre></div>
+<pre class="output"><code>FALSE Error in eval(expr, envir, enclos): 함수 &quot;ggmap&quot;를 찾을 수 없습니다
+</code></pre>
+<p><code>googlemap</code>이 위도경도 지도중앙, <code>stamen</code>, <code>openstreetmap</code>, <code>cloudmade</code>는 위도경도 상자표기를 권장한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;toner&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span>
+<span class="kw">ggmap</span>(krMap)
+
+krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;watercolor&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span>
+<span class="kw">ggmap</span>(krMap)
+
+krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;google&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;terrain&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid</span>
+<span class="kw">ggmap</span>(krMap)
+
+krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;google&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;satellite&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid</span>
+<span class="kw">ggmap</span>(krMap)
+
+krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;google&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;roadmap&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid</span>
+<span class="kw">ggmap</span>(krMap)</code></pre></div>
+<p>krMap &lt;- get_map(location=krLocation, source=“google”, maptype=“hybrid”, crop=FALSE) #terrain, satellite, roadmap, hybrid ggmap(krMap)</p>
+<h3 id="팩키지-설치-방법">팩키지 설치 방법</h3>
+<p>R 저장소 안정된 버젼을 다운로드 받는 경우.</p>
+<ul>
+<li>install.packages(“mapmisc”)</li>
+</ul>
+<p>R 저장소 최신 버젼을 다운로드 받는 경우.</p>
+<ul>
+<li><code>install.packages(&quot;mapmisc&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)</code></li>
+</ul>
+<h4 id="설치된-팩키지-검색방법-statmethods-packages">설치된 팩키지 검색방법 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">search</span>()</code></pre></div>
+<pre class="output"><code>FALSE [1] &quot;.GlobalEnv&quot;        &quot;package:knitr&quot;     &quot;package:stats&quot;    
+FALSE [4] &quot;package:graphics&quot;  &quot;package:grDevices&quot; &quot;package:utils&quot;    
+FALSE [7] &quot;package:datasets&quot;  &quot;Autoloads&quot;         &quot;package:base&quot;
+</code></pre>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://tip.daum.net/question/3092152">대한민국의 위도와 경도를 알고 싶어요</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.statmethods.net/interface/packages.html">Statmethods - Packages</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
