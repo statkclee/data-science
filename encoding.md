@@ -11,11 +11,19 @@ subtitle: R 인코딩
 > * R에서 봉착하는 인코딩 문제에 대한 해법을 이해한다.
 
 
-### 인코딩 [^swcarpentry-v4-encoding]
+### 인코딩과 유니코드를 사용해야 되는 이유 [^swcarpentry-v4-encoding]
 
 인코딩에 대한 기본 개념 및 교재는 소프트웨어 카펜트리 버젼 4 파이썬 텍스트에 대한 내용을 번역한 것이며 R에서 자주 봉착하는 인코딩 문제를 윈도우를 많이 사용하는 환경에 맞춰 체계적으로 정리했다.
 
 [^swcarpentry-v4-encoding]: [파이썬 - 텍스트](http://v4.software-carpentry.org/python/text.html)
+
+인코딩에 **UTF-8** 을 사용해야 되는 이유는 2016년 기준 86.4 % 웹사이트가 사용하기 때문이다.
+
+<img src="fig/encoding-utf-8.png" alt="웹에서 UTF-8 성장세" width="50%" />
+
+- [Unicode nearing 50% of the web ](https://googleblog.blogspot.kr/2010/01/unicode-nearing-50-of-web.html)
+- [UTF-8](https://en.wikipedia.org/wiki/UTF-8)
+- [Usage of character encodings for websites](http://w3techs.com/technologies/overview/character_encoding/all)
 
 ### 1. 아스키 코드
 
@@ -138,3 +146,67 @@ dat <-read.csv("dat.csv", encoding="UTF-8", stringsAsFactors=FALSE)
 ~~~ {.input}
 $ iconv -f UTF8 -t EUC-KR sms_db_master.csv > sms_db_master_encoding.csv
 ~~~
+
+### 6. R 인코딩 확인
+
+`Sys.getlocale()` 명령어를 통해 현재 설정된 인코딩을 확인한다. 윈도우 운영체제를 사용하는 경우 
+`CP949`가 기본디폴트 설정으로 떨어진다.
+
+~~~ {.r}
+# Sys.getlocale()
+unlist(strsplit(Sys.getlocale(), ";"))
+~~~
+
+~~~ {.output}
+[1] "LC_COLLATE=Korean_Korea.949"  "LC_CTYPE=Korean_Korea.949"    "LC_MONETARY=Korean_Korea.949"
+[4] "LC_NUMERIC=C"                 "LC_TIME=Korean_Korea.949"    
+~~~
+
+`l10n_info()` 명령어를 통해 현지화(Localization) 설정정보를 확인한다.
+
+~~~ {.r}
+l10n_info()
+~~~
+
+~~~ {.output}
+$MBCS
+[1] TRUE
+
+$`UTF-8`
+[1] FALSE
+
+$`Latin-1`
+[1] FALSE
+
+$codepage
+[1] 949
+~~~
+
+`.Platform` 명령어를 통해서 현재 R이 실행되는 환경 정보를 확인할 수 있다.
+
+~~~ {.r}
+unlist(.Platform)
+~~~
+
+~~~ {.output}
+  OS.type     file.sep   dynlib.ext          GUI       endian      pkgType     path.sep 
+"windows"          "/"       ".dll"    "RStudio"     "little" "win.binary"          ";" 
+   r_arch 
+    "x64" 
+~~~
+
+`CP949`를 유니코드로 설정을 바꾼는 명령어가 `Sys.setlocale` 함수에 
+인자값으로 `ko_KR.UTF-8`을 넣어준다.
+
+~~~ {.r}
+Sys.setlocale("LC_COLLATE", "ko_KR.UTF-8")
+~~~
+
+> ### EUC-KR, CP949 {.callout}
+> 
+> `EUC-KR`, `CP949` 모두 2바이트 한글을 표현하는 방식으로 동일점이 있지만,
+> `EUC-KR` 인코딩 방식은 완성형으로 불리며 8비트 문자인코딩으로 초기 사용되던 방식이고, 
+> `CP949`는 확장 완성형으로도 불리며 `EUC-KR`에서 표현할 수 없는 한글글자마디 8,822자를 추가한 것으로
+> 마이크로소프트 코드페이지(Code Page) 949를 사용하기 시작하면서 일반화되었다.  
+>
+> 참고: [CP949 to Unicode table](http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/> CP949.TXT)
