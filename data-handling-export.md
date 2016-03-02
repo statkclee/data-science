@@ -10,9 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-````
+
 
 
 
@@ -64,20 +62,48 @@ R에서 데이터를 파일로 써서 내보내는 경우는 많지만, 다음 �
 데이터를 하드디스크에 파일을 불러읽어도 되지만, 
 `gapminder` 팩키지에 `gapminder.tsv` 파일이 저장되어 있어 이 파일을 바로 불러 읽어들인다.
 
-```{r}
+
+~~~{.r}
 gap_tsv <- system.file("gapminder.tsv", package = "gapminder")
 gapminder <- read.table(gap_tsv, header = TRUE, sep = "\t", quote = "")
 str(gapminder)
-```
+~~~
+
+
+
+~~~{.output}
+'data.frame':	1704 obs. of  6 variables:
+ $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+ $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+ $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+ $ gdpPercap: num  779 821 853 836 740 ...
+
+~~~
 
 R에 기본으로 설정된 가져오기 함수는 `read.table()`이다. 인자 몇개에 일반적인 값의 조합을 해서 넘겨야 되지만,
 탭구분 데이터를 가진 경우, 몇가지 인자 설정을 생략할 수 있는 더욱 단순한 `read.delim()` 함수로 데이터를 불러 읽어올 
 수 있다.
 
-```{r}
+
+~~~{.r}
 gapminder <- read.delim(gap_tsv)
 str(gapminder)
-```
+~~~
+
+
+
+~~~{.output}
+'data.frame':	1704 obs. of  6 variables:
+ $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+ $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+ $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+ $ gdpPercap: num  779 821 853 836 740 ...
+
+~~~
 
 콤마구분자인 경우 `read.csv()` 함수가 `read.delim()` 함수와 유사한 편의성 기능을 제공한다.
 
@@ -85,22 +111,50 @@ str(gapminder)
 [readr CRAN](https://cran.r-project.org/web/packages/readr/index.html),
 [readr GitHub](https://github.com/hadley/readr) 참고한다.
 
-``` {.r}
+
+~~~{.r}
 library(readr)
 gapminder <- read_tsv(gap_tsv)
 str(gapminder)
-```
+~~~
+
+
+
+~~~{.output}
+Classes 'tbl_df', 'tbl' and 'data.frame':	1704 obs. of  6 variables:
+ $ country  : chr  "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
+ $ continent: chr  "Asia" "Asia" "Asia" "Asia" ...
+ $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+ $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+ $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+ $ gdpPercap: num  779 821 853 836 740 ...
+
+~~~
 
 `readr` 기본디폴트 동작으로 유념할 점은 **문자열(string)을 요소(factor) 자료형으로 변경하지 않는다**는 것이다.
 즉, `country`와 `continent`는 가져와서 불러읽어들이면 자료형이 문자형이다.
 크게 생각해 보면, 문자열을 다시 요소자료형으로 변경해야 되지만, 이런 것이 더 나은 기본디폴트 동작유형이다.
 일반적으로, `readr` 팩키지를 사용하게 되면 뒷단에 더 적은 작업량이 배정된다.
 
-``` {r}
+
+~~~{.r}
 gapminder$country <- factor(gapminder$country)
 gapminder$continent <- factor(gapminder$continent)
 str(gapminder)
-```
+~~~
+
+
+
+~~~{.output}
+Classes 'tbl_df', 'tbl' and 'data.frame':	1704 obs. of  6 variables:
+ $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+ $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+ $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+ $ gdpPercap: num  779 821 853 836 740 ...
+
+~~~
 
 `readr` 팩키지에 대한 소품문을 읽고 진정한 강력함을 느껴보기 바란다. 
 [칼럼 자료형](https://cran.r-project.org/web/packages/readr/vignettes/column-types.html) 참고.
@@ -108,7 +162,8 @@ str(gapminder)
 
 ### 데이터 내보내기
 
-```{r}
+
+~~~{.r}
 suppressPackageStartupMessages(library(dplyr))
 le_lin_fit <- function(dat, offset = 1952) {
   the_fit <- lm(lifeExp ~ I(year - offset), dat)
@@ -119,7 +174,28 @@ gfits <- gapminder %>%
   do(le_lin_fit(.)) %>% 
   ungroup()
 gfits
-```
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [142 x 4]
+
+       country continent intercept     slope
+        (fctr)    (fctr)     (dbl)     (dbl)
+1  Afghanistan      Asia  29.90729 0.2753287
+2      Albania    Europe  59.22913 0.3346832
+3      Algeria    Africa  43.37497 0.5692797
+4       Angola    Africa  32.12665 0.2093399
+5    Argentina  Americas  62.68844 0.2317084
+6    Australia   Oceania  68.40051 0.2277238
+7      Austria    Europe  66.44846 0.2419923
+8      Bahrain      Asia  52.74921 0.4675077
+9   Bangladesh      Asia  36.13549 0.4981308
+10     Belgium    Europe  67.89192 0.2090846
+..         ...       ...       ...       ...
+
+~~~
 
 
 
