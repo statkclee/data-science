@@ -1,0 +1,20 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 시각화
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+```{r  include = FALSE}
+source("tools/chunk-options.R")
+````
+
+> ## 학습 목표  {.objectives}
+>
+> * 
+

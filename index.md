@@ -3,8 +3,13 @@ layout: page
 title: 데이터 과학
 ---
 
+<img src="fig/ct-unplugged-4th-paradigm-korea.png" width="57%" />
 
-### 데이터 과학
+> ### 기계와의 경쟁을 준비하며... {.challenge}
+> "The future is here, it's just not evenly distributed yet."  
+>                                                           - William Gibson
+
+### R과 RStudio 툴체인 데이터 과학 
 
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
@@ -19,6 +24,7 @@ title: 데이터 과학
     - [RStudio 활용 코드작성](rstudio-writing-code.html)
     - [시간데이터](data-handling-timendate.html)
     - [데이터테이블](data-handling-datatable.html)
+    - [정렬(Sort)](data-handling-sorting-ex.html)
     - [SQL](data-handling-sql.html)    
     - [엑셀](data-handling-excel.html)
     - [R 이전 교육자료(2015)](data-handling-old.html)
@@ -26,22 +32,25 @@ title: 데이터 과학
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
-1. [정규표현식](regex-index.html)
-    - [정규표현식 소개](regex-intro.html)
-    - [간단한 패턴](regex-simple-pattern.html)
-    - [연산자](regex-operators.html)
-    - [작동원리](regex-under-the-hood.html)
-    - [추가 패턴](regex-more-pattern.html)
-    - [참고문헌 사례](regex-last-wrinkle.html)
-    - [요약](regex-wrapup.html)
-1. [텍스트 마이닝](text-ming.html)
-1. [지리정보](geo-info.html)
-    - [구글](geo-info-google.html)
-    - [ggmap](geo-info-ggmap.html) 
-1. [SNS](sns-intro.html)
-1. [R 인코딩](encoding.html)
-1. [R 라이브러리](library.html)
-1. 데이터 과학 툴체인
+1. [현대적인 과학논문 저작](http://statkclee.github.io/modern-scientific-authoring/index-kr.html)
+    - [심각한 현재 상황](http://statkclee.github.io/modern-scientific-authoring/01-mess-kr.html)  
+    - [마크다운 기초](http://statkclee.github.io/modern-scientific-authoring/02-markdown-kr.html)
+    - [고급 마크다운](http://statkclee.github.io/modern-scientific-authoring/03-advanced-kr.html)
+1. [텍스트 마이닝](text-mining.html)
+    - [R 인코딩](encoding.html)
+    - [정규표현식](regex-index.html)
+        + [정규표현식 소개](regex-intro.html)
+        + [간단한 패턴](regex-simple-pattern.html)
+        + [연산자](regex-operators.html)
+        + [작동원리](regex-under-the-hood.html)
+        + [추가 패턴](regex-more-pattern.html)
+        + [참고문헌 사례](regex-last-wrinkle.html)
+        + [요약](regex-wrapup.html)
+1. [시각화](viz.html)
+    - [지리정보](geo-info.html)
+        + [구글](geo-info-google.html)
+        + [ggmap](geo-info-ggmap.html) 
+1. [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
     - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
         - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
@@ -49,6 +58,8 @@ title: 데이터 과학
         - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
+1. [SNS](sns-intro.html)
+1. [R 라이브러리](library.html)
 
 
 > ## 참고 자료 {.prereq}
