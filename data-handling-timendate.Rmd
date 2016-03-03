@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 지리정보 시각화 - 구글
+subtitle: 시간데이터
 output:
   html_document: 
     keep_md: yes
