@@ -366,8 +366,7 @@ file.remove(list.files(pattern = "^gfits"))
 `readr` 팩키지의 경우, 칼럼명은 적법한 R 식별자로 정리되기 보다는, 있는 그대로 남겨진다.
 (즉, `check.names = TRUE`이 없다) 그래서 변수명에서 공백을 갖고 그럭저럭 넘어갈 수 있지만, 변수명에 공백을 넣는 것을
 추천하지 않는다.
-
-
+ 
 ### 참고자료
 
 Ethan P White, Elita Baldridge, Zachary T. Brym, Kenneth J. Locey, Daniel J. McGlinn, Sarah R. Supp, "Nine simple ways to make it easier to (re)use your data"
