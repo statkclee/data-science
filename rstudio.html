@@ -43,10 +43,19 @@
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
-
+<ul>
+<li>RStudio 데이터 과학 툴체인 아키텍처를 이해한다.</li>
+<li>아키텍처 각 구성요소와 연관성을 이해한다.</li>
+</ul>
 </div>
 </section>
-<!-- <img src="fig/data-science-rationale.png" alt="전통적 문제정의" width="50%" /> -->
+<p>RStudio 진영에서 제안하는 데이터 과학 툴체인은 다음과 같이 구성된다.</p>
+<p><code>readr</code> 팩키지를 비롯한 다양한 데이터 가져오기 팩키지를 통해서 파일 형식 데이터 뿐만 아니라 서비스형식의 데이터도 불러올 수 있고, 필요에 따라서는 <code>rvest</code>를 활용하여 크롤링해서 데이터를 긁어 오는 것도 가능하다.</p>
+<p><code>tidyr</code> 팩키지를 활용하여 데이터를 깔끔히 정제한 뒤에 <code>dplyr</code>에 내장된 데이터 분석 동사를 활용하여 자유자재로 분석을 수행하고 나서, 이를 시각화와 모형화를 위한 입력값으로 활용한다.</p>
+<p>데이터분석과정이 완료되면 두가지 최종 제품이 결과물로 산출된다. 하나는 보고서 형태로 일반 책이나 논문을 산출물로 생각하면 좋다. 책이나 논문은 HTML, PDF, 워드파일이 이에 해당되는 사례다. 또하나는 응용프로그램으로 일반적인 웹앱으로 생각하면 된다. 이를 위해 <code>shiny</code>라는 팩키지를 활용한다.</p>
+<p>데이터를 불러와서, 변환한고, 분석하고, 모형개발과 시각화, 그리고 최종 데이터과학제품으로 이어지는 전체 과정은 R 코드와 문서를 버젼제어 해야하고, 동시에 팩키지 관리도 이루어져야 재현가능한 과학과 제품개발이 가능해진다. 소스코드제어를 위해 R에서는 Git과 GitHub를 연결해서 사용하고, 팩키지 관리를 위해서는 <code>packrat</code>를 사용하여 팩키지 대상과 팩키지 버젼도 이력관리한다.</p>
+<p>물론 이 모든 것은 RStudio IDE 라는 R전용 GUI 통합개발환경 위에서 개발이 가능하다.</p>
+<p><img src="fig/rstudio-data-science-architecture.png" alt="RStudio" width="77%" /></p>
         </div>
       </div>
       </article>

@@ -14,7 +14,7 @@ title: 데이터 과학
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
     - [데이터 변환(dplyr)](data-handling-dplyr.html)
     - [데이터 시각화(ggplot2, ggvis)](data-handling-ggplot2.html)
-    - [데이터 내보네기](data-handling-export.html)
+    - [데이터 내보내기](data-handling-export.html)
 1. [RStudio](rstudio.html)
     - [RStudio 활용 코드작성](rstudio-writing-code.html)
     - [시간데이터](data-handling-timendate.html)
