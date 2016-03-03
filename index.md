@@ -24,7 +24,7 @@ title: 데이터 과학
     - [RStudio 활용 코드작성](rstudio-writing-code.html)
     - [시간데이터](data-handling-timendate.html)
     - [데이터테이블](data-handling-datatable.html)
-    - [정렬(Sort)](data-handling-sorting-ex.html)
+    - [정렬(Sort)](data-handling-sorting-ex.html) 
     - [SQL](data-handling-sql.html)    
     - [엑셀](data-handling-excel.html)
     - [R 이전 교육자료(2015)](data-handling-old.html)
