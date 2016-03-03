@@ -33,7 +33,7 @@ source("tools/chunk-options.R")
 기본 팩키지와 유틸리티가 나타나 있다.
 
 
-`.Rprofile` 파일에 `.libPaths("C:/Users/xwMOOC/Rpackages")`를 추가해서 팩키지를 한 곳에 몰아 관리할 수도 있다.
+`.Rprofile` 파일에 `.libPaths("C:/Users/xwMOOC/Rpackages")`를 추가해서 팩키지를 한 곳에 몰아 관리할 수도 있다. 
 
 
 
