@@ -10,57 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-library(dplyr)
-library(ggplot2)
 
-# Multiple plot function
-#
-# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
-# - cols:   Number of columns in layout
-# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
-#
-# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
-# then plot 1 will go in the upper left, 2 will go in the upper right, and
-# 3 will go all the way across the bottom.
-#
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-
-  numPlots = length(plots)
-
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                    ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-
- if (numPlots==1) {
-    print(plots[[1]])
-
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
-````
 
 > ## 학습 목표  {.objectives}
 >
@@ -87,30 +37,133 @@ Anscombe는 1973년 동일한 통계량을 갖는 4종류 데이터셋을 만들
 [^anscombe-jstor]: Anscombe, F. J. (1973). "Graphs in Statistical Analysis". American Statistician 27 (1): 17–21.
 
 
-``` {r}
+
+~~~{.r}
 data(anscombe)
 anscombe <- tbl_df(anscombe)
 anscombe
-```
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [11 x 8]
+
+      x1    x2    x3    x4    y1    y2    y3    y4
+   (dbl) (dbl) (dbl) (dbl) (dbl) (dbl) (dbl) (dbl)
+1     10    10    10     8  8.04  9.14  7.46  6.58
+2      8     8     8     8  6.95  8.14  6.77  5.76
+3     13    13    13     8  7.58  8.74 12.74  7.71
+4      9     9     9     8  8.81  8.77  7.11  8.84
+5     11    11    11     8  8.33  9.26  7.81  8.47
+6     14    14    14     8  9.96  8.10  8.84  7.04
+7      6     6     6     8  7.24  6.13  6.08  5.25
+8      4     4     4    19  4.26  3.10  5.39 12.50
+9     12    12    12     8 10.84  9.13  8.15  5.56
+10     7     7     7     8  4.82  7.26  6.42  7.91
+11     5     5     5     8  5.68  4.74  5.73  6.89
+
+~~~
 
 #### Anscombe 데이터셋 4종 기술통계량
 
-```{r}
+
+~~~{.r}
 # x1, x2, x3, x4 평균
 anscombe %>% select(x1,x2,x3,x4) %>% 
 summarize(x1Mean=round(mean(x1),1), y2Mean=round(mean(x2),2), y3Mean=round(mean(x3),1), y4Mean=round(mean(x4),1))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [1 x 4]
+
+  x1Mean y2Mean y3Mean y4Mean
+   (dbl)  (dbl)  (dbl)  (dbl)
+1      9      9      9      9
+
+~~~
+
+
+
+~~~{.r}
 # x1, x2, x3, x4 분산
 anscombe %>% select(x1,x2,x3,x4) %>% 
 summarize(x1Var=round(var(x1),1), x2Var=round(var(x2),1), x3Var=round(var(x3),1), x4Var=round(var(x4),1))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [1 x 4]
+
+  x1Var x2Var x3Var x4Var
+  (dbl) (dbl) (dbl) (dbl)
+1    11    11    11    11
+
+~~~
+
+
+
+~~~{.r}
 # y1, y2, y3, y4 평균
 anscombe %>% select(y1,y2,y3,y4) %>% 
 summarize(y1Mean=round(mean(y1),1), y2Mean=round(mean(y2),2), y3Mean=round(mean(y3),1), y4Mean=round(mean(y4),1))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [1 x 4]
+
+  y1Mean y2Mean y3Mean y4Mean
+   (dbl)  (dbl)  (dbl)  (dbl)
+1    7.5    7.5    7.5    7.5
+
+~~~
+
+
+
+~~~{.r}
 # y1, y2, y3, y4 분산
 anscombe %>% select(y1,y2,y3,y4) %>% 
 summarize(y1Var=round(var(y1),1), y2Var=round(var(y2),1), y3Var=round(var(y3),1), y4Var=round(var(y4),1))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [1 x 4]
+
+  y1Var y2Var y3Var y4Var
+  (dbl) (dbl) (dbl) (dbl)
+1   4.1   4.1   4.1   4.1
+
+~~~
+
+
+
+~~~{.r}
 # x1:y1 ~ x4:y4 상관계수
 anscombe %>% 
 summarise(cor1=round(cor(x1,y1),2), cor2=round(cor(x2,y2),2), cor3=round(cor(x3,y3),2),cor4=round(cor(x4,y4),2))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [1 x 4]
+
+   cor1  cor2  cor3  cor4
+  (dbl) (dbl) (dbl) (dbl)
+1  0.82  0.82  0.82  0.82
+
+~~~
+
+
+
+~~~{.r}
 # y1:x1-x4 ~ y1:x1-x4 회귀분석
 lm_fit <- function(y1, x1, dat) {
   the_fit <- lm(y1 ~ x1, dat)
@@ -121,22 +174,77 @@ gfits <- anscombe %>%
      reg3=lm_fit(y3, x3, .), reg4=lm_fit(y4, x4, .))
 
 unlist(gfits$reg1)
+~~~
+
+
+
+~~~{.output}
+intercept     slope 
+3.0000909 0.5000909 
+
+~~~
+
+
+
+~~~{.r}
 unlist(gfits$reg2)
+~~~
+
+
+
+~~~{.output}
+intercept     slope 
+3.0000909 0.5000909 
+
+~~~
+
+
+
+~~~{.r}
 unlist(gfits$reg3)
+~~~
+
+
+
+~~~{.output}
+intercept     slope 
+3.0000909 0.5000909 
+
+~~~
+
+
+
+~~~{.r}
 unlist(gfits$reg4)
-```
+~~~
+
+
+
+~~~{.output}
+intercept     slope 
+3.0000909 0.5000909 
+
+~~~
 
 
 #### Anscombe 데이터셋 4종 시각화
 
-``` {r}
+
+~~~{.r}
 p1 <- ggplot(anscombe) + geom_point(aes(x1, y1), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 1")
 p2 <- ggplot(anscombe) + geom_point(aes(x2, y2), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 2")
 p3 <- ggplot(anscombe) + geom_point(aes(x3, y3), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 3")
 p4 <- ggplot(anscombe) + geom_point(aes(x4, y4), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 4")
 
 multiplot(p1, p2, p3, p4, cols=2, main="Anscombe's Quartet")
-```
+~~~
+
+<img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
+
+~~~{.output}
+[1] "Anscombe's Quartet"
+
+~~~
 
 ### 시각화 [^tamara] 
 
@@ -160,19 +268,45 @@ multiplot(p1, p2, p3, p4, cols=2, main="Anscombe's Quartet")
 
 **인지부하(cognitive load)**를 **시각적 지각(perception)**으로 바꿔 해당 작업을 더욱 효과적으로 처리하는데 시각화를 사용한다.
 
-``` {r}
+
+~~~{.r}
 library(datasets)
 women
-```
+~~~
+
+
+
+~~~{.output}
+   height weight
+1      58    115
+2      59    117
+3      60    120
+4      61    123
+5      62    126
+6      63    129
+7      64    132
+8      65    135
+9      66    139
+10     67    142
+11     68    146
+12     69    150
+13     70    154
+14     71    159
+15     72    164
+
+~~~
 
 `women` 데이터가 정렬이 되어 있어서, 신장이 커짐에 따라 체중이 증가하는 것을 알 수 있지만, 데이터만 보고 이해하려면
 인지적으로 데이터 한줄을 읽고 머리속으로 생각하고, 두번째 줄을 읽고 생각하고, ... 이런 과정을 반복하면서 인지적 부하가 증가하게 된다.
 하지만, 시각적으로 표현하게 되면 한눈에 신장과 체중 관계를 볼 수 있다.
 
-``` {r}
+
+~~~{.r}
 women %>% ggplot(aes(y=weight, x=height)) + geom_point(color='blue', size=2) +
   geom_smooth(color='pink')
-```
+~~~
+
+<img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
 #### 시각화 분석 얼개 구성요소
 
