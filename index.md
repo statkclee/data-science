@@ -59,7 +59,7 @@ title: 데이터 과학
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
 1. [SNS](sns-intro.html)
-1. [R 라이브러리](library.html)
+1. [R 라이브러리](data-science-library.html)
 
 
 > ## 참고 자료 {.prereq}
