@@ -1,0 +1,111 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 시각화
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+```{r  include = FALSE}
+source("tools/chunk-options.R")
+```
+
+시각화 메커니즘[^viz-mechanism]
+
+[^viz-mechanism]: [A Better Default Colormap for Matplotlib, SciPy 2015, Nathaniel Smith and Stéfan van der Walt](https://www.youtube.com/watch?v=xAoljeRJ3lU&feature=youtu.be)
+
+
+<img src="fig/viz-mechanism.png" alt="시각적 인지 메커니즘" width="70%" />
+
+
+
+### 기본 도식화 기호를 속이 꽉찬 원으로 변경
+
+```{r}
+suppressPackageStartupMessages(library(dplyr))
+library(gapminder)
+str(gapminder)
+```
+
+
+
+```{r}
+library(dplyr)
+jdat.filter <- c("Eritrea","Nepal","Chad","Jamaica","Cuba","Costa Rica","Germany","Norway")
+jdat <- gapminder %>% 
+  filter(country %in% jdat.filter, year %in% 2007)
+jdat
+```
+
+```{r fig.show='hold', out.width='50%'}
+plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
+     col = "red", main = 'col = "red"')
+plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
+     col = c("blue", "orange"), main = 'col = c("blue", "orange")')
+```
+
+### RColorBrewer
+
+색상선택이 가장 논란이 많고, 이리저리 만지작 거리면서 정말 많은 시간을 보내는 분야다.
+지리학자이며 생상 전문가 [Cynthia Brewer](http://en.wikipedia.org/wiki/Cynthia_Brewer) 교수가
+출판과 웹에서 사용되는 색상표를 제작했고, 이는 [RColorBrewer](http://cran.r-project.org/web/packages/RColorBrewer/index.html)
+팩키지에 반영되어 있다. 팩키지를 설치하고 사용하면 된다. 연관된 전체 팔레트를 살펴보는 명령어는 `display.brewer.all()` 이다.
+
+``` {r}
+#install.packages("RColorBrewer")
+library(RColorBrewer)
+display.brewer.all()
+```
+
+팔레트는 종류가 많지만 다음 세가지 범주에 속한다. 위에서 아래부터 다음과 같다.
+
+- **순차적(sequential)** : 낮은 것에서 높은 것으로 한쪽 극단이 흥미롭고 반대쪽 극단이 재미없는 것을 시각화하는데 매우 좋다.
+  예를 들어 p-값, 상관계수 (주의: 상관계수 1 이 흥미로운 것은 양수를 가정했다)
+- **정량적(quantitative)** : 순서가 없는 범주형 자료를 시각화할 때 유용하다. 예를 들어, 국가나 대륙.
+  특수한 "쌍을 이룬" 팔레트가 있다; 예를 들어, 곡물 밀 유형같이 실험이 아닌 요인, 실험군과 대조군 같은 이진 실험 요인.
+- **발산하는(diverging)** : 극단의 음수에서 극단의 양수까지 범위를 같는 것을 시각화하는데 유용한다.
+  이런 데이터는 극단의 값이 중간에 위치한 덜 흥미로운 지점을 지난다. 예를 들어, t-통계량, z-점수, 상관계수가 이에 속한다.
+
+명칭을 명세해서 RColorBrewer 팔렛트 하나만 볼 수 있다.
+
+``` {r}
+display.brewer.pal(n = 8, name = 'Dark2')
+```
+
+`n` 갯수를 지정(3--8)해야 된다는 점에서, 솔직히 팩키지가 다소 투박하다. 하지만 어쩔 수 없이 그래야만 된다.
+
+장인정신이 뭍어 나는 `peachpuff3` 색상표 대신에 RColorBrewer 에서 선택해서 맞춤형 색상을 지정하여 명세하자.
+색상은 맞춤형 색상표에 따라 색상을 칠하게 되지만, 색상에 딸린 명칭은 기대한 바가 아니다. 다음 학습주제에서 이를 다룰 것이다.
+
+``` {r}
+j_brew_colors <- brewer.pal(n = 8, name = "Dark2")
+plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
+     col = j_brew_colors, main = 'Dark2 qualitative palette from RColorBrewer')
+with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors,
+                pos = rep(c(1, 3, 1), c(5, 1, 2)))) 
+```
+
+### viridis
+
+2015년 Stéfan van der Walt 와 Nathaniel Smith는 파이썬 `matplotlib` 팩키지에 사용될
+새로운 색상 지도를 설계했고, [SciPy 2015](https://www.youtube.com/watch?v=xAoljeRJ3lU&feature=youtu.be)에서 발표했다.
+`viridis` 팩키지로 인해 R에 4가지 신규 팔레트가 추가되었다. [CRAN](https://cran.r-project.org/web/packages/viridis/index.html)과,
+[GitHub](https://github.com/sjmgarnier/viridis)에서 팩키지를 만날 수 있다.
+
+> `viridis` 색상표는 완벽하게 균등하게 지각되도록 설계되었고, 정규형식에서나 흑백으로 전환되었을 때도 마찬가지다.
+> 또한 색망을 갖는 독자도 올바르게 지각될 수 있도록 설계되었다.
+
+아직 나온지 얼마되지 않아서, 자세한 사항은 `viridis` 팩키지를 설치하고 [소품문](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html_document)을
+읽고 직접 경험하기 바란다.
+
+
+
+
+
+
+
+
