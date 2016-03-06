@@ -49,6 +49,7 @@ title: 데이터 과학
     - [데이터 시각화(ggplot2, ggvis)](viz-ggplot2.html)
     - [R 과 색상](viz-r-colors.html)
     - [ggplot2 색상 제어](viz-ggplot2-control.html)
+    - [행복한 시각화 생활을 위한 비밀](viz-secret.html)
     - [지리정보](geo-info.html)
         + [구글](geo-info-google.html)
         + [ggmap](geo-info-ggmap.html) 
