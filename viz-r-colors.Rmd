@@ -14,14 +14,157 @@ mainfont: NanumGothic
 source("tools/chunk-options.R")
 ```
 
-시각화 메커니즘[^viz-mechanism]
+### 시각화 메커니즘[^viz-mechanism]
+
+크게보면 컴퓨터에서 색을 이해하고 표현하는 RGB 체계와 사람이 색을 인지하고 이해하는 HCL 체계로 나누어 진다.
+2진수로 표현된 시각적 데이터는 RGB 16진수로 변환되어 모니터에 표시되고,
+물리적 광자(photon)로 사람눈에 위치한 망막에 꽂히게 되고,
+뇌에서 사람이 인지한 후에 이를 처리하여 시각적인 정보를 인식하게 된다.
+
+따라서, 사람의 뇌에 인식할 수 있는 시각적인 정보로 데이터를 구성해야만 다양한 종류의 모니터를 통해 
+효율적이고 효과적으로 정보가 전달될 수 있다.
 
 [^viz-mechanism]: [A Better Default Colormap for Matplotlib, SciPy 2015, Nathaniel Smith and Stéfan van der Walt](https://www.youtube.com/watch?v=xAoljeRJ3lU&feature=youtu.be)
 
-
 <img src="fig/viz-mechanism.png" alt="시각적 인지 메커니즘" width="70%" />
 
+### 16진수 RGB 표색법
 
+작은 양수나 크레파스 명칭 대신에, 일반적이고 컴퓨터가 읽어들일 수 있는 색상 표색법이 16진수 팔레트다.
+RColorBrewer Dark2 팔레트가 실제로 저장된 방법이 다음에 나와 있다.
+
+``` {r}
+brewer.pal(n = 8, name = "Dark2")
+```
+
+`#` 기호는 관례로 붙이는 것이고, 16진수 문자열을 다음과 같이 파싱한다:
+`#rrggbb`에서 `rr`, `gg`, `bb` 각각은 적색, 녹색, 청색 채널에 대한 생상농도를 나타낸다.
+각 색상은 2를 밑으로하는 16개 숫자를 나타내고, "16진수(hexadecimal)" 혹은 줄여서 헥스(hex)로 부른다.
+다음에 밑을 10으로 하는 십진수와 16진수 비교표가 다음에 나와 있다.
+
+```{r include = FALSE}
+library(xtable)
+foo <- t(cbind(hex = I(c(as.character(0:9), LETTERS[1:6])),
+               decimal = I(as.character(0:15))))
+foo <- xtable(foo)
+```
+
+예를 들어, 팔렛트 첫 색상이 `#1B9E77`으로 명세되어 있다. 따라서, 녹색 채널 색상농도는 `9E`가 된다.
+
+$$
+9E = 9 * 16^1 + 14 * 16^0 = 9 * 16 + 14 = 158
+$$
+
+무슨 뜻일까? 해당 채널의 가장 낮은 값은 `00`=0 이 되고, 
+가장 높은 값은 `FF`=255 가 된다.
+
+도움이 되는 기억해야될 중요한 사례가 다음에 나타나 있다.
+적색, 녹색, 청색에 대한 강렬한 RGB 색상은 다음과 같다.
+
+```{r include = FALSE}
+foo <- data.frame(color_name = c("blue", "green", "red"),
+                  hex = c("#0000FF", "#00FF00", "#FF0000"),
+                  red = c(0, 0, 255),
+                  green = c(0, 255, 0),
+                  blue = c(255, 0, 0))
+foo <- xtable(foo, digits = 0)
+```
+
+```{r results = 'asis', echo = FALSE}
+print(foo, type='html', include.rownames = FALSE)
+```
+
+다음에 흑백, 회색을 표현한 것이 나타나 있다.
+
+```{r include = FALSE}
+j_intensity <- c(255, 171, 84, 0)
+foo <- data.frame(color_name = c("white, gray100", "gray67",
+                                 "gray33", "black, gray0"),
+                  hex = c("#FFFFFF", "#ABABAB", "#545454", "#000000"),
+                  red = j_intensity,
+                  green = j_intensity,
+                  blue = j_intensity)
+foo <- xtable(foo, digits = 0)
+```
+
+```{r results = 'asis', echo = FALSE}
+print(foo, type='html', include.rownames = FALSE)
+```
+
+"grey" 회색으로 치환하게 되면, "gray"를 보게되는 어느 곳에서나 동일한 결과를 얻게 됨에 주목한다.
+모든 채널을 최대값으로 하면 흰색, 모든 채널을 최소값으로 하면 검정색이 된다.
+
+> ### R에서 색상을 지정하는 방법 {.callout}
+> 
+> - **양의 정수**: `palette()`함수로 조작하거나 검색한 현재 색상 팔레트에 인덱스를 사용.
+> - **색상 명칭**: `colors()` 함수로 검색된 색상
+> - **16진수 문자열**: 16진수로 구성된 3개조에 추가해서, 알파 투명도를 나타내는 네번째 채널을 넣어 
+> 16진수 4개조로 구성된 생상표로 확장하기도 한다.
+
+`rgb()`, `col2rgb()`, `convertColor()` 함수도 유용하니, 자세한 내용은 도움말을 참조한다.
+
+
+### 대안 RGB 색상모형, HCL
+
+RGB 색공간과 색상모형이 유일무이하고 가장 최고는 아니다.
+컴퓨터 화면에 색상을 표현하는데는 자연스럽지만, 일부 영역에서 색상을 선택하는 
+작업에는 이런 모형을 적용하기 어렵다.
+예를 들어, 사람이 구별하기는 쉽지만, 인지적으로 색상별로 비교되는 생각으로 구성된
+정성적인 팔레트를 만들어 내는 방법은 명확하지 않다.
+컴퓨터에 사용되는 색상을 기술하는데 RGB를 사용하지만, 
+**사람이 색상체계를 구축하는 색공간에 RGB체계를 사용할 이유는 없다.**
+이점은 사람과 컴퓨터가 다른 것이고, 이를 인정해야만 된다.
+
+색상모형은 일반적으로 RGB와 마찬가지로 세가지 차원으로 구성된다.
+이는 망막에 세가지 다른 수용체를 인간이 갖는 생리적 사실에 기인한다.
+RGB와 인간 시각 체계에 대한 자세한 정보는 [블로그](http://manyworldstheory.com/2013/01/15/my-favorite-rgb-color/)를
+참고한다.
+색상모형의 차원이 사람이 인식할 수 있는 식별가능한 정보량에 더 가까이 부합되면 될수록, 더욱 유용하다.
+이런 부합성이 사려깊게 작성된 팔레트 생성을 가능하게 하고, 더불어 특정한 특성을 갖는 색공간에 대한 길을 연다.
+RGB 색체계는 인간의 인식체계와 일치성이 떨어진다.
+적색, 녹색, 청색광을 탐지할 수 있는 광수용체를 갖기 때문에, 
+색을 *인지하는 체험*이 RGB 방식으로 분해된다는 것을 의미하지 않는다.
+적색과 녹색을 섞은 것으로 황색을 인식하는 체험을 했는가?
+물론 아니다. 생리학적인 현실은 그렇다.
+또다른 RGB 대안 모형이 HSV(Hue-Saturation-Value, 색상-채도-명도)모형이다.
+불행하게도, 색을 선택하는데 문제가 많은데, 이유는 색상이 서로 중첩되는 차원을 갖기 때문이다.
+
+사람이 인지하기 좋은 색모형은 무엇일까? CIELUV 와 CIELAB 이 가장 잘 알려진 사례다.
+CIELUV의 변종인 HCL(Hue-Chroma-Luminance, 색상-채도-휘도) 모형[^dt-hcl]을 좀더 살펴보자.
+Zeileis와 동료들이 R 사용자를 위한 팩키지로 멋지게 작성했다.
+`colorspace` R 팩키지에 딸려있고, HCL 색상모형을 탐색하고 이용하는데 도움을 준다.
+마지막으로, HCL 색모형이 `ggplot2`에 `RColorBrewer`와 마찬가지로 잘 녹여져있다.
+
+[^dt-hcl]: [알아봅시다 - 디스플레이 화질 구성 요소](http://www.dt.co.kr/contents.html?article_no=2014110702101832742001)
+
+> ### HCL 색상모형의 세가지 차원 {.callout}
+> 
+> - **색상(Hue)** : 색상은 일반적으로 "색상이 뭐지?"라고 생각할 때 생각나는 것이다. 이해가 바로되는 쉬운 것이다!
+>   각도로 주어지고 따라서 0 에서 360 까지 값을 갖는데, 무지개 도넛을 상상하면 된다.
+> - **채도(Chroma)** : 채도는 색상이 얼마나 순수한지 혹은 생생한지 나타낸다. 특정 색상이 회색과 섞일 수록,
+>   채도는 떨어진다. 가장 낮은 값은 0 으로 회색 그자체에 대응되고, 최대값은 휘도에 따라 변한다.
+> - **휘도(Lumiance)** : 휘도는 명도(brightness), 명도(Lightness), 광도(intensity), 명도(value)와 관련된다.
+>   낮은 휘도는 어두움을 의미하고, 진짜 검정색은 휘도가 0 이다. 높은 휘도는 밝음을 의미하고, 진짜 흰색은 휘도가 1 이다.
+
+저자는 채도와 휘도를 이해하고 구별하는데 힘든 시간을 보냈다. 위에서 살펴봤듯이, 색체계는 서로 독립된 것이 아니고,
+3차원 HCL 공간에 기이한 모형으로 정보를 제공하고 있다.
+
+위캠의 `ggplot2` 책에 나온 6.6 그림이 HCL 색공간을 이해하는데 도움이 된다.
+
+<img src="fig/viz-ggplot2book-fig6.6.png" alt="ggplot2 HCL 색공간" width="70%" />
+
+위캠 책에 언급된 내용을 다시 적으면 다음과 같다: 각 측면, 창은 휘도에 따라 가장 낮은 값에서 높은 값 순으로
+HCL 공간을 슬라이스로 나누어 도식화한 것을 보여주고 있다.
+0 과 100 극단 휘도값은 생략되었는데, 이유는 각각 검은 점과 흰점으로 나타나기 때문이다.
+슬라이스 내부에, 중심은 채도가 0 으로, 회색에 대응된다. 슬라이스 끝쪽으로 이동하면, 
+채도가 증가하고, 색상이 더 순색에 가까워지고 농도가 짖어진다. 색상은 각도로 매핑된다.
+
+`colorspace` 팩키지에 가치있는 기여는 아마도 함수를 사용해서 색상공간을 합리적 방식으로 색공간을 이리저리 돌아다닐 수 있게 만든 것이다.
+이와는 대조적으로 `RColorBrewer` 팩키지가 제공하는 팔레트는 정교하게 제작되었지만, 불행히도 고정이다.
+
+인지기반 색상체계를 사용하는 것에 대한 옹호 사례와 더불어 색공간에 0 이 자리하는 것을 알려주는 중요성을 시연하고 있다.
+
+- ["Why Should Engineers and Scientists Be Worried About Color?"](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)
 
 ### 기본 도식화 기호를 속이 꽉찬 원으로 변경
 
@@ -102,10 +245,76 @@ with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors,
 아직 나온지 얼마되지 않아서, 자세한 사항은 `viridis` 팩키지를 설치하고 [소품문](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html_document)을
 읽고 직접 경험하기 바란다.
 
+### 색맹을 갖는 사람
 
+`dichromat` 팩키지([CRAN](http://cran.r-project.org/web/packages/dichromat/))는 
+2색시자에 대한 효과적인 색상체계를 선택하는데 도움이 된다.
 
+```{r}
+# install.packages("dichromat")
+library(dichromat)
+```
 
+`colorschems` 목록에는 `r length(colorschemes)` 가지 색상체계가 담겨있는데, 적색과 녹색을 구별하는 능력이 없거나 예외적인
+시력을 갖는 2색시자에게 적합하다.
 
+```{r dichromat-colorschemes, echo = FALSE}
+library(ggplot2)
+x_boundaries <-
+  lapply(colorschemes,
+         function(x) seq(from = 0, to = 1, length = length(x) + 1))
+df <- data.frame(
+  xmin = unlist(lapply(x_boundaries, function(x) rev(rev(x)[-1]))),
+  xmax = unlist(lapply(x_boundaries, function(x) x[-1])),
+  ymax = rep(seq_along(colorschemes), sapply(colorschemes, length)))
+anno_df <- data.frame(
+  scheme = names(colorschemes),
+  num = seq_along(colorschemes))
+ggplot(df, aes(xmin = xmin, xmax = xmax, ymin = ymax - 0.85, ymax = ymax)) +
+  geom_rect(fill = unlist(colorschemes)) + xlim(c(-0.6, 1)) + 
+  annotate("text", x = -0.05, y = anno_df$num - 0.5, label = anno_df$scheme,
+           hjust = 1) + 
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank())
 
+## the example also turns some schemes into continuous ones like so:
+## colorRampPalette(colorschemes$BrowntoBlue.10, space = "Lab")(100)
+## it would be nice to demonstrate how to base a continuous color scale on a
+## discrete palette
+```
+
+`dichmat()` 함수는 색상을 변환해서 다른 형태의 색맹에 근사적인 효과를 구현할 수 있어서,
+후보 색상체계에 대한 효과를 평가할 수 있게 한다. 
+`data("dalton")` 명령어는 256 색상 팔레트를 표현하는 객체를 생성하는데,
+정상 시야로 표현되는 것과, 적록(red-green) 색맹과 청녹(green-blue) 생맹으로 표현되는 것이다.
+
+### 환경 정리
+
+```{r  eval = FALSE}
+par(opar)
+```
+
+### 참고문헌
+
+- Achim Zeileis, Kurt Hornik, Paul Murrell (2009). Escaping RGBland: Selecting Colors for Statistical Graphics. 
+  Computational Statistics & Data Analysis, 53(9), 3259-3270 [PDF](http://eeecon.uibk.ac.at/~zeileis/papers/Zeileis+Hornik+Murrell-2009.pdf)
+- `colorspace` [소품문](http://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
+- Earl F. Glynn, Stowers Institute for Medical Research
+    + `colors()` 함수로 활용가능한 색상명칭 [참고자료](http://research.stowers-institute.org/efg/R/Color/Chart/)
+    + ["Using Color in R"](http://research.stowers-institute.org/efg/Report/UsingColorInR.pdf) 강연.
+- Many Worlds Theory 블로그 포스트 [My favorite RGB color](http://manyworldstheory.com/2013/01/15/my-favorite-rgb-color/)
+- Hadley Wickham, "ggplot2: Elegant Graphics for Data Analysis" Springer (2009)
+    + [SpringerLink](http://ezproxy.library.ubc.ca/login?url=http://link.springer.com.ezproxy.library.ubc.ca/book/10.1007/978-0-387-98141-3/page/1)
+    + [ggplot2 도움말 문서](http://docs.ggplot2.org/current/)
+    + [저자 웹사이트](http://ggplot2.org/book/)
+    + [ggplot2 공식 페이지](http://ggplot2.org/)
+- Bernice E. Rogowitz and Lloyd A. Treinish, 
+  "[Why Should Engineers and Scientists Be Worried About Color?](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)", 
+  IBM Research.
 
 
