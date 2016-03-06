@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-16', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">데이터 시각화(ggplot2, ggvis)</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표-data-carpentry-ggplot2"><span class="glyphicon glyphicon-certificate"></span>학습 목표 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>ggplot2</code> 팩키지로 데이터를 시각화한다.</li>
+<li>고난도 복잡한 시각화 산출물을 <code>ggplot2</code> 팩키지를 활용하여 단계적으로 구축한다.</li>
+<li>Figshare <a href="http://files.figshare.com/1919744/surveys.csv">surveys.csv</a>, <a href="http://figshare.com/articles/Portal_Project_Teaching_Database/1314459">mammals data</a> 데이터를 활용하여 시각화를 실습한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="ggplot2로-시각화를-하는-이유"><code>ggplot2</code>로 시각화를 하는 이유</h3>
+<p>R에 기본적으로 시각화를 위한 다양한 기능이 존재하지만, <code>ggplot2</code>가 기본으로 제공되는 R 시각화 기능 위에 더욱 강력한 기능을 제공한다. 기본적인 R 기능도 상대적으로 다른 소프트웨어 서비스나 제품과 비교가 되지 않을 정도록 강력하다. 이런 점에서 R은 참 겸손하다는 생각이 든다.</p>
+<h3 id="데이터-다운로드와-시각화-툴체인-준비">데이터 다운로드와 시각화 툴체인 준비</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read_csv로 csv 파일을 불러 읽어온다.</span>
+<span class="kw">library</span>(readr)
+<span class="co"># 시각화를 위한 ggplot2 팩키지를 불러 읽어온다. </span>
+<span class="kw">library</span>(ggplot2)
+<span class="co"># ggplot2에 입력데이터로 사용될 데이터를 전처리한다.</span>
+<span class="kw">library</span>(dplyr)
+<span class="co"># 데이터를 불러온다.</span>
+surveys.dat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;http://files.figshare.com/1919744/surveys.csv&quot;</span>)</code></pre></div>
+<p><a href="https://figshare.com/">figshare</a><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> 사이트에서 데이터를 가져온다. <code>surveys.csv</code> 데이터는 포획된 동물에 관한 측정정보가 담겨 있다.</p>
+<h3 id="시각화를-위한-데이터-전처리-과정">시각화를 위한 데이터 전처리 과정</h3>
+<p>다운로드 받은 데이터에 대한 요약정보를 <code>summary</code> 함수를 사용해서 살펴본다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(surveys.dat)</code></pre></div>
+<pre class="output"><code>   record_id         month             day             year     
+ Min.   :    1   Min.   : 1.000   Min.   : 1.00   Min.   :1977  
+ 1st Qu.: 8888   1st Qu.: 4.000   1st Qu.: 9.00   1st Qu.:1984  
+ Median :17775   Median : 6.000   Median :16.00   Median :1990  
+ Mean   :17775   Mean   : 6.474   Mean   :16.11   Mean   :1990  
+ 3rd Qu.:26662   3rd Qu.: 9.000   3rd Qu.:23.00   3rd Qu.:1997  
+ Max.   :35549   Max.   :12.000   Max.   :31.00   Max.   :2002  
+                                                                
+    plot_id      species_id            sex            hindfoot_length
+ Min.   : 1.0   Length:35549       Length:35549       Min.   : 2.00  
+ 1st Qu.: 5.0   Class :character   Class :character   1st Qu.:21.00  
+ Median :11.0   Mode  :character   Mode  :character   Median :32.00  
+ Mean   :11.4                                         Mean   :29.29  
+ 3rd Qu.:17.0                                         3rd Qu.:36.00  
+ Max.   :24.0                                         Max.   :70.00  
+                                                      NA&#39;s   :4111   
+     weight      
+ Min.   :  4.00  
+ 1st Qu.: 20.00  
+ Median : 37.00  
+ Mean   : 42.67  
+ 3rd Qu.: 48.00  
+ Max.   :280.00  
+ NA&#39;s   :3266    
+</code></pre>
+<h4 id="단계---결측값-제거">1 단계 - 결측값 제거</h4>
+<p>데이터셋에 일부 결측정보가 <code>summary</code> 실행결과를 보여주고 있어, 이를 제거한다. 각 변수마다 결측치가 있어 이를 한땀 한땀 정성스럽게 결측정보를 제거하는 대신에 <code>dplyr</code> 파이프 연산자를 사용하여 일괄적으로 처리한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surveys.complete &lt;-<span class="st"> </span>surveys.dat %&gt;%
+<span class="st">                    </span><span class="kw">filter</span>(species_id !=<span class="st"> &quot;&quot;</span>) %&gt;%<span class="st">       </span><span class="co"># species_id 결측값 제거</span>
+<span class="st">                    </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(weight)) %&gt;%<span class="st">          </span><span class="co"># weight 결측값 제거</span>
+<span class="st">                    </span><span class="kw">filter</span>(!<span class="kw">is.na</span>(hindfoot_length))     <span class="co"># hindfoot_length 결측값 제거</span></code></pre></div>
+<h4 id="단계---미미한-자료-제거">2 단계 - 미미한 자료 제거</h4>
+<p>개체수가 적은 종이 많아서, 개체수 기준 10 보다 적은 종은 제거하기로 한다. 먼저 <code>group_by</code> 함수로 개체종을 그룹으로 군집화하고, <code>tally</code> 함수로 각 종별로 개체수를 세고, 내부인자로 <code>sort=TRUE</code> 를 넣어서 내림차순으로 정렬한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">species.counts &lt;-<span class="st"> </span>surveys.complete %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(species_id) %&gt;%
+<span class="st">  </span><span class="kw">tally</span>(<span class="dt">sort=</span><span class="ot">TRUE</span>)
+
+<span class="kw">tail</span>(species.counts)</code></pre></div>
+<pre class="output"><code>FALSE Source: local data frame [6 x 2]
+FALSE 
+FALSE   species_id     n
+FALSE        (chr) (int)
+FALSE 1         PH    31
+FALSE 2         PI     8
+FALSE 3         RO     8
+FALSE 4         OX     5
+FALSE 5         PX     2
+FALSE 6         RX     2
+</code></pre>
+<p>개체수가 10개 미만인 종을 제거하고, 시각화를 위한 기본 데이터셋 준비를 완료한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">frequent.species &lt;-<span class="st"> </span>species.counts %&gt;%
+<span class="st">                    </span><span class="kw">filter</span>(n &gt;=<span class="st"> </span><span class="dv">10</span>) %&gt;%
+<span class="st">                    </span><span class="kw">select</span>(species_id)
+
+surveys.complete &lt;-<span class="st"> </span>surveys.complete %&gt;%
+<span class="st">           </span><span class="kw">filter</span>(species_id %in%<span class="st"> </span>frequent.species$species_id)</code></pre></div>
+<h4 id="기본-r-시각화-기능-활용">기본 R 시각화 기능 활용</h4>
+<p><code>weight</code>를 예측변수 <code>x</code> 위치에 두고, 종속변수 <code>hindfoot_length</code>를 <code>y</code>에 두고 R 기본 시각화 산점도를 도식화해 보자.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="dt">x =</span> surveys.complete$weight, <span class="dt">y =</span> surveys.complete$hindfoot_length)</code></pre></div>
+<p><img src="fig/base-plot-1.png" title="plot of chunk base-plot" alt="plot of chunk base-plot" style="display: block; margin: auto;" /></p>
+<h3 id="ggplot2-팩키지로-시각화"><code>ggplot2</code> 팩키지로 시각화</h3>
+<p><code>ggplot2</code>를 사용해서 R 기본 내장된 시각화 기능을 대신하여 동일한 작업을 수행할 수 있다.</p>
+<p>데이터프레임 데이터에서 복잡하고 정교한 시각화 산출물을 <code>ggplot2</code> 팩키지로 생성할 수 있다. 기본설정만으로 최소의 노력으로 출판 품질 시각화 산출물을 만들어 낼 수 있다.</p>
+<p><code>ggplot2</code> 시각화 산출물은 시각화 요소를 차곡차곡 추가해 나가면서 만들어 간다.</p>
+<p><code>ggplot2</code> 시각화 산출물은 다음 단계로 만들어 나간다:</p>
+<ul>
+<li><code>data</code> 인자로 특정 데이터프레임과 플롯을 묶어 연결시킨다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete)</code></pre></div>
+<ul>
+<li>미적 요소를 <code>aes</code> 로 정의해서, 플롯축에 데이터 변수를 매핑하고, 크기, 모양, 색상 등을 시각화한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete, <span class="kw">aes</span>(<span class="dt">x =</span> weight, <span class="dt">y =</span> hindfoot_length))</code></pre></div>
+<ul>
+<li>데이터에 대한 시각적 표현(점, 선, 막대 등)을 하는데 <code>geoms</code> 을 사용해서 플롯에 반영한다. 플롯에 <code>geoms</code>를 추가하는데 <code>+</code> 연산자를 사용한다::</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete, <span class="kw">aes</span>(<span class="dt">x =</span> weight, <span class="dt">y =</span> hindfoot_length)) +
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/first-ggplot-1.png" title="plot of chunk first-ggplot" alt="plot of chunk first-ggplot" style="display: block; margin: auto;" /></p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h4 id="주의-사항"><span class="glyphicon glyphicon-pushpin"></span>주의 사항</h4>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>ggplot</code> 함수에 넣은 어떤 것도 추가한 <code>geom</code> 계층을 통해 반영된다. 즉, 보편적인 플롯 설정이다.</li>
+<li><code>aes()</code>에 설정한 <code>x</code>축, <code>y</code>축도 여기에 포함된다.</li>
+</ul>
+</div>
+</aside>
+<h3 id="플롯-변경하기">플롯 변경하기</h3>
+<ul>
+<li>투명도(transparaency, alpha)를 추가한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete, <span class="kw">aes</span>(<span class="dt">x =</span> weight, <span class="dt">y =</span> hindfoot_length)) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.1</span>)</code></pre></div>
+<p><img src="fig/first-ggplot-alpha-1.png" title="plot of chunk first-ggplot-alpha" alt="plot of chunk first-ggplot-alpha" style="display: block; margin: auto;" /></p>
+<ul>
+<li>색상을 추가한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete, <span class="kw">aes</span>(<span class="dt">x =</span> weight, <span class="dt">y =</span> hindfoot_length)) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.1</span>, <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="fig/first-ggplot-alpha-color-1.png" title="plot of chunk first-ggplot-alpha-color" alt="plot of chunk first-ggplot-alpha-color" style="display: block; margin: auto;" /></p>
+<h3 id="상자-그림">상자 그림</h3>
+<p>각 종별로 체중 분포를 시각화한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete, <span class="kw">aes</span>(<span class="dt">x =</span> species_id,  <span class="dt">y =</span> weight)) +
+<span class="st">                   </span><span class="kw">geom_boxplot</span>()</code></pre></div>
+<p><img src="fig/boxplot-1.png" title="plot of chunk boxplot" alt="plot of chunk boxplot" style="display: block; margin: auto;" /></p>
+<p>상자그림에 점을 추가해서, 특이한 관측점과 많이 관측된 측정값을 볼 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> surveys.complete, <span class="kw">aes</span>(<span class="dt">x =</span> species_id, <span class="dt">y =</span> weight)) +
+<span class="st">                   </span><span class="kw">geom_jitter</span>(<span class="dt">alpha =</span> <span class="fl">0.3</span>, <span class="dt">color =</span> <span class="st">&quot;tomato&quot;</span>) +
+<span class="st">                   </span><span class="kw">geom_boxplot</span>(<span class="dt">alpha =</span> <span class="dv">0</span>)</code></pre></div>
+<p><img src="fig/boxplot-with-points-1.png" title="plot of chunk boxplot-with-points" alt="plot of chunk boxplot-with-points" style="display: block; margin: auto;" /></p>
+<p>상기 시각화 산출물에서 상자그림이 지터 계층 위에 놓인 방식에 주목한다. <code>geoms</code> 순서를 조정하고, 투명도를 조절해 플롯에 계층을 쌓는 방식을 제어한다.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h3 id="도전과제"><span class="glyphicon glyphicon-pencil"></span>도전과제</h3>
+</div>
+<div class="panel-body">
+<p><code>hindfoot_length</code>에 대한 상자그림을 생성한다.</p>
+</div>
+</section>
+<h3 id="시계열-데이터-시각화">시계열 데이터 시각화</h3>
+<p>각 종별로 년도별 개체수를 계산한다. 이 작업을 수행하기 위해서는 먼저 데이터를 그룹집단화하고, 각 그룹마다 해당 레코드 개수를 센다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">yearly.counts &lt;-<span class="st"> </span>surveys.complete %&gt;%
+<span class="st">                 </span><span class="kw">group_by</span>(year, species_id) %&gt;%
+<span class="st">                 </span>tally</code></pre></div>
+<p><code>x</code>축에 연도, <code>y</code> 축에 개수를 놓고 직선으로 시간에 따라 경과한 정보를 시각화한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n)) +
+<span class="st">                  </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
+<p>불행하게도, 상기 그래프는 원하는 바가 아닌데, 이유는 모든 종에 대해 데이터를 시각화하게 명령어를 전송했기 때문이다. <code>species_id</code>로 시각화한 데이터를 쪼갠 후에 <code>ggplot</code> 명령어로 시각화하게 한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">group =</span> species_id)) +
+<span class="st">  </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+<p>색상을 추가하게 되면, 그래프에서 개체를 식별하게 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">group =</span> species_id, <span class="dt">color =</span> species_id)) +
+<span class="st">  </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" /></p>
+<h3 id="측면보여주기faceting">측면보여주기(faceting)</h3>
+<p><code>ggplot</code> 에는 <em>측면 보여주기(faceting)</em> 라는 특수한 기능이 있어서, 특정 요인에 따라 그래프 하나를 다수 그래프로 쪼갤 수 있다. 예를 들어, 각 종마다 시계열 그래프를 별도로 도식화할 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> species_id)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">facet_wrap</span>(~species_id)</code></pre></div>
+<p><img src="fig/first-facet-1.png" title="plot of chunk first-facet" alt="plot of chunk first-facet" style="display: block; margin: auto;" /></p>
+<p>관측된 각 개체 성별에 따라 그래프에 직선을 쪼개고자 한다. 이 작업을 수행하려면, 성별로 그룹을 만들어 데이터프레임에 개수를 세어야 된다.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h3 id="도전과제-1"><span class="glyphicon glyphicon-pencil"></span>도전과제</h3>
+</div>
+<div class="panel-body">
+<ul>
+<li>데이터프레임을 필터링해서 “F” 혹은 “M” 값을 갖는 레코드만 갖도록 작업한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sex_values =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>)
+surveys.complete &lt;-<span class="st"> </span>surveys.complete %&gt;%
+<span class="st">           </span><span class="kw">filter</span>(sex %in%<span class="st"> </span>sex_values)</code></pre></div>
+<ul>
+<li>연도(<code>year</code>), 개체 신원정보(<code>special_id</code>), 성(<code>sex</code>) 별로 그룹을 만든다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">yearly.sex.counts &lt;-<span class="st"> </span>surveys.complete %&gt;%
+<span class="st">                     </span><span class="kw">group_by</span>(year, species_id, sex) %&gt;%
+<span class="st">                     </span>tally</code></pre></div>
+<ul>
+<li>(개별 그래프 내부에) 성별로 쪼개는 측면보여주기 플롯을 생성한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.sex.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> species_id, <span class="dt">group =</span> sex)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>species_id)</code></pre></div>
+<p><img src="fig/facet-by-species-and-sex-1.png" title="plot of chunk facet-by-species-and-sex" alt="plot of chunk facet-by-species-and-sex" style="display: block; margin: auto;" /></p>
+<ul>
+<li>논문출판으로 흰색 배경이 좀더 가독성을 좋게 한다. <code>theme_bw()</code> 함수를 사용해서 흰색 배경을 적용한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.sex.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> species_id, <span class="dt">group =</span> sex)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>species_id) +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="fig/facet-by-species-and-sex-white-bg-1.png" title="plot of chunk facet-by-species-and-sex-white-bg" alt="plot of chunk facet-by-species-and-sex-white-bg" style="display: block; margin: auto;" /></p>
+<blockquote>
+<ul>
+<li>종대신에 성별로 색상을 입혀서 그래프 가독성을 좋게 만들 수 있다. (종은 이미 별도 그래프로 시각화되어서, 더 잘 식별하게 만들 필요는 없다.)</li>
+</ul>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.sex.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> sex, <span class="dt">group =</span> sex)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>species_id) +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="fig/facet-by-species-and-sex-colored-1.png" title="plot of chunk facet-by-species-and-sex-colored" alt="plot of chunk facet-by-species-and-sex-colored" style="display: block; margin: auto;" /></p>
+<blockquote>
+<ul>
+<li>연도에 걸쳐 각 종별로 평균 체중을 시각화한다.</li>
+</ul>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">yearly.weight &lt;-<span class="st"> </span>surveys.complete %&gt;%
+<span class="st">                 </span><span class="kw">group_by</span>(year, species_id, sex) %&gt;%
+<span class="st">                 </span><span class="kw">summarise</span>(<span class="dt">avg_weight =</span> <span class="kw">mean</span>(weight, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+<span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.weight, <span class="kw">aes</span>(<span class="dt">x=</span>year, <span class="dt">y=</span>avg_weight, <span class="dt">color =</span> species_id, <span class="dt">group =</span> species_id)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="fig/average-weight-timeseries-1.png" title="plot of chunk average-weight-timeseries" alt="plot of chunk average-weight-timeseries" style="display: block; margin: auto;" /></p>
+<blockquote>
+<ul>
+<li>시각화를 왜 이런 단계를 밟아서 도식화 절차를 거친다고 생각하는가?</li>
+<li>수컷과 암컷 체중이 상당히 차이가 나서 성별로 별도 시각화를 수행한다.</li>
+</ul>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.weight, <span class="kw">aes</span>(<span class="dt">x=</span>year, <span class="dt">y=</span>avg_weight, <span class="dt">color =</span> species_id, <span class="dt">group =</span> species_id)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>sex) +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="fig/average-weight-time-facet_sex-1.png" title="plot of chunk average-weight-time-facet_sex" alt="plot of chunk average-weight-time-facet_sex" style="display: block; margin: auto;" /> 지금까지 시각화 결과가 상당히 좋았지만, 아직 출판하기에는 많이 부족하다. 시각화 산출물 결과를 향상할 수 있는 다른 방법은 무엇이 있을까? <code>ggplot2</code> <a href="https://www.rstudio.com/wp-content/uploads/2015/08/ggplot2-cheatsheet.pdf">컨닝쪽지(cheat sheet)</a>를 참조하고, 적어도 세가지 아이디어를 적어본다.</p>
+<p><code>x</code>축과 <code>y</code>축에 ‘year’와 ’n’ 보다 더 많은 정보를 전달하도록 변경하고, 그래프에 제목을 추가한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.sex.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> sex, <span class="dt">group =</span> sex)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +
+<span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>species_id) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Observed species in time&#39;</span>,
+       <span class="dt">x =</span> <span class="st">&#39;Year of observation&#39;</span>,
+       <span class="dt">y =</span> <span class="st">&#39;Number of species&#39;</span>) +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="fig/number_species_year_with_right_labels-1.png" title="plot of chunk number_species_year_with_right_labels" alt="plot of chunk number_species_year_with_right_labels" style="display: block; margin: auto;" /></p>
+<p>이제 좀더 나아져서 훨씬 더 많은 정보를 주는 <code>x</code>, <code>y</code> 축 명칭으로 바꿨지만, 가독성이 떨어지고 있다. 글자 크기를 변경하고 글자체도 변경한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.sex.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> sex, <span class="dt">group =</span> sex)) +
+<span class="st">  </span><span class="kw">geom_line</span>() +
+<span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>species_id) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Observed species in time&#39;</span>,
+       <span class="dt">x =</span> <span class="st">&#39;Year of observation&#39;</span>,
+       <span class="dt">y =</span> <span class="st">&#39;Number of species&#39;</span>) +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>, <span class="dt">family=</span><span class="st">&quot;Arial&quot;</span>)) +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="fig/number_species_year_with_right_labels_xfont_size-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_size" alt="plot of chunk number_species_year_with_right_labels_xfont_size" style="display: block; margin: auto;" /></p>
+<p>조작을 한 다음에, <code>x</code> 축이 여전히 적절한 가독성을 전달하고 있지 않음을 볼 수 있다. 라벨 방향을 변경해서 서로 겹쳐지지 않도록 수평 혹은 수직방향으로 바꾼다. 90도 각도를 사용하거나, 대각선 방향으로 라벨방향을 변경하도록 적절한 각도로 바꾸는 실험을 진행한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> yearly.sex.counts, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> n, <span class="dt">color =</span> sex, <span class="dt">group =</span> sex)) +
+<span class="st">    </span><span class="kw">geom_line</span>() +
+<span class="st">    </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>species_id) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">colour=</span><span class="st">&quot;grey20&quot;</span>, <span class="dt">size=</span><span class="dv">12</span>, <span class="dt">angle=</span><span class="dv">90</span>, <span class="dt">hjust=</span>.<span class="dv">5</span>, <span class="dt">vjust=</span>.<span class="dv">5</span>),
+          <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">colour=</span><span class="st">&quot;grey20&quot;</span>, <span class="dt">size=</span><span class="dv">12</span>),
+          <span class="dt">text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>, <span class="dt">family=</span><span class="st">&quot;Arial&quot;</span>)) +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Observed species in time&#39;</span>,
+         <span class="dt">x =</span> <span class="st">&#39;Year of observation&#39;</span>,
+         <span class="dt">y =</span> <span class="st">&#39;Number of species&#39;</span>)</code></pre></div>
+<p><img src="fig/number_species_year_with_right_labels_xfont_orientation-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_orientation" alt="plot of chunk number_species_year_with_right_labels_xfont_orientation" style="display: block; margin: auto;" /></p>
+<p>이제, 라벨을 키워서 가독성이 더 좋아졌지만, 개선할 여지는 남아 있다. 시간을 5분만 더 들여서 더 나은 시각화 산출물을 만들어 내도록 하나 혹은 두가지 작업을 시도해 본다. <code>ggplot2</code> 컨닝 쪽지를 사용해서, 상기 시각화 산출물에 적용할 영감을 받아본다.</p>
+<p>다음에 몇가지 생각난 것이 있다:</p>
+<ul>
+<li>선 두께를 변경할 수 있는지 살펴본다.</li>
+<li>범례(legend) 명칭을 변경할 방법을 살펴본다. 범례 라벨은 어떤가?</li>
+<li>외양을 좋게 하는데 다른 색상 팔레트를 사용한다. (http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/)</li>
+</ul>
+<p>완벽한 시각화 산출물이 도출되면, 선호하는 그림파일 형식으로 저장한다. 그림 폭과 높이를 지정해서 크기를 쉽게 변경한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggsave</span>(<span class="st">&quot;observed_species_in_time.png&quot;</span>, <span class="dt">width=</span><span class="dv">15</span>, <span class="dt">height=</span><span class="dv">10</span>)</code></pre></div>
+</div>
+</section>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="error-in-plot.new-figure-margins-too-large-시각화-문제-해결"><span class="glyphicon glyphicon-pushpin"></span><code>Error in plot.new() : figure margins too large</code> 시각화 문제 해결</h3>
+</div>
+<div class="panel-body">
+<p>그림에 좌우상하 여백(margin)이 맞지 않는 오류가 발생하는 경우 좌우상하 여백을 기본설정 <code>par(mar=c(1,1,1,1))</code> 명령어를 통해 해결한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="dt">x =</span> surveys.complete$weight, <span class="dt">y =</span> surveys.complete$hindfoot_length)
+Error in <span class="kw">plot.new</span>() :<span class="st"> </span>figure margins too large</code></pre></div>
+</div>
+</aside>
+<h3 id="참고자료">참고자료</h3>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://www.datacarpentry.org/R-ecology/">Data Carpentry R lessons on ecology</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.wired.co.uk/news/archive/2014-07/25/figshare">“figshare wants to open up scientific data to the world”</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
