@@ -10,10 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(error = TRUE)
-```
+
 
 ### `gapminder` 데이터 준비[^viz-ggplot2-control] 
 
@@ -30,7 +27,8 @@ knitr::opts_chunk$set(error = TRUE)
 *2015-10-19: GitHub에서 가져온 `ggplot2` 버젼 1.0.1.9003 을 사용한다.
 `dev` 개발버젼이 CRAN 저장소 버젼보다 변경사항이 많이 반영되어 있다!*
 
-```{r}
+
+~~~{.r}
 library(ggplot2)
 library(gapminder)
 suppressPackageStartupMessages(library(dplyr))
@@ -39,7 +37,7 @@ jdat <- gapminder %>%
   droplevels() %>% 
   mutate(country = reorder(country, -1 * pop)) %>% 
   arrange(year, country)  
-```
+~~~
 
 ### 점에 대한 크기와 색상 제어
 
@@ -48,7 +46,8 @@ jdat <- gapminder %>%
 
 먼저, 년도 하나를 선정해서 간단한 산점도를 생성한다.
 
-```{r scatterplot}
+
+~~~{.r}
 j_year <- 2007
 q <-
   jdat %>% 
@@ -56,17 +55,22 @@ q <-
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   scale_x_log10(limits = c(230, 63000))
 q + geom_point()
-```
+~~~
+
+<img src="fig/scatterplot-1.png" title="plot of chunk scatterplot" alt="plot of chunk scatterplot" style="display: block; margin: auto;" />
 
 제도되는 기호, 크기, 색상을 제어한다.
 다소 불쾌한 설정을 사용해서, 성공과 실패를 확실히 명확히 한다.
 멎진 색상체계를 적용하는데 정교한 조작을 할 시점이 지금은 아니다.
 배짱을 가져라!
 
-```{r scatterplot-obnoxious-points}
+
+~~~{.r}
 ## 기호에 대한 크기와 색상을 채우는 것을 제어할 수 있는가? 그렇다!
 q + geom_point(pch = 21, size = 8, fill = I("darkorchid1"))
-```
+~~~
+
+<img src="fig/scatterplot-obnoxious-points-1.png" title="plot of chunk scatterplot-obnoxious-points" alt="plot of chunk scatterplot-obnoxious-points" style="display: block; margin: auto;" />
 
 ### 원크기 = 인구수
 
@@ -76,13 +80,16 @@ q + geom_point(pch = 21, size = 8, fill = I("darkorchid1"))
 두번째 시도에서, `show_guide = FALSE` 선택옵션 설정으로 범례를 숨겼고, 
 $\sqrt(pop / \pi)$ 로 원크기를 매핑해서 명시적으로 규모에 대한 범위를 설정해서 원의 크기를 증가시켰다.
 
-```{r scatterplot-population-area, fig.show='hold', out.width='50%'}
+
+~~~{.r}
 ## ggplot2 ALERT: size now means size, not radius!
 q + geom_point(aes(size = pop), pch = 21)
 (r <- q +
    geom_point(aes(size = pop), pch = 21, show.legend = FALSE) +
    scale_size_continuous(range=c(1,40)))
-```
+~~~
+
+<img src="fig/scatterplot-population-area-1.png" title="plot of chunk scatterplot-population-area" alt="plot of chunk scatterplot-population-area" width="50%" style="display: block; margin: auto;" /><img src="fig/scatterplot-population-area-2.png" title="plot of chunk scatterplot-population-area" alt="plot of chunk scatterplot-population-area" width="50%" style="display: block; margin: auto;" />
 
 ### 요인으로 결정된 색상으로 원을 채워넣는다.
 
@@ -92,10 +99,13 @@ q + geom_point(aes(size = pop), pch = 21)
 점검해 나가는데 도움이 된다. 가령 유럽에 있는 모든 국가가 녹색 색조를 띄기 때문에,
 만약 대륙 패싯에 다양한 색상의 원이 있다면, 뭔가 잘못된 것을 인지할 수 있게 된다.
 
-```{r scatterplot-continent-fill, fig.show='hold', out.width='50%'}
+
+~~~{.r}
 (r <- r + facet_wrap(~ continent) + ylim(c(39, 87)))
 r + aes(fill = continent)
-```
+~~~
+
+<img src="fig/scatterplot-continent-fill-1.png" title="plot of chunk scatterplot-continent-fill" alt="plot of chunk scatterplot-continent-fill" width="50%" style="display: block; margin: auto;" /><img src="fig/scatterplot-continent-fill-2.png" title="plot of chunk scatterplot-continent-fill" alt="plot of chunk scatterplot-continent-fill" width="50%" style="display: block; margin: auto;" />
 
 ### 국가별 생상조합을 설정한다.
 
@@ -103,10 +113,34 @@ r + aes(fill = continent)
 예를 들어, [국가별 색상조합](https://github.com/jennybc/gapminder/blob/master/data-raw/gapminder-color-scheme-ggplot2.png)을 
 클릭한다.
 
-```{r}
+
+~~~{.r}
 str(country_colors)
+~~~
+
+
+
+~~~{.output}
+ Named chr [1:142] "#7F3B08" "#833D07" "#873F07" "#8B4107" ...
+ - attr(*, "names")= chr [1:142] "Nigeria" "Egypt" "Ethiopia" "Congo, Dem. Rep." ...
+
+~~~
+
+
+
+~~~{.r}
 head(country_colors)
-```
+~~~
+
+
+
+~~~{.output}
+         Nigeria            Egypt         Ethiopia Congo, Dem. Rep. 
+       "#7F3B08"        "#833D07"        "#873F07"        "#8B4107" 
+    South Africa            Sudan 
+       "#8F4407"        "#934607" 
+
+~~~
 
 `country_colors` 순서가 알파벳 순이 아니다.
 국가가 실제로 대륙내 크기로 정렬되어 있어, 색상조합이 생성된 로직을 반영하고 있다.
@@ -132,15 +166,19 @@ head(country_colors)
 마지막으로 추가할 최종 비트 두개는 `aes()`를 사용해서 국가가 색상에 매칭되게 하고,
 `scale_fill_manual()`을 사용해서 맞춤형 색상조합을 명세한다.
 
-```{r scatterplot-country-fill}
+
+~~~{.r}
 r + aes(fill = country) + scale_fill_manual(values = country_colors)
-```
+~~~
+
+<img src="fig/scatterplot-country-fill-1.png" title="plot of chunk scatterplot-country-fill" alt="plot of chunk scatterplot-country-fill" style="display: block; margin: auto;" />
 
 ### 한곳에 모두 모아보자.
 
 제도를 완성하는 전체 코드는 다음과 같다.
 
-```{r scatterplot-country-fill-final}
+
+~~~{.r}
 j_year <- 2007
 jdat %>% 
   filter(year == j_year) %>% 
@@ -150,4 +188,6 @@ jdat %>%
   geom_point(aes(size = pop), pch = 21, show.legend = FALSE) +
   scale_x_log10(limits = c(230, 63000)) +
   scale_size_continuous(range = c(1,40)) + ylim(c(39, 87))
-```
+~~~
+
+<img src="fig/scatterplot-country-fill-final-1.png" title="plot of chunk scatterplot-country-fill-final" alt="plot of chunk scatterplot-country-fill-final" style="display: block; margin: auto;" />

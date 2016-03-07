@@ -10,10 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(error = TRUE)
-```
+
 
 ### 데이터 랭글링 숨은 문제 [^viz-secret] 
 
@@ -33,27 +30,39 @@ knitr::opts_chunk$set(error = TRUE)
 
 상당히 많은 학생들 코드를 살펴보면 변수가 데이터프레임 밖에 복사되고 작업공간에 독립된 객체로 존재하는 것을 볼 수 있다.
 
-```{r}
+
+~~~{.r}
 library(gapminder)
 life_exp <- gapminder$lifeExp
 year <- gapminder$year
-```
+~~~
 
 문제는 `ggplot2`가 믿을 수 없을 정도로 강력히 데이터프레임에 존재하는 변수를 선호함에 있다;
 `ggplot2`로 제도를 하는데 기반이 되는 것이 데이터프레임으로 사실상 요구사항이나 다름 없다.
 
-``` {r}
+
+~~~{.r}
 library(ggplot2)
 ggplot(aes(x = year, y = life_exp)) + geom_jitter()
-```
+~~~
+
+
+
+~~~{.output}
+Error: ggplot2 doesn't know how to deal with data of class uneval
+
+~~~
 
 **변수를 데이터프레임에 보관하고 연관된 데이터프레임에 전달하라!**
 이런 전략은 R 기본 그래픽 시스템 뿐만 아니라, `lattice` 그래픽에도 적용되는 것으로,
 `ggplot2`에만 특정된 것은 아니다.
 
-```{r data-in-situ}
+
+~~~{.r}
 ggplot(data = gapminder, aes(x = year, y = life_exp)) + geom_jitter()
-```
+~~~
+
+<img src="fig/data-in-situ-1.png" title="plot of chunk data-in-situ" alt="plot of chunk data-in-situ" style="display: block; margin: auto;" />
 
 
 국가별, 대륙별, 년도별 데이터를 필터링하면 어떨까?
@@ -75,15 +84,33 @@ ggplot(data = gapminder, aes(x = year, y = life_exp)) + geom_jitter()
 구체적으로 말하면, 문자열은 명시적으로 지정하지 않게 되면 요인으로 변환되지 않는다.
 이것만으로도 데이터프레임과 연관된 지연과 관련된 문제를 회피할 수 있다.
 
-```{r data_frame-love}
+
+~~~{.r}
 suppressPackageStartupMessages(library(dplyr))
 my_dat <-
   data_frame(x = 1:5,
              y = x ^ 2,
              text = c("alpha", "beta", "gamma", "delta", "epsilon"))
 str(my_dat)
+~~~
+
+
+
+~~~{.output}
+Classes 'tbl_df', 'tbl' and 'data.frame':	5 obs. of  3 variables:
+ $ x   : int  1 2 3 4 5
+ $ y   : num  1 4 9 16 25
+ $ text: chr  "alpha" "beta" "gamma" "delta" ...
+
+~~~
+
+
+
+~~~{.r}
 ggplot(my_dat, aes(x, y)) + geom_line() + geom_text(aes(label = text))
-```
+~~~
+
+<img src="fig/data_frame-love-1.png" title="plot of chunk data_frame-love" alt="plot of chunk data_frame-love" style="display: block; margin: auto;" />
 
 데이터프레임에 변수를 새로 추가하는 `dplyr::mutate()` 함수를 통해, 동일한 길이를 갖는
 연관된 변수를 처리할 때마다 데이터프레임 내부에서 동작하는 도구를 갖추게 된다.
@@ -93,15 +120,31 @@ ggplot(my_dat, aes(x, y)) + geom_line() + geom_text(aes(label = text))
 슬프게도 모든 함수가 `data=` 인자를 제공하지는 않는다.
 상관계수를 계산하는 `cor()` 함수를 예로 들어보자. 다음 코드는 동작하지 않는다:
 
-```{r}
+
+~~~{.r}
 cor(year, lifeExp, data = gapminder)
-```
+~~~
+
+
+
+~~~{.output}
+Error in cor(year, lifeExp, data = gapminder): 사용되지 않은 인자 (data = gapminder)
+
+~~~
 
 물론 다음과 같이 데이터프레임 명칭을 항상 반복하면 된다:
 
-```{r}
+
+~~~{.r}
 cor(gapminder$year, gapminder$lifeExp)
-```
+~~~
+
+
+
+~~~{.output}
+[1] 0.4356112
+
+~~~
 
 하지만, 타이핑은 사람들이 싫어하는 것이다.
 아마도 이렇게 `gapminder`를 반복적으로 타이핑한다는 의식속에 숨겨진 공포가 
@@ -113,19 +156,35 @@ cor(gapminder$year, gapminder$lifeExp)
 명령어 한줄 혹은 여러줄로 된 토막 코드가 될 수도 있다.
 특별한 점은 데이터프레임에 변수를 이름으로 참조할 수 있다는 것이다.
 
-```{r}
+
+~~~{.r}
 with(gapminder,
      cor(year, lifeExp))
-```
+~~~
+
+
+
+~~~{.output}
+[1] 0.4356112
+
+~~~
 
 `magrittr` 팩키지를 사용하게 되면, 또다른 선택욥션이 `%$%` 연산자를 사용해서 데이터프레임 내부 변수를 노출시켜 향후 
 연산작업을 진행해 나간다:
 
-```{r}
+
+~~~{.r}
 library(magrittr)
 gapminder %$%
   cor(year, lifeExp)
-```
+~~~
+
+
+
+~~~{.output}
+[1] 0.4356112
+
+~~~
 
 ### 데이터 깔끔히 만들기
 
@@ -150,15 +209,35 @@ gapminder %$%
 그리고 나서 `pop`, `lifeExp`, `gdpPercap` 변수를 `var` 동반변수를 키로 
 `value` 변수를 값으로 하여 변수하나로 `gather()`함수를 통해 모은다. 
 
-```{r}
+
+~~~{.r}
 suppressPackageStartupMessages(library(tidyr))
 korea_dat <- gapminder %>%
   filter(country == "Korea, Rep.")
 korea_tidy <- korea_dat %>%
   gather(key = var, value = value, pop, lifeExp, gdpPercap)
 dim(korea_dat)
+~~~
+
+
+
+~~~{.output}
+[1] 12  6
+
+~~~
+
+
+
+~~~{.r}
 dim(korea_tidy)
-```
+~~~
+
+
+
+~~~{.output}
+[1] 36  5
+
+~~~
 
 필터링된 `korea_dat`는 12 행을 갖는다. 
 `korea_tidy` 데이터프레임에 변수를 세개 모아 쌓아서, 행의 갯수가 3 배 되는 것이 이해된다.
@@ -170,18 +249,22 @@ dim(korea_tidy)
 데이터가 깔끔한 데이터프레임에 반복을 돌릴 수 있는 변수를 나타내는 적절한 요인으로 구성되어서,
 패싯 기능을 구현하기만 하면 된다.
 
-```{r korea}
+
+~~~{.r}
 p <- ggplot(korea_tidy, aes(x = year, y = value)) +
   facet_wrap(~ var, scales="free_y")
 p + geom_point() + geom_line() +
   scale_x_continuous(breaks = seq(1950, 2011, 15))
-```
+~~~
+
+<img src="fig/korea-1.png" title="plot of chunk korea" alt="plot of chunk korea" style="display: block; margin: auto;" />
 
 #### 요약
 
 한국을 뽑아 시각화한 코드가 다음에 요약되어 있다.
 
-```{r eval = FALSE}
+
+~~~{.r}
 korea_tidy <- gapminder %>%
   filter(country == "Korea, Rep.") %>%
   gather(key = var, value = value, pop, lifeExp, gdpPercap)
@@ -189,7 +272,7 @@ ggplot(korea_tidy, aes(x = year, y = value)) +
   facet_wrap(~ var, scales="free_y") +
   geom_point() + geom_line() +
   scale_x_continuous(breaks = seq(1950, 2011, 15))
-```
+~~~
 
 앞에서 언급한 규칙에서 나온 이득을 상기 토마코드가 보여주고 있다.
 

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-16', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">ggplot2 색상 제어</h2>
+<h3 id="gapminder-데이터-준비viz-ggplot2-control"><code>gapminder</code> 데이터 준비<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p>국가가 2개만 포함된 오세아니아를 제외한 <code>gapminder</code> 데이터를 불러온다.</p>
+<p>인구수에 기반해서 국가 요인을 정렬하고 나서 데이터도 정렬한다. 이유는 아래 거품그림에서 큰 국가가 작은 국가를 가리는 것을 방지하기 위함이다. 슬프게도, 데이터 행의 순서가 시각적 산출물에 영향을 미치는 사례다. 하지만, <code>ggplot2</code>는 <code>lattice</code> 혹은 기본 그래픽 시스템보다 이런 것에 덜 영향을 받는다.</p>
+<p><em>2015-10-19: GitHub에서 가져온 <code>ggplot2</code> 버젼 1.0.1.9003 을 사용한다. <code>dev</code> 개발버젼이 CRAN 저장소 버젼보다 변경사항이 많이 반영되어 있다!</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(gapminder)
+<span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(dplyr))
+jdat &lt;-<span class="st"> </span>gapminder %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(continent !=<span class="st"> &quot;Oceania&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">droplevels</span>() %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">country =</span> <span class="kw">reorder</span>(country, -<span class="dv">1</span> *<span class="st"> </span>pop)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(year, country)  </code></pre></div>
+<h3 id="점에-대한-크기와-색상-제어">점에 대한 크기와 색상 제어</h3>
+<p><code>ggplot2</code>를 사용해서 전통적 <code>gapminder</code> 거품그림을 생성해 나간다. 기어가고 나서, 걷고, 마지막으로 뛴다.</p>
+<p>먼저, 년도 하나를 선정해서 간단한 산점도를 생성한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">j_year &lt;-<span class="st"> </span><span class="dv">2007</span>
+q &lt;-
+<span class="st">  </span>jdat %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(year ==<span class="st"> </span>j_year) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> gdpPercap, <span class="dt">y =</span> lifeExp)) +
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">230</span>, <span class="dv">63000</span>))
+q +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/scatterplot-1.png" title="plot of chunk scatterplot" alt="plot of chunk scatterplot" style="display: block; margin: auto;" /></p>
+<p>제도되는 기호, 크기, 색상을 제어한다. 다소 불쾌한 설정을 사용해서, 성공과 실패를 확실히 명확히 한다. 멎진 색상체계를 적용하는데 정교한 조작을 할 시점이 지금은 아니다. 배짱을 가져라!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## 기호에 대한 크기와 색상을 채우는 것을 제어할 수 있는가? 그렇다!
+q +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="dv">8</span>, <span class="dt">fill =</span> <span class="kw">I</span>(<span class="st">&quot;darkorchid1&quot;</span>))</code></pre></div>
+<p><img src="fig/scatterplot-obnoxious-points-1.png" title="plot of chunk scatterplot-obnoxious-points" alt="plot of chunk scatterplot-obnoxious-points" style="display: block; margin: auto;" /></p>
+<h3 id="원크기-인구수">원크기 = 인구수</h3>
+<p>원크기로 인구수를 반영하고자 한다. 반지름을 바로 제어할 수 있기 때문에, 국가별 인구에서 원의 크기를 결정하도록 관계를 <span class="math inline">\(면적 = \pi r^2\)</span>으로 설정한다. 첫번째 시도에서 일부 미비점이 발견되었다: 원의 크기가 너무 작았고, 크기별 범례는 원하던 것이 아니다. 두번째 시도에서, <code>show_guide = FALSE</code> 선택옵션 설정으로 범례를 숨겼고, <span class="math inline">\(\sqrt(pop / \pi)\)</span> 로 원크기를 매핑해서 명시적으로 규모에 대한 범위를 설정해서 원의 크기를 증가시켰다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## ggplot2 ALERT: size now means size, not radius!
+q +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> pop), <span class="dt">pch =</span> <span class="dv">21</span>)
+(r &lt;-<span class="st"> </span>q +
+<span class="st">   </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> pop), <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) +
+<span class="st">   </span><span class="kw">scale_size_continuous</span>(<span class="dt">range=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">40</span>)))</code></pre></div>
+<p><img src="fig/scatterplot-population-area-1.png" title="plot of chunk scatterplot-population-area" alt="plot of chunk scatterplot-population-area" width="50%" style="display: block; margin: auto;" /><img src="fig/scatterplot-population-area-2.png" title="plot of chunk scatterplot-population-area" alt="plot of chunk scatterplot-population-area" width="50%" style="display: block; margin: auto;" /></p>
+<h3 id="요인으로-결정된-색상으로-원을-채워넣는다.">요인으로 결정된 색상으로 원을 채워넣는다.</h3>
+<p><code>aes()</code> 함수를 사용해서 요인을 색상으로 매핑한다. 우선, <code>continent</code> 요인과 자동 색상조합에 맞춰 사용한다. 대륙별 패싯(facet)을 사용한다. 패싯을 사용하는 이유는 맞춤형 색상조합을 사용하면서 진도상황을 점검해 나가는데 도움이 된다. 가령 유럽에 있는 모든 국가가 녹색 색조를 띄기 때문에, 만약 대륙 패싯에 다양한 색상의 원이 있다면, 뭔가 잘못된 것을 인지할 수 있게 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(r &lt;-<span class="st"> </span>r +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>continent) +<span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">39</span>, <span class="dv">87</span>)))
+r +<span class="st"> </span><span class="kw">aes</span>(<span class="dt">fill =</span> continent)</code></pre></div>
+<p><img src="fig/scatterplot-continent-fill-1.png" title="plot of chunk scatterplot-continent-fill" alt="plot of chunk scatterplot-continent-fill" width="50%" style="display: block; margin: auto;" /><img src="fig/scatterplot-continent-fill-2.png" title="plot of chunk scatterplot-continent-fill" alt="plot of chunk scatterplot-continent-fill" width="50%" style="display: block; margin: auto;" /></p>
+<h3 id="국가별-생상조합을-설정한다.">국가별 생상조합을 설정한다.</h3>
+<p><code>gapminder</code> 팩키지에는 대륙과 각 국가별 색상 팔레트가 따라온다. 예를 들어, <a href="https://github.com/jennybc/gapminder/blob/master/data-raw/gapminder-color-scheme-ggplot2.png">국가별 색상조합</a>을 클릭한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(country_colors)</code></pre></div>
+<pre class="output"><code> Named chr [1:142] &quot;#7F3B08&quot; &quot;#833D07&quot; &quot;#873F07&quot; &quot;#8B4107&quot; ...
+ - attr(*, &quot;names&quot;)= chr [1:142] &quot;Nigeria&quot; &quot;Egypt&quot; &quot;Ethiopia&quot; &quot;Congo, Dem. Rep.&quot; ...
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(country_colors)</code></pre></div>
+<pre class="output"><code>         Nigeria            Egypt         Ethiopia Congo, Dem. Rep. 
+       &quot;#7F3B08&quot;        &quot;#833D07&quot;        &quot;#873F07&quot;        &quot;#8B4107&quot; 
+    South Africa            Sudan 
+       &quot;#8F4407&quot;        &quot;#934607&quot; 
+</code></pre>
+<p><code>country_colors</code> 순서가 알파벳 순이 아니다. 국가가 실제로 대륙내 크기로 정렬되어 있어, 색상조합이 생성된 로직을 반영하고 있다. 이상적으로, 실제에서는 항상 그렇지는 않지만, 분석이 행순서에 의존하면 안된다.</p>
+<h3 id="ggplot2에-사용될-색상조합을-준비한다."><code>ggplot2</code>에 사용될 색상조합을 준비한다.</h3>
+<p>그래픽 문법(Grammar of Graphics)에서, <strong>scale</strong> 함수가 데이터 변수에서 <code>aes</code> 미학에 대한 매핑을 제어한다. 지금까지, 자동으로 <code>ggplot2</code>가 색상 / 채우기 scale 이 결정되도록 내버려 두었다. 하지만, 맞춤형 색상조합을 사용하려면, <code>country</code> 요인이 <code>geom_point</code>에 색상을 채우는데 매핑이 되도록 제어한다.</p>
+<p><code>scale_fill_manual</code> 함수를 사용한다. 이산형 척도를 맞춤형으로 제어하는데 사용되는 함수 가족 중 구성원이다. 핵심 인자는 <code>value =</code>으로 미학값 벡터로 이번 경우에 색상을 채워넣는다. 벡터가 명칭을 갖게되면, 매핑과정에서 참고된다. 이런 기능이 믿을 수 없을 정도로 유용하다! <code>country_colors</code> 가 왜 <strong>정확하게 작업</strong>을 수행하는 이유다. 이를 통해 <code>country</code> 요인 수준에 대한 순서, 데이터 행 순서, 혹은 정확하게 어떤 국가가 제도되어야 하는지에 관한 걱정을 덜어준다.</p>
+<h3 id="ggplot2-거품그림을-생성한다."><code>ggplot2</code> 거품그림을 생성한다.</h3>
+<p>이 지점에 오면 사기성이 있을 정도로 단순해 진다. 다른 많은 것과 마찬가지로, 앞선 모든 것을 해결하면, 정말 쉽다. 마지막으로 추가할 최종 비트 두개는 <code>aes()</code>를 사용해서 국가가 색상에 매칭되게 하고, <code>scale_fill_manual()</code>을 사용해서 맞춤형 색상조합을 명세한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r +<span class="st"> </span><span class="kw">aes</span>(<span class="dt">fill =</span> country) +<span class="st"> </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> country_colors)</code></pre></div>
+<p><img src="fig/scatterplot-country-fill-1.png" title="plot of chunk scatterplot-country-fill" alt="plot of chunk scatterplot-country-fill" style="display: block; margin: auto;" /></p>
+<h3 id="한곳에-모두-모아보자.">한곳에 모두 모아보자.</h3>
+<p>제도를 완성하는 전체 코드는 다음과 같다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">j_year &lt;-<span class="st"> </span><span class="dv">2007</span>
+jdat %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(year ==<span class="st"> </span>j_year) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> gdpPercap, <span class="dt">y =</span> lifeExp, <span class="dt">fill =</span> country)) +
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> country_colors) +
+<span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>continent) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> pop), <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) +
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">230</span>, <span class="dv">63000</span>)) +
+<span class="st">  </span><span class="kw">scale_size_continuous</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">40</span>)) +<span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">39</span>, <span class="dv">87</span>))</code></pre></div>
+<p><img src="fig/scatterplot-country-fill-final-1.png" title="plot of chunk scatterplot-country-fill-final" alt="plot of chunk scatterplot-country-fill-final" style="display: block; margin: auto;" /></p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://stat545-ubc.github.io/block019_enforce-color-scheme.html">Taking control of qualitative colors in ggplot2</a><a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

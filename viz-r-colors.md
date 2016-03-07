@@ -10,10 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(error = TRUE)
-```
+
 
 ### 시각화 메커니즘[^viz-mechanism] 
 
@@ -35,21 +32,24 @@ knitr::opts_chunk$set(error = TRUE)
 작은 양수나 크레파스 명칭 대신에, 일반적이고 컴퓨터가 읽어들일 수 있는 색상 표색법이 16진수 팔레트다.
 RColorBrewer Dark2 팔레트가 실제로 저장된 방법이 다음에 나와 있다.
 
-``` {r}
+
+~~~{.r}
 brewer.pal(n = 8, name = "Dark2")
-```
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): 함수 "brewer.pal"를 찾을 수 없습니다
+
+~~~
 
 `#` 기호는 관례로 붙이는 것이고, 16진수 문자열을 다음과 같이 파싱한다:
 `#rrggbb`에서 `rr`, `gg`, `bb` 각각은 적색, 녹색, 청색 채널에 대한 생상농도를 나타낸다.
 각 색상은 2를 밑으로하는 16개 숫자를 나타내고, "16진수(hexadecimal)" 혹은 줄여서 헥스(hex)로 부른다.
 다음에 밑을 10으로 하는 십진수와 16진수 비교표가 다음에 나와 있다.
 
-```{r include = FALSE}
-library(xtable)
-foo <- t(cbind(hex = I(c(as.character(0:9), LETTERS[1:6])),
-               decimal = I(as.character(0:15))))
-foo <- xtable(foo)
-```
+
 
 예를 들어, 팔렛트 첫 색상이 `#1B9E77`으로 명세되어 있다. 따라서, 녹색 채널 색상농도는 `9E`가 된다.
 
@@ -63,35 +63,30 @@ $$
 도움이 되는 기억해야될 중요한 사례가 다음에 나타나 있다.
 적색, 녹색, 청색에 대한 강렬한 RGB 색상은 다음과 같다.
 
-```{r include = FALSE}
-foo <- data.frame(color_name = c("blue", "green", "red"),
-                  hex = c("#0000FF", "#00FF00", "#FF0000"),
-                  red = c(0, 0, 255),
-                  green = c(0, 255, 0),
-                  blue = c(255, 0, 0))
-foo <- xtable(foo, digits = 0)
-```
 
-```{r results = 'asis', echo = FALSE}
-print(foo, type='html', include.rownames = FALSE)
-```
+
+<!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
+<!-- Mon Mar  7 11:07:12 2016 -->
+<table border=1>
+<tr> <th> color_name </th> <th> hex </th> <th> red </th> <th> green </th> <th> blue </th>  </tr>
+  <tr> <td> blue </td> <td> #0000FF </td> <td align="right"> 0 </td> <td align="right"> 0 </td> <td align="right"> 255 </td> </tr>
+  <tr> <td> green </td> <td> #00FF00 </td> <td align="right"> 0 </td> <td align="right"> 255 </td> <td align="right"> 0 </td> </tr>
+  <tr> <td> red </td> <td> #FF0000 </td> <td align="right"> 255 </td> <td align="right"> 0 </td> <td align="right"> 0 </td> </tr>
+   </table>
 
 다음에 흑백, 회색을 표현한 것이 나타나 있다.
 
-```{r include = FALSE}
-j_intensity <- c(255, 171, 84, 0)
-foo <- data.frame(color_name = c("white, gray100", "gray67",
-                                 "gray33", "black, gray0"),
-                  hex = c("#FFFFFF", "#ABABAB", "#545454", "#000000"),
-                  red = j_intensity,
-                  green = j_intensity,
-                  blue = j_intensity)
-foo <- xtable(foo, digits = 0)
-```
 
-```{r results = 'asis', echo = FALSE}
-print(foo, type='html', include.rownames = FALSE)
-```
+
+<!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
+<!-- Mon Mar  7 11:07:12 2016 -->
+<table border=1>
+<tr> <th> color_name </th> <th> hex </th> <th> red </th> <th> green </th> <th> blue </th>  </tr>
+  <tr> <td> white, gray100 </td> <td> #FFFFFF </td> <td align="right"> 255 </td> <td align="right"> 255 </td> <td align="right"> 255 </td> </tr>
+  <tr> <td> gray67 </td> <td> #ABABAB </td> <td align="right"> 171 </td> <td align="right"> 171 </td> <td align="right"> 171 </td> </tr>
+  <tr> <td> gray33 </td> <td> #545454 </td> <td align="right"> 84 </td> <td align="right"> 84 </td> <td align="right"> 84 </td> </tr>
+  <tr> <td> black, gray0 </td> <td> #000000 </td> <td align="right"> 0 </td> <td align="right"> 0 </td> <td align="right"> 0 </td> </tr>
+   </table>
 
 "grey" 회색으로 치환하게 되면, "gray"를 보게되는 어느 곳에서나 동일한 결과를 얻게 됨에 주목한다.
 모든 채널을 최대값으로 하면 흰색, 모든 채널을 최소값으로 하면 검정색이 된다.
@@ -173,11 +168,25 @@ HCL 공간을 슬라이스로 나누어 도식화한 것을 보여주고 있다.
 
 `gapminder` 데이터를 불러온다.
 
-```{r}
+
+~~~{.r}
 suppressPackageStartupMessages(library(dplyr))
 library(gapminder)
 str(gapminder)
-```
+~~~
+
+
+
+~~~{.output}
+Classes 'tbl_df', 'tbl' and 'data.frame':	1704 obs. of  6 variables:
+ $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+ $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+ $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+ $ gdpPercap: num  779 821 853 836 740 ...
+
+~~~
 
 #### 기본 도식화 기호를 속이 꽉찬 원으로 변경
 
@@ -185,10 +194,11 @@ str(gapminder)
 기본 R 그래픽으로 한정하고자 `par()` 설정을 사용한다.
 `par()` 함수는 기본 R 그래픽 매개변수를 설정하고 조회하는 함수다. 인터랙티브 세션 혹은 일반 R 스크립트로 다음 명령어를 실행한다.
 
-```{r eval = FALSE}
+
+~~~{.r}
 ## how to change the plot symbol in a simple, non-knitr setting
 opar <- par(pch = 19)
-```
+~~~
 
 기술적으로, 대입연산자가 필요하지만, 명시적으로 표현하는 것은 좋은 코딩 습관이다.
 상기 명령어는 일석이조의 효과를 갖는다:
@@ -217,53 +227,64 @@ R 사막 동떨어진 섬에 거주하고 있지만, 이런 관습이 납기를 
 `jdat` 데이터를 살펴보자.
 
 
-```{r echo = FALSE}
-## take a random sample of countries
-n_c <- 8
-j_year <- 2007
-set.seed(1903)
-countries_to_keep <-
-  levels(gapminder$country) %>% 
-  sample(size = n_c) %>% 
-  as.character()
-jdat <-
-  gapminder %>% 
-  filter(country %in% countries_to_keep, year == j_year) %>% 
-  droplevels() %>% 
-  arrange(gdpPercap)
-#str(jdat)
-```
 
-```{r}
+
+
+~~~{.r}
 jdat
-```
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [8 x 6]
+
+     country continent  year lifeExp      pop  gdpPercap
+      (fctr)    (fctr) (int)   (dbl)    (int)      (dbl)
+1    Eritrea    Africa  2007  58.040  4906585   641.3695
+2      Nepal      Asia  2007  63.785 28901790  1091.3598
+3       Chad    Africa  2007  50.651 10238807  1704.0637
+4    Jamaica  Americas  2007  72.567  2780132  7320.8803
+5       Cuba  Americas  2007  78.273 11416987  8948.1029
+6 Costa Rica  Americas  2007  78.782  4133884  9645.0614
+7    Germany    Europe  2007  79.406 82400996 32170.3744
+8     Norway    Europe  2007  80.196  4627926 49357.1902
+
+~~~
 
 R 기본 `graphics` 팩키지에서 `plot()` 함수를 사용해서 간단한 산점도를 그려본다.
 
-```{r}
+
+~~~{.r}
 j_xlim <- c(460, 60000)
 j_ylim <- c(47, 82)
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      main = "Start your engines ...")
-```
+~~~
+
+<img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
 
 이름을 지정해서 색상을 명시적으로 명세할 수 있는데, 한개 이상 색상명을 문자벡터로 전달한다.
 점 8 개에 색상이 필요한데, 적은 색상명을 전달하게 되면 재활용이 일어난다.
 즉, `plot()` 제도함수에 `col=` 인자로 한개 혹은 두개 색상만 명세하면 다음과 같이 된다.
 
 
-```{r fig.show='hold', out.width='50%'}
+
+~~~{.r}
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = "red", main = 'col = "red"')
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = c("blue", "orange"), main = 'col = c("blue", "orange")')
-```
+~~~
+
+<img src="fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="50%" style="display: block; margin: auto;" /><img src="fig/unnamed-chunk-13-2.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="50%" style="display: block; margin: auto;" />
 
 작은 양의 정수로 색상을 명세할 수 있는데, 현재 팔레트에 인덱스로 해석되고, `palette()` 함수로 인덱스 값을 확인할 수 있다.
 정수와 색상명을 라벨로 그림에 추가했다. 기본디폴트 설정된 팔레트는 색상이 8개다. 
 이것이 데이터에서 8 개국을 선정한 이유다. 기본설정 팔레트는 사실 엉망이다.
 
-```{r fig.show='hold', out.width='50%'}
+
+~~~{.r}
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = 1:n_c, main = paste0('col = 1:', n_c))
 with(jdat, text(x = gdpPercap, y = lifeExp, pos = 1))
@@ -271,21 +292,26 @@ plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = 1:n_c, main = 'the default palette()')
 with(jdat, text(x = gdpPercap, y = lifeExp, labels = palette(),
                 pos = rep(c(1, 3, 1), c(5, 1, 2))))     
-```
+~~~
+
+<img src="fig/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="50%" style="display: block; margin: auto;" /><img src="fig/unnamed-chunk-14-2.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="50%" style="display: block; margin: auto;" />
 
 대신에 본인이 정의한 색상벡터를 사용할 수도 있다.
 저자가 의도적으로 가장 모범사례를 모형화했다: 맞춤형 색상을 사용하려면, 
 정확하게 한 장소에 객체를 저장하고, 도식화하는 제도 호출, 범례생성 같은 시점에 해당 객체를 사용한다.
 이런 방식이 맞춤형 색상표를 가지고 노는데 용이하다.
 
-```{r}
+
+~~~{.r}
 j_colors <- c('chartreuse3', 'cornflowerblue', 'darkgoldenrod1', 'peachpuff3',
              'mediumorchid2', 'turquoise3', 'wheat4', 'slategray2')
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = j_colors, main = 'custom colors!')
 with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_colors,
                 pos = rep(c(1, 3, 1), c(5, 1, 2)))) 
-```
+~~~
+
+<img src="fig/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" style="display: block; margin: auto;" />
 
 #### 이용가능한 색상은? 기호와 선유형은?
 
@@ -293,10 +319,32 @@ R이 "peachpuff3" 색상을 알 것이라고 상상이라도 했겠는가?
 `colors()` 함수를 사용해서 657 개 내장된 색상명칭을 살펴본다.
 
 
-```{r}
+
+~~~{.r}
 head(colors())
+~~~
+
+
+
+~~~{.output}
+[1] "white"         "aliceblue"     "antiquewhite"  "antiquewhite1"
+[5] "antiquewhite2" "antiquewhite3"
+
+~~~
+
+
+
+~~~{.r}
 tail(colors())
-```
+~~~
+
+
+
+~~~{.output}
+[1] "yellow"      "yellow1"     "yellow2"     "yellow3"     "yellow4"    
+[6] "yellowgreen"
+
+~~~
 
 히지만, 색상을 화면으로 볼 수 있는 것이 훨씬더 흥미롭다. 
 많은 사람들이 색상, 기호, 선유형에 대한 문제를 다루었고 작업 결과를 인터넷에 공개했다.
@@ -317,11 +365,14 @@ tail(colors())
 출판과 웹에서 사용되는 색상표를 제작했고, 이는 [RColorBrewer](http://cran.r-project.org/web/packages/RColorBrewer/index.html)
 팩키지에 반영되어 있다. 팩키지를 설치하고 사용하면 된다. 연관된 전체 팔레트를 살펴보는 명령어는 `display.brewer.all()` 이다.
 
-``` {r}
+
+~~~{.r}
 #install.packages("RColorBrewer")
 library(RColorBrewer)
 display.brewer.all()
-```
+~~~
+
+<img src="fig/unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" style="display: block; margin: auto;" />
 
 팔레트는 종류가 많지만 다음 세가지 범주에 속한다. 위에서 아래부터 다음과 같다.
 
@@ -334,22 +385,28 @@ display.brewer.all()
 
 명칭을 명세해서 RColorBrewer 팔렛트 하나만 볼 수 있다.
 
-``` {r}
+
+~~~{.r}
 display.brewer.pal(n = 8, name = 'Dark2')
-```
+~~~
+
+<img src="fig/unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" style="display: block; margin: auto;" />
 
 `n` 갯수를 지정(3--8)해야 된다는 점에서, 솔직히 팩키지가 다소 투박하다. 하지만 어쩔 수 없이 그래야만 된다.
 
 장인정신이 뭍어 나는 `peachpuff3` 색상표 대신에 RColorBrewer 에서 선택해서 맞춤형 색상을 지정하여 명세하자.
 색상은 맞춤형 색상표에 따라 색상을 칠하게 되지만, 색상에 딸린 명칭은 기대한 바가 아니다. 다음 학습주제에서 이를 다룰 것이다.
 
-``` {r}
+
+~~~{.r}
 j_brew_colors <- brewer.pal(n = 8, name = "Dark2")
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = j_brew_colors, main = 'Dark2 qualitative palette from RColorBrewer')
 with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors,
                 pos = rep(c(1, 3, 1), c(5, 1, 2)))) 
-```
+~~~
+
+<img src="fig/unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
 
 ### viridis
 
@@ -369,43 +426,16 @@ with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors,
 `dichromat` 팩키지([CRAN](http://cran.r-project.org/web/packages/dichromat/))는 
 2색시자에 대한 효과적인 색상조합을 선택하는데 도움이 된다.
 
-```{r}
+
+~~~{.r}
 # install.packages("dichromat")
 library(dichromat)
-```
+~~~
 
-`colorschems` 목록에는 `r length(colorschemes)` 가지 색상조합이 담겨있는데, 적색과 녹색을 구별하는 능력이 없거나 예외적인
+`colorschems` 목록에는 17 가지 색상조합이 담겨있는데, 적색과 녹색을 구별하는 능력이 없거나 예외적인
 시력을 갖는 2색시자에게 적합하다.
 
-```{r dichromat-colorschemes, echo = FALSE}
-library(ggplot2)
-x_boundaries <-
-  lapply(colorschemes,
-         function(x) seq(from = 0, to = 1, length = length(x) + 1))
-df <- data.frame(
-  xmin = unlist(lapply(x_boundaries, function(x) rev(rev(x)[-1]))),
-  xmax = unlist(lapply(x_boundaries, function(x) x[-1])),
-  ymax = rep(seq_along(colorschemes), sapply(colorschemes, length)))
-anno_df <- data.frame(
-  scheme = names(colorschemes),
-  num = seq_along(colorschemes))
-ggplot(df, aes(xmin = xmin, xmax = xmax, ymin = ymax - 0.85, ymax = ymax)) +
-  geom_rect(fill = unlist(colorschemes)) + xlim(c(-0.6, 1)) + 
-  annotate("text", x = -0.05, y = anno_df$num - 0.5, label = anno_df$scheme,
-           hjust = 1) + 
-  theme_bw() +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank())
-
-## the example also turns some schemes into continuous ones like so:
-## colorRampPalette(colorschemes$BrowntoBlue.10, space = "Lab")(100)
-## it would be nice to demonstrate how to base a continuous color scale on a
-## discrete palette
-```
+<img src="fig/dichromat-colorschemes-1.png" title="plot of chunk dichromat-colorschemes" alt="plot of chunk dichromat-colorschemes" style="display: block; margin: auto;" />
 
 `dichmat()` 함수는 색상을 변환해서 다른 형태의 색맹에 근사적인 효과를 구현할 수 있어서,
 후보 색상조합에 대한 효과를 평가할 수 있게 한다. 
@@ -414,9 +444,10 @@ ggplot(df, aes(xmin = xmin, xmax = xmax, ymin = ymax - 0.85, ymax = ymax)) +
 
 ### 환경 정리
 
-```{r  eval = FALSE}
+
+~~~{.r}
 par(opar)
-```
+~~~
 
 ### 참고문헌
 
