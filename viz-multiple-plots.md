@@ -10,10 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(error = TRUE)
-```
+
 
 ### 패싯이 만병통치약은 아니다. [^viz-multiple-plots]
 
@@ -33,23 +30,26 @@ knitr::opts_chunk$set(error = TRUE)
 
 `gridExtra` 팩키지를 설치하고 나서 확실히 불러온다.
 
-```{r}
+
+~~~{.r}
 # install.packages("gridExtra")
 library(gridExtra)
-```
+~~~
 
 ### `gapminder` 데이터와 `ggplot2` 팩키지를 불러온다. 
 
-```{r}
+
+~~~{.r}
 library(gapminder)
 library(ggplot2)
-```
+~~~
 
 ### `arrangeGrob()` 함수와 친구를 사용
 
 구성되는 그림을 그림객체로 저장하고 나서 `arrangeGrob()` 함수에 전달한다.
 
-```{r arrangeGrob-demo}
+
+~~~{.r}
 p_dens <- ggplot(gapminder, aes(x = gdpPercap)) + geom_density() + scale_x_log10() +
   theme(axis.text.x = element_blank(),
         axis.ticks = element_blank(),
@@ -59,7 +59,9 @@ p_scatter <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
 #p_both <- arrangeGrob(p_dens, p_scatter, nrow = 2, heights = c(0.35, 0.65))
 #print(p_both)
 grid.arrange(p_dens, p_scatter, nrow = 2, heights = c(0.35, 0.65))
-```
+~~~
+
+<img src="fig/arrangeGrob-demo-1.png" title="plot of chunk arrangeGrob-demo" alt="plot of chunk arrangeGrob-demo" style="display: block; margin: auto;" />
 
 [R Graph Catalog](http://shinyapps.stat.ubc.ca/r-graph-catalog/)에 `arrangeGrob()`를 사용한 사례를 많이 찾을 수 있다.
 
@@ -68,7 +70,8 @@ grid.arrange(p_dens, p_scatter, nrow = 2, heights = c(0.35, 0.65))
 [Cookbook for R](http://www.cookbook-r.com/) 책에서, 윈스턴 창(Winston Chang)이 `grid` 팩키지를 사용해서
 `multiplot()` 함수 기능을 구현했다.
 
-```{r eval = FALSE}
+
+~~~{.r}
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -114,15 +117,16 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
   }
 }
-```
+~~~
 
 `p1`, `p2`, `p3`, `p4` 그림 객체가 사전에 정의되었다고 가정하면, 다음과 같이
 함수를 호출한다.
 
 
-```{r eval = FALSE}
+
+~~~{.r}
 multiplot(p1, p2, p3, p4, cols = 2)
-```
+~~~
 
 [Multiple graphs on one page (ggplot2)](http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/)
 웹사이트를 방문해서 상기 함수를 사용한 사례를 살펴본다.
