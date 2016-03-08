@@ -1,0 +1,49 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: R 정규표현식
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+
+
+```{r  include = FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(error = TRUE)
+```
+
+### 학습 데이터 준비 [^regex-intro] [^regex-r] 
+
+[^regex-intro]: [Regular Expression in R](https://stat545-ubc.github.io/block022_regular-expression.html)
+[^regex-r] : [Regular Expressions and Character Data](https://stat545-ubc.github.io/block027_regular-expressions.html)
+
+`git clone` 명령어로 정규표현식 실습을 위한 텍스트 데이터를 불러온다.
+[STAT545](https://stat545-ubc.github.io/)와 연결된 [GitHub STAT545](https://github.com/STAT545-UBC/STAT545-UBC.github.io)
+저장소를 클론한다.
+
+~~~ {.shell}
+$ git clone https://github.com/STAT545-UBC/STAT545-UBC.github.io.git
+$ cd STAT545-UBC.github.io
+~~~
+
+GitHub 저장소에서 학습에 사용될 데이터를 가져왔으면, `list.files()` R 내부 쉘명령어로 저장소에서 로컬컴퓨터로 제대로 가져왔는지 확인한다.
+
+
+```{r install, eval=FALSE}
+install.packages("stringr")
+```
+
+```{r input}
+library(stringr)
+files <- list.files()
+head(files)
+gDat <- read.delim("gapminderDataFiveYear.txt")
+str(gDat)
+```
+
+
