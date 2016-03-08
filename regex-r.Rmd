@@ -38,6 +38,12 @@ GitHub 저장소에서 학습에 사용될 데이터를 가져왔으면, `list.f
 install.packages("stringr")
 ```
 
+
+`stringr` 팩키지에 나온 함수를 활용한다.
+`stringr` 팩키지가 깔끔하고 현대적인 문자열 연산기능을 제공하고,
+R에 기본으로 내장된 문자열 함수보다 사용하기 쉽고 기억하기도 좋다.
+지금까지 사용한 적이 없다면, 팩키지를 설치하고 시작해본다.
+
 ```{r input}
 library(stringr)
 files <- list.files()
@@ -45,5 +51,36 @@ head(files)
 gDat <- read.delim("gapminderDataFiveYear.txt")
 str(gDat)
 ```
+
+문자열 함수를 사용해서 파일명을 추출한다. 예를 들어 `dplyr` 관련 문서.
+`grep()` 함수를 사용해서 `dplyr` 문자열이 포함된 파일명을 식별한다.
+인자값을 `value = TRUE` 으로 설정하면, `grep()` 함수가 매칭되는 것을 반환하는 반면에, `value = FALSE` 로 설정하면, 인덱스를 반환한다.
+`invert` 인자를 사용하면, 지정된 패턴을 제외한 모든 것을 반환한다.
+`grepl()` 함수는 유사한 함수지만, 논리벡터를 반환한다.
+자세한 정보는 [여기](http://www.rdocumentation.org/packages/base/functions/grep)를 참조한다.
+
+```{r simple}
+grep("dplyr", files, value = TRUE)
+grep("dplyr", files, value = FALSE)
+grepl("dplyr", files)
+```
+
+`dplyr` 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
