@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-16', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">R 정규표현식</h2>
+<h3 id="학습-데이터-준비-regex-intro-regex-r">학습 데이터 준비 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> [^regex-r]</h3>
+<p>[^regex-r] : <a href="https://stat545-ubc.github.io/block027_regular-expressions.html">Regular Expressions and Character Data</a></p>
+<p><code>git clone</code> 명령어로 정규표현식 실습을 위한 텍스트 데이터를 불러온다. <a href="https://stat545-ubc.github.io/">STAT545</a>와 연결된 <a href="https://github.com/STAT545-UBC/STAT545-UBC.github.io">GitHub STAT545</a> 저장소를 클론한다.</p>
+<pre class="shell"><code>$ git clone https://github.com/STAT545-UBC/STAT545-UBC.github.io.git
+$ cd STAT545-UBC.github.io</code></pre>
+<p>GitHub 저장소에서 학습에 사용될 데이터를 가져왔으면, <code>list.files()</code> R 내부 쉘명령어로 저장소에서 로컬컴퓨터로 제대로 가져왔는지 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;stringr&quot;</span>)</code></pre></div>
+<p><code>stringr</code> 팩키지에 나온 함수를 활용한다. <code>stringr</code> 팩키지가 깔끔하고 현대적인 문자열 연산기능을 제공하고, R에 기본으로 내장된 문자열 함수보다 사용하기 쉽고 기억하기도 좋다. 지금까지 사용한 적이 없다면, 팩키지를 설치하고 시작해본다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)
+files &lt;-<span class="st"> </span><span class="kw">list.files</span>()
+<span class="kw">head</span>(files)</code></pre></div>
+<pre class="output"><code>[1] &quot;_includes&quot; &quot;_layouts&quot;  &quot;_site&quot;     &quot;AUTHORS&quot;   &quot;code&quot;      &quot;css&quot;      
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gDat &lt;-<span class="st"> </span><span class="kw">read.delim</span>(<span class="st">&quot;gapminderDataFiveYear.txt&quot;</span>)</code></pre></div>
+<pre class="output"><code>Warning in file(file, &quot;rt&quot;): 파일 &#39;gapminderDataFiveYear.txt&#39;를 여는데 실패
+했습니다: No such file or directory
+</code></pre>
+<pre class="output"><code>Error in file(file, &quot;rt&quot;): 커넥션을 열 수 없습니다
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(gDat)</code></pre></div>
+<pre class="output"><code>Error in str(gDat): 객체 &#39;gDat&#39;를 찾을 수 없습니다
+</code></pre>
+<p>문자열 함수를 사용해서 파일명을 추출한다. 예를 들어 <code>dplyr</code> 관련 문서. <code>grep()</code> 함수를 사용해서 <code>dplyr</code> 문자열이 포함된 파일명을 식별한다. 인자값을 <code>value = TRUE</code> 으로 설정하면, <code>grep()</code> 함수가 매칭되는 것을 반환하는 반면에, <code>value = FALSE</code> 로 설정하면, 인덱스를 반환한다. <code>invert</code> 인자를 사용하면, 지정된 패턴을 제외한 모든 것을 반환한다. <code>grepl()</code> 함수는 유사한 함수지만, 논리벡터를 반환한다. 자세한 정보는 <a href="http://www.rdocumentation.org/packages/base/functions/grep">여기</a>를 참조한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;dplyr&quot;</span>, files, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;data-handling-dplyr.html&quot; &quot;data-handling-dplyr.md&quot;  
+[3] &quot;data-handling-dplyr.Rmd&quot; 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;dplyr&quot;</span>, files, <span class="dt">value =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre class="output"><code>[1] 11 12 13
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grepl</span>(<span class="st">&quot;dplyr&quot;</span>, files)</code></pre></div>
+<pre class="output"><code>  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+ [12]  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [23] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [34] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [45] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [56] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [67] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [78] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [89] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[100] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[111] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[122] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[133] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[144] FALSE
+</code></pre>
+<p><code>dplyr</code> 팩키지와 관련된 모든 숙제 파일을 뽑아내려면 어떨까? <code>hw</code> 문자열과 중간에 문자열 그리고 <code>dplyr</code> 문자열을 매칭하도록 명세할 필요가 있다. 이런 경우에 정규표현식이 편리하다.</p>
+<h3 id="정규표현식과-관련된-문자열-함수">정규표현식과 관련된 문자열 함수</h3>
+<p>정규표현식은 공통된 구조를 갖는 특정 문자열을 기술하는 패턴이다. 특정 구문에서 언어마다 약간 차이가 날 수 있지만, 모든 프로그래밍 언어에서 공통적으로 문자열 매칭/치환에 사용되는 것이 정규표현식이다. 문자열 연산에 있어 정규표현식은 심장과 영혼이다. <code>base</code> R과 <code>stringr</code> 팩키지 모두 문자열 함수는 정규표현식을 사용한다. 심지어 RStudio 찾기와 바꾸기 기능도 정규표현식을 허용한다.</p>
+<ul>
+<li>패턴과 매칭되는지 확인 : <code>grep(..., value = FALSE)</code>, <code>grepl()</code>, <code>stringr::str_detect()</code></li>
+<li>패턴과 매칭되는 것을 추출 : <code>grep(..., value = TRUE)</code>, <code>stringr::str_extract()</code>, <code>stringr::str_extract_all()</code></li>
+<li>문자열 내부에 패턴을 위치, 즉 매칭된 패턴의 시작점 부여 : <code>regexpr()</code>, <code>gregexpr()</code>, <code>stringr::str_locate()</code>, <code>string::str_locate_all()</code></li>
+<li>매칭된 패턴 바꾸기 : <code>sub()</code>, <code>gsub()</code>, <code>stringr::str_replace()</code>, <code>stringr::str_replace_all()</code></li>
+<li>패턴을 사용해서 문자열 쪼개기 : <code>strsplit()</code>, <code>stringr::str_split()</code></li>
+</ul>
+<h3 id="정규표현식-구문">정규표현식 구문</h3>
+<p>일반적으로 정규표현식은 문자열 내부에 반복되는 정보와 위치정보로 검색할 문자열 (혹은 문자열 클래스)를 명세한다. 특수한 의미를 갖는 메타문자를 사용해서 이런 작업을 완수한다: <code>$ * + . ? [ ] ^ { } | ( ) \</code>. 다음에 단순하고 작은 예제를 통해 정규표현식 구문과 메타문자가 어떤 의미도 함께 소개한다.</p>
+<h3 id="확장-문자열-escape-sequence">확장 문자열 (Escape Sequence)</h3>
+<p>문자열로 직접적으로 부호화할 수 없는 특수한 문자가 있다. 예를 들어, 단일 인용부호를 패턴으로 두고 단일 인용부호(<code>'</code>)를 갖는 국가를 검색한다고 가정하자. 패턴에서 단일 인용부호 앞에 <code>\</code> 부호를 넣어서 단일 인용부호를 “빠져나오게(escape)” 만들어야 한다. 그렇게 함으로써 문자열에서 명세하는 부분이 아님을 분명히 한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&#39;</span><span class="ch">\&#39;</span><span class="st">&#39;</span>, <span class="kw">levels</span>(gDat$country), <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>Error in levels(gDat$country): 객체 &#39;gDat&#39;를 찾을 수 없습니다
+</code></pre>
+<p>R에는 확장 문자가 또 있다. 정규표현식을 포함해서, R에 모든 문자열함수에 동일한 규칙이 적용된다. R 확장 문자열에 대한 전체 목록은 <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Quotes.html">여기</a>서 확인한다.</p>
+<ul>
+<li><code>\'</code>: 단일 인용부호. 이중 인용부호 내부에 있는 단일 인용부호를 빠져나올 필요는 없다. 그래서 앞선 예제에서 <code>&quot;'&quot;</code>도 사용한다.</li>
+<li><code>\&quot;</code>: 이중 인용부호. 마찬가지로 단일 인용부호 내부에 이중 인용부호를 사용할 수 있다. 즉, <code>'&quot;'</code>.<br />
+</li>
+<li><code>\n</code>: 개행문자.</li>
+<li><code>\r</code>: 복귀문자.</li>
+<li><code>\t</code>: 탭문자.</li>
+</ul>
+<blockquote>
+<p>주목: <code>cat()</code> 함수와 <code>print()</code> 함수는 확장문자열을 다르게 처리한다. 확장문자열을 해석된 그대로 문자열을 출력하려면, <code>cat()</code> 함수를 사용한다.</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="st">&quot;a</span><span class="ch">\n</span><span class="st">b&quot;</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;a\nb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="st">&quot;a</span><span class="ch">\n</span><span class="st">b&quot;</span>)</code></pre></div>
+<pre class="output"><code>a
+b
+</code></pre>
+<h3 id="정량자quantifiers">정량자(Quantifiers)</h3>
+<p>정량자는 패턴을 얼마나 많이 반복할지 명세한다.</p>
+<ul>
+<li><code>*</code>: 적어도 0 번 매칭한다.</li>
+<li><code>+</code>: 적어도 1 번 매칭한다.</li>
+<li><code>?</code>: 많아아 1 번 매칭한다.</li>
+<li><code>{n}</code>: 정확히 n 번 매칭한다.</li>
+<li><code>{n,}</code>: 적어도 n 번 매칭한다.</li>
+<li><code>{n,m}</code>: n 번에서 m 번 매칭한다.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(strings &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;ab&quot;</span>, <span class="st">&quot;acb&quot;</span>, <span class="st">&quot;accb&quot;</span>, <span class="st">&quot;acccb&quot;</span>, <span class="st">&quot;accccb&quot;</span>))</code></pre></div>
+<pre class="output"><code>[1] &quot;a&quot;      &quot;ab&quot;     &quot;acb&quot;    &quot;accb&quot;   &quot;acccb&quot;  &quot;accccb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ac*b&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;ab&quot;     &quot;acb&quot;    &quot;accb&quot;   &quot;acccb&quot;  &quot;accccb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ac+b&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;acb&quot;    &quot;accb&quot;   &quot;acccb&quot;  &quot;accccb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ac?b&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;ab&quot;  &quot;acb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ac{2}b&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;accb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ac{2,}b&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;accb&quot;   &quot;acccb&quot;  &quot;accccb&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ac{2,3}b&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;accb&quot;  &quot;acccb&quot;
+</code></pre>
+<blockquote>
+<p>도전과제 {.challenges}</p>
+<p>정량자를 사용해서 <code>gapminder</code> 데이터프레임에서 <code>ee</code> 문자열을 갖는 모든 국가를 찾아라.</p>
+</blockquote>
+<pre class="output"><code>Error in levels(gDat$country): 객체 &#39;gDat&#39;를 찾을 수 없습니다
+</code></pre>
+<h3 id="문자열-내부-패턴-위치">문자열 내부 패턴 위치</h3>
+<ul>
+<li><code>^</code>: 문자열 시작위치를 매칭.</li>
+<li><code>$</code>: 문자열 끝위치를 매칭.</li>
+<li><code>\b</code>: <em>단어</em> 양쪽 끝에 위치한 빈문자열을 매칭. 문자열 끝을 표식하는 <code>^$</code>와 혼동하지 않는다.</li>
+<li><code>\B</code>: 단어 끝에 위치하지 않는 빈문자열을 매칭.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(strings &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;abcd&quot;</span>, <span class="st">&quot;cdab&quot;</span>, <span class="st">&quot;cabd&quot;</span>, <span class="st">&quot;c abd&quot;</span>))</code></pre></div>
+<pre class="output"><code>[1] &quot;abcd&quot;  &quot;cdab&quot;  &quot;cabd&quot;  &quot;c abd&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ab&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;abcd&quot;  &quot;cdab&quot;  &quot;cabd&quot;  &quot;c abd&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;^ab&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;abcd&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;ab$&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;cdab&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grep</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">bab&quot;</span>, strings, <span class="dt">value =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;abcd&quot;  &quot;c abd&quot;
+</code></pre>
+<blockquote>
+<p>도전과제 {.challenges}</p>
+<p>해당 디렉토리에 <code>.txt</code> 확장자를 갖는 모든 파일을 찾는다.</p>
+<pre class="output"><code>[1] &quot;requirements.txt&quot;
+</code></pre>
+</blockquote>
+<h3 id="연산자">연산자</h3>
+<ul>
+<li><code>.</code>: 어떤 문자 하나와 매칭.</li>
+<li><code>[...]</code>: 문자 리스트. 꺾쇠괄호 내부에 지정된 문자중 하나와 매칭. 문자범위를 지정하는데 꺽쇠 내부에 <code>-</code>도 사용가능.</li>
+<li><code>[^...]</code>: 반전문자 리스트. <code>[...]</code>와 유사하지만, 꺾쇠괄호 내부에 있는 것을 <strong>제외</strong>한 문자 어떤 것이나 매칭</li>
+<li><code>\</code>: 정규표현식 메타문자가 갖는 특수한 의미를 억제. 즉, <code>$ * + . ? [ ] ^ { } | ( ) \</code> 확장문자열 사용과 유사함. R에서 <code>\</code> 자체가 탈출할 필요가 있기 때문에, <code>\\$</code>처럼 역슬래쉬를 두개 사용해서 이런 메타문자를 탈출시킨다.<br />
+</li>
+<li><code>|</code>: “or” 또는 연산자. <code>|</code> 어느쪽이든 패턴을 매칭.<br />
+</li>
+<li><code>(...)</code>: 정규표현식에 있는 그룹연산자. 정규표현식으로 매칭된 부분을 나중에 불러올 수 있어서 추후 변경을 하거나 새로운 문자열을 만들어 내는데 사용할 수 있다. 각 그룹을 <code>\\N</code> 을 사용해서 참조할 수 있다. N은 <code>(...)</code> 에서 나온 번호에 해당되는 N 이다. 이것을 <strong>역참조(backreference)</strong>라고 부른다.</li>
+</ul>
+<p><sub><del>{.r} (strings &lt;- c(“^ab”, “ab”, “abc”, “abd”, “abe”, “ab 12”))</del></sub></p>
+<p><sub>~</sub>{.output} [1] “^ab” “ab” “abc” “abd” “abe” “ab 12”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} grep(“ab.”, strings, value = TRUE)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “abc” “abd” “abe” “ab 12”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} grep(“ab[c-e]”, strings, value = TRUE)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “abc” “abd” “abe”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} grep(“ab[^c]”, strings, value = TRUE)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “abd” “abe” “ab 12”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} grep(“^ab”, strings, value = TRUE)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “ab” “abc” “abd” “abe” “ab 12”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} grep(“\^ab”, strings, value = TRUE)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “^ab”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} grep(“abc|abd”, strings, value = TRUE)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “abc” “abd”</p>
+<p><sub>~</sub></p>
+<p><sub><del>{.r} gsub(“(ab) 12”, “\1 34”, strings)</del></sub></p>
+<p><sub>~</sub>{.output} [1] “^ab” “ab” “abc” “abd” “abe” “ab 34”</p>
+<p><sub>~</sub></p>
+<blockquote>
+<p>도전과제 {.challenges}</p>
+<p><code>i</code> 혹은 <code>t</code> 를 포함하고, <code>land</code>로 끝나는 국가를 <code>gapminder</code> 에서 찾아 역참조를 사용해서 <code>land</code>를 <code>LAND</code>로 치환한다.</p>
+<pre class="output"><code>Error in levels(gDat$country): 객체 &#39;gDat&#39;를 찾을 수 없습니다
+</code></pre>
+<pre class="output"><code>Error in grep(&quot;LAND&quot;, countries, value = TRUE): 객체 &#39;countries&#39;를 찾을 수 없습니다
+</code></pre>
+</blockquote>
+<h3 id="문자열-클래스">문자열 클래스</h3>
+<p>문자열 클래스는 문자열 클래스 전체 예를 들어, 문자, 숫자를 명세하도록 한다. 문자열 클래스에 대한 두가지 선호방식이 존재한다. 한방식은 꺾쇠괄호 내부 사전에 정의된 이름을 <code>[:</code>와 <code>:]</code> 사이에 사용하는 것이고, 또다른 방식은 <code>\</code> 와 특수문자를 사용하는 것이다. 두가지 방식은 때때로 상호바꿔서 사용가능하다.</p>
+<ul>
+<li><code>[:숫자:]</code> 혹은 <code>\d</code> : 숫자, 0,1,2,3,4,5,6,7,8,9, 동등한 표현 <code>[0-9]</code>.</li>
+<li><code>\D</code> : 숫자가 아님, 동등한 표현 <code>[^0-9]</code>.</li>
+<li><code>[:영문 소문자:]</code> : 영문 소문자, 동등한 표현 <code>[a-z]</code>.</li>
+<li><code>[:영문 대문자:]</code> : 영문 대문자, 동등한 표현 <code>[A-Z]</code>.</li>
+<li><code>[:알파벳:]</code> : 알파벳 대소문자, 동등한 표현 <code>[[:영문 소문자:][:영문 대문자:]]</code> 혹은 <code>[A-z]</code></li>
+<li><code>[:알파벳숫자:]</code> : 알파벳 숫자 문자, 동등한 표현 <code>[[:알파벳:][:숫자:]]</code> 혹은 <code>[A-z0-9]</code>.</li>
+<li><code>\w</code> : 단어 문자,</li>
+</ul>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://stat545-ubc.github.io/block022_regular-expression.html">Regular Expression in R</a><a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

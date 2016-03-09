@@ -12,10 +12,7 @@ mainfont: NanumGothic
 
 
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(error = TRUE)
-```
+
 
 ### 학습 데이터 준비 [^regex-intro] [^regex-r] 
 
@@ -34,9 +31,10 @@ $ cd STAT545-UBC.github.io
 GitHub 저장소에서 학습에 사용될 데이터를 가져왔으면, `list.files()` R 내부 쉘명령어로 저장소에서 로컬컴퓨터로 제대로 가져왔는지 확인한다.
 
 
-```{r install, eval=FALSE}
+
+~~~{.r}
 install.packages("stringr")
-```
+~~~
 
 
 `stringr` 팩키지에 나온 함수를 활용한다.
@@ -44,13 +42,53 @@ install.packages("stringr")
 R에 기본으로 내장된 문자열 함수보다 사용하기 쉽고 기억하기도 좋다.
 지금까지 사용한 적이 없다면, 팩키지를 설치하고 시작해본다.
 
-```{r input}
+
+~~~{.r}
 library(stringr)
 files <- list.files()
 head(files)
+~~~
+
+
+
+~~~{.output}
+[1] "_includes" "_layouts"  "_site"     "AUTHORS"   "code"      "css"      
+
+~~~
+
+
+
+~~~{.r}
 gDat <- read.delim("gapminderDataFiveYear.txt")
+~~~
+
+
+
+~~~{.output}
+Warning in file(file, "rt"): 파일 'gapminderDataFiveYear.txt'를 여는데 실패
+했습니다: No such file or directory
+
+~~~
+
+
+
+~~~{.output}
+Error in file(file, "rt"): 커넥션을 열 수 없습니다
+
+~~~
+
+
+
+~~~{.r}
 str(gDat)
-```
+~~~
+
+
+
+~~~{.output}
+Error in str(gDat): 객체 'gDat'를 찾을 수 없습니다
+
+~~~
 
 문자열 함수를 사용해서 파일명을 추출한다. 예를 들어 `dplyr` 관련 문서.
 `grep()` 함수를 사용해서 `dplyr` 문자열이 포함된 파일명을 식별한다.
@@ -59,11 +97,57 @@ str(gDat)
 `grepl()` 함수는 유사한 함수지만, 논리벡터를 반환한다.
 자세한 정보는 [여기](http://www.rdocumentation.org/packages/base/functions/grep)를 참조한다.
 
-```{r simple}
+
+~~~{.r}
 grep("dplyr", files, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "data-handling-dplyr.html" "data-handling-dplyr.md"  
+[3] "data-handling-dplyr.Rmd" 
+
+~~~
+
+
+
+~~~{.r}
 grep("dplyr", files, value = FALSE)
+~~~
+
+
+
+~~~{.output}
+[1] 11 12 13
+
+~~~
+
+
+
+~~~{.r}
 grepl("dplyr", files)
-```
+~~~
+
+
+
+~~~{.output}
+  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+ [12]  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [23] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [34] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [45] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [56] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [67] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [78] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [89] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[100] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[111] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[122] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[133] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[144] FALSE
+
+~~~
 
 `dplyr` 팩키지와 관련된 모든 숙제 파일을 뽑아내려면 어떨까?
 `hw` 문자열과 중간에 문자열 그리고 `dplyr` 문자열을 매칭하도록 명세할 필요가 있다.
@@ -97,9 +181,17 @@ grepl("dplyr", files)
 패턴에서 단일 인용부호 앞에 `\` 부호를 넣어서 단일 인용부호를 "빠져나오게(escape)" 만들어야 한다.
 그렇게 함으로써 문자열에서 명세하는 부분이 아님을 분명히 한다.
 
-```{r quote_error}
+
+~~~{.r}
 grep('\'', levels(gDat$country), value = TRUE)
-```
+~~~
+
+
+
+~~~{.output}
+Error in levels(gDat$country): 객체 'gDat'를 찾을 수 없습니다
+
+~~~
 
 R에는 확장 문자가 또 있다.
 정규표현식을 포함해서, R에 모든 문자열함수에 동일한 규칙이 적용된다.
@@ -116,10 +208,31 @@ R 확장 문자열에 대한 전체 목록은 [여기](https://stat.ethz.ch/R-ma
 > 주목: `cat()` 함수와 `print()` 함수는 확장문자열을 다르게 처리한다.
 > 확장문자열을 해석된 그대로 문자열을 출력하려면, `cat()` 함수를 사용한다.
 
-```{r cat_print}
+
+~~~{.r}
 print("a\nb")
+~~~
+
+
+
+~~~{.output}
+[1] "a\nb"
+
+~~~
+
+
+
+~~~{.r}
 cat("a\nb")
-```
+~~~
+
+
+
+~~~{.output}
+a
+b
+
+~~~
 
 ### 정량자(Quantifiers)
 
@@ -132,23 +245,105 @@ cat("a\nb")
   * `{n,}`: 적어도 n 번 매칭한다.
   * `{n,m}`: n 번에서 m 번 매칭한다.
 
-```{r quantifiers}
+
+~~~{.r}
 (strings <- c("a", "ab", "acb", "accb", "acccb", "accccb"))
+~~~
+
+
+
+~~~{.output}
+[1] "a"      "ab"     "acb"    "accb"   "acccb"  "accccb"
+
+~~~
+
+
+
+~~~{.r}
 grep("ac*b", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "ab"     "acb"    "accb"   "acccb"  "accccb"
+
+~~~
+
+
+
+~~~{.r}
 grep("ac+b", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "acb"    "accb"   "acccb"  "accccb"
+
+~~~
+
+
+
+~~~{.r}
 grep("ac?b", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "ab"  "acb"
+
+~~~
+
+
+
+~~~{.r}
 grep("ac{2}b", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "accb"
+
+~~~
+
+
+
+~~~{.r}
 grep("ac{2,}b", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "accb"   "acccb"  "accccb"
+
+~~~
+
+
+
+~~~{.r}
 grep("ac{2,3}b", strings, value = TRUE)
-```
+~~~
+
+
+
+~~~{.output}
+[1] "accb"  "acccb"
+
+~~~
 
 > 도전과제 {.challenges}
 >
 > 정량자를 사용해서 `gapminder` 데이터프레임에서 `ee` 문자열을 갖는 모든 국가를 찾아라.
 
-```{r ex_quant, echo = FALSE}
-grep("e{2}", levels(gDat$country), value = TRUE)
-```
+
+~~~{.output}
+Error in levels(gDat$country): 객체 'gDat'를 찾을 수 없습니다
+
+~~~
 
 ### 문자열 내부 패턴 위치
 
@@ -157,21 +352,79 @@ grep("e{2}", levels(gDat$country), value = TRUE)
   * `\b`: *단어* 양쪽 끝에 위치한 빈문자열을 매칭. 문자열 끝을 표식하는 `^$`와 혼동하지 않는다.
   * `\B`: 단어 끝에 위치하지 않는 빈문자열을 매칭.
 
-```{r position}
+
+~~~{.r}
 (strings <- c("abcd", "cdab", "cabd", "c abd"))
+~~~
+
+
+
+~~~{.output}
+[1] "abcd"  "cdab"  "cabd"  "c abd"
+
+~~~
+
+
+
+~~~{.r}
 grep("ab", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "abcd"  "cdab"  "cabd"  "c abd"
+
+~~~
+
+
+
+~~~{.r}
 grep("^ab", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "abcd"
+
+~~~
+
+
+
+~~~{.r}
 grep("ab$", strings, value = TRUE)
+~~~
+
+
+
+~~~{.output}
+[1] "cdab"
+
+~~~
+
+
+
+~~~{.r}
 grep("\\bab", strings, value = TRUE)
-```  
+~~~
+
+
+
+~~~{.output}
+[1] "abcd"  "c abd"
+
+~~~
 
 > 도전과제 {.challenges}
 >
 > 해당 디렉토리에 `.txt` 확장자를 갖는 모든 파일을 찾는다.
 > 
-> ```{r ex_pos, echo = FALSE}
-> grep("\\.txt$", files, value = TRUE)
-> ```
+> 
+> ~~~{.output}
+> [1] "requirements.txt"
+> 
+> ~~~
 
 ### 연산자
 
@@ -183,25 +436,125 @@ grep("\\bab", strings, value = TRUE)
   * `|`: "or" 또는 연산자. `|` 어느쪽이든 패턴을 매칭.  
   * `(...)`: 정규표현식에 있는 그룹연산자. 정규표현식으로 매칭된 부분을 나중에 불러올 수 있어서 추후 변경을 하거나 새로운 문자열을 만들어 내는데 사용할 수 있다. 각 그룹을 `\\N` 을 사용해서 참조할 수 있다. N은  `(...)` 에서 나온 번호에 해당되는 N 이다. 이것을 **역참조(backreference)**라고 부른다.
 
-  ```{r operators}
-(strings <- c("^ab", "ab", "abc", "abd", "abe", "ab 12"))
-grep("ab.", strings, value = TRUE)
-grep("ab[c-e]", strings, value = TRUE)
-grep("ab[^c]", strings, value = TRUE)
-grep("^ab", strings, value = TRUE)
-grep("\\^ab", strings, value = TRUE)
-grep("abc|abd", strings, value = TRUE)
-gsub("(ab) 12", "\\1 34", strings)
-```
+  
+  ~~~{.r}
+  (strings <- c("^ab", "ab", "abc", "abd", "abe", "ab 12"))
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "^ab"   "ab"    "abc"   "abd"   "abe"   "ab 12"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  grep("ab.", strings, value = TRUE)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "abc"   "abd"   "abe"   "ab 12"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  grep("ab[c-e]", strings, value = TRUE)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "abc" "abd" "abe"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  grep("ab[^c]", strings, value = TRUE)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "abd"   "abe"   "ab 12"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  grep("^ab", strings, value = TRUE)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "ab"    "abc"   "abd"   "abe"   "ab 12"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  grep("\\^ab", strings, value = TRUE)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "^ab"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  grep("abc|abd", strings, value = TRUE)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "abc" "abd"
+  
+  ~~~
+  
+  
+  
+  ~~~{.r}
+  gsub("(ab) 12", "\\1 34", strings)
+  ~~~
+  
+  
+  
+  ~~~{.output}
+  [1] "^ab"   "ab"    "abc"   "abd"   "abe"   "ab 34"
+  
+  ~~~
 
 > 도전과제 {.challenges}
 >
 > `i` 혹은 `t` 를 포함하고, `land`로 끝나는 국가를 `gapminder` 에서 찾아 역참조를 사용해서 `land`를 `LAND`로 치환한다.
 > 
-> ```{r ex_operator, echo = F}
-> countries <- gsub("(.*[it].*)land$", "\\1LAND", levels(gDat$country), ignore.case = T)
-> grep("LAND", countries, value = TRUE)
-> ```
+> 
+> ~~~{.output}
+> Error in levels(gDat$country): 객체 'gDat'를 찾을 수 없습니다
+> 
+> ~~~
+> 
+> 
+> 
+> ~~~{.output}
+> Error in grep("LAND", countries, value = TRUE): 객체 'countries'를 찾을 수 없습니다
+> 
+> ~~~
 
 ### 문자열 클래스
 
