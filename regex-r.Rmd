@@ -279,6 +279,122 @@ grep(pattern, strings, value = TRUE, ignore.case = TRUE)
 > ```
 
 
+### 연습문제
+
+앞에서 개별적으로 학습한 사항을 통합해보자. `dplyr` 팩키지에 대한 모든 학습 교재를 찾아,
+지금까지 다룬 주제만 추출한다.
+학습 교재는 다음과 같은 명명규칙을 따르고 있다:
+`block` 다음에 숫자 3 자리, 그리고 나서, `_`, 그리고 마지막으로 학습주제.
+[학습 인덱스](http://stat545-ubc.github.io/topics.html)를 살펴보면,
+`dplyr`에 대한 학습교재가 두개 있다: [intro](http://stat545-ubc.github.io/block009_dplyr-intro.html),
+[verbs for a single dataset](http://stat545-ubc.github.io/block010_dplyr-end-single-table.html).
+학습교재 파일 두개에 대한 `.rmd` 파일명을 추출하자.
+작업을 약간더 어렵게 만들고자, 파일명 전략과 매칭이 바로 되지 않는 몇개 가짜 파일을 GitHub 저장소에 넣었음을 밝혀둔다.
+
+파일명에 `block`과 `dplyr` 단어가 있어야 되고 Rmd 확장자를 갖는 파일이어야 된다.
+그래서 이 세가지 부분을 함께 넣으면 어떻게 될까?
+
+```{r example_1}
+pattern <- "block.*dplyr.*rmd"
+grep(pattern, files, value = TRUE)
+```
+
+원하는 파일을 제쳐두고, 가짜 3개 파일도 함게 딸려나왔다: block0_dplyr-fake.rmd, block000_dplyr-fake.rmd.txt, xblock000_dplyr-fake.rmd.
+패턴이 충분히 엄격하지 못하다. 
+어떤 파일은 `block` 다음에 숫자가 3자리도 아니다. 다른 파일은 `block`으로 시작하지도 않고,
+`rmd` 다음에 `.txt` 확장자를 갖는 것도 있다.
+이번에는 제대로 고쳐보자:
+
+```{r example_2}
+pattern <- "^block\\d{3}_.*dplyr.*rmd$"
+(dplyr_file <- grep(pattern, files, value = TRUE))
+```
+
+`dplyr_file` 변수에 파일명 두개가 저장되어 있다. 주제를 뽑아내보자.
+
+학습주제를 뽑아내는 한방법은 `sub()`, `gsub()`, `str_sub()`같은 치환함수를 사용해서
+학습주제 앞과 뒤에 오는 모든 것을 빈 문자열로 치환한다:
+
+```{r example_3}
+(dplyr_topic <- gsub("^block\\d{3}_.*dplyr-", "", dplyr_file))
+(dplyr_topic <- gsub("\\.rmd", "", dplyr_topic))
+```
+
+다른 대안으로, `grep()` + `gsub()` 함수를 사용하는 대신에, `str_match()` 함수를 사용한다.
+앞에서 언급했듯이, 해당 함수는 `()` 연산자로 감싼 패턴에 대한 매칭값을 전달한다.
+정규표현식을 다시 구성해서 학습주제부분을 명세한다:
+
+```{r example_4}
+pattern <- "^block\\d{3}_.*dplyr-(.*)\\.rmd$"
+(na.omit(str_match(files, pattern)))
+```
+두번째 결과 데이터프레임 칼럼에 필요로 하는 학습주제 정보가 담겨있다.
+
+### 고급 문자열 함수
+
+정규표현식과 연관된 고급 문자열 함수가 더 있다: 문자열을 쪼개고, 문자열 부분집합을 뽑아내고, 문자열을 붙이는 등등.
+이런 함수를 사용해서 데이터를 정제한다. 다음에 간략한 소개가 나와 있다.
+
+앞선 연습문제에서 `dplyr` 학습주제를 두개 뽑았다. `strsplit()` 함수를 사용해서 단어로 쪼갠다.
+두번째 인자 `split`은 쪼개는데 사용되는 정규표현식이고, 함수는 리스트를 반환한다.
+`unlist()` 함수를 사용해서 리스트를 문자벡터로 변환한다.
+혹은 `str_split_fixed()` 함수를 대신 사용해서 데이터프레임을 반환한다.
+
+```{r strsplit}
+(topic_split <- unlist(strsplit(dplyr_topic[2], "-")))
+(topic_split <- str_split_fixed(dplyr_topic[2], "-", 3)[1, ])
+```
+
+`paste()` 혹은 `paste0()` 함수를 사용해서 다시 붙여되돌린다.
+`paste0()` 함수는 인자로 `sep=""`을 갖는 `paste()` 함수와 동일하다.
+`collapse = "-"` 인자를 사용해서 문자열벡터를 문자열로 결합한다:
+
+```{r paste}
+paste(topic_split, collapse = "-")
+```
+
+또다른 유용한 함수는 `substr()` 으로 시작과 끝 위치정보를 갖는 문자열 일부를 추출하는데 사용된다.
+예를 들어 `dplyr_topic`에서 처음 문자 3개만 뽑아내려면, 다음과 같이 코드를 작성한다:
+
+```{r substr}
+substr(dplyr_topic, 1, 3)
+```
+
+> 도전과제 {.challenges}
+>
+> 동료검토에 관련된 모든 마크다운 문서를 찾아서 해당 주제만 뽑아낸다.
+>
+> **힌트** : 파일명이 `peer-review`로 시작된다.
+> 
+> ```{r ex_final, echo = FALSE}
+> cat(na.omit(str_match(files, "peer-review.*_(.*)\\.md")[, 2]), sep = ",  ")
+> ```
+
+### 정규표현식과 쉘 글롭(glob)
+
+유닉스 쉘 환경에서 글로빙(globbing)은 와일드카드 문자에 기반한 패턴매칭을 의미한다.
+와일드카드 문자를 사용해서 문자열을 다른 문자로 치환한다.
+글로빙을 파일명 혹은 경로를 매칭하는데 일반적으로 사용하지만, 훨씬 더 간결한 구문을 갖는다.
+정규표현식과 다소 유사성이 있어 종종 사람들이 둘을 혼동하기도 한다.
+다음에 글로빙 구문과 정규표현식에 대한 비교가 나와 있다:
+
+  * `*` : 임의 문자를 임의 갯수만큼 매칭한다. 정규표현식 `.*` 와 동일.
+  * `?` : 임의 문자를 한번만 매칭한다. 정규표현식 `.` 과 동일.
+  * `\` : 정규표현식과 동일.
+  * `[...]` : 정규표현식과 동일.
+  * [!...] : 정규표현식 `[^...]`와 동일.
+
+
+### 추가 학습교재
+
+  * R 정규표현식 [공식 문서](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
+  * 펄 정규표현식 : 펄 정규표현식 [매뉴얼](http://perldoc.perl.org/perlre.html#Regular-Expressions)
+  * [`qdapRegex` 팩키지](http://trinkerrstuff.wordpress.com/2014/09/27/canned-regular-expressions-qdapregex-0-1-2-on-cran/) : 축약어, 날짜, 전자우편주소, 해쉬태그, 전화번호, 시간, 이모티콘, URL 등등 편리한 정규표현식 도구상자.
+  * 최근에 가독성이 좋은 정규표현식을 개발하려는 시도가 있다. 루비 [Regularity](https://github.com/andrewberls/regularity)가
+    상당한 성공을 거두었다. R 구현이 아직 베타 단계로 Regularity만큼 성능이 되지 않지만, 관심을 가지고 지켜보자.
+  * 정규표현식을 학습할 수 있는 온라인 도구가 많이 있다. 데이터를 붙여놓고, 정규표현식을 작성하면, 매칭된 것을 강조하여 화면에 뿌려준다.
+      - [regexpal](http://regexpal.com/)
+      - [RegExr](http://www.regexr.com/)
 
 
 
