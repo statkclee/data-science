@@ -38,6 +38,7 @@ title: 데이터 과학
 1. [텍스트 마이닝](text-mining.html)
     - [R 인코딩](encoding.html)
     - [R 정규표현식](regex-r.html)
+    - [정규표현식과 문자데이터](regex-r-char.html)
     - [정규표현식](regex-index.html)
         + [정규표현식 소개](regex-intro.html)
         + [간단한 패턴](regex-simple-pattern.html)
