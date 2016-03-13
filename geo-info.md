@@ -13,7 +13,7 @@ subtitle: 지리정보 시각화
 
 ### 지리정보 파일(SHP)
 
-대한민국 센서스용 행정구역경계(시군구) 자료는 [통계지리정보서비스](http://sgis.kostat.go.kr/html/index.html) 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 *자료신청* &rarr; *자료제공목록*을 참조한다. 
+대한민국 센서스용 행정구역경계(시군구) 자료는 [통계지리정보서비스](http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp) 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 *자료신청* &rarr; *자료제공 목록*을 참조한다. 혹은, [Encaion](https://goo.gl/KyHR46) 구글 드라이브에서 직접 다운로드 받을 수도 있다. 통계청으로 신청하면 승인까지 수일이 소요되며 행정처리일 기준으로 처리되며 다운로드 가능한 기간도 1주일이다.
 
 혹은 [GADM](http://www.gadm.org/) 데이터베이스에서 *Country*에서 **South Korea*을 선택하고, *File Format*에서 *Shapefile*을 선택하여 다운로드한다.
 
@@ -32,94 +32,44 @@ FILEMAP = {
             ('skorea-municipalities.RData','http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData')]
 ~~~
 
-#### R 데이터 가져오기
+### 지리정보 시각화를 위한 대한민국 정보
 
-R로 데이터를 불러와야만 자료분석을 시작이 시작된다.  전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 [statmethods.net](http://www.statmethods.net/input/importingdata.html) 사이트에 소개되어 있다.
+대한민국 경도범위는 124 -- 132, 위도범위는 33 -- 43 이다. 
 
-- CSV : `.csv` 파일
-- Excel : `.xlsx` 파일
-- 통계 팩키지
-    - SPSS : `.por` 파일
-    - SAS : `xpt` 파일
-    - 미니탭 : `.mtp` 파일
-
-다양한 데이터를 R로 불러와서 작업하는 방법은 [Datacamp 블로그](http://blog.datacamp.com/)와 [r-bloggers](http://www.r-bloggers.com/)에서 확인이 가능하다.
-
-- [This R Data Import Tutorial Is Everything You Need](http://blog.datacamp.com/r-data-import-tutorial/)
-- [Importing Data Into R – Part Two](http://www.r-bloggers.com/importing-data-into-r-part-two/)
-
-##### GIS 데이터
-
-지리정보시스템(GIS) 데이터 처리를 위한 기본 R 팩키지를 설치한다.
-
-[rgdal](http://www.rdocumentation.org/packages/rgdal), [raster](http://www.rdocumentation.org/packages/raster), [sp](http://www.rdocumentation.org/packages/sp)를 3종세트로 GIS 데이터 처리를 시작해 본다.
-
-~~~ {.r}
-install.packages("raster") # Geographic data analysis and modeling
-install.packages("rgdal") # Bindings for the Geospatial Data Abstraction Library
-install.packages("sp") # Classes and Methods for Spatial Data
-~~~
-
-~~~ {.r}
-#===========================
-# 필요한 라이브러리를 메모리에 적재한다.
-#===========================
-library("sp ", "rgdal", "raster")
-
-#===========================
-# 지리정보 데이터 정보
-# ㄴ 원본 .sph 데이터: http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip
-#===========================
+> ### 대한민국 위도와 경도 [^kor-lonlat] {.callout}
+>
+> #### 대한민국 전체
+> - 극동: 경상북도 울릉군의 독도 동단 동경 131° 52′20", 
+> - 극서: 평안북도 용천군 신도면 마안도 서단 동경 124° 11′45"
+> - 극남: 제주도 남제주군 대정읍 마라도 남단 북위 33° 06′40"
+> - 극북: 함경북도 온성군 남양면 북단 북위 43° 00′35"
+>
+> #### 북한 제외
+> - 극동: 경상북도 울릉군의 독도(獨島)로 동경 131° 52′, 
+> - 극서: 전라남도 신안군의 소흑산도(小黑山島)로 동경 125° 04′, 
+> - 극북: 강원도 고성군 현내면 송현진으로 북위 38° 27′, 
+> - 극남: 제주도 남제주군 마라도(馬羅島)로 북위 33° 06′이다.
 
 
-#===========================
-# 작업 디렉토리를 생성한다.
-#===========================
-localDir <- 'KOR_GIS_data'
-if (!file.exists(localDir)) {
-    dir.create(localDir)
-}
+[^kor-lonlat]: [대한민국의 위도와 경도를 알고 싶어요](http://tip.daum.net/question/3092152)
 
-#===========================
-# 데이터를 불러와서 압축을 푼다.
-#===========================
-url <- 'http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip'
-file <- paste(localDir,basename(url),sep='/')
-if (!file.exists(file)) {
-    download.file(url, file)
-    unzip(file,exdir=localDir)
-}
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+# 위치를 지정한다.
+krLocation <- c(124.11, 33.06, 131.52, 43.00) #좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도
+southKrLocation <- c(125.04, 33.06, 131.52, 38.27)
+#krLocation <- c(lon=126, lat=37) # 대한민국 서울
+krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, toner, watercolor
+ggmap(krMap)
+```
 
-# list.files(localDir)
+`googlemap`이 위도경도 지도중앙, `stamen`, `openstreetmap`, `cloudmade`는 
+위도경도 상자표기를 권장한다.
 
-#===========================
-# 계층을 설정하고, 내부정보를 살펴본다.
-#===========================
+``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, satellite, roadmap, hybrid, toner, watercolor
+ggmap(krMap)
+```
 
-# .shp 파일에서 파일 확장자를 제거한 계층명칭이된다.
-layer_KOR_adm0 <- "KOR_adm0"  
-layer_KOR_adm1 <- "KOR_adm1"  
-layer_KOR_adm2 <- "KOR_adm2"  
-
-# 데이터를 불러온다.
-KOR_adm0_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm0) 
-KOR_adm1_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm1) 
-KOR_adm2_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm2) 
-
-#class(KOR_adm0_projected)
-#slotNames(KOR_adm0_projected)
-
-# 행정구역 정보 시각화
-par(mfrow=c(1,3))
-plot(KOR_adm0_projected)
-plot(KOR_adm1_projected)
-plot(KOR_adm2_projected)
-~~~
-
-<img src="fig/korea-admin-level.png" alt="대한민국 행정구역" width="70%" /> 
-
-[Using R - Working with Geospatial Data](http://mazamascience.com/WorkingWithData/?p=1277)
-[Raster Data in R - The Basics](http://neondataskills.org/R/Raster-Data-In-R/)
 
 
 ### 주제도(Thematic Map)

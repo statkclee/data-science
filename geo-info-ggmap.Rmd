@@ -19,86 +19,106 @@ source("tools/chunk-options.R")
 > * `ggmap`
 
 
-대한민국 경도범위는 124 -- 132, 위도범위는 33 -- 43 이다. 
 
-> ### 대한민국 위도와 경도 [^kor-lonlat] {.callout}
->
-> #### 대한민국 전체
-> - 극동: 경상북도 울릉군의 독도 동단 동경 131° 52′20", 
-> - 극서: 평안북도 용천군 신도면 마안도 서단 동경 124° 11′45"
-> - 극남: 제주도 남제주군 대정읍 마라도 남단 북위 33° 06′40"
-> - 극북: 함경북도 온성군 남양면 북단 북위 43° 00′35"
->
-> #### 북한 제외
-> - 극동: 경상북도 울릉군의 독도(獨島)로 동경 131° 52′, 
-> - 극서: 전라남도 신안군의 소흑산도(小黑山島)로 동경 125° 04′, 
-> - 극북: 강원도 고성군 현내면 송현진으로 북위 38° 27′, 
-> - 극남: 제주도 남제주군 마라도(馬羅島)로 북위 33° 06′이다.
+~~~ {.r kor-map}
+setwd("~/Dropbox/01_data_science")
 
+#### 패키지 로딩 & 데이터 읽어오기 ####
+library("ggplot2")
+library("ggmap")
+library("sp")
+library("maptools")
+library("dplyr")
 
-[^kor-lonlat]: [대한민국의 위도와 경도를 알고 싶어요](http://tip.daum.net/question/3092152)
+kor.map.shp = readShapePoly("kor-map/센서스용_행정구역경계_2013_시군구/BND_SIGUNGU_PG.shp")
+kor.map = fortify(korea.map.shp)
+head(kor.map)
+ggplot(kor.map, aes(long, lat)) + geom_polygon()
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
-# 위치를 지정한다.
-krLocation <- c(124.11, 33.06, 131.52, 43.00) #좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도
-southKrLocation <- c(125.04, 33.06, 131.52, 38.27)
-#krLocation <- c(lon=126, lat=37) # 대한민국 서울
-krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, toner, watercolor
-ggmap(krMap)
+m <- ggplot(kor.map, aes(long, lat)) + geom_polygon(fill = "white", colour = "blue")
+m
+~~~
+
+``` {.r seongnam-map}
+bd <- subset(korea_map_shp, korea_map_shp$sigungu_nm %in% c("성남시수정구","성남시중원구", "성남시분당구"))
+bd
+ggplot(data = bd, aes(x = long, y = lat, group = group, colour = id)) + 
+  geom_polygon(fill = "#FFFFFF")
 ```
 
-`googlemap`이 위도경도 지도중앙, `stamen`, `openstreetmap`, `cloudmade`는 
-위도경도 상자표기를 권장한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, toner, watercolor
-ggmap(krMap)
+##### GIS 데이터
 
-krMap <- get_map(location=krLocation, source="stamen", maptype="watercolor", crop=FALSE) #terrain, toner, watercolor
-ggmap(krMap)
+지리정보시스템(GIS) 데이터 처리를 위한 기본 R 팩키지를 설치한다.
 
-krMap <- get_map(location=krLocation, source="google", maptype="terrain", crop=FALSE) #terrain, satellite, roadmap, hybrid
-ggmap(krMap)
+[rgdal](http://www.rdocumentation.org/packages/rgdal), [raster](http://www.rdocumentation.org/packages/raster), [sp](http://www.rdocumentation.org/packages/sp)를 3종세트로 GIS 데이터 처리를 시작해 본다.
 
-krMap <- get_map(location=krLocation, source="google", maptype="satellite", crop=FALSE) #terrain, satellite, roadmap, hybrid
-ggmap(krMap)
+~~~ {.r}
+install.packages("raster") # Geographic data analysis and modeling
+install.packages("rgdal") # Bindings for the Geospatial Data Abstraction Library
+install.packages("sp") # Classes and Methods for Spatial Data
+~~~
 
-krMap <- get_map(location=krLocation, source="google", maptype="roadmap", crop=FALSE) #terrain, satellite, roadmap, hybrid
-ggmap(krMap)
-```
+~~~ {.r}
+#===========================
+# 필요한 라이브러리를 메모리에 적재한다.
+#===========================
+library("sp ", "rgdal", "raster")
 
-krMap <- get_map(location=krLocation, source="google", maptype="hybrid", crop=FALSE) #terrain, satellite, roadmap, hybrid
-ggmap(krMap)
-
-
-### 팩키지 설치 방법
-
-R 저장소 안정된 버젼을 다운로드 받는 경우.
-
-- install.packages("mapmisc")
-
-R 저장소 최신 버젼을 다운로드 받는 경우.
-
-- `install.packages("mapmisc", repos="http://R-Forge.R-project.org")`
-
-#### 설치된 팩키지 검색방법 [^statmethods-packages]
+#===========================
+# 지리정보 데이터 정보
+# ㄴ 원본 .sph 데이터: http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip
+#===========================
 
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-library()
-```
+#===========================
+# 작업 디렉토리를 생성한다.
+#===========================
+localDir <- 'KOR_GIS_data'
+if (!file.exists(localDir)) {
+    dir.create(localDir)
+}
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
-search()
-```
+#===========================
+# 데이터를 불러와서 압축을 푼다.
+#===========================
+url <- 'http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip'
+file <- paste(localDir,basename(url),sep='/')
+if (!file.exists(file)) {
+    download.file(url, file)
+    unzip(file,exdir=localDir)
+}
 
-[^statmethods-packages]: [Statmethods - Packages](http://www.statmethods.net/interface/packages.html)
+# list.files(localDir)
 
+#===========================
+# 계층을 설정하고, 내부정보를 살펴본다.
+#===========================
 
+# .shp 파일에서 파일 확장자를 제거한 계층명칭이된다.
+layer_KOR_adm0 <- "KOR_adm0"  
+layer_KOR_adm1 <- "KOR_adm1"  
+layer_KOR_adm2 <- "KOR_adm2"  
 
+# 데이터를 불러온다.
+KOR_adm0_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm0) 
+KOR_adm1_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm1) 
+KOR_adm2_projected <- readOGR(dsn=localDir, layer=layer_KOR_adm2) 
 
+#class(KOR_adm0_projected)
+#slotNames(KOR_adm0_projected)
 
+# 행정구역 정보 시각화
+par(mfrow=c(1,3))
+plot(KOR_adm0_projected)
+plot(KOR_adm1_projected)
+plot(KOR_adm2_projected)
+~~~
 
+<img src="fig/korea-admin-level.png" alt="대한민국 행정구역" width="70%" /> 
+
+[Using R - Working with Geospatial Data](http://mazamascience.com/WorkingWithData/?p=1277)
+[Raster Data in R - The Basics](http://neondataskills.org/R/Raster-Data-In-R/)
 
 
 
