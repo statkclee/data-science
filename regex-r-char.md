@@ -19,7 +19,7 @@ mainfont: NanumGothic
 #### 시작환경 설정 
 
 [^regex-intro]: [Regular Expression in R](https://stat545-ubc.github.io/block022_regular-expression.html)
-[^regex-r] : [Regular Expressions and Character Data](https://stat545-ubc.github.io/block027_regular-expressions.html)
+[^regex-r]: [Regular Expressions and Character Data](https://stat545-ubc.github.io/block027_regular-expressions.html)
 
 `stringr` 팩키지를 설치하지 않았다면 설치하고 관련된 팩키지를 불러온다.
 
