@@ -18,6 +18,7 @@ source("tools/chunk-options.R")
 > ## 학습 목표 {.objectives}
 >
 > * R 팩키지와 라이브러리를 이해한다.
+> * R을 최신 버젼으로 업그레이드 한다.
 
 ### 라이브러리 설정  
 
@@ -59,6 +60,69 @@ search()
 
 [^statmethods-packages]: [Statmethods - Packages](http://www.statmethods.net/interface/packages.html)
 
+### R 엔진 업그레이드 [^r-upgrade]
+
+[^r-upgrade]: [R 3.2.4 is released](http://www.r-bloggers.com/r-3-2-4-is-released/)
+
+R 버젼이 3.2.3(2015-12-10) 에서 3.2.4(2016-03-10)로 4개월만에 업그레이드 되었다.
+
+`sessionInfo()` 명령어를 통해서 현재 버전을 확인한다.
+
+~~~ {.r}
+sessionInfo()
+~~~
+
+~~~ {.output}
+R version 3.2.3 (2015-12-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows >= 8 x64 (build 9200)
+
+locale:
+[1] LC_COLLATE=Korean_Korea.949  LC_CTYPE=Korean_Korea.949   
+[3] LC_MONETARY=Korean_Korea.949 LC_NUMERIC=C                
+[5] LC_TIME=Korean_Korea.949    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets 
+[6] methods   base     
+
+loaded via a namespace (and not attached):
+[1] tools_3.2.3
+~~~
+
+### R 엔진 업그레이드
+
+[installr](http://cran.r-project.org/web/packages/installr/) 팩키지를 사용해서 간단히 R 을 최신 버젼으로 업그레이드 한다.
+
+~~~ {.r}
+install.packages("installr")
+setInternet2(TRUE)
+installr::updateR()
+~~~
+
+[installr](http://cran.r-project.org/web/packages/installr/) 팩키지가 설치되어 있지 않다면,
+설치를 하고, 인터넷 연결을 `setInternet2(TRUE)` 설정하고 나서 `installr::updateR()` 갱신 명령어를 실행한다.
+이후 자세한 사항은 [A step by step (screenshots) tutorial for upgrading R on Windows](http://www.r-statistics.com/2015/06/a-step-by-step-screenshots-tutorial-for-upgrading-r-on-windows/) 사이트를 참조한다. 계속 마우스로 누르면 설치가 완료된다.
+
+<img src="fig/library-r-upgrade.png" alt="R 업그레이드" width="50%" />
+
+
+~~~ {.output}
+R version 3.2.4 (2016-03-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows >= 8 x64 (build 9200)
+
+locale:
+[1] LC_COLLATE=Korean_Korea.949  LC_CTYPE=Korean_Korea.949   
+[3] LC_MONETARY=Korean_Korea.949 LC_NUMERIC=C                
+[5] LC_TIME=Korean_Korea.949    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] tools_3.2.4
+~~~
 
 ### 참고자료
 
