@@ -42,6 +42,40 @@ FALSE [1] "/Library/Frameworks/R.framework/Versions/3.2/Resources/library"
 `.Rprofile` 파일에 `.libPaths("C:/Users/xwMOOC/Rpackages")`를 추가해서 팩키지를 한 곳에 몰아 관리할 수도 있다. 
 
 
+### 팩키지 설치 방법
+
+R 저장소 안정된 버젼을 다운로드 받는 경우.
+
+- install.packages("mapmisc")
+
+R 저장소 최신 버젼을 다운로드 받는 경우.
+
+- `install.packages("mapmisc", repos="http://R-Forge.R-project.org")`
+
+#### 설치된 팩키지 검색방법 [^statmethods-packages]
+
+
+
+~~~{.r}
+library()
+~~~
+
+
+~~~{.r}
+search()
+~~~
+
+
+
+~~~{.output}
+FALSE [1] ".GlobalEnv"        "package:knitr"     "package:stats"    
+FALSE [4] "package:graphics"  "package:grDevices" "package:utils"    
+FALSE [7] "package:datasets"  "Autoloads"         "package:base"
+
+~~~
+
+[^statmethods-packages]: [Statmethods - Packages](http://www.statmethods.net/interface/packages.html)
+
 
 ### 참고자료
 

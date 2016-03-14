@@ -48,77 +48,82 @@
 </ul>
 </div>
 </section>
-<p>대한민국 경도범위는 124 – 132, 위도범위는 33 – 43 이다.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h3 id="대한민국-위도와-경도-kor-lonlat"><span class="glyphicon glyphicon-pushpin"></span>대한민국 위도와 경도 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
-</div>
-<div class="panel-body">
-<h4 id="대한민국-전체">대한민국 전체</h4>
-<ul>
-<li>극동: 경상북도 울릉군의 독도 동단 동경 131° 52′20“,</li>
-<li>극서: 평안북도 용천군 신도면 마안도 서단 동경 124° 11′45&quot;</li>
-<li>극남: 제주도 남제주군 대정읍 마라도 남단 북위 33° 06′40&quot;</li>
-<li>극북: 함경북도 온성군 남양면 북단 북위 43° 00′35&quot;</li>
-</ul>
-<h4 id="북한-제외">북한 제외</h4>
-<ul>
-<li>극동: 경상북도 울릉군의 독도(獨島)로 동경 131° 52′,</li>
-<li>극서: 전라남도 신안군의 소흑산도(小黑山島)로 동경 125° 04′,</li>
-<li>극북: 강원도 고성군 현내면 송현진으로 북위 38° 27′,</li>
-<li>극남: 제주도 남제주군 마라도(馬羅島)로 북위 33° 06′이다.</li>
-</ul>
-</div>
-</aside>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 위치를 지정한다.</span>
-krLocation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">124.11</span>, <span class="fl">33.06</span>, <span class="fl">131.52</span>, <span class="fl">43.00</span>) <span class="co">#좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도</span>
-southKrLocation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">125.04</span>, <span class="fl">33.06</span>, <span class="fl">131.52</span>, <span class="fl">38.27</span>)
-<span class="co">#krLocation &lt;- c(lon=126, lat=37) # 대한민국 서울</span>
-krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;toner&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span></code></pre></div>
-<pre class="output"><code>FALSE Error in eval(expr, envir, enclos): 함수 &quot;get_map&quot;를 찾을 수 없습니다
+<p><sub>~</sub> {.r kor-map} setwd(“~/Dropbox/01_data_science”)</p>
+<h4 id="패키지-로딩-데이터-읽어오기">패키지 로딩 &amp; 데이터 읽어오기</h4>
+<p>library(“ggplot2”) library(“ggmap”) library(“sp”) library(“maptools”) library(“dplyr”)</p>
+<p>kor.map.shp = readShapePoly(“kor-map/센서스용_행정구역경계_2013_시군구/BND_SIGUNGU_PG.shp”) kor.map = fortify(korea.map.shp) head(kor.map) ggplot(kor.map, aes(long, lat)) + geom_polygon()</p>
+<p>m &lt;- ggplot(kor.map, aes(long, lat)) + geom_polygon(fill = “white”, colour = “blue”) m <sub>~</sub></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bd &lt;-<span class="st"> </span><span class="kw">subset</span>(korea_map_shp, korea_map_shp$sigungu_nm %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;성남시수정구&quot;</span>,<span class="st">&quot;성남시중원구&quot;</span>, <span class="st">&quot;성남시분당구&quot;</span>))</code></pre></div>
+<pre class="output"><code>Error in subset(korea_map_shp, korea_map_shp$sigungu_nm %in% c(&quot;성남시수정구&quot;, : 객체 &#39;korea_map_shp&#39;를 찾을 수 없습니다
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggmap</span>(krMap)</code></pre></div>
-<pre class="output"><code>FALSE Error in eval(expr, envir, enclos): 함수 &quot;ggmap&quot;를 찾을 수 없습니다
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bd</code></pre></div>
+<pre class="output"><code>Error in eval(expr, envir, enclos): 객체 &#39;bd&#39;를 찾을 수 없습니다
 </code></pre>
-<p><code>googlemap</code>이 위도경도 지도중앙, <code>stamen</code>, <code>openstreetmap</code>, <code>cloudmade</code>는 위도경도 상자표기를 권장한다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;toner&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span>
-<span class="kw">ggmap</span>(krMap)
-
-krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;watercolor&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span>
-<span class="kw">ggmap</span>(krMap)
-
-krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;google&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;terrain&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid</span>
-<span class="kw">ggmap</span>(krMap)
-
-krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;google&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;satellite&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid</span>
-<span class="kw">ggmap</span>(krMap)
-
-krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;google&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;roadmap&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid</span>
-<span class="kw">ggmap</span>(krMap)</code></pre></div>
-<p>krMap &lt;- get_map(location=krLocation, source=“google”, maptype=“hybrid”, crop=FALSE) #terrain, satellite, roadmap, hybrid ggmap(krMap)</p>
-<h3 id="팩키지-설치-방법">팩키지 설치 방법</h3>
-<p>R 저장소 안정된 버젼을 다운로드 받는 경우.</p>
-<ul>
-<li>install.packages(“mapmisc”)</li>
-</ul>
-<p>R 저장소 최신 버젼을 다운로드 받는 경우.</p>
-<ul>
-<li><code>install.packages(&quot;mapmisc&quot;, repos=&quot;http://R-Forge.R-project.org&quot;)</code></li>
-</ul>
-<h4 id="설치된-팩키지-검색방법-statmethods-packages">설치된 팩키지 검색방법 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>()</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">search</span>()</code></pre></div>
-<pre class="output"><code>FALSE [1] &quot;.GlobalEnv&quot;        &quot;package:knitr&quot;     &quot;package:stats&quot;    
-FALSE [4] &quot;package:graphics&quot;  &quot;package:grDevices&quot; &quot;package:utils&quot;    
-FALSE [7] &quot;package:datasets&quot;  &quot;Autoloads&quot;         &quot;package:base&quot;
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> bd, <span class="kw">aes</span>(<span class="dt">x =</span> long, <span class="dt">y =</span> lat, <span class="dt">group =</span> group, <span class="dt">colour =</span> id)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="dt">fill =</span> <span class="st">&quot;#FFFFFF&quot;</span>)</code></pre></div>
+<pre class="output"><code>Error in eval(expr, envir, enclos): 함수 &quot;ggplot&quot;를 찾을 수 없습니다
 </code></pre>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p><a href="http://tip.daum.net/question/3092152">대한민국의 위도와 경도를 알고 싶어요</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><a href="http://www.statmethods.net/interface/packages.html">Statmethods - Packages</a><a href="#fnref2">↩</a></p></li>
-</ol>
-</div>
+<h5 id="gis-데이터">GIS 데이터</h5>
+<p>지리정보시스템(GIS) 데이터 처리를 위한 기본 R 팩키지를 설치한다.</p>
+<p><a href="http://www.rdocumentation.org/packages/rgdal">rgdal</a>, <a href="http://www.rdocumentation.org/packages/raster">raster</a>, <a href="http://www.rdocumentation.org/packages/sp">sp</a>를 3종세트로 GIS 데이터 처리를 시작해 본다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;raster&quot;</span>) <span class="co"># Geographic data analysis and modeling</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;rgdal&quot;</span>) <span class="co"># Bindings for the Geospatial Data Abstraction Library</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;sp&quot;</span>) <span class="co"># Classes and Methods for Spatial Data</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#===========================</span>
+<span class="co"># 필요한 라이브러리를 메모리에 적재한다.</span>
+<span class="co">#===========================</span>
+<span class="kw">library</span>(<span class="st">&quot;sp &quot;</span>, <span class="st">&quot;rgdal&quot;</span>, <span class="st">&quot;raster&quot;</span>)
+
+<span class="co">#===========================</span>
+<span class="co"># 지리정보 데이터 정보</span>
+<span class="co"># ㄴ 원본 .sph 데이터: http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip</span>
+<span class="co">#===========================</span>
+
+
+<span class="co">#===========================</span>
+<span class="co"># 작업 디렉토리를 생성한다.</span>
+<span class="co">#===========================</span>
+localDir &lt;-<span class="st"> &#39;KOR_GIS_data&#39;</span>
+if (!<span class="kw">file.exists</span>(localDir)) {
+    <span class="kw">dir.create</span>(localDir)
+}
+
+<span class="co">#===========================</span>
+<span class="co"># 데이터를 불러와서 압축을 푼다.</span>
+<span class="co">#===========================</span>
+url &lt;-<span class="st"> &#39;http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip&#39;</span>
+file &lt;-<span class="st"> </span><span class="kw">paste</span>(localDir,<span class="kw">basename</span>(url),<span class="dt">sep=</span><span class="st">&#39;/&#39;</span>)
+if (!<span class="kw">file.exists</span>(file)) {
+    <span class="kw">download.file</span>(url, file)
+    <span class="kw">unzip</span>(file,<span class="dt">exdir=</span>localDir)
+}
+
+<span class="co"># list.files(localDir)</span>
+
+<span class="co">#===========================</span>
+<span class="co"># 계층을 설정하고, 내부정보를 살펴본다.</span>
+<span class="co">#===========================</span>
+
+<span class="co"># .shp 파일에서 파일 확장자를 제거한 계층명칭이된다.</span>
+layer_KOR_adm0 &lt;-<span class="st"> &quot;KOR_adm0&quot;</span>  
+layer_KOR_adm1 &lt;-<span class="st"> &quot;KOR_adm1&quot;</span>  
+layer_KOR_adm2 &lt;-<span class="st"> &quot;KOR_adm2&quot;</span>  
+
+<span class="co"># 데이터를 불러온다.</span>
+KOR_adm0_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span>localDir, <span class="dt">layer=</span>layer_KOR_adm0) 
+KOR_adm1_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span>localDir, <span class="dt">layer=</span>layer_KOR_adm1) 
+KOR_adm2_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span>localDir, <span class="dt">layer=</span>layer_KOR_adm2) 
+
+<span class="co">#class(KOR_adm0_projected)</span>
+<span class="co">#slotNames(KOR_adm0_projected)</span>
+
+<span class="co"># 행정구역 정보 시각화</span>
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))
+<span class="kw">plot</span>(KOR_adm0_projected)
+<span class="kw">plot</span>(KOR_adm1_projected)
+<span class="kw">plot</span>(KOR_adm2_projected)</code></pre></div>
+<p><img src="fig/korea-admin-level.png" alt="대한민국 행정구역" width="70%" /></p>
+<p><a href="http://mazamascience.com/WorkingWithData/?p=1277">Using R - Working with Geospatial Data</a> <a href="http://neondataskills.org/R/Raster-Data-In-R/">Raster Data in R - The Basics</a></p>
         </div>
       </div>
       </article>

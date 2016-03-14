@@ -51,7 +51,7 @@
 <p><a href="https://en.wikipedia.org/wiki/Cartography">지도학(Cartography)</a>는 지도를 제작하는 방식이다.</p>
 <p>특정한 목적에 따라 특수한 주제 혹은 내용만을 나타내어 그린 지도를 <a href="https://ko.wikipedia.org/wiki/지도의_종류">주제도(Thematic Map)</a>라고 한다. 어느 시점에서의 일기 상황을 나타낸 기상도, 운전할 때 쓰이는 도로도, 항해할 때 쓰이는 해도, 통계값을 지도에 그려 넣은 통계 지도 등이 좋은 사례다.</p>
 <h3 id="지리정보-파일shp">지리정보 파일(SHP)</h3>
-<p>대한민국 센서스용 행정구역경계(시군구) 자료는 <a href="http://sgis.kostat.go.kr/html/index.html">통계지리정보서비스</a> 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 <em>자료신청</em> → <em>자료제공목록</em>을 참조한다.</p>
+<p>대한민국 센서스용 행정구역경계(시군구) 자료는 <a href="http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp">통계지리정보서비스</a> 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 <em>자료신청</em> → <em>자료제공 목록</em>을 참조한다. 혹은, <a href="https://goo.gl/KyHR46">Encaion</a> 구글 드라이브에서 직접 다운로드 받을 수도 있다. 통계청으로 신청하면 승인까지 수일이 소요되며 행정처리일 기준으로 처리되며 다운로드 가능한 기간도 1주일이다.</p>
 <p>혹은 <a href="http://www.gadm.org/">GADM</a> 데이터베이스에서 <em>Country</em>에서 **South Korea<em>을 선택하고, </em>File Format<em>에서 </em>Shapefile*을 선택하여 다운로드한다.</p>
 <ul>
 <li><a href="http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp">통계지역경계</a></li>
@@ -66,84 +66,32 @@
     <span class="co">&#39;r&#39;</span>  : [(<span class="st">&#39;skorea.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm0.RData&#39;</span>),
             (<span class="st">&#39;skorea-provinces.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm1.RData&#39;</span>),
             (<span class="st">&#39;skorea-municipalities.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData&#39;</span>)]</code></pre></div>
-<h4 id="r-데이터-가져오기">R 데이터 가져오기</h4>
-<p>R로 데이터를 불러와야만 자료분석을 시작이 시작된다. 전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 <a href="http://www.statmethods.net/input/importingdata.html">statmethods.net</a> 사이트에 소개되어 있다.</p>
+<h3 id="지리정보-시각화를-위한-대한민국-정보">지리정보 시각화를 위한 대한민국 정보</h3>
+<p>대한민국 경도범위는 124 – 132, 위도범위는 33 – 43 이다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="대한민국-위도와-경도-kor-lonlat"><span class="glyphicon glyphicon-pushpin"></span>대한민국 위도와 경도 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+</div>
+<div class="panel-body">
+<h4 id="대한민국-전체">대한민국 전체</h4>
 <ul>
-<li>CSV : <code>.csv</code> 파일</li>
-<li>Excel : <code>.xlsx</code> 파일</li>
-<li>통계 팩키지
-<ul>
-<li>SPSS : <code>.por</code> 파일</li>
-<li>SAS : <code>xpt</code> 파일</li>
-<li>미니탭 : <code>.mtp</code> 파일</li>
-</ul></li>
+<li>극동: 경상북도 울릉군의 독도 동단 동경 131° 52′20“,</li>
+<li>극서: 평안북도 용천군 신도면 마안도 서단 동경 124° 11′45&quot;</li>
+<li>극남: 제주도 남제주군 대정읍 마라도 남단 북위 33° 06′40&quot;</li>
+<li>극북: 함경북도 온성군 남양면 북단 북위 43° 00′35&quot;</li>
 </ul>
-<p>다양한 데이터를 R로 불러와서 작업하는 방법은 <a href="http://blog.datacamp.com/">Datacamp 블로그</a>와 <a href="http://www.r-bloggers.com/">r-bloggers</a>에서 확인이 가능하다.</p>
+<h4 id="북한-제외">북한 제외</h4>
 <ul>
-<li><a href="http://blog.datacamp.com/r-data-import-tutorial/">This R Data Import Tutorial Is Everything You Need</a></li>
-<li><a href="http://www.r-bloggers.com/importing-data-into-r-part-two/">Importing Data Into R – Part Two</a></li>
+<li>극동: 경상북도 울릉군의 독도(獨島)로 동경 131° 52′,</li>
+<li>극서: 전라남도 신안군의 소흑산도(小黑山島)로 동경 125° 04′,</li>
+<li>극북: 강원도 고성군 현내면 송현진으로 북위 38° 27′,</li>
+<li>극남: 제주도 남제주군 마라도(馬羅島)로 북위 33° 06′이다.</li>
 </ul>
-<h5 id="gis-데이터">GIS 데이터</h5>
-<p>지리정보시스템(GIS) 데이터 처리를 위한 기본 R 팩키지를 설치한다.</p>
-<p><a href="http://www.rdocumentation.org/packages/rgdal">rgdal</a>, <a href="http://www.rdocumentation.org/packages/raster">raster</a>, <a href="http://www.rdocumentation.org/packages/sp">sp</a>를 3종세트로 GIS 데이터 처리를 시작해 본다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;raster&quot;</span>) <span class="co"># Geographic data analysis and modeling</span>
-<span class="kw">install.packages</span>(<span class="st">&quot;rgdal&quot;</span>) <span class="co"># Bindings for the Geospatial Data Abstraction Library</span>
-<span class="kw">install.packages</span>(<span class="st">&quot;sp&quot;</span>) <span class="co"># Classes and Methods for Spatial Data</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#===========================</span>
-<span class="co"># 필요한 라이브러리를 메모리에 적재한다.</span>
-<span class="co">#===========================</span>
-<span class="kw">library</span>(<span class="st">&quot;sp &quot;</span>, <span class="st">&quot;rgdal&quot;</span>, <span class="st">&quot;raster&quot;</span>)
-
-<span class="co">#===========================</span>
-<span class="co"># 지리정보 데이터 정보</span>
-<span class="co"># ㄴ 원본 .sph 데이터: http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip</span>
-<span class="co">#===========================</span>
-
-
-<span class="co">#===========================</span>
-<span class="co"># 작업 디렉토리를 생성한다.</span>
-<span class="co">#===========================</span>
-localDir &lt;-<span class="st"> &#39;KOR_GIS_data&#39;</span>
-if (!<span class="kw">file.exists</span>(localDir)) {
-    <span class="kw">dir.create</span>(localDir)
-}
-
-<span class="co">#===========================</span>
-<span class="co"># 데이터를 불러와서 압축을 푼다.</span>
-<span class="co">#===========================</span>
-url &lt;-<span class="st"> &#39;http://biogeo.ucdavis.edu/data/gadm2/shp/KOR_adm.zip&#39;</span>
-file &lt;-<span class="st"> </span><span class="kw">paste</span>(localDir,<span class="kw">basename</span>(url),<span class="dt">sep=</span><span class="st">&#39;/&#39;</span>)
-if (!<span class="kw">file.exists</span>(file)) {
-    <span class="kw">download.file</span>(url, file)
-    <span class="kw">unzip</span>(file,<span class="dt">exdir=</span>localDir)
-}
-
-<span class="co"># list.files(localDir)</span>
-
-<span class="co">#===========================</span>
-<span class="co"># 계층을 설정하고, 내부정보를 살펴본다.</span>
-<span class="co">#===========================</span>
-
-<span class="co"># .shp 파일에서 파일 확장자를 제거한 계층명칭이된다.</span>
-layer_KOR_adm0 &lt;-<span class="st"> &quot;KOR_adm0&quot;</span>  
-layer_KOR_adm1 &lt;-<span class="st"> &quot;KOR_adm1&quot;</span>  
-layer_KOR_adm2 &lt;-<span class="st"> &quot;KOR_adm2&quot;</span>  
-
-<span class="co"># 데이터를 불러온다.</span>
-KOR_adm0_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span>localDir, <span class="dt">layer=</span>layer_KOR_adm0) 
-KOR_adm1_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span>localDir, <span class="dt">layer=</span>layer_KOR_adm1) 
-KOR_adm2_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn=</span>localDir, <span class="dt">layer=</span>layer_KOR_adm2) 
-
-<span class="co">#class(KOR_adm0_projected)</span>
-<span class="co">#slotNames(KOR_adm0_projected)</span>
-
-<span class="co"># 행정구역 정보 시각화</span>
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))
-<span class="kw">plot</span>(KOR_adm0_projected)
-<span class="kw">plot</span>(KOR_adm1_projected)
-<span class="kw">plot</span>(KOR_adm2_projected)</code></pre></div>
-<p><img src="fig/korea-admin-level.png" alt="대한민국 행정구역" width="70%" /></p>
-<p><a href="http://mazamascience.com/WorkingWithData/?p=1277">Using R - Working with Geospatial Data</a> <a href="http://neondataskills.org/R/Raster-Data-In-R/">Raster Data in R - The Basics</a></p>
+</div>
+</aside>
+<p><code>{r message=FALSE, warning=FALSE, comment=FALSE} # 위치를 지정한다. krLocation &lt;- c(124.11, 33.06, 131.52, 43.00) #좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도 southKrLocation &lt;- c(125.04, 33.06, 131.52, 38.27) #krLocation &lt;- c(lon=126, lat=37) # 대한민국 서울 krMap &lt;- get_map(location=krLocation, source=&quot;stamen&quot;, maptype=&quot;toner&quot;, crop=FALSE) #terrain, toner, watercolor ggmap(krMap)</code></p>
+<p><code>googlemap</code>이 위도경도 지도중앙, <code>stamen</code>, <code>openstreetmap</code>, <code>cloudmade</code>는 위도경도 상자표기를 권장한다.</p>
+<p><code>{r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE} krMap &lt;- get_map(location=krLocation, source=&quot;stamen&quot;, maptype=&quot;toner&quot;, crop=FALSE) #terrain, satellite, roadmap, hybrid, toner, watercolor ggmap(krMap)</code></p>
 <h3 id="주제도thematic-map">주제도(Thematic Map)</h3>
 <h4 id="choropleth-map">Choropleth map</h4>
 <p>Unclassed Maps Classed Maps</p>
@@ -160,7 +108,7 @@ KOR_adm2_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>
 <li><p><a href="http://indiemapper.com/app/learnmore.php?l=choropleth">http://indiemapper.com/</a></p></li>
 <li><p>미국 대선(2012) <a href="http://elections.nytimes.com/2012/results/president">뉴욕타임즈 President Map</a></p></li>
 </ul>
-<h3 id="지리정보처리-툴체인-1">지리정보처리 툴체인 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<h3 id="지리정보처리-툴체인-1">지리정보처리 툴체인 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
 <p><img src="fig/R_SAGA_GE_logo.jpg" alt="LAMP와 Docker가 설치된 우분투 공용 이미지" width="40%" /></p>
 <ul>
 <li>오픈 GIS 소프트웨어
@@ -192,7 +140,8 @@ KOR_adm2_projected &lt;-<span class="st"> </span><span class="kw">readOGR</span>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>http://spatial-analyst.net/wiki/index.php?title=Main_Page<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p><a href="http://tip.daum.net/question/3092152">대한민국의 위도와 경도를 알고 싶어요</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>http://spatial-analyst.net/wiki/index.php?title=Main_Page<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
         </div>

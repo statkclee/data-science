@@ -229,7 +229,7 @@ poli_pattern %>% gsub(replacement = "balloons", clean_tweets) %>% grep("balloons
 R에 다른 모든 것처럼, Hadley Wickham이 문자열처리도 효과적이고 효율적으로 다루고자 많은 기여를 했다.
 문자열에 대한 기여결과가 `stringr` 팩키지로 구현되었다.
 기존에 존재하던 많은 함수를 더 멋진 구문으로 구현했다.
-문자열 처리 팩키지를 `dplyr`과 함께 사용해서 트윗데이터에 대한 기본적인 어휘분석을 수행한다!
+문자열 처리 팩키지를 `dplyr`과 함께 사용해서 트윗데이터에 대한 기본적인 어휘분석을 수행한다! 
 
 트윗에서 "단어가 아닌" 모든 텍스트를 정제한다. 정제를 시작해보자:
 
@@ -280,7 +280,7 @@ word_counts %>%
     top_n(15) 
 ```
 
-흠... 정규표현식으로 사용해서 대문자로 시작되는 문자로 적어도 길이가 4자 이상되는 문자만 잡아내자.
+흠... 정규표현식으로 사용해서 대문자로 시작되는 문자로 적어도 길이가 4자 이상되는 문자만 잡아내자. 
 
 ```{r warning=FALSE,message=FALSE}
 tweet_words <- str_extract_all(clean_tweets, "[A-Z][a-z]{4,}")

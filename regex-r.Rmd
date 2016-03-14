@@ -11,7 +11,6 @@ mainfont: NanumGothic
 ---
 
 
-
 ```{r  include = FALSE}
 source("tools/chunk-options.R")
 knitr::opts_chunk$set(error = TRUE)
@@ -20,7 +19,7 @@ knitr::opts_chunk$set(error = TRUE)
 ### 학습 데이터 준비 [^regex-intro] [^regex-r] 
 
 [^regex-intro]: [Regular Expression in R](https://stat545-ubc.github.io/block022_regular-expression.html)
-[^regex-r] : [Regular Expressions and Character Data](https://stat545-ubc.github.io/block027_regular-expressions.html)
+[^regex-r]: [Regular Expressions and Character Data](https://stat545-ubc.github.io/block027_regular-expressions.html)
 
 `git clone` 명령어로 정규표현식 실습을 위한 텍스트 데이터를 불러온다.
 [STAT545](https://stat545-ubc.github.io/)와 연결된 [GitHub STAT545](https://github.com/STAT545-UBC/STAT545-UBC.github.io)

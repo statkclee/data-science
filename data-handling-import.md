@@ -105,4 +105,21 @@ API를 통해 데이터가 제공되지 않는 경우, `rvest` 팩키지를 통�
 > - HTML: `library(rvest)`, `rvest`는 파이썬 뷰티풀숩(Beautiful Soup)에 해당
 
 
+### 4. R 데이터 가져오기
+
+R로 데이터를 불러와야만 자료분석을 시작이 시작된다.  전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 [statmethods.net](http://www.statmethods.net/input/importingdata.html) 사이트에 소개되어 있다.
+
+- CSV : `.csv` 파일
+- Excel : `.xlsx` 파일
+- 통계 팩키지
+    - SPSS : `.por` 파일
+    - SAS : `xpt` 파일
+    - 미니탭 : `.mtp` 파일
+
+다양한 데이터를 R로 불러와서 작업하는 방법은 [Datacamp 블로그](http://blog.datacamp.com/)와 [r-bloggers](http://www.r-bloggers.com/)에서 확인이 가능하다.
+
+- [This R Data Import Tutorial Is Everything You Need](http://blog.datacamp.com/r-data-import-tutorial/)
+- [Importing Data Into R – Part Two](http://www.r-bloggers.com/importing-data-into-r-part-two/)
+
+
 ### 참고자료
