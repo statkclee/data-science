@@ -44,13 +44,17 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>지리정보를 시각화한다.</li>
+<li>지리정보 시각화를 위한 기본 개념을 학습한다.</li>
 </ul>
 </div>
 </section>
-<p><a href="https://en.wikipedia.org/wiki/Cartography">지도학(Cartography)</a>는 지도를 제작하는 방식이다.</p>
-<p>특정한 목적에 따라 특수한 주제 혹은 내용만을 나타내어 그린 지도를 <a href="https://ko.wikipedia.org/wiki/지도의_종류">주제도(Thematic Map)</a>라고 한다. 어느 시점에서의 일기 상황을 나타낸 기상도, 운전할 때 쓰이는 도로도, 항해할 때 쓰이는 해도, 통계값을 지도에 그려 넣은 통계 지도 등이 좋은 사례다.</p>
-<h3 id="지리정보-파일shp">지리정보 파일(SHP)</h3>
+<p><a href="https://en.wikipedia.org/wiki/Cartography">지도학(Cartography)</a>는 지도를 제작하는 방식이다. 특정한 목적에 따라 특수한 주제 혹은 내용만을 나타내어 그린 지도를 <strong><a href="https://ko.wikipedia.org/wiki/지도의_종류">주제도(Thematic Map)</a></strong> 라고 한다. 어느 시점에서의 일기 상황을 나타낸 기상도, 운전할 때 쓰이는 도로도, 항해할 때 쓰이는 해도, 통계값을 지도에 그려 넣은 통계 지도 등이 좋은 사례다.</p>
+<p>지리정보를 표현하기 위해서는 다음과 같은 기본 요소가 필요하다.</p>
+<ol style="list-style-type: decimal">
+<li><code>.shp</code> 확장자를 갖는 지도정보 파일</li>
+<li>대한민국에 대한 기본 지리정보: 위도 경도</li>
+</ol>
+<h3 id="지리정보-파일shp">1. 지리정보 파일(SHP)</h3>
 <p>대한민국 센서스용 행정구역경계(시군구) 자료는 <a href="http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp">통계지리정보서비스</a> 사이트에서 자료신청을 하면 얻을 수 있다. 그리고, 제공되는 자세한 형식에 대한 정보는 <em>자료신청</em> → <em>자료제공 목록</em>을 참조한다. 혹은, <a href="https://goo.gl/KyHR46">Encaion</a> 구글 드라이브에서 직접 다운로드 받을 수도 있다. 통계청으로 신청하면 승인까지 수일이 소요되며 행정처리일 기준으로 처리되며 다운로드 가능한 기간도 1주일이다.</p>
 <p>혹은 <a href="http://www.gadm.org/">GADM</a> 데이터베이스에서 <em>Country</em>에서 **South Korea<em>을 선택하고, </em>File Format<em>에서 </em>Shapefile*을 선택하여 다운로드한다.</p>
 <ul>
@@ -66,8 +70,8 @@
     <span class="co">&#39;r&#39;</span>  : [(<span class="st">&#39;skorea.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm0.RData&#39;</span>),
             (<span class="st">&#39;skorea-provinces.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm1.RData&#39;</span>),
             (<span class="st">&#39;skorea-municipalities.RData&#39;</span>,<span class="st">&#39;http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData&#39;</span>)]</code></pre></div>
-<h3 id="지리정보-시각화를-위한-대한민국-정보">지리정보 시각화를 위한 대한민국 정보</h3>
-<p>대한민국 경도범위는 124 – 132, 위도범위는 33 – 43 이다.</p>
+<h3 id="지리정보-시각화를-위한-대한민국-정보">2.지리정보 시각화를 위한 대한민국 정보</h3>
+<p>대한민국 지도에 관한 일반정보의 경도범위는 124 – 132, 위도범위는 33 – 43 이다.</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
 <h3 id="대한민국-위도와-경도-kor-lonlat"><span class="glyphicon glyphicon-pushpin"></span>대한민국 위도와 경도 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
@@ -89,26 +93,67 @@
 </ul>
 </div>
 </aside>
-<p><code>{r message=FALSE, warning=FALSE, comment=FALSE} # 위치를 지정한다. krLocation &lt;- c(124.11, 33.06, 131.52, 43.00) #좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도 southKrLocation &lt;- c(125.04, 33.06, 131.52, 38.27) #krLocation &lt;- c(lon=126, lat=37) # 대한민국 서울 krMap &lt;- get_map(location=krLocation, source=&quot;stamen&quot;, maptype=&quot;toner&quot;, crop=FALSE) #terrain, toner, watercolor ggmap(krMap)</code></p>
+<h4 id="rworldmap-팩키지를-활용한-지도-그리기-기초">2.1 <code>rworldmap</code> 팩키지를 활용한 지도 그리기 기초</h4>
+<p>지도가 구해졌으면 범위를 한정하기 위해 극점(extreme point) 정보를 알아내는 것이 중요하다. <a href="https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea">남한 극단정보</a> 위키피디아에서 확인한 극점정보를 사용하여 남한해 지도를 그려본다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#install.packages(rworldmap)</span>
+<span class="kw">library</span>(rworldmap)
+<span class="kw">library</span>(ggmap)
+korea.map &lt;-<span class="st"> </span><span class="kw">getMap</span>(<span class="dt">resolution =</span> <span class="st">&quot;high&quot;</span>)
+
+south.korea.limits &lt;-<span class="st"> </span><span class="kw">geocode</span>(<span class="kw">c</span>(
+  <span class="st">&quot;Daegang-ri, Hyeonnae-myeon, County of Goseong, Gangwon&quot;</span>,
+  <span class="st">&quot;Marado, Daejeong-eup, Seogwipo, Jeju&quot;</span>,
+  <span class="st">&quot;Dokdo-ri,Ulleung-eup, County of Ulleung, North Gyeongsang&quot;</span>,
+  <span class="st">&quot;Baengnyeongdo, Baengnyeong-myeon,    County of Ongjin, Incheon&quot;</span>)
+)  
+
+south.korea.limits</code></pre></div>
+<pre class="output"><code>FALSE        lon      lat
+FALSE 1 128.3445 38.60602
+FALSE 2 126.2522 33.22682
+FALSE 3 131.8597 37.24397
+FALSE 4 126.1783 37.21389
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(korea.map,
+     <span class="dt">xlim =</span> <span class="kw">range</span>(south.korea.limits$lon),
+     <span class="dt">ylim =</span> <span class="kw">range</span>(south.korea.limits$lat),
+     <span class="dt">asp =</span> <span class="dv">1</span>
+)</code></pre></div>
+<p><img src="fig/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" /></p>
+<p><a href="https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea">남한 극단정보</a> 중 섬을 제외한 본토를 기준으로 지리정보를 시각화하면 다음과 같다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">south.korea.mainland.limits &lt;-<span class="st"> </span><span class="kw">geocode</span>(<span class="kw">c</span>(
+  <span class="st">&quot;Daegang-ri, Hyeonnae-myeon, County of Goseong, Gangwon&quot;</span>,
+  <span class="st">&quot;Songho-ri, Songji-myeon, Haenam, South Jeolla&quot;</span>,
+  <span class="st">&quot;Guryongpo-eup, Pohang, North Gyeongsang&quot;</span>,
+  <span class="st">&quot;Mohang-ri, Sowon-myeon, Taean, Chungcheong&quot;</span>)
+)  
+south.korea.mainland.limits</code></pre></div>
+<pre class="output"><code>FALSE        lon      lat
+FALSE 1 128.3445 38.60602
+FALSE 2 126.5351 34.32605
+FALSE 3 129.5471 35.98531
+FALSE 4 126.1413 36.76856
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(korea.map,
+     <span class="dt">xlim =</span> <span class="kw">range</span>(south.korea.mainland.limits$lon),
+     <span class="dt">ylim =</span> <span class="kw">range</span>(south.korea.mainland.limits$lat),
+     <span class="dt">asp =</span> <span class="dv">1</span>
+)</code></pre></div>
+<p><img src="fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
+<h4 id="ggmap-팩키지를-활용한-지도-그리기-기초">2.2 <code>ggmap</code> 팩키지를 활용한 지도 그리기 기초</h4>
+<p><code>ggmap</code> API를 활용하여 지도를 그린다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggmap)
+<span class="co"># 위치를 지정한다.</span>
+krLocation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">124.11</span>, <span class="fl">33.06</span>, <span class="fl">131.52</span>, <span class="fl">43.00</span>) <span class="co">#좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도</span>
+southKrLocation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">125.04</span>, <span class="fl">33.06</span>, <span class="fl">131.52</span>, <span class="fl">38.27</span>)
+<span class="co">#krLocation &lt;- c(lon=126, lat=37) # 대한민국 서울</span>
+krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;toner&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, toner, watercolor</span>
+<span class="kw">ggmap</span>(krMap)</code></pre></div>
+<p><img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" /></p>
 <p><code>googlemap</code>이 위도경도 지도중앙, <code>stamen</code>, <code>openstreetmap</code>, <code>cloudmade</code>는 위도경도 상자표기를 권장한다.</p>
-<p><code>{r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE} krMap &lt;- get_map(location=krLocation, source=&quot;stamen&quot;, maptype=&quot;toner&quot;, crop=FALSE) #terrain, satellite, roadmap, hybrid, toner, watercolor ggmap(krMap)</code></p>
-<h3 id="주제도thematic-map">주제도(Thematic Map)</h3>
-<h4 id="choropleth-map">Choropleth map</h4>
-<p>Unclassed Maps Classed Maps</p>
-<h4 id="graduatedproportional-symbol">Graduated/Proportional Symbol</h4>
-<h4 id="cartogram">Cartogram</h4>
-<h4 id="heat-maps">Heat Maps</h4>
-<h4 id="flow-maps">Flow Maps</h4>
-<h3 id="spatialization">Spatialization</h3>
-<p>MDS 혹은 코호넨 네트워크</p>
-<h4 id="implicit-spatialization">Implicit Spatialization</h4>
-<h4 id="explicit-spatialization">Explicit Spatialization</h4>
-<ul>
-<li>미국 빈곤율 정보 시각화 <a href="http://www.cdc.gov/pcd/issues/2007/oct/07_0091.htm">The Topography of Poverty in the United States</a></li>
-<li><p><a href="http://indiemapper.com/app/learnmore.php?l=choropleth">http://indiemapper.com/</a></p></li>
-<li><p>미국 대선(2012) <a href="http://elections.nytimes.com/2012/results/president">뉴욕타임즈 President Map</a></p></li>
-</ul>
-<h3 id="지리정보처리-툴체인-1">지리정보처리 툴체인 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">krMap &lt;-<span class="st"> </span><span class="kw">get_map</span>(<span class="dt">location=</span>krLocation, <span class="dt">source=</span><span class="st">&quot;stamen&quot;</span>, <span class="dt">maptype=</span><span class="st">&quot;toner&quot;</span>, <span class="dt">crop=</span><span class="ot">FALSE</span>) <span class="co">#terrain, satellite, roadmap, hybrid, toner, watercolor</span>
+<span class="kw">ggmap</span>(krMap)</code></pre></div>
+<h3 id="지리정보처리-툴체인-1">3. 지리정보처리 툴체인 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
 <p><img src="fig/R_SAGA_GE_logo.jpg" alt="LAMP와 Docker가 설치된 우분투 공용 이미지" width="40%" /></p>
 <ul>
 <li>오픈 GIS 소프트웨어
@@ -121,6 +166,12 @@
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Keyhole_Markup_Language">Keyhole Markup Language, KML</a></li>
 </ul></li>
+</ul>
+<h3 id="지리정보-시각화-사례">4. 지리정보 시각화 사례</h3>
+<ul>
+<li>미국 대선(2012) <a href="http://elections.nytimes.com/2012/results/president">뉴욕타임즈 President Map</a></li>
+<li>미국 빈곤율 정보 시각화 <a href="http://www.cdc.gov/pcd/issues/2007/oct/07_0091.htm">The Topography of Poverty in the United States</a></li>
+<li><a href="http://indiemapper.com/app/learnmore.php?l=choropleth">http://indiemapper.com/</a></li>
 </ul>
 <h3 id="참고자료">참고자료</h3>
 <ul>

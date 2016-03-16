@@ -70,10 +70,12 @@ FILEMAP = {
 
 지도가 구해졌으면 범위를 한정하기 위해 극점(extreme point) 정보를 알아내는 것이 중요하다.
 [남한 극단정보](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea)
-위키피디아에서 확인한 극점정보를 사용하여 남한해 지도를 그려본다.
+위키피디아에서 확인한 극점정보를 사용하여 남한해 지도를 그려본다. 
 
 ``` {r message=FALSE, warning=FALSE, comment=FALSE}
+#install.packages(rworldmap)
 library(rworldmap)
+library(ggmap)
 korea.map <- getMap(resolution = "high")
 
 south.korea.limits <- geocode(c(
