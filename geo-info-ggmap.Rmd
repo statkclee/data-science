@@ -121,6 +121,14 @@ plot(KOR_adm2_projected)
 [Raster Data in R - The Basics](http://neondataskills.org/R/Raster-Data-In-R/)
 
 
+### `leaflet` 팩키지 
+
+
+GoogleVis [^googlevis],  전세계 원자력 발전소 위치 [^powerplant]
+
+
+[^googlevis]: [Plotting geo-spatial data on Google Maps in R](http://diggdata.in/post/51396519384/plotting-geo-spatial-data-on-google-maps-in-r)
+[^powerplant]: [Nuclear Power plants](https://www.google.com/fusiontables/exporttable?query=select%20*%20from%201u4krB7NJ0Ppwzcd5h7uwOak3Reja4A7yVFIklw)
 
 
 
