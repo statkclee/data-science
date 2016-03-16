@@ -131,6 +131,11 @@ GoogleVis [^googlevis],  전세계 원자력 발전소 위치 [^powerplant]
 [^powerplant]: [Nuclear Power plants](https://www.google.com/fusiontables/exporttable?query=select%20*%20from%201u4krB7NJ0Ppwzcd5h7uwOak3Reja4A7yVFIklw)
 
 
+### `tmap` 팩키지
+
+[R-package tmap - Creating thematic maps in a flexible way](http://user2015.math.aau.dk/presentations/20.pdf)
+
+
 
 
 

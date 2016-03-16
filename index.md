@@ -56,7 +56,7 @@ title: 데이터 과학
     - [데이터 시각화(ggplot2, ggvis)](viz-ggplot2.html)
     - [R 시각화 카탈로그](http://shiny.stat.ubc.ca/r-graph-catalog/)
 1. [지리정보](geo-info.html)
-    - [구글](geo-info-google.html)
+    - [주소와 위도경도](geo-info-lonlat.html)
     - [ggmap](geo-info-ggmap.html) 
 1. [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
     - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)

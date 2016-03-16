@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 지리정보 시각화 - 지리정보 API
+subtitle: 지리정보 시각화 - 주소와 위도경도
 output:
   html_document: 
     keep_md: yes
@@ -15,7 +15,7 @@ mainfont: NanumGothic
 > ## 학습 목표 {.objectives}
 >
 > *  한국 주소명을 지리정보(위도, 경도)로 변환한다. [^geoCodingWithR]
-> * `dplyr` 팩키지 `mutate_geocode` 위도경도 함수를 파이프연산자와 결합하여 코드를 간결화한다.  
+> * `dplyr` 팩키지 `mutate_geocode` 위도경도 함수를 파이프연산자와 결합하여 코드를 간결화한다. 
 
 ### 1. 지리정보 API - `geocode` 
 
