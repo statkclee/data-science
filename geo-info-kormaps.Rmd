@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 지리정보 시각화 - ggmap
+subtitle: Kormaps, leaflet 지리정보 시각화 기초 
 output:
   html_document: 
     keep_md: yes
@@ -9,7 +9,7 @@ output:
     latex_engine: xelatex
 mainfont: NanumGothic
 ---
-
+ 
 ``` {r, include=FALSE}
 source("tools/chunk-options.R")
 

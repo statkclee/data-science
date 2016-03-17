@@ -1,0 +1,24 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: tmap 주제도
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+```
+
+> ## 학습 목표 {.objectives}
+>
+>  * 위도경도 정보 활용 `ggmap` 지리정보 시각화한다.
+>  * `Kormaps` 지리정보 시각화한다.
+
+### 1. `tmap` 주제도 [^kormaps-01] 
+
+주제도를 그린다.
