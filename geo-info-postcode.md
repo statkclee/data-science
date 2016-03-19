@@ -86,6 +86,9 @@ leaflet(data = addr.mst) %>% addTiles() %>%
   addMarkers(~lon, ~lat, popup = ~as.character(addr))
 ~~~
 
+`leaflet` 팩키지는 R에서 지리정보 시각화를 위한 자바스크립트를 사용할 수 있도록 만들어졌다.
+따라서 웹에서 자바스크립트로 코드 몇줄로 간단히 구현한 효과를 볼 수 있다.
+
 <img src="fig/geo-postcode-marker.png" alt="분당 장소 표식 10곳" width="50%" />
 
 
