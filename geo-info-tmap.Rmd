@@ -40,3 +40,9 @@ gIntersection(regions, lads, byid = TRUE, drop_lower_td = TRUE)
 Shapefile은 확장자로 `.shp`을 갖고, 벡터방식으로 공간정보를 저장한다.
 `.shp` 파일은 점, 선, 면(Polygon) 중 하나의 속성을 갖는다.
 
+### 단계구분도(choropleth)
+
+[단계구분도(Choropleth map)](https://en.wikipedia.org/wiki/Choropleth_map)는 
+주제도(thematic map)으로 인구밀도, 1인당 소득 같은 정보를 비례하여 음영처리나 패턴을 넣어 지도상에 표현하는 방식이다.
+
+
