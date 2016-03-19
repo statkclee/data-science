@@ -86,7 +86,7 @@ leaflet(data = addr.mst) %>% addTiles() %>%
   addMarkers(~lon, ~lat, popup = ~as.character(addr))
 ~~~
 
-<img src="geo-postcode-marker.png" alt="분당 장소 표식 10곳" width="50%" />
+<img src="fig/geo-postcode-marker.png" alt="분당 장소 표식 10곳" width="50%" />
 
 
 
