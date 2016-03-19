@@ -24,7 +24,7 @@ source("tools/chunk-options.R")
 주제도를 그린다.
 
 
-### `.shp` 파일에서 다각형(polygon)을 잘라낸다. [^shape-polygon-clipping]
+### `.shp` 파일에서 면(polygon)을 잘라낸다. [^shape-polygon-clipping]
 
 gIntersection(regions, lads, byid = TRUE, drop_lower_td = TRUE)
 
@@ -35,4 +35,8 @@ gIntersection(regions, lads, byid = TRUE, drop_lower_td = TRUE)
 
 
 
-###
+### 
+
+Shapefile은 확장자로 `.shp`을 갖고, 벡터방식으로 공간정보를 저장한다.
+`.shp` 파일은 점, 선, 면(Polygon) 중 하나의 속성을 갖는다.
+
