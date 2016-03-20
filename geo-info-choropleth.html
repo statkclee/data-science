@@ -50,9 +50,9 @@
 </ul>
 </div>
 </section>
-<h3 id="단계구분도choropleth">단계구분도(choropleth)</h3>
+<h3 id="단계구분도choropleth">0. 단계구분도(choropleth)</h3>
 <p><a href="https://en.wikipedia.org/wiki/Choropleth_map">단계구분도(Choropleth map)</a>는 주제도(thematic map)으로 인구밀도, 1인당 소득 같은 정보를 비례하여 음영처리나 패턴을 넣어 지도상에 표현하는 방식이다. 단계구분도를 단계구분도 전용 <code>choroplethr</code> 팩키지와 그래픽 문법 범용 <code>ggplot</code> 팩키지를 사용하여 지리정보로 도식화한다.</p>
-<h3 id="choroplethr-팩키지-단계구분도"><code>choroplethr</code> 팩키지 단계구분도</h3>
+<h3 id="choroplethr-팩키지-단계구분도">1. <code>choroplethr</code> 팩키지 단계구분도</h3>
 <p><a href="https://cran.r-project.org/web/packages/choroplethr/index.html">choroplethr</a><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>은 R에서 단계구분도 생성을 간략화하려는 목적으로 개발되었다. 특히, <a href="https://cran.r-project.org/web/packages/choroplethr/vignettes/i-creating-admin1-maps.html">Administrative Level 1 Maps</a> 소품문에 나와 있듯이, 인구조사 센서스 데이터가 있는 경우 쉽게 단계구분도를 쉽게 적용할 수 있다.</p>
 <section class="prereq panel panel-warning">
 <div class="panel-heading">
@@ -106,7 +106,7 @@ df_korea_census_mapdata$region[df_korea_census_mapdata$region==<span class="st">
                   <span class="dt">num_colors   =</span> <span class="dv">1</span>)</code></pre></div>
 <p><code>choroplethr</code>, <code>choroplethrAdmin1</code>, <code>Kormaps</code> 팩키지를 활용한 단계구분도로 시각화하였다. 2010년 시점 세종시는 정보가 없어 검은색으로 나타나 있음에 주의한다. 경기도와 서울에 대분의 인구가 몰려있음을 단계구분도를 통해 시각적으로 확인할 수 있다.</p>
 <p><img src="fig/geo-choropleth.png" alt="2010년 인구 단계구분도" width="50%" /></p>
-<h3 id="ggplot-팩키지-단계구분도-ggplot-choropleth"><code>ggplot</code> 팩키지 단계구분도 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<h3 id="ggplot-팩키지-단계구분도-ggplot-choropleth">2. <code>ggplot</code> 팩키지 단계구분도 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
 <p>단계구분도 전용 <code>choroplethr</code> 팩키지 대신 범용 <code>ggplot</code> 팩키지를 사용해서도 단계구분도를 수월하게 지리정보로 표현할 수 있다. 기본적으로 <code>.shp</code> 파일에 <strong>id</strong> 칼럼을 단계구분도에 표시되는 정보에 연결하는 것이 핵심이다. 따라서, <code>.shp</code> 파일에 <strong>id</strong> 칼럼을 확인하고, 단계구분도로 단계를 표시할 데이터프레임에 필히 <strong>id</strong> 칼럼을 포함하여 매칭될 수 있도록한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##==========================================================================
 ## 팩키지 및 데이터 가져오기
@@ -163,12 +163,34 @@ korea.population<span class="fl">.2010</span> &lt;-merge.shp.coef[<span class="k
 <span class="st">  </span><span class="kw">scale_fill_distiller</span>(<span class="dt">name=</span><span class="st">&quot;인구 : 단위(만명)&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Greens&quot;</span>, <span class="dt">breaks =</span> <span class="kw">pretty_breaks</span>(<span class="dt">n =</span> <span class="dv">10</span>), <span class="dt">direction =</span> <span class="dv">1</span>)+
 <span class="st">  </span><span class="kw">theme_nothing</span>(<span class="dt">legend =</span> <span class="ot">TRUE</span>)+
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;대한민국 인구  (2010년)&quot;</span>)</code></pre></div>
+<p><img src="fig/geo-choropleth-ggplot.png" alt="2010년 인구 단계구분도" width="50%" /></p>
+<h3 id="ggmap-팩키지-단계구분도-ggmap-choropleth">3. <code>ggmap</code> 팩키지 단계구분도 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+<p>전용 단계구분도 <code>choroplethr</code> 팩키지 및 그래픽 문법을 따르는 범용 그래픽 <code>ggplot</code> 팩키지를 사용하여 단계구분도를 작성해봤고, 그래픽 문법을 따르는 전용 지리정보 제공 <code>ggmap</code> 팩키지를 사용한다. 기본적으로 <code>.shp</code> 파일에 <strong>id</strong> 칼럼을 단계구분도에 표시되는 정보에 연결하는 것이 핵심은 동일하다. <code>.shp</code> 파일에 <strong>id</strong> 칼럼을 확인하고, 단계구분도로 단계를 표시할 데이터프레임에 필히 <strong>id</strong> 칼럼을 포함하여 매칭될 수 있도록 한다.</p>
+<p>다만, <code>ggmap</code>을 사용할 경우 일반 지도 위에 <code>.shp</code> 파일을 올려 면(polygon)을 올릴 수 있다는 점에서 차이점이 생긴다.</p>
+<p>데이터는 앞서 사용한 <code>Kormaps</code> 팩키지에 뽑아낸 2010년 인구통계총조사 자료를 <code>.shp</code> 파일에 사용한 동일한 데이터를 사용하고 이를 <code>ggmap</code>의 <code>qmap</code> 함수를 활용하여 단계구분도로 시각화한다. 1단계로 먼저 <code>.shp</code> 파일이 구글지도에 겹치는지 확인하고 나서, 2단계로 인구정보를 단계구분도로 도식화한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1 단계 </span>
+korea &lt;-<span class="st"> </span><span class="kw">qmap</span>(<span class="st">&quot;south korea&quot;</span>, <span class="dt">zoom=</span><span class="dv">7</span>)
+
+korea +<span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">x=</span>long,<span class="dt">y=</span>lat, <span class="dt">group=</span>group, <span class="dt">alpha=</span><span class="fl">0.25</span>), <span class="dt">data=</span>korea.population<span class="fl">.2010</span>, <span class="dt">fill=</span><span class="st">&#39;white&#39;</span>) +
+<span class="st">  </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">x=</span>long,<span class="dt">y=</span>lat, <span class="dt">group=</span>group), <span class="dt">data=</span>korea.population<span class="fl">.2010</span>, <span class="dt">color=</span><span class="st">&#39;black&#39;</span>, <span class="dt">fill=</span><span class="ot">NA</span>)
+
+<span class="co"># 2 단계: 연속형</span>
+korea +<span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">x=</span>long,<span class="dt">y=</span>lat, <span class="dt">group=</span>group,  <span class="dt">fill=</span>population), 
+                    <span class="dt">data=</span>korea.population<span class="fl">.2010</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>) +
+<span class="st">  </span><span class="kw">scale_fill_gradient</span>(<span class="dt">low=</span><span class="st">&#39;white&#39;</span>, <span class="dt">high=</span><span class="st">&#39;red&#39;</span>)
+
+
+<span class="co"># 2 단계: 중간이 있는 연속형</span>
+korea +<span class="st"> </span><span class="kw">geom_polygon</span>(<span class="kw">aes</span>(<span class="dt">x=</span>long,<span class="dt">y=</span>lat, <span class="dt">group=</span>group, <span class="dt">fill=</span>population), <span class="dt">data=</span>korea.population<span class="fl">.2010</span>, <span class="dt">color=</span><span class="st">&#39;black&#39;</span>) +
+<span class="st">  </span><span class="kw">scale_fill_distiller</span>(<span class="dt">palette=</span><span class="st">&#39;Spectral&#39;</span>) +<span class="st"> </span><span class="kw">scale_alpha</span>(<span class="dt">range=</span><span class="kw">c</span>(<span class="fl">0.5</span>,<span class="fl">0.5</span>))</code></pre></div>
+<p>순서대로 단계구분도를 지도에 도식화하기 전에 <code>.shp</code> 파일에서 지도면 정보를 구글지도에 입히고 나서, 두가지 색상체계를 가지고 2010년 인구통계총조사 결과에 나온 인구정보를 지도에 도식화했다.</p>
 <p><img src="fig/geo-choropleth-ggmap.png" alt="2010년 인구 단계구분도" width="50%" /></p>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://cran.r-project.org/web/packages/choroplethr/index.html">choroplethr: Simplify the Creation of Choropleth Maps in R</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="http://www.r-bloggers.com/mapping-with-ggplot-create-a-nice-choropleth-map-in-r/">Mapping with ggplot: Create a nice choropleth map in R</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://www.r-bloggers.com/plotting-choropleths-from-shapefiles-in-r-with-ggmap-toronto-neighbourhoods-by-population/">Plotting Choropleths from Shapefiles in R with ggmap – Toronto Neighbourhoods by Population</a><a href="#fnref3">↩</a></p></li>
 </ol>
 </div>
         </div>

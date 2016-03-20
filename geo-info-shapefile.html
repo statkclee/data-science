@@ -83,11 +83,10 @@ korea.sn &lt;-<span class="st"> </span><span class="kw">subset</span>(korpopmap2
 <span class="kw">plot</span>(korea.sn)
 
 <span class="co"># ggplot 시각화를 위해 데이터프레임으로 변환한다.</span>
-korea.shp.f &lt;-<span class="st"> </span><span class="kw">fortify</span>(korea.sn, <span class="dt">region =</span> <span class="st">&quot;id&quot;</span>)
-<span class="kw">tail</span>(korea.shp.f)
+korea.shp.f &lt;-<span class="st"> </span><span class="kw">fortify</span>(korea.sn, <span class="dt">region =</span> <span class="st">&quot;region&quot;</span>)
 
-<span class="co"># 성남시 지도와 병합한다.</span>
-merge.shp.coef&lt;-<span class="kw">merge</span>(korea.shp.f, admin.sn, <span class="dt">by=</span><span class="st">&quot;id&quot;</span>, <span class="dt">all.x=</span><span class="ot">TRUE</span>)
+<span class="co"># 성남시 지도와 병합한다. &quot;5&quot;자리 지역코드 korea.sn, admin.sn 을 맞춘다.</span>
+merge.shp.coef&lt;-<span class="kw">merge</span>(korea.shp.f, admin.sn, <span class="dt">by.x=</span><span class="st">&quot;id&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;region&quot;</span>, <span class="dt">all.x=</span><span class="ot">TRUE</span>)
 korea.sn &lt;-merge.shp.coef[<span class="kw">order</span>(merge.shp.coef$order), ] 
 <span class="kw">View</span>(korea.sn)
 

@@ -10,14 +10,13 @@ subtitle: 단계구분도(choropleth)
 > * 대한민국인구를 단계구분도를 사용하여 지리정보 시각화한다.
 > * 단계구분도 전용 R 팩키지와 그래프 문법 ggplot 팩키지로 지리정보를 시각화한다.
 
-### 단계구분도(choropleth)
+### 0. 단계구분도(choropleth)
 
 [단계구분도(Choropleth map)](https://en.wikipedia.org/wiki/Choropleth_map)는 
 주제도(thematic map)으로 인구밀도, 1인당 소득 같은 정보를 비례하여 음영처리나 패턴을 넣어 지도상에 표현하는 방식이다.
 단계구분도를 단계구분도 전용 `choroplethr` 팩키지와 그래픽 문법 범용 `ggplot` 팩키지를 사용하여 지리정보로 도식화한다.
 
-### `choroplethr` 팩키지 단계구분도
-
+### 1. `choroplethr` 팩키지 단계구분도
 
 [choroplethr](https://cran.r-project.org/web/packages/choroplethr/index.html)[^choroplethr]은 R에서
 단계구분도 생성을 간략화하려는 목적으로 개발되었다. 특히, [Administrative Level 1 Maps](https://cran.r-project.org/web/packages/choroplethr/vignettes/i-creating-admin1-maps.html) 소품문에 나와 있듯이,
@@ -79,7 +78,7 @@ admin1_choropleth(country.name = "south korea",
 
 <img src="fig/geo-choropleth.png" alt="2010년 인구 단계구분도" width="50%" />
 
-### `ggplot` 팩키지 단계구분도 [^ggplot-choropleth]
+### 2. `ggplot` 팩키지 단계구분도 [^ggplot-choropleth]
 
 단계구분도 전용 `choroplethr` 팩키지 대신 범용 `ggplot` 팩키지를 사용해서도 단계구분도를 수월하게 지리정보로 표현할 수 있다.
 기본적으로 `.shp` 파일에 **id** 칼럼을 단계구분도에 표시되는 정보에 연결하는 것이 핵심이다.
@@ -150,6 +149,42 @@ ggplot() +
 ~~~
 
 
+<img src="fig/geo-choropleth-ggplot.png" alt="2010년 인구 단계구분도" width="50%" />
+
+### 3. `ggmap` 팩키지 단계구분도 [^ggmap-choropleth]
+
+전용 단계구분도 `choroplethr` 팩키지 및 그래픽 문법을 따르는 범용 그래픽 `ggplot` 팩키지를 사용하여 단계구분도를 
+작성해봤고, 그래픽 문법을 따르는 전용 지리정보 제공 `ggmap` 팩키지를 사용한다.
+기본적으로 `.shp` 파일에 **id** 칼럼을 단계구분도에 표시되는 정보에 연결하는 것이 핵심은 동일하다.
+`.shp` 파일에 **id** 칼럼을 확인하고, 단계구분도로 단계를 표시할 데이터프레임에 필히 **id** 칼럼을 포함하여
+매칭될 수 있도록 한다. 
+
+다만, `ggmap`을 사용할 경우 일반 지도 위에 `.shp` 파일을 올려 면(polygon)을 올릴 수 있다는 점에서 차이점이 생긴다.
+
+[^ggmap-choropleth]: [Plotting Choropleths from Shapefiles in R with ggmap – Toronto Neighbourhoods by Population](http://www.r-bloggers.com/plotting-choropleths-from-shapefiles-in-r-with-ggmap-toronto-neighbourhoods-by-population/)
+
+데이터는 앞서 사용한 `Kormaps` 팩키지에 뽑아낸 2010년 인구통계총조사 자료를 `.shp` 파일에 사용한 동일한 데이터를 사용하고 이를 `ggmap`의 `qmap` 함수를 활용하여 단계구분도로 시각화한다. 1단계로 먼저 `.shp` 파일이 구글지도에 겹치는지 확인하고 나서,
+2단계로 인구정보를 단계구분도로 도식화한다.
+
+~~~ {.r}
+# 1 단계 
+korea <- qmap("south korea", zoom=7)
+
+korea +geom_polygon(aes(x=long,y=lat, group=group, alpha=0.25), data=korea.population.2010, fill='white') +
+  geom_polygon(aes(x=long,y=lat, group=group), data=korea.population.2010, color='black', fill=NA)
+
+# 2 단계: 연속형
+korea +geom_polygon(aes(x=long,y=lat, group=group,  fill=population), 
+                    data=korea.population.2010, color="black") +
+  scale_fill_gradient(low='white', high='red')
+
+
+# 2 단계: 중간이 있는 연속형
+korea + geom_polygon(aes(x=long,y=lat, group=group, fill=population), data=korea.population.2010, color='black') +
+  scale_fill_distiller(palette='Spectral') + scale_alpha(range=c(0.5,0.5))
+~~~
+
+순서대로 단계구분도를 지도에 도식화하기 전에 `.shp` 파일에서 지도면 정보를 구글지도에 입히고 나서,
+두가지 색상체계를 가지고 2010년 인구통계총조사 결과에 나온 인구정보를 지도에 도식화했다.
+
 <img src="fig/geo-choropleth-ggmap.png" alt="2010년 인구 단계구분도" width="50%" />
-
-

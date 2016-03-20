@@ -58,11 +58,10 @@ korea.sn <- subset(korpopmap2, korpopmap2@data$code.1 %in% c("31020", "31021", "
 plot(korea.sn)
 
 # ggplot 시각화를 위해 데이터프레임으로 변환한다.
-korea.shp.f <- fortify(korea.sn, region = "id")
-tail(korea.shp.f)
+korea.shp.f <- fortify(korea.sn, region = "region")
 
-# 성남시 지도와 병합한다.
-merge.shp.coef<-merge(korea.shp.f, admin.sn, by="id", all.x=TRUE)
+# 성남시 지도와 병합한다. "5"자리 지역코드 korea.sn, admin.sn 을 맞춘다.
+merge.shp.coef<-merge(korea.shp.f, admin.sn, by.x="id", by.y="region", all.x=TRUE)
 korea.sn <-merge.shp.coef[order(merge.shp.coef$order), ] 
 View(korea.sn)
 
