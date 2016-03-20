@@ -187,4 +187,4 @@ korea + geom_polygon(aes(x=long,y=lat, group=group, fill=population), data=korea
 순서대로 단계구분도를 지도에 도식화하기 전에 `.shp` 파일에서 지도면 정보를 구글지도에 입히고 나서,
 두가지 색상체계를 가지고 2010년 인구통계총조사 결과에 나온 인구정보를 지도에 도식화했다.
 
-<img src="fig/geo-choropleth-ggmap.png" alt="2010년 인구 단계구분도" width="50%" />
+<img src="fig/geo-choropleth-ggmap.png" alt="2010년 인구 단계구분도" width="100%" />

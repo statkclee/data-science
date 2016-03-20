@@ -78,4 +78,4 @@ ggplot() +
 
 성남을 구성하는 중원구, 수정구, 분당구로 나눠진 것을 확인할 수 있고, 그 이전에 성남시만 별도로 발라냈다.
 
-<img src="fig/geo-shapefile-sn.png" alt="2010년 인구 단계구분도" width="100%" />
+<img src="fig/geo-shapefile-sn.png" alt="2010년 인구 단계구분도" width="50%" />
