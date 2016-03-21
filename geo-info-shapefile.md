@@ -20,7 +20,7 @@ Shapefile은 확장자로 `.shp`을 갖고, 벡터방식으로 공간정보를 �
 [^shape-polygon-dissolving]: [Dissolve polygons in R](https://philmikejones.wordpress.com/2015/09/01/clipping-polygons-in-r/)
 
 
-### shapefile?
+### 지도 일부분 뽑아내기
 
 [통계청](http://kostat.go.kr/) &rarr; [통계분류포털](http://kssc.kostat.go.kr) 사이트에서,  
 즉, `통계청` &rarr; `통계분류포털` &rarr; `특수/일반/국제/행정구역분류`를 쫓아가게 되면,
