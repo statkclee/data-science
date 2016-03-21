@@ -102,216 +102,9 @@ probation.office.html &lt;-<span class="st"> </span>
 <span class="kw">library</span>(htmlwidgets)
 <span class="kw">saveWidget</span>(<span class="dt">widget=</span>probation.office.html,<span class="dt">file=</span><span class="st">&quot;probation_office.html&quot;</span>)</code></pre></div>
 <h3 id="년-범죄-발생정보-시각화">2.2. 2014년 범죄 발생정보 시각화</h3>
-<p>참으로 다양하고 많은 범죄가 죄종별로 분류가 된다. 특히, 절도범죄, 폭력범죄, 교통범죄, 지능범죄가 전체발생 범죄의 70~80%를 점유한다.</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">순</th>
-<th align="left">죄종별(대)</th>
-<th align="left">죄종별(소)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1</td>
-<td align="left">강력범죄</td>
-<td align="left">살인기수</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">살인미수등</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">강도</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">강간・강제추행</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">강간</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">유사강간</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">강제추행</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">기타 강간·강제추행등</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">방화</td>
-</tr>
-<tr class="even">
-<td align="left">2</td>
-<td align="left">절도범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">3</td>
-<td align="left">폭력범죄</td>
-<td align="left">상해</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">폭행</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">체포・감금</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">협박</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">약취・유인</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">폭력행위</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">공갈</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">손괴</td>
-</tr>
-<tr class="odd">
-<td align="left">4</td>
-<td align="left">지능범죄</td>
-<td align="left">직무유기</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">직권남용</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">증수뢰</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">통화</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">문서・인장</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">유가증권인지</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">사기</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">횡령</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">배임</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="left">풍속범죄</td>
-<td align="left">성풍속범죄</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left"></td>
-<td align="left">도박</td>
-</tr>
-<tr class="even">
-<td align="left">7</td>
-<td align="left">특별경제범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">8</td>
-<td align="left">마약범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">9</td>
-<td align="left">보건범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">10</td>
-<td align="left">환경범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">11</td>
-<td align="left">교통범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">12</td>
-<td align="left">노동범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">13</td>
-<td align="left">안보범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">14</td>
-<td align="left">선거범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">15</td>
-<td align="left">병역범죄</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">16</td>
-<td align="left">기타범죄</td>
-<td align="left"></td>
-</tr>
-</tbody>
-</table>
+<p>KOSIS 국가통계포털에서 범죄발생데이터를 다운로드하여 <code>read_excel()</code> 함수로 불러 읽어온다. 죄종별로 데이터를 구분하고, 구글 지도 API 위경도 정보 매칭을 위해 키값으로 도시명을 사용한다. 불러온 데이터가 맞는지 검증차원에서 <code>1,778,966</code> 범죄발생건수가 2014년 동일한지 엑셀원본과 검증한다.</p>
 <p><a href="html/crime_korea_2014.html"><img src="fig/geo-crime-2014.png" width="30%" ></a></p>
 <p>자세한 도시별 2014년 범죄발생 내역을 확인하려면 상기 지도이미지를 클릭합니다.</p>
-<p>KOSIS 국가통계포털에서 범죄발생데이터를 다운로드하여 <code>read_excel()</code> 함수로 불러 읽어온다. 죄종별로 데이터를 구분하고, 구글 지도 API 위경도 정보 매칭을 위해 키값으로 도시명을 사용한다. 불러온 데이터가 맞는지 검증차원에서 <code>1,778,966</code> 범죄발생건수가 2014년 동일한지 엑셀원본과 검증한다.</p>
 <p><code>crime.2014.cl$city</code> 도시를 기준으로 위도경도정보를 구글 지도API <code>geocode</code>로 붙여넣는다.</p>
 <p><code>leaflet</code> 팩키지를 활용하여 범죄정보를 죄종별로 시각화한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##===========================================================
@@ -381,6 +174,189 @@ crime.korea<span class="fl">.2014</span> &lt;-<span class="st"> </span><span cla
 ##===========================================================
 <span class="kw">library</span>(htmlwidgets)
 <span class="kw">saveWidget</span>(<span class="dt">widget=</span>crime.korea<span class="fl">.2014</span> ,<span class="dt">file=</span><span class="st">&quot;crime_korea_2914.html&quot;</span>)</code></pre></div>
+<p>참으로 다양하고 많은 범죄가 죄종별로 분류가 된다. 특히, 절도범죄, 폭력범죄, 교통범죄, 지능범죄가 전체발생 범죄의 70~80%를 점유한다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">순</th>
+<th align="left">죄종별(대)</th>
+<th align="left">죄종별(소)</th>
+<th align="left">순</th>
+<th align="left">죄종별(대)</th>
+<th align="left">죄종별(소)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">강력범죄</td>
+<td align="left">살인기수</td>
+<td align="left">4</td>
+<td align="left">지능범죄</td>
+<td align="left">직무유기</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">살인미수등</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">직권남용</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">강도</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">증수뢰</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">강간・강제추행</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">통화</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">강간</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">문서・인장</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">유사강간</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">유가증권인지</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">강제추행</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">사기</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">기타 강간·강제추행등</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">횡령</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">방화</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">배임</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">절도범죄</td>
+<td align="left"></td>
+<td align="left">5</td>
+<td align="left">풍속범죄</td>
+<td align="left">성풍속범죄</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">폭력범죄</td>
+<td align="left">상해</td>
+<td align="left">6</td>
+<td align="left"></td>
+<td align="left">도박</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">폭행</td>
+<td align="left">7</td>
+<td align="left">특별경제범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">체포・감금</td>
+<td align="left">8</td>
+<td align="left">마약범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">협박</td>
+<td align="left">9</td>
+<td align="left">보건범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">약취・유인</td>
+<td align="left">10</td>
+<td align="left">환경범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">폭력행위</td>
+<td align="left">11</td>
+<td align="left">교통범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">공갈</td>
+<td align="left">12</td>
+<td align="left">노동범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">손괴</td>
+<td align="left">13</td>
+<td align="left">안보범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">14</td>
+<td align="left">선거범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">15</td>
+<td align="left">병역범죄</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">16</td>
+<td align="left">기타범죄</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
 <div class="footnotes">
 <hr />
 <ol>
