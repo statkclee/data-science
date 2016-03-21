@@ -29,8 +29,8 @@ mainfont: NanumGothic
 범죄데이터는 공공데이터 포털과 [국가통계포털(KOSIS)](http://kosis.kr/statHtml/statHtml.do?orgId=132&tblId=DT_13204_3105&vw_cd=MT_ZTITLE&list_id=132_13204_GKIT659_gik986_di654&seqNo=&lang_mode=ko&language=kor&obj_var_id=&itm_id=&conn_path=E1)에서
 이용가능한 최신 데이터를 활용한다.
 
-전국적으로 2014년 **1,778,966	**건 발생했다. 또한, 강력범죄, 절도범죄, 폭력범죄, 지능범죄 등 총 15개 범죄가 유형별로 있으며,
-각 범죄별로 내부를 뜯어보면 강력범죄의 경우, 살인기수, 강도, 강간, 유사강간, 강제추행, 방화 등으로 쪼개진다.
+전국적으로 2014년 **1,778,966	**건 발생했다. 또한,             , 절도범죄, 폭력범죄, 지능범죄 등 총 15개 범죄가 유형별로 있으며,
+각 범죄별로 내부를 뜯어보면             의 경우, 살인기수, 강도, 강간, 유사강간, 강제추행, 방화 등으로 쪼개진다.
 이 자체만으로도 대한민국 국민은 누구나 범죄에 노출되어 있음을 실감하게 된다. 
 
 > ### 보호관찰제도 [^moj] {.callout}
@@ -65,9 +65,7 @@ mainfont: NanumGothic
 표식도 추가하고, 표식이 너무 많은 경우 `clusterOptions = markerClusterOptions()` 을 추가한다.
 
 ~~~ {.r}
-
 library(readxl); library(ggmap); library(dplyr); library(leaflet)
-
 ##===========================================================
 ## 범죄데이터 가져오기 
 ##===========================================================
@@ -94,11 +92,139 @@ leaflet(data = probation.office) %>% addTiles() %>%
 ##===========================================================
 ## HTML 파일 내보내기
 ##===========================================================
-# 최종 (군집 표시)
 library(htmlwidgets)
 saveWidget(widget=probation.office.html,file="probation_office.html")
 ~~~
 
+
+### 2.2. 2014년 범죄 발생정보 시각화
+
+참으로 다양하고 많은 범죄가 죄종별로 분류가 된다. 특히, 절도범죄, 폭력범죄, 교통범죄, 지능범죄가 
+전체발생 범죄의 70~80%를 점유한다.
+
+|  순  | 죄종별(대)      | 죄종별(소)                    |
+|------|------------------|------------------------------|
+|   1   | 강력범죄        | 살인기수                     |
+|      |                      | 살인미수등                  |
+|      |                      | 강도                           |
+|      |                      | 강간・강제추행              |
+|      |                      | 강간                           |
+|      |                      | 유사강간                     |
+|      |                      | 강제추행                     |
+|      |                      | 기타 강간·강제추행등    |
+|      |                      | 방화                            |
+|   2   | 절도범죄         |                                   |
+|   3   | 폭력범죄         | 상해                            |
+|      |                      | 폭행                            |
+|      |                      | 체포・감금                    |
+|      |                      | 협박                            |
+|      |                      | 약취・유인                    |
+|      |                      | 폭력행위                     |
+|      |                      | 공갈                            |
+|      |                      | 손괴                            |
+|    4  | 지능범죄         | 직무유기                     |
+|      |                       | 직권남용                     |
+|      |                       | 증수뢰                         |
+|      |                       | 통화                            |
+|      |                       | 문서・인장                    |
+|      |                       | 유가증권인지               |
+|      |                       | 사기                            |
+|      |                       | 횡령                            |
+|      |                       | 배임                            |
+|    5  | 풍속범죄         | 성풍속범죄                  |
+|   6   |                       | 도박                            |
+|    7  | 특별경제범죄   |                                   |
+|    8  | 마약범죄         |                                   |
+|   9   | 보건범죄         |                                   |
+|   10   | 환경범죄         |                                   |
+|   11   | 교통범죄         |                                   |
+|  12    | 노동범죄         |                                   |
+|   13   | 안보범죄         |                                   |
+|   14   | 선거범죄         |                                   |
+|    15  | 병역범죄         |                                   |
+|   16   | 기타범죄         |                                   |
+
+[<img src="fig/geo-crime-2014.png" width="30%" >](html/crime_korea_2014.html)
+
+자세한 도시별 2014년 범죄발생 내역을 확인하려면 상기 지도이미지를 클릭합니다. 
+
+KOSIS 국가통계포털에서 범죄발생데이터를 다운로드하여 `read_excel()` 함수로 불러 읽어온다.
+죄종별로 데이터를 구분하고, 구글 지도 API 위경도 정보 매칭을 위해 키값으로 도시명을 사용한다.
+불러온 데이터가 맞는지 검증차원에서 `1,778,966` 범죄발생건수가 2014년 동일한지 엑셀원본과 검증한다.
+
+`crime.2014.cl$city` 도시를 기준으로 위도경도정보를 구글 지도API `geocode`로 붙여넣는다.
+
+ `leaflet` 팩키지를 활용하여 범죄정보를 죄종별로 시각화한다.
+
+~~~ {.r}
+##===========================================================
+## 지역별 범죄 데이터 적개
+##===========================================================
+# KOSIS: http://kosis.kr/statHtml/statHtml.do?orgId=132&tblId=DT_13204_3105&vw_cd=MT_ZTITLE&list_id=132_13204_GKIT659_gik986_di654&seqNo=&lang_mode=ko&language=kor&obj_var_id=&itm_id=&conn_path=E1
+crime.rd <- read_excel("crime/data/crime-2011-2014.xlsx", sheet = "Sheet1", skip=1,
+                       col_types = c("text","text",rep("numeric",44)))
+
+names(crime.rd) <- paste0("v",seq(from=1,to=46,by=1))
+crime.rd[is.na(crime.rd)] <- 0
+crime.2014.cl <- crime.rd %>% 
+  rename(year=v1,city=v2,cat01=v4, cat02=v14, cat03=v15, cat04=v24, 
+         cat05=v34, cat06=v37, cat07=v38, cat08=v39, cat09=v40,
+         cat10=v41, cat11=v42, cat12=v43, cat13=v44, cat14=v45,cat15=v46) %>% 
+  select(year, city, starts_with("cat")) %>% 
+  filter(year=="2014" & !(city %in% c("계")) ) %>% 
+  mutate(city = paste0(city,"시")) %>% 
+  mutate(cat_tlt = cat01+cat02+cat03+cat04+cat05+cat06+cat07+cat08+cat09+cat10+cat11+cat12+cat13+cat14+cat15)
+crime.2014.cl$cat_tlt %>% sum # 1778966
+
+##===========================================================
+## 위도경도 정보
+##===========================================================
+# 구글 지도 API 위경도 정보 결합
+crime.lonlat <- geocode(crime.2014.cl$city)
+crime.2014.lonlat <- bind_cols(crime.2014.cl, crime.lonlat)
+# NA 값은 제외시킨다. -----> leaflet에서 오동작 방지
+crime.2014.lonlat <- crime.2014.lonlat %>% 
+  mutate(lat = ifelse(city %in% c("기타도시시"), NA, lat)) %>% 
+  mutate(lon = ifelse(city %in% c("기타도시시"), NA, lon)) %>% 
+  filter(!is.na(lat) | !is.na(lon))
+
+##===========================================================
+## 지리정보 시각화
+##===========================================================
+# 범죄정보 시각화
+
+crime.korea.2014 <- leaflet(data = crime.2014.lonlat) %>% 
+  # 기본 그룹
+  addProviderTiles("CartoDB.Positron", group ="지도") %>%
+  addProviderTiles("Stamen.Toner", group = "흑백") %>%
+  addProviderTiles("OpenTopoMap", group = "위성") %>%
+  # 시각화 범죄그룹  
+  addCircles(~lon, ~lat, radius = ~cat_tlt/5, popup=~city, stroke = TRUE, group = "전체범죄") %>% 
+  hideGroup("전체범죄") %>% 
+  addCircles(lng = ~lon, lat=~lat, radius = ~cat01/2, popup=~city, stroke = TRUE, group = "강력범죄", color="red")  %>%  
+  #hideGroup("강력범죄") %>% 
+  addCircles(lng = ~lon, lat=~lat, radius = ~cat02/2, popup=~city, stroke = FALSE, group = "절도범죄",  color="grey")  %>%  
+  hideGroup("절도범죄") %>% 
+  addCircles(lng = ~lon, lat=~lat, radius = ~cat03/2, popup=~city, stroke = FALSE, group = "폭력범죄",  color="purple")  %>%  
+  hideGroup("폭력범죄") %>% 
+  addCircles(lng = ~lon, lat=~lat, radius = ~cat04/2, popup=~city, stroke = FALSE, group = "지능범죄",  color="violet")  %>%  
+  hideGroup("지능범죄") %>% 
+  addCircles(lng = ~lon, lat=~lat, radius = ~cat10/2, popup=~city, stroke = FALSE, group = "교통범죄",  color="brown")  %>%  
+  hideGroup("교통범죄") %>% 
+  # Layers control
+  addLayersControl(
+    baseGroups = c("지도","흑백", "위성"),
+    overlayGroups = c("전체범죄", "강력범죄","절도범죄","폭력범죄","지능범죄","교통범죄"),
+    position = "bottomleft",
+    options = layersControlOptions(collapsed = FALSE)
+  ) 
+
+##===========================================================
+## HTML 파일 내보내기
+##===========================================================
+library(htmlwidgets)
+saveWidget(widget=crime.korea.2014 ,file="crime_korea_2914.html")
+~~~
 
 
 
