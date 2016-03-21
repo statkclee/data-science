@@ -61,7 +61,7 @@ title: 데이터 과학
     - [우편번호 지리정보 시각화](geo-info-postcode.html)
     - [단계구분도(choropleth) 지리정보 시각화](geo-info-choropleth.html)
     - [.shp 지도 일부 추출](geo-info-shapefile.html)
-    - [tmap 주제도](geo-info-tmap.html)     
+    - [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
 1. [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
     - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
