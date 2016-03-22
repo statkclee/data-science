@@ -85,7 +85,7 @@
 <li>근본적인 원인중의 하나는 대부분의 R 팩키지가 유니코드 utf-8으로 개발되기 때문에 팩키지에 인코딩을 맞춰 넣으려면 CP949, EUC-KR와 인코딩을 맞추는 것은 개발자에게 있어 상당한 낭비다. 또한, 웹환경에 배포를 하고 협업하는 국내외 환경을 생각하면 utf-8을 사용하는 것이 장기적으로 시간을 크게 절약하는 현명한 접근법으로 보여진다.</li>
 </ul>
 </blockquote>
-<p><img src="fig/virtualbox-vagrant-rstudio-toolchain.png" alt="RStudio 개발 환경 설정" width="50%" /></p>
+<p><img src="fig/virtualbox-RStudio_encoding.png" alt="RStudio 개발 환경 설정" width="50%" /></p>
 <h3 id="윈도우-환경-r-개발환경-설정">1. 윈도우 환경 R 개발환경 설정</h3>
 <p>윈도우 환경 가상상자와 부랑자에 대한 설치는 <a href="http://raspberry-pi.xwmooc.org/raspberry-pi-virtual-window.html">윈도 가상 개발환경 구축</a>을 참조한다.</p>
 <p>R과 RStudio를 설치할 경우 포트번호를 8787 포트포워딩해서 가상컴퓨터와 호스트컴퓨터 응용프로그램간 통신을 할 수 있게 조정을 해야 한다. 더불어, <code>config.vm.synced_folder</code> 설정으로 호스트 윈도우 환경과 리눅스 환경 사이 폴더를 동기화하여 <code>scp</code>, <code>sftp</code>같은 번거로운 복사 작업을 최소화한다. devtools, Rcpp등 일부 덩치가 크고 중요한 팩키지의 경우 메모리를 1024 즉, 1GByte로 설정한 경우 오류를 내는 경우가 있어 최소 2GB이상 설정한다.</p>

@@ -39,7 +39,7 @@ R과 RStudio를 설치하여 데이터과학을 위한 개발환경을 구축하
 > * 처음 R과 RStudio를 유닉스에 설치하는 것이 망설여지고, 몇일 고생할 수도 있지만, 장기적으로 보면 올바른 선택이라고 보여진다.
 > * 근본적인 원인중의 하나는 대부분의 R 팩키지가 유니코드 utf-8으로 개발되기 때문에 팩키지에 인코딩을 맞춰 넣으려면 CP949, EUC-KR와 인코딩을 맞추는 것은 개발자에게 있어 상당한 낭비다. 또한, 웹환경에 배포를 하고 협업하는 국내외 환경을 생각하면 utf-8을 사용하는 것이 장기적으로 시간을 크게 절약하는 현명한 접근법으로 보여진다. 
 
-<img src="fig/virtualbox-vagrant-rstudio-toolchain.png" alt="RStudio 개발 환경 설정" width="50%" />
+<img src="fig/virtualbox-RStudio_encoding.png" alt="RStudio 개발 환경 설정" width="50%" />
 
 ### 1. 윈도우 환경 R 개발환경 설정
 
