@@ -1,18 +1,150 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: RStudio IDE와 Shiny 서버 설치
+subtitle: 한글처리 RStudio 개발환경
 ---
-> ## 학습 목표 {.objectives}
+
+> ### 학습 목표 {.objectives}
 >
-> *   SoftLayer API를 사용해서 가상 컴퓨터를 주문한다.
-> *   Shiny 앱 개발을 위한 RStudio를 설치한다.
-> *   데이터 과학 응용프로그램 운영 Shiny 서버를 설치한다.
+> *  한글처리 RStudio 개발환경을 구축한다.
+> *  고성능 개인용컴퓨터 혹은 클라우드 환경에 개발환경을 설정한다.
+> *  윈도우 환경에 가상상자(Virtualbox)와 부랑자(Vagrant) + RStudio 서버를 설치한다.
+> *  리눅스와 맥환경에는 RStudio IDE를 설치한다.
+> *  클라우드 환경에 가상 컴퓨터를 주문하여 RStudio IDE를 바로 설치한다.
+> *  소프트레이어 API를 사용해서 가상 컴퓨터를 코드로 주문한다.
+> *  Shiny 앱 개발을 위한 RStudio를 설치한다.
+> *  데이터 과학 응용프로그램 운영 Shiny 서버를 설치한다.
 
+<img src="fig/virtualbox-vagrant-rstudio-toolchain.png" alt="RStudio 개발 환경 설정" width="50%" />
 
-### 1. 클라우드 API 맛보기
+R과 RStudio를 설치하여 데이터과학을 위한 개발환경을 구축하는 방법이 크게 세가지로 정리된다. 각 방법에 대한 장단점이 존재하는 만큼 충분히 숙지한 후에 최적의 방안을 찾아도 되지만, [라즈베리파이](http://raspbery-pi.xwmooc.org) 등 저렴한 하지만 강력한 하드웨어와 더불어 오픈 소프트웨어가 많은 만큼 날 잡고서 몇일 나름의 최적 R설치방안을 찾아보기 바란다. 특히, 데이터과학을 인생에 중요한 전환점이라고 생각한다면 꼭 한번 도전해볼 가치가 있다고 생각된다.
 
-SoftLayer API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오는 프로그램을 작성해보자.
+1. 한국인 90% 이상이 아마도 이 범주에 해당된다고 보인다. 윈도우를 깔고 있는 상태에서 [가상상자(virtualbox)](https://www.virtualbox.org/)와 [부랑자(Vagrant)](https://www.vagrantup.com/)를 설치하고 그 위에 R 즉 **r-base** 와 더불어 RStudio 서버를 설치한다. 그리고 나서 `http://localhost:8787/` 8787포트를 통해서 웹브라우져를 통해 개발을 한다.
+    * 가상상자와 더불어 부랑자라는 도구를 새로 배워야하고 Type II 가상화 개념도 이해하고 있어야 한다.
+    * 컴퓨터와 컴퓨터간 통신 프로토콜을 이해해야 하고, 컴퓨터간 응용프로그램 통신을 위한 포트 개념도 알고 있어야 한다.
+    * 개인용 컴퓨터에 가상컴퓨터를 띄워 R과 RStudio를 웹브라우져를 통해 돌리는만큼 현저한 속도저하를 경험할 수도 있다.
+1. 개인용 컴퓨터에 운영체제로 리눅스를 설치한다. 혹은 맥을 구입한 후에 R 즉 **r-base** 와 더불어 RStudio 서버를 설치한다.
+    * 리눅스의 경우 대한민국 정부에서 서비스하는 대부분의 전자정부서비스를 비롯한 금융서비스 등 불편한점을 많이 경험할 수 있다.
+    * 이런 경우 가상상자와 부랑자를 사용해 윈도우를 설치하고 은행업무나 마이크로소프트 서비스가 필요한 경우 그때 그때 가상컴퓨터를 띄워 사용한다.
+1. 클라우드 서비스 제공자(아마존웹서비스, IBM 소프트레이어, 구글웹엔진, 마이크로소프트 애져등)에서 가상 유닉스계열 컴퓨터를 생성하고 난 후 R 즉 **r-base** 와 더불어 RStudio 서버를 설치한다.
+    * 종량제 개념으로 컴퓨터를 사용한만큼 과금을 하는 방식이라 비용이 발생할 수 있다.
+    * 유닉스 계열 가상컴퓨터를 원하는 사양에 맞춰 갖을 수 있다.
+
+> ### 한글처리 문제로 기승전 유닉스로 가다!!! {.challenges}
+>
+> * 결국, 윈도우를 버리고 R과 RStudio를 유닉스 컴퓨터에 설치하는 결론에 도달했다.
+> * 시작은 윈도우에서 한글처리를 R과 RStudio에서 처리하는 소박한 소망에서 시작했다.
+> * 한글 인코딩이 발목을 잡고, 이에 대한 근본적인 처리는 결국 Type I, Type II 가상화를 통해 유닉스를 설치하고 그 
+>   위에 R과 RStudio를 설치하는 것이다.
+> * 처음 R과 RStudio를 유닉스에 설치하는 것이 망설여지고, 몇일 고생할 수도 있지만, 장기적으로 보면 올바른 선택이라고 보여진다.
+> * 근본적인 원인중의 하나는 대부분의 R 팩키지가 유니코드 utf-8으로 개발되기 때문에 팩키지에 인코딩을 맞춰 넣으려면 CP949, EUC-KR와 인코딩을 맞추는 것은 개발자에게 있어 상당한 낭비다. 또한, 웹환경에 배포를 하고 협업하는 국내외 환경을 생각하면 utf-8을 사용하는 것이 장기적으로 시간을 크게 절약하는 현명한 접근법으로 보여진다. 
+
+<img src="fig/virtualbox-vagrant-rstudio-toolchain.png" alt="RStudio 개발 환경 설정" width="50%" />
+
+### 1. 윈도우 환경 R 개발환경 설정
+
+윈도우 환경 가상상자와 부랑자에 대한 설치는 [윈도 가상 개발환경 구축](http://raspberry-pi.xwmooc.org/raspberry-pi-virtual-window.html)을 참조한다.
+
+R과 RStudio를 설치할 경우 포트번호를 8787 포트포워딩해서 가상컴퓨터와 호스트컴퓨터 응용프로그램간 통신을 할 수 있게 조정을 해야 한다. 더불어, `config.vm.synced_folder` 설정으로 호스트 윈도우 환경과 리눅스 환경 사이 폴더를 동기화하여 `scp`, `sftp`같은 번거로운 복사 작업을 최소화한다.
+devtools, Rcpp등 일부 덩치가 크고 중요한 팩키지의 경우 메모리를 1024 즉, 1GByte로 설정한 경우 오류를 내는 경우가 있어 최소 2GB이상 설정한다.
+
+~~~ {.input}
+Vagrant.configure(2) do |config|
+# 우분투 리눅스를 설치한다.
+  config.vm.box = "ubuntu/trusty64"
+# RStudio 서버를 설치한 후 포트번호 8787을 설정해야 향후 localhost:8787 로 접속하여 RStudio를 사용한다.
+  config.vm.network "forwarded_port", guest: 8787, host: 8787
+# 호스트 윈도우 파일시스템과 가상컴퓨터 우분트 파일시스템을 동기화시켜 scp, sftp 등을 사용할 필요를 없앤다.
+  config.vm.synced_folder  "C:/Users/KwangChun/docs/rstudio", "/home/vagrant"
+
+  config.vm.provider "virtualbox" do |vb|
+# devtools, Rcpp등 일부 덩치가 크고 중요한 팩키지의 경우 메모리가 적어 오류를 내는 경우가 있어 최소 2GB이상 설정한다.
+     vb.memory = "2048"
+  end
+end
+~~~
+
+`vagrant up` 명령어를 입력하면 RStudio 서버가 구동하게 되고 `vagrant ssh` 명령어를 입력하고 들어가서 R과 RStudio 서버를 설치한다.
+
+최신버젼 R을 설치하는 경우 다음 명령어를 터미널에서 입력한다. [^latest-r-install]
+
+[^latest-r-install]: [How to install latest version of R on Ubuntu 12.04 LTS? [duplicate]](http://askubuntu.com/questions/614530/how-to-install-latest-version-of-r-on-ubuntu-12-04-lts)
+
+~~~ {.shell}
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ codename=$(lsb_release -c -s)
+$ echo "deb http://cran.fhcrc.org/bin/linux/ubuntu $codename/" | sudo tee -a /etc/apt/sources.list /dev/null
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+$ sudo add-apt-repository ppa:marutter/rdev
+$ sudo apt-get install r-base r-base-dev
+~~~
+
+최신버젼 R을 설치한 경우 RStudio **서버** 를 [다운로드](https://www.rstudio.com/products/rstudio/download-server/)받아 설치한다. 
+
+~~~ {.shell}
+$ sudo apt-get install gdebi-core
+$ wget https://download2.rstudio.org/rstudio-server-0.99.893-amd64.deb
+$ sudo gdebi rstudio-server-0.99.893-amd64.deb
+~~~
+
+`wget`이 막힌 경우 `curl -O https://download2.rstudio.org/rstudio-server-0.99.893-amd64.deb` 명령어를 사용한다.
+
+~~~ {.output}
+KwangChun@paris MINGW64 ~/docs/rstudio
+$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Checking if box 'ubuntu/trusty64' is up to date...
+==> default: `vagrant box update` to update.
+==> default: Preparing network interfaces based on configuration...
+    default: Adapter 1: nat
+==> default: Forwarding ports...
+    default: 8787 (guest) => 8787 (host) (adapter 1)
+    default: 22 (guest) => 2222 (host) (adapter 1)
+==> default: Running 'pre-boot' VM customizations...
+==> default: Booting VM...
+==> default: Waiting for machine to boot. This may take a few minutes...
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: vagrant
+    default: SSH auth method: private key
+    default: Warning: Remote connection disconnect. Retrying...
+==> default: Machine booted and ready!
+==> default: Checking for guest additions in VM...
+    default: Guest Additions Version: 4.3.34
+    default: VirtualBox Version: 5.0
+==> default: Mounting shared folders...
+    default: /vagrant => C:/Users/KwangChun/docs/rstudio
+    default: /home/vagrant => C:/Users/KwangChun/docs/rstudio
+==> default: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> default: flag to force provisioning. Provisioners marked to run always will still run.
+~~~
+
+`vagrant up` 명령어를 실행하면 먼저 설정된 `Vagrantfile`을 읽어 이를 차례로 실행한다. 웹브라우져를 열고 `localhost:8787`을 입력하면 로그인 창이 뜬다. RStudio 서버의 경우 보안상의 이유로 `root`로 로그인이 금지되어 있고, `/home` 디렉토리에 
+사용자를 생성하고 그 사용자를 사용하여야만 되지만, `vagrant` 사용자가 이미 설정되어 있기 때문에 동일한 비밀번호를 입력하고 들어가면 RStudio를 바로 사용할 수 있게 된다.
+
+<img src="fig/virtualbox-rstudio-server-vagrant-login.png" alt="RStudio 개발 환경 설정" width="50%" />
+
+R 팩키지를 설치할 때 `XML` 관련 오류가 생겨나는 경우 터미널에서 해당 프로그램을 설치한다. `vagrant ssh` 명령어를 통해서 윈도우 쉘에서 바로 작업이 가능한다. 지도 관련 오류가 나는 경우 `libgdal-dev` 팩키지를 추가로 설치한다.
+
+~~~ {.shell}
+# XML누락 관련
+$ sudo apt-get -y build-dep libcurl4-gnutls-dev
+$ sudo apt-get -y install libcurl4-gnutls-dev
+# 지도 관련 팩키지 설치 시 오류가 나는 경우
+$ sudo apt-get install libgdal-dev
+$ sudo apt-get install libgdal1-dev libproj-dev
+~~~
+
+### 2. 리눅스나 맥에서 R 개발환경 설정
+
+리눅스나 맥에서 R 개발환경을 설정하는 것은 매우 직관적이다.
+RStudio IDE를 다운로드 받아 GUI를 사용할 경우 *다음* 버튼을 여러번 누르면 바로 개발환경 설정이 된다.
+명령라인 인터페이스를 사용하는 경우 다음 클라우드 환경에서 R개발환경 설정을 참고하기 바란다.
+
+### 3. 클라우드 환경 R 개발환경 설정
+
+[소프트레이어(SoftLayer)](http://www.softlayer.com/m-ko/) 웹인터페이스를 사용하는 것도 가능하지만 API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오고 가장컴퓨터 주문도 가능하다.
+
 먼저, 소프트레이어 계정정보에 악의적인 사용을 막기위해서 계정정보 `API Access Information` 아래 `Allowed IPs`를 `ifconfig` 명령을 통해서 등록한다. 다음 소프트레이어 API 문서를 참고해서 다음과 같이 파이썬 코드를 작성하고 실행한다.
 
 ~~~ {.python}
@@ -38,7 +170,7 @@ Account city info :  Seoul
 > 요즘은 홈페이지 구축이나 추가개편 시 따로 추가로 개발하지 않고도로 이런 오픈 api를 가져와 사용하는 추세이다.
 > 출처: [위키피디아 API](http://ko.wikipedia.org/wiki/API) 
 
-### 2. 데이터 과학 응용프로그램 개발 가상 컴퓨터 주문
+#### 3.1. 데이터 과학 응용프로그램 개발 가상 컴퓨터 주문
 
 데이터 과학 응용프로그램 개발을 위한 가상 컴퓨터를 파이썬 프로그램을 작성해서 주문한다. 컴퓨터 호스트 이름은 `shiny-sl`이고 프로세서는 1개, 주기억장치는 1GB, 보조기억장치는 25GB를 달러스 데이터센터에 우분투 최신 버젼 OS를 가지고 비용절감을 위해서 공용으로 주문한다.
 
@@ -96,7 +228,7 @@ id  :  xxxxxxxxx
 fullyQualifiedDomainName  :  shiny-sl.xwmooc.net
 ~~~
 
-#### 2.1. 주문한 가상 컴퓨터 생성 확인
+##### 3.1.1. 주문한 가상 컴퓨터 생성 확인
 
 `slcli vs list` 명령어를 통해서 새로운 가상 컴퓨터 `shiny-sl`이 생성된 것을 확인할 수 있다.
 
@@ -109,7 +241,7 @@ root@shiny:~# slcli vs list
 :.........:..........:.................:................:............:........:
 ~~~
 
-#### 2.2.주문한 가상 컴퓨터 삭제
+##### 3.1.2. 주문한 가상 컴퓨터 삭제
 
 파이썬 프로그램으로 가상컴퓨터를 간단히 삭제할 수 있다.
 삭제하는 방법은 `id`를 `cancel_instance()` 메쏘드에 인자로 넣어주면 끝이다.
@@ -176,9 +308,9 @@ hon -m json.tool
 <img src="fig/toolchain-shiny-install-overview.png" alt="클라우드 가상 컴퓨터 위에 Shiny 웹서버와 RStudio IDE 설치" width="50%" />
 
 
-### 3. Shiny 서버 설치
+#### 3.2. Shiny 서버 설치
 
-#### 3.1. 가상 컴퓨터 사양 확인 
+##### 3.2.1. 가상 컴퓨터 사양 확인 
 
 `Shiny R`을 설치하기에 앞서 클라우드 데이터 과학 분석을 위한 가상 컴퓨터를 살펴보자.
 데이터 과학용 클라우드 가상 컴퓨터가 준비되었으면 `ssh root@169.53.232.11`를 이용해서 `lshw` 명령어를 통해서 하드웨어 기본 사양을 확인한다.
@@ -238,7 +370,7 @@ Release:        14.04
 Codename:       trusty
 ~~~
 
-#### 3.2. `Shiny` 서버 설치 
+##### 3.2.2. `Shiny` 서버 설치 
 
 기본적으로 `R` 라이선스가 `GPL`을 따르기 때문에 `Shiny` 서버도 동일한 라이선스를 따르니 리눅스를 이용하는 기분으로 소프트웨어를 사용한다.
 이제 Shiny 서버를 클라우드에 구축하기 위해서 Shiny 서버를 다운로드하여 설치한다.
@@ -284,7 +416,7 @@ start: Job is already running: shiny-server
 With Shiny and `rmarkdown` installed, you should see a Shiny doc above.
 ~~~
 
-#### 3.3. `shinyapp.io` 공용 Shiny 서버 설정
+##### 3.2.3. `shinyapp.io` 공용 Shiny 서버 설정
 
 `Tools` --> `ShinyApps` --> `Manage Accounts...`를 통해 RStudio에서 바로 [https://www.shinyapps.io/](https://www.shinyapps.io/) 공용 Shiny 서버로 응용프로그램을 배포할 수 있다. 먼저 [https://www.shinyapps.io/](https://www.shinyapps.io/) 웹사이트에 접속해서 계정을 생성한다. 
 
@@ -304,7 +436,7 @@ shinyapps::setAccountInfo(name='xwmooc',
 
 <img src="fig/toolchain-shiny-shinyapp-io-connect-menu.png" alt="RStudio IDE에서 shinyapp.io에 개발한 응용프로그램을 바로 배포(Publish App...)" width="30%" />
 
-### 4. `RStudio` 서버 설치
+#### 3.3. `RStudio` 서버 설치
 
 `Shiny 서버`를 설치한 다음에 `RStudio` 개발환경을 설치한다.
 `gdebi`는 `Shiny 서버` 소프트웨어를 설치할 때 설치했기 때문에 바로 최신 버전을 `wget`을 통해 다운로드하고 나서 설치한다.
@@ -331,7 +463,7 @@ Saving to: 'rstudio-server-0.98.1103-amd64.deb'
 root@shiny-sl:~# sudo gdebi rstudio-server-0.98.1103-amd64.deb
 ~~~
 
-### 4.1 `RStudio` IDE 접속
+#### 3.3.1 `RStudio` IDE 접속
 
 이제 웹브라우져를 열고 **포트번호(port, 8787)**를 뒤에 `:8787`을 붙여 `http://169.53.232.11:8787/`와 같이 입력하면 
 `Sign in to RStudio` 화면에 사용자명(`username:`)과 비밀번호(`Password:`)를 넣고 `Sign In`하라고 한다.

@@ -63,7 +63,7 @@ title: 데이터 과학
     - [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
     - [.shp 지도 일부 추출](geo-info-shapefile.html)
 1. [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
-    - [RStudio IDE와 Shiny 서버 설치](toolchain-shiny-rstudio.html)
+    - [한글처리 RStudio 개발환경](toolchain-shiny-rstudio.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
         - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
         - [데이터 과학 도커 - R](toolchain-docker-r.html)  
