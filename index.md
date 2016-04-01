@@ -13,6 +13,7 @@ title: 데이터 과학
 
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
+    - [웹스크래핑(Web Scraping)](data-scraping.html)
 1. [데이터 정제](data-handling.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
@@ -70,7 +71,8 @@ title: 데이터 과학
         - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
-1. [SNS](sns-intro.html)
+1. [정치데이터](politics-intro.html)
+    - [SNS](sns-intro.html)
 1. [R 라이브러리](data-science-library.html) 
 
 

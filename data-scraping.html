@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-16', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">웹스크래핑(Web Scraping)</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>웹 페이지에서 데이터를 추출한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="위키사전-데이터-추출-wiki-scraping">위키사전 데이터 추출 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p>마음에 드는 웹페이지에서 데이터를 발견했을 때, 데이터를 복사하여 붙여넣기 신공을 하지 않고, 데이터를 깔끔하게 뽑아내는 방법을 살펴본다. 먼저, 마음에 드는 웹페이지를 방문하고 나서, 웹브라우져(크롬 기준)에서 마우스 우클릭으로 <strong>검사</strong> 를 클릭한다. 그리고 나서 해당 데이터가 보관되어 있는 위치로 이동한다. (여기서는 20대 총선 정당별 지지율 추이표) 해당하는 곳에 마우스를 올리거나, <code>검사창</code> 에서 해당 <code>&lt;table&gt;</code> 태그를 찾아 마우스 우클릭하고 <strong>Copy</strong> 메뉴의 <strong>Copy XPath</strong> 를 클릭해서 <code>XPath</code>를 복사하고 나서 다음 R 스크립트에 복사해서 붙여넣는다.</p>
+<p>제 20 대 총선 위키페이지 url은 다음과 같다.</p>
+<ul>
+<li>url : <a href="https://ko.wikipedia.org/wiki/대한민국_20대_국회의원_선거" class="uri">https://ko.wikipedia.org/wiki/대한민국_20대_국회의원_선거</a></li>
+<li>XPath: //*<span class="citation">[@id=&quot;mw-content-text&quot;]</span>/table[8]</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rvest)
+<span class="kw">library</span>(dplyr)
+url &lt;-<span class="st"> &quot;https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EC%A0%9C20%EB%8C%80_%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9B%90_%EC%84%A0%EA%B1%B0&quot;</span>
+url</code></pre></div>
+<pre class="output"><code>FALSE [1] &quot;https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EC%A0%9C20%EB%8C%80_%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9B%90_%EC%84%A0%EA%B1%B0&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">survey &lt;-<span class="st"> </span>url %&gt;%
+<span class="st">  </span><span class="kw">html</span>() %&gt;%
+<span class="st">  </span><span class="kw">html_nodes</span>(<span class="dt">xpath=</span><span class="st">&#39;//*[@id=&quot;mw-content-text&quot;]/table[8]&#39;</span>) %&gt;%
+<span class="st">  </span><span class="kw">html_table</span>()</code></pre></div>
+<pre class="output"><code>FALSE Error in open.connection(x, &quot;rb&quot;): Timeout was reached
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">survey &lt;-<span class="st"> </span>survey[[<span class="dv">1</span>]]</code></pre></div>
+<pre class="output"><code>FALSE Error in eval(expr, envir, enclos): 객체 &#39;survey&#39;를 찾을 수 없습니다
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(survey)</code></pre></div>
+<pre class="output"><code>FALSE Error in head(survey): 객체 &#39;survey&#39;를 찾을 수 없습니다
+</code></pre>
+<h3 id="스크래핑한-데이터-정제">스크래핑한 데이터 정제</h3>
+<h3 id="선거-지지도-데이터-통계-분석">선거 지지도 데이터 통계 분석</h3>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://www.r-bloggers.com/using-rvest-to-scrape-an-html-table/">Using rvest to Scrape an HTML Table</a><a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
