@@ -1,14 +1,4 @@
----
-layout: page
-title: 데이터 과학
-subtitle: 웹스크래핑(Web Scraping)
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
  
 
 
@@ -28,21 +18,21 @@ mainfont: NanumGothic
 
 제 20 대 총선 위키페이지 url은 다음과 같다.
 
-- url : [https://ko.wikipedia.org/wiki/대한민국_20대_국회의원_선거](https://ko.wikipedia.org/wiki/대한민국_20대_국회의원_선거)
+- url : [https://ko.wikipedia.org/wiki/대한민국_제20대_국회의원_선거](https://ko.wikipedia.org/wiki/대한민국_제20대_국회의원_선거)
 - XPath: //*[@id="mw-content-text"]/table[8]
 
 
 ~~~{.r}
 library(rvest)
 library(dplyr)
-url <- "https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EC%A0%9C20%EB%8C%80_%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9B%90_%EC%84%A0%EA%B1%B0"
+url <- "https://ko.wikipedia.org/wiki/대한민국_제20대_국회의원_선거"
 url
 ~~~
 
 
 
 ~~~{.output}
-FALSE [1] "https://ko.wikipedia.org/wiki/%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD_%EC%A0%9C20%EB%8C%80_%EA%B5%AD%ED%9A%8C%EC%9D%98%EC%9B%90_%EC%84%A0%EA%B1%B0"
+FALSE [1] "https://ko.wikipedia.org/wiki/대한민국_제20대_국회의원_선거"
 
 ~~~
 
@@ -58,7 +48,7 @@ survey <- url %>%
 
 
 ~~~{.output}
-FALSE Error in open.connection(x, "rb"): Timeout was reached
+FALSE Error: Table has inconsistent number of columns. Do you want fill = TRUE?
 
 ~~~
 
