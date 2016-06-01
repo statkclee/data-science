@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-16', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://xwmooc.net" title="xwMOOC">
+          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">R 빅데이터</h2>
+<h3 id="r-빅데이터-r-big-data-r-pipeline">R 빅데이터 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">구분</th>
+<th align="left">데이터 크기</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">매우 큰 데이터</td>
+<td align="left">컴퓨터 한대 메모리에 저장될 수 없는 크기 : <strong>&gt;5 TB</strong></td>
+</tr>
+<tr class="even">
+<td align="left">중간 데이터</td>
+<td align="left">서버 컴퓨터 메모리에 저장할 수 있는 크기 : <strong>10 GB – 5 TB</strong></td>
+</tr>
+<tr class="odd">
+<td align="left">작은 데이터</td>
+<td align="left">노트북 컴퓨터 메모리에 저장할 수 있는 크기 : **&lt;10 GB |</td>
+</tr>
+</tbody>
+</table>
+<p>전통적으로 R은 작은 데이터를 빠르게 탐색하는데 최적의 환경을 제공한다. 중간크기 데이터를 작업하지 못할 기술적인 이유는 없지만, 거의 작업이 이뤄지지 않고 있다.</p>
+<h3 id="빅데이터를-r에서-처리하는-전략">빅데이터를 R에서 처리하는 전략</h3>
+<ol style="list-style-type: decimal">
+<li>요약/표본추출/부분집합 추출 (90%)
+<ul>
+<li>빅데이터를 작은 데이터로 줄이지만, 그자체도 클 수 있다.</li>
+</ul></li>
+<li>작은 데이터 문제로 쪼개서 분할 정복 (9%)
+<ul>
+<li>데이터 일부에 대해 모형을 적용하고, 각 데이터별로 개발된 모형을 종합한다.</li>
+</ul></li>
+<li>더이상 어찌할 수 없는 큰 문제 데이터 (1%)
+<ul>
+<li>어쩔 수 없이 모든 데이터를 한번에 올려 모형을 개발한다.</li>
+</ul></li>
+</ol>
+<h3 id="데이터-웨어하우스에-저장된-빅데이터">데이터 웨어하우스에 저장된 빅데이터</h3>
+<p>데이터 웨어하우스에 저장된 데이터를 R로 작업하는 전략은 크게 다음과 같이 두가지로 나눌 수 있다.</p>
+<ol style="list-style-type: decimal">
+<li>데이터 웨어하우스에서 데이터 일부를 뽑아 R에서 분석 및 모형을 개발한다.</li>
+<li><code>dplyr</code>, <code>DBI</code>, <code>RHadoop</code>, <code>SparkR</code>, <code>RODBC</code>등 팩키지를 중간에 놓고 데이터 웨어하우스와 R사이 분석 및 모형개발작업을 수행한다.</li>
+</ol>
+<p>1987년부터 2008년 사이 민간항공사의 도착과 출발 정보로 1.2억건으로 압축 1.6GB, 압축풀면 12GB 크기가 된다. <a href="http://stat-computing.org/dataexpo/2009/">Data Expo - Airline on-time performance</a></p>
+<p>민간항공사 도착과 출발정보를 데이터 웨어하우스에 저장하고 R로 분석하는 전략이 다음과 같이 될 수 있다. 클라우드에 데이터 웨어하우스를 구축한 경우 아마존 Redshift에 넣고 작업을 수행한다.</p>
+<ol style="list-style-type: decimal">
+<li>훈련데이터 일부를 데이터 웨어하우스에서 뽑아낸다.</li>
+<li>R로 훈련데이터를 활용하여 모형을 생성한다.</li>
+<li>데이터 웨어하우스에 저장된 데이터에 예측모형을 활용하여 점수를 매겨 저장한다.</li>
+</ol>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.rstudio.com/resources/webinars/working-with-big-data-in-r/">Working with Big Data in R</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.rstudio.com/resources/webinars/pipelines-for-data-analysis-in-r/">Pipelines for data analysis in R</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
+        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
+        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
