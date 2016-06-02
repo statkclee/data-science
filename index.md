@@ -76,6 +76,7 @@ title: 데이터 과학
 1. [R 빅데이터](r-big-data.html) 
 1. [R 병렬처리](r-parallel.html) 
     - [분석결과 내보내기](r-parallel-local-export.html)
+    - [`.R` 스크립트 실행](r-parallel-rscript-exec.html)
 
 
 
