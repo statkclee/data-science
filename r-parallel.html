@@ -37,67 +37,25 @@
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <h1 class="title">데이터 과학</h1>
-          <h2 class="subtitle">두언어 문제</h2>
+          <h2 class="subtitle">R 병렬처리</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>두 언어 문제에 대해 이해한다.</li>
-<li>사용자와 개발자를 나누는 사회적 장벽을 이해한다.</li>
+<li>R 병렬처리</li>
 </ul>
 </div>
 </section>
-<iframe width="320" height="200" src="https://www.youtube.com/embed/B9moDuSYzGo" frameborder="0" allowfullscreen>
-</iframe>
-<h3 id="두-언어-문제-ousterhout-dichotomy">두 언어 문제 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
-<p><a href="https://www.youtube.com/watch?v=B9moDuSYzGo">ODSC East 2016 - Stefan Karpinski - “Solving the Two Language Problem”</a></p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">시스템 언어</th>
-<th align="left">Ousterhout 이분법</th>
-<th align="left">스크립트 언어</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">정적</td>
-<td align="left">–</td>
-<td align="left">동적</td>
-</tr>
-<tr class="even">
-<td align="left">컴파일</td>
-<td align="left">–</td>
-<td align="left">인터프리터</td>
-</tr>
-<tr class="odd">
-<td align="left">사용자정의 자료형</td>
-<td align="left">–</td>
-<td align="left">표준 자료형</td>
-</tr>
-<tr class="even">
-<td align="left">빠른 속도</td>
-<td align="left">–</td>
-<td align="left">늦은 속도</td>
-</tr>
-<tr class="odd">
-<td align="left">어려움</td>
-<td align="left">–</td>
-<td align="left">쉬움</td>
-</tr>
-</tbody>
-</table>
-<p>두 언어 문제로 인해 편리함을 위해 파이썬, R, Matlab을 사용하고 C/C++, 포트란 시스템 언어로 모든 힘든 작업을 수행한다. 시스템 언어와 스크립트 언어의 두가지 문제점을 해결하기 위해서 두가지 다른 언어의 장점을 취하고 이를 보완하려는 노력이 지속적으로 경주되고 있다.</p>
-<p><img src="fig/data-scientist-languages.png" alt="데이터 과학자 언어" width="50%"></p>
-<p>과거 데이터 과학자가 선형대수, 통계&amp;시각화, 속도, 통합작업과 관련하여 다양한 언어와 도구를 익혀야 했지만, 2010년 중반을 넘어서는 현시점에서 파이썬과 R을 함께 사용하는 것으로 중지가 모아지고 있다.</p>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Ousterhout%27s_dichotomy">Ousterhout’s dichotomy</a><a href="#fnref1">↩</a></p></li>
-</ol>
-</div>
+<p><img src="fig/paralle-r-architecture.png" alt="병렬처리 R 아키텍처" width="70%"></p>
+<ul>
+<li><strong>multicore</strong>: 로컬 컴퓨터에 장착된 모든 코어를 <code>fork()</code>를 사용해서 다수 코어를 활용하는데 윈도우는 지원이 되지 않는다.</li>
+<li><strong>snow</strong>: Lisp-Stat의 아버지 루크 티어니가 개발한 것으로 로컬 컴퓨터 뿐만 아니라 다수 컴퓨터에도 동작된다.</li>
+<li><strong>parallel</strong>: <code>multicore</code>와 <code>snow</code>를 추상화한 것으로 현재 R 기본 팩키지의 일부로 사용된다.</li>
+<li><strong>foreach</strong>: <code>for</code> 루프를 병렬로 돌릴 수 있는 팩키지</li>
+</ul>
+<p>그외 <code>Rmpi</code>, <code>Rdsn</code>, <code>pbdR</code> 등의 팩키지가 있다.</p>
         </div>
       </div>
       </article>

@@ -75,6 +75,8 @@ title: 데이터 과학
 1. [두언어 문제](two-language-problem.html) 
 1. [R 빅데이터](r-big-data.html) 
 1. [R 병렬처리](r-parallel.html) 
+    - [분석결과 내보내기](r-parallel-local-export.html)
+
 
 
 > ## 참고 자료 {.prereq}

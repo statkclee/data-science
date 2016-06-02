@@ -56,8 +56,7 @@ preview : $(DST_ALL)
 	    -o $@ $<
 
 # Pattern to convert R Markdown to Markdown.
-%.md: %.Rmd $(R_CHUNK_OPTS) tools/check_knitr_version.R
-	Rscript -e "source('tools/check_knitr_version.R')"
+%.md: %.Rmd $(R_CHUNK_OPTS)
 	Rscript -e "knitr::knit('$$(basename $<)', output = '$$(basename $@)')"
 
 ## commands : Display available commands.
