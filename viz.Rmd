@@ -67,16 +67,6 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 > * 데이터 시각화의 중요성을 이해한다.
 > * 시각화 얼개를 통해 시각화를 목적과 방향을 이해한다.
 
-## 학습목차
-
-* [R 과 색상](viz-r-colors.html)
-* [ggplot2 색상 제어](viz-ggplot2-control.html)
-* [행복한 시각화 생활을 위한 비밀](viz-secret.html)
-* [그래프 한장에 찍기](viz-multiple-plots.html)
-* [그림을 파일에 저장](viz-save-plot.html) 
-* [데이터 시각화(ggplot2, ggvis)](viz-ggplot2.html)
-* [R 시각화 카탈로그](http://shiny.stat.ubc.ca/r-graph-catalog/)
-
 
 ### Anscombe 4종류 데이터(Anscombe's Quartet) [^anscombe] [^anscombe-jstor]
 
