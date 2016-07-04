@@ -11,9 +11,7 @@ title: 데이터 과학
 
 ### R과 RStudio 툴체인 데이터 과학 
 
-1. [데이터 제품](data-product.html)
-    - [공공 데이터 제품](data-product-civic-hacking.html)
-    - [웹스크래핑(Web Scraping)](data-scraping.html)
+
 1. [데이터 정제](data-handling.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
@@ -48,14 +46,7 @@ title: 데이터 과학
         + [추가 패턴](regex-more-pattern.html)
         + [참고문헌 사례](regex-last-wrinkle.html)
         + [요약](regex-wrapup.html)
-1. [시각화](viz.html)
-    - [R 과 색상](viz-r-colors.html)
-    - [ggplot2 색상 제어](viz-ggplot2-control.html)
-    - [행복한 시각화 생활을 위한 비밀](viz-secret.html)
-    - [그래프 한장에 찍기](viz-multiple-plots.html)
-    - [그림을 파일에 저장](viz-save-plot.html) 
-    - [데이터 시각화(ggplot2, ggvis)](viz-ggplot2.html)
-    - [R 시각화 카탈로그](http://shiny.stat.ubc.ca/r-graph-catalog/)
+1. [시각화](lessons/05-viz/viz.html)
 1. [지리정보](geo-info.html)
     - [주소와 위도경도](geo-info-lonlat.html)
     - [Kormaps, leaflet 지리정보 시각화 기초](geo-info-kormaps.html)
@@ -77,7 +68,9 @@ title: 데이터 과학
 1. [R 병렬처리](r-parallel.html) 
     - [분석결과 내보내기](r-parallel-local-export.html)
     - [`.R` 스크립트 실행](r-parallel-rscript-exec.html)
-
+1. [데이터 제품](data-product.html)
+    - [공공 데이터 제품](data-product-civic-hacking.html)
+    - [웹스크래핑(Web Scraping)](data-scraping.html)
 
 
 > ## 참고 자료 {.prereq}
