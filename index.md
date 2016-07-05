@@ -11,7 +11,11 @@ title: 데이터 과학
 
 ### R과 RStudio 툴체인 데이터 과학 
 
-
+1. [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
+    - [위기의 스프레드쉬트](ds-why-not-excel.html)
+    - [들어가며](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/01-intro.html)
+    - [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
+    - [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
 1. [데이터 정제](data-handling.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
