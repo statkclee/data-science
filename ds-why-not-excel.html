@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">위기의 스프레드쉬트</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>왜 스프레드쉬트가 위기인지 이해한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="스프레드쉬트를-버려야-하는-6가지-이유-stop-excel">1. 스프레드쉬트를 버려야 하는 6가지 이유 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p>엑셀은 작은 데이터를 가지고 임의 분석과 계산을 하는데 최적화 되었지만, 데이터베이스 기능으로 사용하는 것은 자제하여야 한다. 아주 많은 기업이나 조직에서 마이크로소프트 엑셀 스프레드쉬트에 매우 중요한 데이터로 보관하고 작업을 해서, 사소한 실수로 중요한 의사결정이 왜곡되는 위험에 처해 있다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h4 id="스프레드쉬트를-사용하는-이유"><span class="glyphicon glyphicon-pushpin"></span>스프레드쉬트를 사용하는 이유</h4>
+</div>
+<div class="panel-body">
+<ul>
+<li>항상 엑셀을 사용했다: 항상 데이터를 엑셀로 저장하고 분석해서 사용했다. 하지만, 버튼 하나로 데이터를 내보내기 쉽다.</li>
+<li>데이터베이스를 사용할 만큼 데이터가 충분하지 않다: 데이터가 작아서 데이터베이스를 사용할 이유를 찾지 못하지만, 사업이 커지고, 업무량이 늘어나면서 엑셀 작업량이 높아지고, 복잡성도 커지고, 엑셀 자체에서 처리되는 시간도 늘어난다.</li>
+</ul>
+</div>
+</aside>
+<h4 id="한번에-한사람만-작업이-가능하다.">1.1. 한번에 한사람만 작업이 가능하다.</h4>
+<p>해당 시간에 한번만 엑셀로 작업이 가능하다. 만약 다른 직원이 엑셀을 열어 작업을 하게 되면 “읽기 전용(Read-Only)”으로만 볼 수만 있다.</p>
+<h4 id="데이터-감사는-데이터베이스에서만-가능">1.2. 데이터 감사는 데이터베이스에서만 가능</h4>
+<p>보통 한 사람만 엑셀 스프레드쉬트 파일을 생성하고 유지보수한다. 이 직원이 다른 부서로 전보되거나 회사를 떠나게 되면, 모든 지식이 직원과 함께 날아간다. 고로, 해당 업무를 담고 있는 엑셀 스프레드쉬트를 익히는데 수개월이 소요된다.</p>
+<p>이와 비교하여 감사 기능이 제공되는 데이터베이스는 주기적으로 사용자 활동을 기록해서 엑셀 스프레드쉬트가 담고 있는 정보 및 직관도 전달한다.</p>
+<h4 id="데이터베이스는-정형화된-작업흐름을-지원한다.">1.3. 데이터베이스는 정형화된 작업흐름을 지원한다.</h4>
+<p>업무 프로세스를 엑셀 스프레드쉬트로 정의할 경우, 엑셀 스프레드쉬트 파일을 전자우편으로 다수 개발자, 검토자, 승인자에게 셀 수 없이 많이 전달해야 한다. 더 큰 문제는 이를 취합해서 수작업으로 정리해야 된다.</p>
+<p>하지만, 업무 프로세스를 데이터베이스로 정의할 경우, 특정 사업 요구사항을 해결하는데 작업을 매핑하고, 추적하고 관리하기 편하다. 효과적으로 중앙에서 체계적으로 관리되는 스프레드쉬트, 데이터베이스로 할당된 작업에 대응하기 좋다.</p>
+<h4 id="데이터베이스는-엑셀보다-모형을-보다-잘-지원한다.">1.4. 데이터베이스는 엑셀보다 모형을 보다 잘 지원한다.</h4>
+<p>엑셀 스프레드쉬트 업무가 늘어나고 크기가 커지게 되면, 오류에 취약해 진다. 예를 들어, 새로운 수식을 새로운 곳에 복사해서 넣게 되면 셀참조가 엉클어져서 엉뚱한 값이 반영되는 경우도 흔히 발견된다.</p>
+<h4 id="데이터베이스로-보고서-생성이-수월하다.">1.5. 데이터베이스로 보고서 생성이 수월하다.</h4>
+<p>데이터베이스에서 쿼리, 쿼리에 기반한 보고서를 작성하기 더 쉽다. 정적 스프레드쉬트와 반대로 관계형 환경에서 데이터를 정렬, 매칭, 조합하기 더 좋다.</p>
+<h4 id="데이터베이스는-보안이-강력하고-규제하기-좋다.">1.6. 데이터베이스는 보안이 강력하고 규제하기 좋다.</h4>
+<p>스프레드쉬트는 규제를 가하고 보안기능을 두기가 마땅치 않는다. 보안과 제한 기능은 완전히 사용자 몫으로 남겨진다. 엑셀 사용자가 수작업으로 모든 것을 식별해서 작업해야 되고 실수한 것도 고쳐야 된다. 스프레드쉬트에 이러한 기능이 거의 전무하기 때문에, 실수한 것도 알아차리지 못한 상태로 그냥 넘어가는 경우가 상당히 많다.</p>
+<h3 id="스프레드쉬트-참사-excel-disaster">2. 스프레드쉬트 참사 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="10%" />
+<col width="9%" />
+<col width="21%" />
+<col width="44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">회사</th>
+<th align="left">참사 비용</th>
+<th align="left">발생일</th>
+<th align="left">영향</th>
+<th align="left">참사 개요</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">옥스포드 대학</td>
+<td align="left">미확인</td>
+<td align="left">’11.12월</td>
+<td align="left">학생 인터뷰 일정 지연</td>
+<td align="left">엑셀이 수식이 꼬여 인터뷰 일정이 뒤죽박죽 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></td>
+</tr>
+<tr class="even">
+<td align="left">MI5</td>
+<td align="left">미확인</td>
+<td align="left">’11년</td>
+<td align="left">잘못된 전화번호 작업</td>
+<td align="left">엑셀 서식 수식이 꼬여 엉뚱한 전화번호 작업 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></td>
+</tr>
+<tr class="odd">
+<td align="left">’12년 런던 올림픽</td>
+<td align="left">£ 0.5백만</td>
+<td align="left">’12.01월</td>
+<td align="left">티켓 환불 소동</td>
+<td align="left">수영장 10,000 티켓이 초과 판매 (엑셀 입력 오류) <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></td>
+</tr>
+<tr class="even">
+<td align="left">Mouchel</td>
+<td align="left">£ 4.3백만</td>
+<td align="left">’10.11월</td>
+<td align="left">CEO 사임, 주가폭락</td>
+<td align="left">연금펀드평가 £ 4.3백만 엑셀 오류 <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></td>
+</tr>
+<tr class="odd">
+<td align="left">C&amp;C Group</td>
+<td align="left">£ 9 백만</td>
+<td align="left">’09.7월</td>
+<td align="left">주가 15% 하락 등</td>
+<td align="left">매출 3% 상승이 아니고 5% 하락, 엑셀 오류 <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></td>
+</tr>
+<tr class="even">
+<td align="left">UK 교통부</td>
+<td align="left">최소 £ 50 백만</td>
+<td align="left">’12.10월</td>
+<td align="left">영국민 추가 세금 부담</td>
+<td align="left">영국 철도 입찰 오류 <a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a></td>
+</tr>
+<tr class="odd">
+<td align="left">King 펀드</td>
+<td align="left">£ 130 백만</td>
+<td align="left">’11.05월</td>
+<td align="left">브래드 이미지 하락</td>
+<td align="left">웨일즈 지방 NHS 지출 엑셀 오류 <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a></td>
+</tr>
+<tr class="even">
+<td align="left">AXA Rosenberg</td>
+<td align="left">£ 150 백만</td>
+<td align="left">’11.02월</td>
+<td align="left">은폐, 벌금, 브래드 이미지 하락</td>
+<td align="left">엑셀 오류를 감춰서 $242 백만 벌금</td>
+</tr>
+<tr class="odd">
+<td align="left">JP Morgan Chase</td>
+<td align="left">£ 250 백만</td>
+<td align="left">’13.01월</td>
+<td align="left">명성, 고객 신뢰도 저하</td>
+<td align="left">바젤 II VaR 위험 평가 엑셀 오류 <a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a></td>
+</tr>
+<tr class="even">
+<td align="left">Fidelity Magellan 펀드</td>
+<td align="left">£ 1.6 십억</td>
+<td align="left">’95.01월</td>
+<td align="left">투자자에게 약속한 배당금 지급 못함</td>
+<td align="left">음수 부호 누락으로 자본이득 과대계상 <a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a></td>
+</tr>
+<tr class="odd">
+<td align="left">미연방준비위원회</td>
+<td align="left">£ 2.5 십억</td>
+<td align="left">’10.10월</td>
+<td align="left">명확하지 않음</td>
+<td align="left">리볼빙 카드 신용액 산출 과정에 엑셀 오류 <a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a></td>
+</tr>
+<tr class="even">
+<td align="left">하버드 대학</td>
+<td align="left">평가 불능</td>
+<td align="left">’13.04월</td>
+<td align="left">유럽 정부 긴축예산 편성 근거</td>
+<td align="left">GDP 대비 정부 부채 영향도 분석 엑셀 오류 <a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a></td>
+</tr>
+</tbody>
+</table>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://venasolutions.com/blog/2014/08/6-reasons-its-time-to-stop-using-excel-as-a-database/">6 Reasons It’s Time To Stop Using Excel As A Database</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://blogs.mazars.com/the-model-auditor/files/2014/01/12-Modelling-Horror-Stories-and-Spreadsheet-Disasters-Mazars-UK.pdf">THE DIRTY DOZEN 12 MODELLING HORROR STORIES &amp; SPREADSHEET DISASTERS</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://www.cherwell.org/2011/12/07/test-errors-impede-history-applications/">Test errors impede History applications</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://national-security.governmentcomputing.com/news/2011/jul/01/mi5-data-collection-errors">MI5 makes 1,061 bugging errors</a><a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p><a href="http://www.telegraph.co.uk/sport/olympics/8992490/London-2012-Olympics-lucky-few-to-get-100m-final-tickets-after-synchronised-swimming-was-overbooked-by-10000.html">London 2012 Olympics - lucky few to get 100m final tickets after synchronised swimming was overbooked by 10,000</a><a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p><a href="http://www.express.co.uk/finance/city/276053/Mouchel-profits-blow">Mouchel profits blow</a><a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p><a href="http://drinksdaily.com/2009/07/cc-group-admit-to-mistake-in-revenue-results/">C&amp;C Group admit to mistake in revenue results</a><a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p><a href="http://www.bbc.com/news/uk-politics-21577826">West Coast Main Line franchise fiasco ‘to cost at least £50m’</a><a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p><a href="http://leftfootforward.org/2011/05/kings-fund-apologise-for-error-on-health-spending-in-wales/">King’s Fund apologise for “error” in figures on health spending in Wales</a><a href="#fnref9">↩</a></p></li>
+<li id="fn10"><p><a href="http://files.shareholder.com/downloads/ONE/2261602328x0x628656/4cb574a0-0bf5-4728-9582-625e4519b5ab/Task_Force_Report.pdf">Report of JPMorgan Chase &amp; Co. Management Task Force Regarding 2012 CIO Losses</a><a href="#fnref10">↩</a></p></li>
+<li id="fn11"><p><a href="http://catless.ncl.ac.uk/Risks/16.72.html#subj1">Computing error at Fidelity’s Magellan fund</a><a href="#fnref11">↩</a></p></li>
+<li id="fn12"><p><a href="http://www.zerohedge.com/article/blatant-data-error-federal-reserve">Blatant Data Error At The Federal Reserve</a><a href="#fnref12">↩</a></p></li>
+<li id="fn13"><p><a href="https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/">Is the evidence for austerity based on an Excel spreadsheet error?</a><a href="#fnref13">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

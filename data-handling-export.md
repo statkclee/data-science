@@ -10,6 +10,10 @@ output:
 mainfont: NanumGothic
 ---
 
+
+
+
+
 > ## 학습 목표 [^stat545-data-inout] {.objectives}
 >
 > * 작업한 데이터를 내보내어 다음 후행 작업에 대한 선행작업을 깔끔히 마무리한다.
@@ -257,134 +261,27 @@ Argentina	Americas	62.6884358974359	0.231708391608391
 
 ~~~
 
-이제 `readr` 팩키지에는 이에 상응하는 더 깔끔한 인터페이스 외양을 갖추고 있다.
+이제 `readr` 에 상응하는 더 깔끔한 인터페이스 외양을 갖췄다.
 
 
-### `saveRDS()` 와 `readRDS()`
-
-데이터프레임과 함께 요소 수준을 작업한 결과 등을 그대로 저장하고자 한다면 `saveRDS()` 함수를 사용한다.
-이런 경우 `readRDS()` 함수로 `.rds` 파일을 불러오게 되면 모든 정보가 그대로 유지된다.
-
-```{r}
-saveRDS(gfits, "gfits.rds")
-```
-
-`saveRDS()` 함수는 R 객체를 이진파일로 직렬화한다. 편집기로 열거나, Git(Hub)로 차이점을 살펴보거나,
-R 사용자가 아닌 친구와 공유할 수 있는 성질의 파일이 아니다. 
-특별한 상황에서 전용목적을 갖고, 한정된 범위를 갖고 사용된다.
-
-`saveRDS()` 반대가 `readRDS()` 다. `readRDS()` 함수로 불러오면 반환값을 갖게 되는데 이를 객체에 대입해야만 된다.
-저장할 때와 마찬가지로 동일한 명칭을 갖는 것을 저자가 추천하고 있다.
-
-```{r error = TRUE}
-rm(gfits)
-gfits
-gfits <- readRDS("gfits.rds")
-gfits
-```
-
-`saveRDS()` 함수는 인자가 더 있다. 특히, `compress` 인자는 압축을 제어하는데 사용되는데 
-자세한 사용법은 도움말을 확인한다.
-연산작업에 상당한 시간이 소요되는 (직사각형 모양의 데이터프레임과 대비되는) 회귀모형을 적합한 객체를 저장하는데 매우 손쉽다.
-
-`save()` + `load()`, `save.image()` 함수에 대해서 익히 알고 있을 수도 있다.
-R 공식문서와 강의교재에서도 보았을 수도 있지만, 절대로 흔들리지 마라.
-이런 함수는 객체 다수를 함께 저장하거나, 혹은 심지어 전체 작업공간을 한통에 저장하는 안정성이 검증되지 않는 
-실무사례를 조장하고 있다. 이런 유형의 함수가 적용되는 적법한 사용례가 있지만, 
-일반적인 자료분석에는 그런 사례가 적용되지 못한다.
-
-### `dput()` 과 `dget()`
-
-마지막으로 언급할 가치가 있는 데이터를 가져오고 저장하는 방법이 있다: `dput()` 과 `dget()`.
-`dput()` 함수는 기묘한 기능조합으로 볼 수 있다: 이해하게 힘든 방식으로 R 객체를 일반 텍스트로 표현한다.
-`file=` 인자가 사용되면, `dput()` 함수는 파일에 저장하지만, 실제 눈으로 읽고 싶은 생각이 들지는 않는다.
-`dput()` 함수는 R전용이지만 바이너리 표기를 생성한다. 다음을 실행해 보자.
 
 
-```{r}
-## first restore gfits with our desired country factor level order
-gfits <- readRDS("gfits.rds")
-dput(gfits, "gfits-dput.txt")
-```
 
-`gfits-dput.txt` 파일 첫몇줄을 살펴보자.
 
-```{r echo = FALSE, comment = NA}
-"gfits-dput.txt" %>% 
-  readLines(n = 6) %>% 
-  cat(sep = "\n")
-```
 
-걱정하지는 마라.  ["write code for humans, write data for computers"](https://twitter.com/vsbuffalo/statuses/358699162679787521)
- 트윗을 기억하라. `dget()` 짝꿍 함수는 `dput()`으로 저장한 것을 다시 불러 읽어온다.
 
-```{r}
-gfits_dget <- dget("gfits-dput.txt")
-country_levels <- country_levels %>% 
-  mutate(via_dput = head(levels(gfits_dget$country)))
-country_levels
-```
 
-`dput()`, `dget()` 함수의 주된 응용사례는 스택오버플로우 
-[the creation of highly portable, self-contained minimal examples](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example)
-에 잘 정리되어 있다. 
-예를 들어, 지식인에 질문을 올리고 전문가에게 질문하려면, 어떤 데이터 파일도 첨부를 못하고 일반 텍스트만 사용해서 질문내용을 정리해야만 된다.
-질문내용에 필요한 코드와 함께 객체를 정의하는 몸통하나로 된 일반텍스트가 요구된다.
-`dput()`이 객체를 정의하는 코드 일부를 만들어내는데 도움이 된다.
-파일을 지정하지 않고 `dput()` 하려면, 콘솔에서 나온 반환값을 복사해서 스크립트에 붙여넣는다.
-혹은 파일에 저장하고 나서 파일을 열어 복사해서 R 명령어 아래 추가한다.
 
-### 마무리 청소
 
-자료분석 작업을 하면서 파일 몇개 작성했다. 일부는 가치가 오래가지 못하거나, 파일명이 혼동스러울 수 있다.
-파일시스템과 상호작용하는데 R이 제공하는 함수를 사용해서도 가능하다.
 
-```{r}
-file.remove(list.files(pattern = "^gfits"))
-```
 
-### 구분자를 갖는 파일이 갖는 함정들
 
-구분자를 갖는 파일에 사람이 입력한 필드가 담겨있다면, 편집증적일 수 있는데 이유는 사람들이 정말 말도 안되는 일을 저지른다.
-특히 프로그래밍 분야와 관계가 없거나 텍스트로 작업한 적이 없는 사람인 경우 그렇다.
-이런 사람들이 생성하는 파일을 처리하는데는 이들이 갖는 정규표현식 기술과 반비례하는 경향이 있다:
-즉, 정규표현식을 전혀 들어본 적이 없다면, 이런 분들이 작업한 파일을 작업하는데 상당한 노력이 요구되고, 고생길이 열려있다.
 
-헤더 필드 혹은 실제 데이터가 구분자를 갖는 경우, 파싱에 실패하거나 가져오기 오류가 날 수 있다.
-가장 일반적인 구분자는 콤마 `,`와 탭 `\t`로 타이핑할 때 사람들이 흔히 사용한다.
-데이터를 수집하는 동안 문제를 회피하려면, 입력양식에 드롭다운 메뉴 같은 것 등으로 최대한 회피한다.
-때때로 이것이 불가능해서 어쩔 수 없다면, 자유형식 텍스트로 처리해야만 된다.
-인용부호로 감싸서 텍스트를 강제하거나 허용하는 것이 좋은데 이유는 구분자 파일을 좀더 부드럽게 파싱하게 한다.
 
-종종 엄격한 탭구분자 대신에 공백을 구분자로 사용한다. 즉, `read.table()`과 `write.table()` 함수 모두 
-기본디폴트 설정으로 공백이 사용된다. 첫번째 행에서 변수명을 읽거나 쓰는 경우
-(`write.table()`, `read.table()` 함수에서 `header`로 불림), 적법한 R 변수명이 있거나,
-적법한 것으로 강제로 치환해야된다. 
-그래서, 이런 두가지 이유로, 가능하면 변수명은 "한단어"로 작성하는 것이 모범사례가 된다.
-단어 다수가 사용되는 경우, `snake_case` 나 `camelCase` 를 사용한다.
-예를 들어, 피험자 성씨를 갖는 필드명을 헤더로 사용하는 경우 `last_name` 혹은 `lastName`으로 작성한다.
-`readr` 팩키지의 경우, 칼럼명은 적법한 R 식별자로 정리되기 보다는, 있는 그대로 남겨진다.
-(즉, `check.names = TRUE`이 없다) 그래서 변수명에서 공백을 갖고 그럭저럭 넘어갈 수 있지만, 변수명에 공백을 넣는 것을
-추천하지 않는다.
- 
+
+
+
+
+
+
 ### 참고자료
-
-Ethan P White, Elita Baldridge, Zachary T. Brym, Kenneth J. Locey, Daniel J. McGlinn, Sarah R. Supp, "Nine simple ways to make it easier to (re)use your data"
-
-- 최초 출판: [PeerJ Preprints 1:e7v2](http://dx.doi.org/10.7287/peerj.preprints.7v2)
-- 공식 출판: [Ideas in Ecology and Evolution 6(2): 1?10, 2013.](http://library.queensu.ca/ojs/index.php/IEE/article/view/4608)
-    + [doi:10.4033/iee.2013.6b.6.f](doi:10.4033/iee.2013.6b.6.f)
-- 특히 4절 "Use Standard Data Formats" 추천.
-
-Hadley Wickham 의 깔끔한 데이터
-
-- [Journal of Statistical Software Vol 59 (2014), Issue 10, 10.18637/jss.v059.i10](http://www.jstatsoft.org/article/view/v059i10)
-- [PDF 파일](http://vita.had.co.nz/papers/tidy-data.pdf)
-
-Phil Spector(2008), Data Manipulation with R, Springer.
-
-- 2장 "Reading and Writing Data" 참고
-- [SpringerLink](http://ezproxy.library.ubc.ca/login?url=http://link.springer.com.ezproxy.library.ubc.ca/book/10.1007/978-0-387-74731-6/page/1)
-- [저자 웹페이지](http://www.stat.berkeley.edu/~spector/)
-- [구글 도서검색](http://books.google.com/books?id=grfuq1twFe4C&lpg=PP1&dq=data%2520manipulation%2520spector&pg=PP1#v=onepage&q=&f=false)
-

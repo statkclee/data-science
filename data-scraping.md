@@ -1,4 +1,14 @@
-# 데이터 과학
+---
+layout: page
+title: 데이터 과학
+subtitle: 웹스크래핑(Web Scraping)
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
  
 
 
@@ -48,7 +58,7 @@ survey <- url %>%
 
 
 ~~~{.output}
-FALSE Error: Table has inconsistent number of columns. Do you want fill = TRUE?
+FALSE Error in as.vector(x, "list"): cannot coerce type 'environment' to vector of type 'list'
 
 ~~~
 

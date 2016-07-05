@@ -4,34 +4,35 @@
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
     <title>Software Carpentry: 데이터 과학</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-16', 'auto');
-      ga('send', 'pageview');
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://xwmooc.net" title="xwMOOC">
-          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
@@ -181,57 +182,8 @@ Algeria Africa  43.3749743589744    0.56927972027972
 Angola  Africa  32.1266538461539    0.20933986013986
 Argentina   Americas    62.6884358974359    0.231708391608391
 </code></pre>
-<p>이제 <code>readr</code> 팩키지에는 이에 상응하는 더 깔끔한 인터페이스 외양을 갖추고 있다.</p>
-<h3 id="saverds-와-readrds"><code>saveRDS()</code> 와 <code>readRDS()</code></h3>
-<p>데이터프레임과 함께 요소 수준을 작업한 결과 등을 그대로 저장하고자 한다면 <code>saveRDS()</code> 함수를 사용한다. 이런 경우 <code>readRDS()</code> 함수로 <code>.rds</code> 파일을 불러오게 되면 모든 정보가 그대로 유지된다.</p>
-<pre class="{r}"><code>saveRDS(gfits, &quot;gfits.rds&quot;)</code></pre>
-<p><code>saveRDS()</code> 함수는 R 객체를 이진파일로 직렬화한다. 편집기로 열거나, Git(Hub)로 차이점을 살펴보거나, R 사용자가 아닌 친구와 공유할 수 있는 성질의 파일이 아니다. 특별한 상황에서 전용목적을 갖고, 한정된 범위를 갖고 사용된다.</p>
-<p><code>saveRDS()</code> 반대가 <code>readRDS()</code> 다. <code>readRDS()</code> 함수로 불러오면 반환값을 갖게 되는데 이를 객체에 대입해야만 된다. 저장할 때와 마찬가지로 동일한 명칭을 갖는 것을 저자가 추천하고 있다.</p>
-<p><code>{r error = TRUE} rm(gfits) gfits gfits &lt;- readRDS(&quot;gfits.rds&quot;) gfits</code></p>
-<p><code>saveRDS()</code> 함수는 인자가 더 있다. 특히, <code>compress</code> 인자는 압축을 제어하는데 사용되는데 자세한 사용법은 도움말을 확인한다. 연산작업에 상당한 시간이 소요되는 (직사각형 모양의 데이터프레임과 대비되는) 회귀모형을 적합한 객체를 저장하는데 매우 손쉽다.</p>
-<p><code>save()</code> + <code>load()</code>, <code>save.image()</code> 함수에 대해서 익히 알고 있을 수도 있다. R 공식문서와 강의교재에서도 보았을 수도 있지만, 절대로 흔들리지 마라. 이런 함수는 객체 다수를 함께 저장하거나, 혹은 심지어 전체 작업공간을 한통에 저장하는 안정성이 검증되지 않는 실무사례를 조장하고 있다. 이런 유형의 함수가 적용되는 적법한 사용례가 있지만, 일반적인 자료분석에는 그런 사례가 적용되지 못한다.</p>
-<h3 id="dput-과-dget"><code>dput()</code> 과 <code>dget()</code></h3>
-<p>마지막으로 언급할 가치가 있는 데이터를 가져오고 저장하는 방법이 있다: <code>dput()</code> 과 <code>dget()</code>. <code>dput()</code> 함수는 기묘한 기능조합으로 볼 수 있다: 이해하게 힘든 방식으로 R 객체를 일반 텍스트로 표현한다. <code>file=</code> 인자가 사용되면, <code>dput()</code> 함수는 파일에 저장하지만, 실제 눈으로 읽고 싶은 생각이 들지는 않는다. <code>dput()</code> 함수는 R전용이지만 바이너리 표기를 생성한다. 다음을 실행해 보자.</p>
-<pre class="{r}"><code>## first restore gfits with our desired country factor level order
-gfits &lt;- readRDS(&quot;gfits.rds&quot;)
-dput(gfits, &quot;gfits-dput.txt&quot;)</code></pre>
-<p><code>gfits-dput.txt</code> 파일 첫몇줄을 살펴보자.</p>
-<p><code>{r echo = FALSE, comment = NA} &quot;gfits-dput.txt&quot; %&gt;%    readLines(n = 6) %&gt;%    cat(sep = &quot;\n&quot;)</code></p>
-<p>걱정하지는 마라. <a href="https://twitter.com/vsbuffalo/statuses/358699162679787521">“write code for humans, write data for computers”</a> 트윗을 기억하라. <code>dget()</code> 짝꿍 함수는 <code>dput()</code>으로 저장한 것을 다시 불러 읽어온다.</p>
-<pre class="{r}"><code>gfits_dget &lt;- dget(&quot;gfits-dput.txt&quot;)
-country_levels &lt;- country_levels %&gt;% 
-  mutate(via_dput = head(levels(gfits_dget$country)))
-country_levels</code></pre>
-<p><code>dput()</code>, <code>dget()</code> 함수의 주된 응용사례는 스택오버플로우 <a href="http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example">the creation of highly portable, self-contained minimal examples</a> 에 잘 정리되어 있다. 예를 들어, 지식인에 질문을 올리고 전문가에게 질문하려면, 어떤 데이터 파일도 첨부를 못하고 일반 텍스트만 사용해서 질문내용을 정리해야만 된다. 질문내용에 필요한 코드와 함께 객체를 정의하는 몸통하나로 된 일반텍스트가 요구된다. <code>dput()</code>이 객체를 정의하는 코드 일부를 만들어내는데 도움이 된다. 파일을 지정하지 않고 <code>dput()</code> 하려면, 콘솔에서 나온 반환값을 복사해서 스크립트에 붙여넣는다. 혹은 파일에 저장하고 나서 파일을 열어 복사해서 R 명령어 아래 추가한다.</p>
-<h3 id="마무리-청소">마무리 청소</h3>
-<p>자료분석 작업을 하면서 파일 몇개 작성했다. 일부는 가치가 오래가지 못하거나, 파일명이 혼동스러울 수 있다. 파일시스템과 상호작용하는데 R이 제공하는 함수를 사용해서도 가능하다.</p>
-<pre class="{r}"><code>file.remove(list.files(pattern = &quot;^gfits&quot;))</code></pre>
-<h3 id="구분자를-갖는-파일이-갖는-함정들">구분자를 갖는 파일이 갖는 함정들</h3>
-<p>구분자를 갖는 파일에 사람이 입력한 필드가 담겨있다면, 편집증적일 수 있는데 이유는 사람들이 정말 말도 안되는 일을 저지른다. 특히 프로그래밍 분야와 관계가 없거나 텍스트로 작업한 적이 없는 사람인 경우 그렇다. 이런 사람들이 생성하는 파일을 처리하는데는 이들이 갖는 정규표현식 기술과 반비례하는 경향이 있다: 즉, 정규표현식을 전혀 들어본 적이 없다면, 이런 분들이 작업한 파일을 작업하는데 상당한 노력이 요구되고, 고생길이 열려있다.</p>
-<p>헤더 필드 혹은 실제 데이터가 구분자를 갖는 경우, 파싱에 실패하거나 가져오기 오류가 날 수 있다. 가장 일반적인 구분자는 콤마 <code>,</code>와 탭 <code>\t</code>로 타이핑할 때 사람들이 흔히 사용한다. 데이터를 수집하는 동안 문제를 회피하려면, 입력양식에 드롭다운 메뉴 같은 것 등으로 최대한 회피한다. 때때로 이것이 불가능해서 어쩔 수 없다면, 자유형식 텍스트로 처리해야만 된다. 인용부호로 감싸서 텍스트를 강제하거나 허용하는 것이 좋은데 이유는 구분자 파일을 좀더 부드럽게 파싱하게 한다.</p>
-<p>종종 엄격한 탭구분자 대신에 공백을 구분자로 사용한다. 즉, <code>read.table()</code>과 <code>write.table()</code> 함수 모두 기본디폴트 설정으로 공백이 사용된다. 첫번째 행에서 변수명을 읽거나 쓰는 경우 (<code>write.table()</code>, <code>read.table()</code> 함수에서 <code>header</code>로 불림), 적법한 R 변수명이 있거나, 적법한 것으로 강제로 치환해야된다. 그래서, 이런 두가지 이유로, 가능하면 변수명은 “한단어”로 작성하는 것이 모범사례가 된다. 단어 다수가 사용되는 경우, <code>snake_case</code> 나 <code>camelCase</code> 를 사용한다. 예를 들어, 피험자 성씨를 갖는 필드명을 헤더로 사용하는 경우 <code>last_name</code> 혹은 <code>lastName</code>으로 작성한다. <code>readr</code> 팩키지의 경우, 칼럼명은 적법한 R 식별자로 정리되기 보다는, 있는 그대로 남겨진다. (즉, <code>check.names = TRUE</code>이 없다) 그래서 변수명에서 공백을 갖고 그럭저럭 넘어갈 수 있지만, 변수명에 공백을 넣는 것을 추천하지 않는다.</p>
+<p>이제 <code>readr</code> 에 상응하는 더 깔끔한 인터페이스 외양을 갖췄다.</p>
 <h3 id="참고자료">참고자료</h3>
-<p>Ethan P White, Elita Baldridge, Zachary T. Brym, Kenneth J. Locey, Daniel J. McGlinn, Sarah R. Supp, “Nine simple ways to make it easier to (re)use your data”</p>
-<ul>
-<li>최초 출판: <a href="http://dx.doi.org/10.7287/peerj.preprints.7v2">PeerJ Preprints 1:e7v2</a></li>
-<li>공식 출판: <a href="http://library.queensu.ca/ojs/index.php/IEE/article/view/4608">Ideas in Ecology and Evolution 6(2): 1?10, 2013.</a>
-<ul>
-<li><a href="doi:10.4033/iee.2013.6b.6.f" class="uri">doi:10.4033/iee.2013.6b.6.f</a></li>
-</ul></li>
-<li>특히 4절 “Use Standard Data Formats” 추천.</li>
-</ul>
-<p>Hadley Wickham 의 깔끔한 데이터</p>
-<ul>
-<li><a href="http://www.jstatsoft.org/article/view/v059i10">Journal of Statistical Software Vol 59 (2014), Issue 10, 10.18637/jss.v059.i10</a></li>
-<li><a href="http://vita.had.co.nz/papers/tidy-data.pdf">PDF 파일</a></li>
-</ul>
-<p>Phil Spector(2008), Data Manipulation with R, Springer.</p>
-<ul>
-<li>2장 “Reading and Writing Data” 참고</li>
-<li><a href="http://ezproxy.library.ubc.ca/login?url=http://link.springer.com.ezproxy.library.ubc.ca/book/10.1007/978-0-387-74731-6/page/1">SpringerLink</a></li>
-<li><a href="http://www.stat.berkeley.edu/~spector/">저자 웹페이지</a></li>
-<li><a href="http://books.google.com/books?id=grfuq1twFe4C&amp;lpg=PP1&amp;dq=data%2520manipulation%2520spector&amp;pg=PP1#v=onepage&amp;q=&amp;f=false">구글 도서검색</a></li>
-</ul>
 <div class="footnotes">
 <hr />
 <ol>
@@ -241,15 +193,16 @@ country_levels</code></pre>
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
-        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
-        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
