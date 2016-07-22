@@ -11,7 +11,7 @@ subtitle: 탈옥(jailbreakr) -- 엑셀에서 탈출... 자유
 > * 엔론 사례를 통해 스프레드쉬트 현황에 대해 이해한다.
 
 
-<iframe src="https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free/player" width="960" height="540" allowFullScreen frameBorder="0"></iframe>
+<iframe src="https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free/player" width="480" height="270" allowFullScreen frameBorder="0"></iframe>
 
 ### 탈옥 [^user-2016-jailbreakr]
 
@@ -62,6 +62,7 @@ subtitle: 탈옥(jailbreakr) -- 엑셀에서 탈출... 자유
 | 14   | CELL       | 6774           | 75.2%      |
 | 15   | YEAR       | 6812           | 75.6%      |
 
+#### 스프레드쉬트 내 워크쉬트 갯수 분포
 
 <img src="fig/ds-xls-worksheets-dist.png" alt="워크쉬트 분포" width="50%" />
 
@@ -87,20 +88,20 @@ subtitle: 탈옥(jailbreakr) -- 엑셀에서 탈출... 자유
 
 #### 1. 대쉬보드 사례
 
-<img src="ds-xls-enron-ex01.png" alt="엔론 사례01" width="50%" />
+<img src="fig/ds-xls-enron-ex01.png" alt="엔론 사례01" width="50%" />
 
 #### 2. 스포츠 토토
 
-<img src="ds-xls-enron-ex02.png" alt="엔론 사례02" width="50%" />
+<img src="fig/ds-xls-enron-ex02.png" alt="엔론 사례02" width="50%" />
 
 #### 3. 데이터 서식
-<img src="ds-xls-enron-ex03.png" alt="엔론 사례03-서식" width="50%" />
+<img src="fig/ds-xls-enron-ex03.png" alt="엔론 사례03-서식" width="50%" />
 
 #### 4. 수식(formulas) 
 
-<img src="ds-xls-enron-ex04.png" alt="엔론 사례04-수식" width="50%" />
+<img src="fig/ds-xls-enron-ex04.png" alt="엔론 사례04-수식" width="50%" />
 
 #### 5. 병합(merge)
 
-<img src="ds-xls-enron-ex05.png" alt="엔론 사례05-병합" width="50%" />
+<img src="fig/ds-xls-enron-ex05.png" alt="엔론 사례05-병합" width="50%" />
 
