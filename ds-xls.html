@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">탈옥(jailbreakr) – 엑셀에서 탈출… 자유</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>스프레드쉬트에 대한 대중성을 확인한다.</li>
+<li>스프레드쉬트와 R을 비교한다.</li>
+<li>엔론 사례를 통해 스프레드쉬트 현황에 대해 이해한다.</li>
+</ul>
+</div>
+</section>
+<iframe src="https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free/player" width="480" height="270" allowFullScreen frameBorder="0">
+</iframe>
+<h3 id="탈옥-user-2016-jailbreakr">탈옥 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p>엑셀로 대표되는 스프레드쉬트는 가장 많은 사람들이 사용하는 데이터 분석 및 숫자형 데이터 처리를 위해 사용하는 도구다. 사실 애플 컴퓨터가 대중화 되는데 있어 가장 많은 기여를 한 것도 <a href="https://en.wikipedia.org/wiki/VisiCalc">비지캘크(VisiCalc)</a> 라는 스프레드쉬트다. 전세계적으로 R 사용자는 백만명이 되지 않을 것으로 추산된다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">데이터 분석 도구</th>
+<th align="left">사용자 수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">마이크로소프트 오피스</td>
+<td align="left">10 억명</td>
+</tr>
+<tr class="even">
+<td align="left">스프레드쉬트(엑셀)</td>
+<td align="left">6억 5천만명</td>
+</tr>
+<tr class="odd">
+<td align="left">수식(formulas) 사용</td>
+<td align="left">50% ↑</td>
+</tr>
+<tr class="even">
+<td align="left">파이썬</td>
+<td align="left">백만 ~ 오백만명</td>
+</tr>
+<tr class="odd">
+<td align="left">R</td>
+<td align="left">25만 ~ 백만명</td>
+</tr>
+</tbody>
+</table>
+<h3 id="엑셀-코퍼스-excel-enron">엑셀 코퍼스 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p><strong>엑셀 코퍼스 저장소</strong></p>
+<ul>
+<li><a href="http://openscience.us/repo/spreadsheet/euses.html">EUSES corpus</a>: 4,447 스프레드쉬트 (16,853 워크쉬트)</li>
+<li><a href="http://www.felienne.com/archives/3634">A modern day Pompeii - Spreadsheets at Enron</a>: 15,770 스프레드쉬트 (79,983 워크쉬트)</li>
+</ul>
+<p><img src="fig/ds-xls-enron-vs-euses.png" alt="엔론 vs Euses 엑셀 코퍼스 비교" width="50%" /></p>
+<p><strong>엔론 엑셀 코퍼스 분석 결과</strong></p>
+<ul>
+<li><strong>24%</strong> 엔론 스프레드쉬트 수식에 엑셀 오류가 있음</li>
+<li>스프레드쉬트에 사용되는 함수 : 핵심 함수 15 개가 76% 스프레드쉬트에 사용됨</li>
+<li><strong>매일</strong> 스프레드쉬트 100개가 전자우편에 첨부되어 유통</li>
+<li>전자우편을 통해 스프레드쉬트가 10% 전자우편이 첨부되거나 주제로 전달됨.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">순위</th>
+<th align="left">함수</th>
+<th align="left">스프레드쉬트 갯수</th>
+<th align="left">누적 백분율(%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">SUM</td>
+<td align="left">578</td>
+<td align="left">6.4%</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">+</td>
+<td align="left">1259</td>
+<td align="left">14.0%</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">-</td>
+<td align="left">2262</td>
+<td align="left">25.1%</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">/</td>
+<td align="left">2625</td>
+<td align="left">29.1%</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">*</td>
+<td align="left">3959</td>
+<td align="left">43.9%</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">IF</td>
+<td align="left">4260</td>
+<td align="left">47.3%</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">NOW</td>
+<td align="left">5322</td>
+<td align="left">59.1%</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">AVERAGE</td>
+<td align="left">5664</td>
+<td align="left">62.8%</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">VLOOKUP</td>
+<td align="left">5733</td>
+<td align="left">63.6%</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">ROUND</td>
+<td align="left">5990</td>
+<td align="left">66.5%</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">TODAY</td>
+<td align="left">6182</td>
+<td align="left">68.6%</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">SUBTOTAL</td>
+<td align="left">6480</td>
+<td align="left">71.9%</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="left">MONTH</td>
+<td align="left">6520</td>
+<td align="left">72.3%</td>
+</tr>
+<tr class="even">
+<td align="left">14</td>
+<td align="left">CELL</td>
+<td align="left">6774</td>
+<td align="left">75.2%</td>
+</tr>
+<tr class="odd">
+<td align="left">15</td>
+<td align="left">YEAR</td>
+<td align="left">6812</td>
+<td align="left">75.6%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="스프레드쉬트-내-워크쉬트-갯수-분포">스프레드쉬트 내 워크쉬트 갯수 분포</h4>
+<p><img src="fig/ds-xls-worksheets-dist.png" alt="워크쉬트 분포" width="50%" /></p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="럼스펠트가-통계에-남긴-명언"><span class="glyphicon glyphicon-pushpin"></span>럼스펠트가 통계에 남긴 명언</h3>
+</div>
+<div class="panel-body">
+<p>‘you go to war with the army you have, not the army you might want or wish to have at a later time’ – Donald Rumsfeld</p>
+<p>‘you go into data analysis with the tools you know, not the tools you need’ – Jenny Bryan</p>
+</div>
+</aside>
+<h3 id="스프레드쉬트-활용-사례">스프레드쉬트 활용 사례</h3>
+<h4 id="대쉬보드-사례">1. 대쉬보드 사례</h4>
+<p><img src="fig/ds-xls-enron-ex01.png" alt="엔론 사례01" width="50%" /></p>
+<h4 id="스포츠-토토">2. 스포츠 토토</h4>
+<p><img src="fig/ds-xls-enron-ex02.png" alt="엔론 사례02" width="50%" /></p>
+<h4 id="데이터-서식">3. 데이터 서식</h4>
+<p><img src="fig/ds-xls-enron-ex03.png" alt="엔론 사례03-서식" width="50%" /></p>
+<h4 id="수식formulas">4. 수식(formulas)</h4>
+<p><img src="fig/ds-xls-enron-ex04.png" alt="엔론 사례04-수식" width="50%" /></p>
+<h4 id="병합merge">5. 병합(merge)</h4>
+<p><img src="fig/ds-xls-enron-ex05.png" alt="엔론 사례05-병합" width="50%" /></p>
+<h3 id="스프레드쉬트-이해하기">스프레드쉬트 이해하기</h3>
+<p>데이터 분석을 위해서 컴퓨터도 읽을 수 있고, 사람도 읽을 수 있는 프로그램이 다수 존재한다. 컴퓨터 프로그램을 열어보면 컴퓨터가 무시하고 넘어어 가지만 사람이 더 관심을 갖는 주석과 실제 컴퓨터가 실행하는 코드로 구성된다. 따라서 컴퓨터도 읽을 수 있고, 사람도 읽을 수 있는 코드가 데이터 과학을 위해 필요하다.</p>
+<p><strong>코드</strong> 도 사람과 컴퓨터 모두에게 가독성을 제공해야 하지만, <strong>데이터</strong> 도 사람과 컴퓨터 모두에게 가독성을 제공해야만 된다. 문제는 <strong>스프레드쉬트</strong> 가 사람과 컴퓨터 모두에게 가독성을 제공하지 않는데 있다. 어쩌면 가장 복잡성이 높은 것이 스프레드쉬트라고도 볼 수 있다. 처음에는 쉽게 다가오지만, 1주일만 지나도 해독하기가 만만치 않는 경험을 종종 했을 것이다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="알고리즘-복잡성"><span class="glyphicon glyphicon-pushpin"></span>알고리즘 복잡성</h3>
+</div>
+<div class="panel-body">
+<p><img src="fig/ds-xls-algo-complexity.png" alt="엑셀 알고리즘 복잡성" width="50%" /></p>
+</div>
+</aside>
+<p>스프레드쉬트는 데이터, 서식, 수식으로 구성된다. 숫자 데이터를 엑셀로 가져오게 되면 엑셀 내장 함수를 통해 수식 계산을 수행하고, 엑셀 사용자 본인 혹은 외부 사람을 위해 서식을 입히는 과정을 거쳐 비로소 완성된 스프레드쉬트가 된다.</p>
+<p><img src="fig/ds-xls-data-format-logic.png" alt="엑셀 구성요소" width="50%" /></p>
+<p>스프레드쉬트와 R을 비교해 보면, 서로 상응하는 기능이 일대일로 대응되는 것을 확인할 수 있다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>스프레드쉬트</strong></th>
+<th align="left"><strong>R</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">* 데이터</td>
+<td align="left">* 데이터</td>
+</tr>
+<tr class="even">
+<td align="left">* 로직</td>
+<td align="left">* .R, .Rmd</td>
+</tr>
+<tr class="odd">
+<td align="left">* 그림</td>
+<td align="left">* .png, .svg</td>
+</tr>
+<tr class="even">
+<td align="left">* 서식을 갖춘 표</td>
+<td align="left">* .md, .html, .pdf, Shiny 앱</td>
+</tr>
+<tr class="odd">
+<td align="left">* <strong>반응성(reactivity)</strong></td>
+<td align="left">* <strong>빌드와 배포</strong></td>
+</tr>
+</tbody>
+</table>
+<p>이런 스프레드쉬트 문제점을 극복하기 위해서 다양한 시도가 진행되고 있다.</p>
+<ul>
+<li>차세대 스프레드쉬트 응용프로그램을 개발: <a href="https://stenci.la/">Stencila</a>, <a href="http://www.alphasheets.com/">AlphaSheets</a>, <a href="https://manns.github.io/pyspread/">Pyspread</a></li>
+<li>스프레드쉬트는 그대로 두고, 스프레드쉬트에서 좋은 것을 뽑아내거나 다시 되돌리는 시도
+<ul>
+<li>readxl: <a href="https://cran.r-project.org/web/packages/readxl/index.html">CRAN</a></li>
+<li>openxlsx: <a href="https://cran.r-project.org/web/packages/openxlsx/index.html">CRAN</a></li>
+<li>XLConnect: <a href="https://cran.r-project.org/web/packages/XLConnect/index.html">CRAN</a></li>
+<li>gdata: <a href="https://cran.r-project.org/web/packages/gdata/index.html">CRAN</a></li>
+<li>xlsx: <a href="https://cran.r-project.org/web/packages/xlsx/index.html">CRAN</a></li>
+<li>RODBC: <a href="https://cran.r-project.org/web/packages/RODBC/index.html">CRAN</a></li>
+</ul></li>
+</ul>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free">jailbreakr: Get out of Excel, free</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://figshare.com/articles/Enron_s_Spreadsheets_and_Related_Emails_A_Dataset_and_Analysis/1222882">Enron’s Spreadsheets and Related Emails: A Dataset and Analysis</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
