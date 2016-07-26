@@ -12,8 +12,9 @@ title: 데이터 과학
 ### R과 RStudio 툴체인 데이터 과학 
 
 1. **R 언어**
-    * [두언어 문제](two-language-problem.html) 
-    * [R 라이브러리](data-science-library.html) 
+    - [두언어 문제](two-language-problem.html) 
+    - [R 라이브러리](data-science-library.html) 
+    - [R로 전자우편 자동 전송](ds-gmail.html)
 1. [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
     - [위기의 스프레드쉬트](ds-why-not-excel.html)
     - [탈옥(jailbreakr) -- 엑셀에서 탈출... 자유](ds-xls.html)    
