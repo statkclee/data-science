@@ -76,7 +76,7 @@ Use a local file ('.httr-oauth'), to cache OAuth access credentials between R se
 Selection: 
 ~~~
 
-<img src="fig/spammer-r-google-auth" alt="구글 Gmail 인증" width="50%" />
+<img src="fig/spammer-r-google-auth.png" alt="구글 Gmail 인증" width="50%" />
 
 상기 과정이 확인이 되면 다음부터 전자우편을 전송하는 명령어를 실행시키면 다음과 같이 깔끔하게 전송된다.
 
@@ -93,5 +93,9 @@ From:
 Date: 
 Subject: 
 ~~~
+
+### 4. 윈도우 환경에서 자동화
+
+윈도우 환경에서 자동화에 대한 사항은 R-블로거 사이트에 게시된 글을 참조한다.
 
 [Scheduling R Markdown Reports via Email](http://www.r-bloggers.com/scheduling-r-markdown-reports-via-email/)
