@@ -1,134 +1,541 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 탈옥(jailbreakr) -- 엑셀에서 탈출... 자유
+subtitle: R 함수 작성
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
+
+
 
 > ## 학습 목표 {.objectives}
 >
-> * 스프레드쉬트에 대한 대중성을 확인한다.
-> * 스프레드쉬트와 R을 비교한다.
-> * 엔론 사례를 통해 스프레드쉬트 현황에 대해 이해한다.
+> * R 함수를 작성한다.
+
+### 1. 함수 작성
+
+함수를 정의할 때 함수명(`my_fun`)을 먼저 적고 대입 연산자(`<-`)를 작성하고 
+예약어 `function` 을 적어 나서 인자(`arg1`, `arg2`)를 정의한다. 그리고 함수 몸통을 적성한다.
 
 
-<iframe src="https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free/player" width="480" height="270" allowFullScreen frameBorder="0"></iframe>
-
-### 탈옥 [^user-2016-jailbreakr]
-
-엑셀로 대표되는 스프레드쉬트는 가장 많은 사람들이 사용하는 데이터 분석 및 숫자형 데이터 처리를 위해 사용하는 도구다. 사실 애플 컴퓨터가 대중화 되는데 있어 가장 많은 기여를 한 것도 [비지캘크(VisiCalc)](https://en.wikipedia.org/wiki/VisiCalc) 라는 스프레드쉬트다. 전세계적으로 R 사용자는 백만명이 되지 않을 것으로 추산된다.
-
-[^user-2016-jailbreakr]: [jailbreakr: Get out of Excel, free](https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free)
-
-|   데이터 분석 도구    |       사용자 수       |
-|-----------------------|-----------------------|
-| 마이크로소프트 오피스 |     10 억명           |
-|  스프레드쉬트(엑셀)   |    6억 5천만명        |
-|   수식(formulas) 사용 |       50% &uarr;      |
-|      파이썬           |   백만 ~ 오백만명     |
-|        R              |     25만 ~ 백만명     |
-
-### 엑셀 코퍼스 [^excel-enron]
-
-**엑셀 코퍼스 저장소**
-
-* [EUSES corpus](http://openscience.us/repo/spreadsheet/euses.html):  4,447 스프레드쉬트 (16,853 워크쉬트)
-* [A modern day Pompeii - Spreadsheets at Enron](http://www.felienne.com/archives/3634): 15,770 스프레드쉬트 (79,983 워크쉬트)
-
-<img src="fig/ds-xls-enron-vs-euses.png" alt="엔론 vs Euses 엑셀 코퍼스 비교" width="50%" />
-
-[^excel-enron]: [Enron's Spreadsheets and Related Emails: A Dataset and Analysis](https://figshare.com/articles/Enron_s_Spreadsheets_and_Related_Emails_A_Dataset_and_Analysis/1222882)
-
-**엔론 엑셀 코퍼스 분석 결과**
-
-* **24%** 엔론 스프레드쉬트 수식에 엑셀 오류가 있음
-* 스프레드쉬트에 사용되는 함수 : 핵심 함수 15 개가 76% 스프레드쉬트에 사용됨
-* **매일** 스프레드쉬트 100개가 전자우편에 첨부되어 유통
-* 전자우편을 통해 스프레드쉬트가 10% 전자우편이 첨부되거나 주제로 전달됨.
-
-| 순위 |   함수  | 스프레드쉬트 갯수 | 누적 백분율(%) |
-|------|------------|----------------|------------|
-| 1    | SUM        | 578            | 6.4%       |
-| 2    | +          | 1259           | 14.0%      |
-| 3    | -          | 2262           | 25.1%      |
-| 4    | /          | 2625           | 29.1%      |
-| 5    | *          | 3959           | 43.9%      |
-| 6    | IF         | 4260           | 47.3%      |
-| 7    | NOW        | 5322           | 59.1%      |
-| 8    | AVERAGE    | 5664           | 62.8%      |
-| 9    | VLOOKUP    | 5733           | 63.6%      |
-| 10   | ROUND      | 5990           | 66.5%      |
-| 11   | TODAY      | 6182           | 68.6%      |
-| 12   | SUBTOTAL   | 6480           | 71.9%      |
-| 13   | MONTH      | 6520           | 72.3%      |
-| 14   | CELL       | 6774           | 75.2%      |
-| 15   | YEAR       | 6812           | 75.6%      |
-
-#### 스프레드쉬트 내 워크쉬트 갯수 분포
-
-<img src="fig/ds-xls-worksheets-dist.png" alt="워크쉬트 분포" width="50%" />
+~~~{.r}
+my_fun <- function(arg1, arg2) {
+    함수 몸통부분
+}
+~~~
 
 
-> ### 럼스펠트가 통계에 남긴 명언 {.callout}
->
-> 'you go to war with the army you have, not the army you might want or wish to have at a later time' -- Donald Rumsfeld
->
-> 'you go into data analysis with the tools you know, not the tools you need' -- Jenny Bryan
 
-### 스프레드쉬트 활용 사례
+~~~{.output}
+Error: <text>:2:12: 예상하지 못한 기호(symbol)입니다.
+1: my_fun <- function(arg1, arg2) {
+2:     함수 몸통부분
+              ^
 
-#### 1. 대쉬보드 사례
+~~~
 
-<img src="fig/ds-xls-enron-ex01.png" alt="엔론 사례01" width="50%" />
-
-#### 2. 스포츠 토토
-
-<img src="fig/ds-xls-enron-ex02.png" alt="엔론 사례02" width="50%" />
-
-#### 3. 데이터 서식
-<img src="fig/ds-xls-enron-ex03.png" alt="엔론 사례03-서식" width="50%" />
-
-#### 4. 수식(formulas) 
-
-<img src="fig/ds-xls-enron-ex04.png" alt="엔론 사례04-수식" width="50%" />
-
-#### 5. 병합(merge)
-
-<img src="fig/ds-xls-enron-ex05.png" alt="엔론 사례05-병합" width="50%" />
+예를 들어, 두 수를 더하여 합을 구하는 `add` 함수를 정의해 보자. 함수명 `add`를 적고 나서 
+예약어 `function`을 적고 나서 인자 `x`, `y`를 선언한다. 그리고 나서 함수몸통부분에 두 수를 더하는 로직 
+`x + y` 를 정의한다. 
 
 
-### 스프레드쉬트 이해하기
+~~~{.r}
+add <- function(x, y = 1) {
+    x + y
+}
+~~~
 
-데이터 분석을 위해서 컴퓨터도 읽을 수 있고, 사람도 읽을 수 있는 프로그램이 다수 존재한다. 컴퓨터 프로그램을 열어보면 컴퓨터가 무시하고 넘어어 가지만 사람이 더 관심을 갖는 주석과 실제 컴퓨터가 실행하는 코드로 구성된다. 따라서 컴퓨터도 읽을 수 있고, 사람도 읽을 수 있는 코드가 데이터 과학을 위해 필요하다.
+#### 1.1. 함수 해부
 
-**코드** 도 사람과 컴퓨터 모두에게 가독성을 제공해야 하지만, **데이터** 도 사람과 컴퓨터 모두에게 가독성을 제공해야만 된다. 문제는 **스프레드쉬트** 가 사람과 컴퓨터 모두에게 가독성을 제공하지 않는데 있다. 어쩌면 가장 복잡성이 높은 것이 스프레드쉬트라고도 볼 수 있다. 처음에는 쉽게 다가오지만, 1주일만 지나도 해독하기가 만만치 않는 경험을 종종 했을 것이다.
-
-> ### 알고리즘 복잡성 {.callout}
->
-> <img src="fig/ds-xls-algo-complexity.png" alt="엑셀 알고리즘 복잡성" width="50%" />
-
-
-스프레드쉬트는 데이터, 서식, 수식으로 구성된다. 숫자 데이터를 엑셀로 가져오게 되면 엑셀 내장 함수를 통해 수식 계산을 수행하고, 엑셀 사용자 본인 혹은 외부 사람을 위해 서식을 입히는 과정을 거쳐 비로소 완성된 스프레드쉬트가 된다.
-
-<img src="fig/ds-xls-data-format-logic.png" alt="엑셀 구성요소" width="50%" />
+`add` 상기 함수를 `formals`, `body`, `environment` 명령어를 통해 해부할 수 있다. 
 
 
-스프레드쉬트와 R을 비교해 보면, 서로 상응하는 기능이 일대일로 대응되는 것을 확인할 수 있다.
+~~~{.r}
+formals(add)
+~~~
 
-|    **스프레드쉬트**      |          **R**               |
-|--------------------------|------------------------------|
-| * 데이터                 | * 데이터                     |
-| * 로직                   | * .R, .Rmd                   |
-| * 그림                   | * .png, .svg                 |
-| * 서식을 갖춘 표         | * .md, .html, .pdf, Shiny 앱 |
-| * **반응성(reactivity)** | * **빌드와 배포**            |
 
-이런 스프레드쉬트 문제점을 극복하기 위해서 다양한 시도가 진행되고 있다.
 
-* 차세대 스프레드쉬트 응용프로그램을 개발: [Stencila](https://stenci.la/), [AlphaSheets](http://www.alphasheets.com/), [Pyspread](https://manns.github.io/pyspread/) 
-* 스프레드쉬트는 그대로 두고, 스프레드쉬트에서 좋은 것을 뽑아내거나 다시 되돌리는 시도
-    * readxl: [CRAN](https://cran.r-project.org/web/packages/readxl/index.html)
-    * openxlsx: [CRAN](https://cran.r-project.org/web/packages/openxlsx/index.html)
-    * XLConnect: [CRAN](https://cran.r-project.org/web/packages/XLConnect/index.html)
-    * gdata: [CRAN](https://cran.r-project.org/web/packages/gdata/index.html)
-    * xlsx: [CRAN](https://cran.r-project.org/web/packages/xlsx/index.html)
-    * RODBC: [CRAN](https://cran.r-project.org/web/packages/RODBC/index.html)
+~~~{.output}
+$x
+
+
+$y
+[1] 1
+
+~~~
+
+
+
+~~~{.r}
+body(add)
+~~~
+
+
+
+~~~{.output}
+{
+    x + y
+}
+
+~~~
+
+
+
+~~~{.r}
+environment(add)
+~~~
+
+
+
+~~~{.output}
+<environment: R_GlobalEnv>
+
+~~~
+
+#### 1.2. 함수 반환값
+
+R에서 명시적으로 `return` 예약어를 사용해서 반환하기도 하지만, `return` 예약어로 명시하지 않는 경우
+함수몸통부문 마지막 표현식이 평가되어 반환된다.
+
+
+~~~{.r}
+f <- function(x) {
+    if (x < 0) {
+        -x
+    } else {
+        x
+    }
+}
+~~~
+
+상기 함수 `f`는 숫자를 받아 양수면 양수로, 음수면 양수로 절대값으로 변환하는 함수다.
+
+
+~~~{.r}
+f(-5)
+~~~
+
+
+
+~~~{.output}
+[1] 5
+
+~~~
+
+
+
+~~~{.r}
+f(15)
+~~~
+
+
+
+~~~{.output}
+[1] 15
+
+~~~
+
+#### 1.3. 함수는 객체다.
+
+함수는 일반 R 객체처럼 다룰 수 있다.
+
+
+~~~{.r}
+mean2 <- mean
+
+mean2(1:10)
+~~~
+
+
+
+~~~{.output}
+[1] 5.5
+
+~~~
+
+
+
+~~~{.r}
+function(x) { x + 1 }
+~~~
+
+
+
+~~~{.output}
+function(x) { x + 1 }
+
+~~~
+
+
+
+~~~{.r}
+(function(x) { x + 1 })(2)
+~~~
+
+
+
+~~~{.output}
+[1] 3
+
+~~~
+
+`mean` 함수로 `mean2` 객체를 생성시킬 수 있고, 인자를 받아 평균을 계산하고, 이름없는 함수에 인자를 넣어 계산도 가능하다.
+
+
+### 2. 함수 유효 범위(Scope)
+
+함수 유효범위(Scoping)는 명칭으로 값을 R이 찾는 방법으로 함수 내부에 명칭이 정의하지 않는 경우 한단계 상위 수준에서 R이 자동으로 검색한다.
+
+
+~~~{.r}
+x <- 2
+
+g <- function() {
+    y <- 1
+    c(x, y)
+}
+
+g()
+~~~
+
+
+
+~~~{.output}
+[1] 2 1
+
+~~~
+
+변수명이 함수내부에서 지역적으로 정의되지 않고, 상위 수준에서도 정의되지 않는 경우 오류가 발생된다.
+
+
+~~~{.r}
+rm(x) # 변수 x를 제거
+
+g <- function() {
+    y <- 1
+    c(x, y)
+}
+
+g()
+~~~
+
+
+
+~~~{.output}
+Error in g(): 객체 'x'를 찾을 수 없습니다
+
+~~~
+
+유효범위는 값을 찾는 장소를 정의하지만, 시간을 정의하지는 않는다. 
+
+
+~~~{.r}
+f <- function() x
+
+x <- 15
+f()
+~~~
+
+
+
+~~~{.output}
+[1] 15
+
+~~~
+
+
+
+~~~{.r}
+x <- 20
+f()
+~~~
+
+
+
+~~~{.output}
+[1] 20
+
+~~~
+
+변수와 마찬가지로, 검색(lookup)도 함수에 대해 동일하게 적용된다.
+
+
+~~~{.r}
+l <- function(x) x + 1
+
+m <- function() {
+    l <- function(x) x * 2
+    l(10)
+}
+
+m()
+~~~
+
+
+
+~~~{.output}
+[1] 20
+
+~~~
+
+함수를 호출할 때마다 새로 시작되는 자체 환경이 새롭게 준비되고, 새로운 환경이 인자값과 함께 제공된다.
+객체는 그 자체 환경을 먼저 검색하고 만약, 찾는 것이 없으면 함수가 생성된 환경에서 검색을 재개한다.
+
+
+~~~{.r}
+j <- function() {
+    if (!exists("a")) {
+        a <- 1
+    } else {
+        a <- a + 1
+    }
+        print(a)
+}
+
+j()
+~~~
+
+
+
+~~~{.output}
+[1] 1
+
+~~~
+
+
+
+~~~{.r}
+j()
+~~~
+
+
+
+~~~{.output}
+[1] 1
+
+~~~
+
+
+
+~~~{.r}
+a
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): 객체 'a'를 찾을 수 없습니다
+
+~~~
+
+### 3. 자료구조
+
+6가지 **원자 벡터** 와 리스트가 자료구조로 R에 존재한다.
+원자벡터는 `logical`, `integer`, `double`, `character`, `complex`, `raw` 가 있고, 자료가 모두 동일해야 한다.
+반면에 리스트는 이질적인 원자벡터를 포함할 수 있다.
+
+#### 3.1. 결측값
+
+* `NULL`: 벡터가 존재하지 않는 경우를 표현하는데 사용된다.
+* `NA`: 벡터에 빠진 값을 표현하는데 사용된다.
+
+
+~~~{.r}
+typeof(NULL)
+~~~
+
+
+
+~~~{.output}
+[1] "NULL"
+
+~~~
+
+
+
+~~~{.r}
+length(NULL)
+~~~
+
+
+
+~~~{.output}
+[1] 0
+
+~~~
+
+
+
+~~~{.r}
+typeof(NA)
+~~~
+
+
+
+~~~{.output}
+[1] "logical"
+
+~~~
+
+
+
+~~~{.r}
+length(NA)
+~~~
+
+
+
+~~~{.output}
+[1] 1
+
+~~~
+
+벡터 내부에 `NA` 가 존재하는 경우 `is.na` 함수를 통해 검출가능하다.
+
+
+~~~{.r}
+x <- c(1, 2, 3, NA, 5)
+
+x
+~~~
+
+
+
+~~~{.output}
+[1]  1  2  3 NA  5
+
+~~~
+
+
+
+~~~{.r}
+is.na(x)
+~~~
+
+
+
+~~~{.output}
+[1] FALSE FALSE FALSE  TRUE FALSE
+
+~~~
+
+#### 3.2. `NA`는 전염된다.
+
+
+~~~{.r}
+NA + 10
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
+NA / 2
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
+NA > 5
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
+10 == NA
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
+NA == NA
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+#### 3.3. 리스트
+
+리스트는 다른 형태 객체를 담을 수 있다는 점에서 유용한데, 복잡하게 반환되는 객체는 거의 리스트다. 예를 들어 회귀분석, `lm()` 에서 반환되는 객체를 살펴보면 쉽게 이해된다.
+
+`list()` 함수로 리스트를 생성하고, `[`, `[[`, `$` 을 통해 부분집합을 뽑아낸다.
+
+* `[`: 리스트가 포함한 하위 리스트를 뽑아낸다.
+* `[[`, `$`: 원소를 추출하고, 계층구조 수준을 한단계 제거한다.
+
+
+~~~{.r}
+a <- list(
+    a = 1:3,
+    b = "a string",
+    c = pi,
+    d = list(-1, -5)
+)
+
+str(a[4])
+~~~
+
+
+
+~~~{.output}
+List of 1
+ $ d:List of 2
+  ..$ : num -1
+  ..$ : num -5
+
+~~~
+
+
+
+~~~{.r}
+str(a[[4]])
+~~~
+
+
+
+~~~{.output}
+List of 2
+ $ : num -1
+ $ : num -5
+
+~~~
+
+<img src="fig/ds-writing-r-fun-subset.png" alt="리스트 부분집합 추출" width="50%" />
+
+
