@@ -5,10 +5,11 @@ subtitle: 스파크 + dplyr -- sparklyr
 ---
 > ## 학습 목표 {.objectives}
 >
-> *  `sparklyr` 팩키지를 설치한다.
+> *  윈도우, 리눅스, 맥 환경에서 `sparklyr` 팩키지를 설치한다.
+> *  RStudio 프리뷰 버젼을 설치하여 스파크를 편하게 활용한다.
 
 
-<img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="70%" />
+<img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="37%" />
 
 ### 1. `sparklyr` 설치 (윈도우)
 
@@ -17,7 +18,6 @@ subtitle: 스파크 + dplyr -- sparklyr
 > ### 윈도우 사전 준비 {.callout}
 > 
 > 윈도우 환경에서 `sparklyr`을 설치하려면 [Microsoft Visual C++ 2010 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=13523)을 다운로드받아 > 설치한다.
-``
 
 1. [Download Apache Spark](http://spark.apache.org/downloads.html) 사이트를 방문하여 스파크-하둡을 다운로드 한다.
     * 스파크 버젼 1.6.2. : `spark-1.6.2-bin-hadoop2.6.tgz` 버전을 다운로드 받아 설치한다.
@@ -83,4 +83,4 @@ src_tbls(sc)
 
 `sparklyr` RStudio 에서 편한게 사용할 수 있도록 다양한 기능을 제공하고 있다. 이를 위해서 [RStudio v0.99.1273 Preview](https://www.rstudio.com/products/rstudio/download/preview/) 버젼을 다운로드해서 설치한다. **Spark** 탭이 별도로 생성되고 이를 통해 스파크에 대한 전반적인 상황을 확인할 수 있다.
 
-<img src="fig/ds-sparklyr-rstudio.png" alt="RStudio Spark 인터페이스" width="50%" />
+<img src="fig/ds-sparklyr-rstudio.png" alt="RStudio Spark 인터페이스" width="77%" />

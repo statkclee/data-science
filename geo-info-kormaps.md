@@ -1,7 +1,7 @@
 ---
 layout: page
-title: <eb>°<ec>´<ed>„° ê³¼í•™
-subtitle: Kormaps, leaflet ì§€ë¦¬ì •ë³<b4> <ec>‹œê°í™” ê¸°ì´ˆ 
+title: ë°ì´í„° ê³¼í•™
+subtitle: Kormaps, leaflet ì§€ë¦¬ì •ë³´ ì‹œê°í™” ê¸°ì´ˆ 
 output:
   html_document: 
     keep_md: yes
@@ -12,148 +12,72 @@ mainfont: NanumGothic
  
 
 
-> ## <ed>•™<ec>Šµ ëª©í‘œ {.objectives}
+> ## í•™ìŠµ ëª©í‘œ {.objectives}
 >
->  * <ec>œ„<eb>„ê²½ë„ <ec> •ë³<b4> <ed>™œ<ec>š© `ggmap` ì§€ë¦¬ì •ë³<b4> <ec>‹œê°í™”<ed>•œ<eb>‹¤.
->  * `Kormaps` ì§€ë¦¬ì •ë³<b4> <ec>‹œê°í™”<ed>•œ<eb>‹¤.
+>  * ìœ„ë„ê²½ë„ ì •ë³´ í™œìš© `ggmap` ì§€ë¦¬ì •ë³´ ì‹œê°í™”í•œë‹¤.
+>  * `Kormaps` ì§€ë¦¬ì •ë³´ ì‹œê°í™”í•œë‹¤.
 
-### 1. `Kormaps` ì§€ë¦¬ì •ë³<b4> <ec>‹œê°í™” [^kormaps-01] 
+### 1. `Kormaps` ì§€ë¦¬ì •ë³´ ì‹œê°í™” [^kormaps-01] 
 
-[^kormaps-01]: [Kormaps <ed>Œ¨<ed>‚¤ì§€ë¥<bc> <ec>´<ec>š©<ed>•œ <eb>‹¨ê³„êµ¬ë¶„ë„ <ec>‰½ê²<8c> ê·¸ë¦¬ê¸<b0>(1)](http://web-r.org/webrboard/6477)
+[^kormaps-01]: [Kormaps íŒ¨í‚¤ì§€ë¥¼ ì´ìš©í•œ ë‹¨ê³„êµ¬ë¶„ë„ ì‰½ê²Œ ê·¸ë¦¬ê¸°(1)](http://web-r.org/webrboard/6477)
 
-2010<eb>…„ <ec>‹œ/<eb>„, <ec>‹œ/êµ<b0>/êµ<ac>, <ec>/ë©<b4>/<eb>™ <ed>–‰<ec> •êµ¬ì—­ì§€<eb>„ 3ê°œë<a5><bc> ê°–ê³  <ec>¸êµ¬ì´ì¡°ì‚¬(2010<eb>…„) ê¸°ì<a4>€ ì§€ë¦¬ì •ë³´ë<a5><bc> <ec> œê³µí•˜<eb>Š” R <ed>Œ©<ed>‚¤ì§€ë¥<bc> ì¹´í†¨ë¦<ad><eb><8c>€<ed>•™êµ<90>
-[ë¬¸ê±´<ec>›…](http://web-r.org) êµìˆ˜<eb>‹˜ê»˜ì„œ ê°œë°œ<ed>•˜<ec>—¬ ê³µê°œ<ed>•˜<ec><98>€<eb>‹¤.
+2010ë…„ ì‹œ/ë„, ì‹œ/êµ°/êµ¬, ì/ë©´/ë™ í–‰ì •êµ¬ì—­ì§€ë„ 3ê°œë¥¼ ê°–ê³  ì¸êµ¬ì´ì¡°ì‚¬(2010ë…„) ê¸°ì¤€ ì§€ë¦¬ì •ë³´ë¥¼ ì œê³µí•˜ëŠ” R íŒ©í‚¤ì§€ë¥¼ ì¹´í†¨ë¦­ëŒ€í•™êµ
+[ë¬¸ê±´ì›…](http://web-r.org) êµìˆ˜ë‹˜ê»˜ì„œ ê°œë°œí•˜ì—¬ ê³µê°œí•˜ì˜€ë‹¤.
 
-`submap` ê´€<eb> ¨ <ec>¼ë¶€ <eb>™<ec>‘<ec>´ <eb>˜ì§€ <ec>•Š<eb>Š” ê²½ìš°<eb>„ <ec>ˆì§€ë§<8c>, ë¹ ë¥´ê²<8c> <ec>¸êµ¬ì´ì¡°ì‚¬ê²°ê³¼ë¥<bc> <eb><8c>€<ed>•œë¯¼êµ­ ì§€ë¦¬ì •ë³´ë¡œ <eb>„<ec>‹<ed>™”<ed>•˜<eb>Š”<eb>° ì¢‹ì<9d>€ ê¸°ëŠ¥<ec>„ <ec> œê³µí•˜ê³<a0> <ec>ˆ<eb>‹¤.
+`submap` ê´€ë ¨ ì¼ë¶€ ë™ì‘ì´ ë˜ì§€ ì•ŠëŠ” ê²½ìš°ë„ ìˆì§€ë§Œ, ë¹ ë¥´ê²Œ ì¸êµ¬ì´ì¡°ì‚¬ê²°ê³¼ë¥¼ ëŒ€í•œë¯¼êµ­ ì§€ë¦¬ì •ë³´ë¡œ ë„ì‹í™”í•˜ëŠ”ë° ì¢‹ì€ ê¸°ëŠ¥ì„ ì œê³µí•˜ê³  ìˆë‹¤.
 
-`Kormaps` <ed>Œ©<ed>‚¤ì§€ë¥<bc> <ec>„¤ì¹˜í•˜ê³<a0>, ì£¼ì œ<eb>„ <ed>Œ©<ed>‚¤ì§€ `tmap` <eb>„ ë¶ˆëŸ¬<ec>˜¨<eb>‹¤.
+`Kormaps` íŒ©í‚¤ì§€ë¥¼ ì„¤ì¹˜í•˜ê³ , ì£¼ì œë„ íŒ©í‚¤ì§€ `tmap` ë„ ë¶ˆëŸ¬ì˜¨ë‹¤.
 
 
 ~~~{.r}
-#install.packages("devtools")  # <U+653C><U+3E64>•œë²<U+383C><U+3E38> <U+653C><U+3E63>„¤ì¹˜í•œ ê²½ìš°<U+653C><U+3E63>—<U+653C><U+3E62>Š” <U+653C><U+3E62>‹¤<U+653C><U+3E63>‹œ <U+653C><U+3E63>„¤ì¹˜í•  <U+653C><U+3E64>•„<U+653C><U+3E63>š” <U+653C><U+3E63>—†<U+653C><U+3E63>Šµ<U+653C><U+3E62>‹ˆ<U+653C><U+3E62>‹¤.
+#install.packages("devtools")  # í•œë²ˆ ì„¤ì¹˜í•œ ê²½ìš°ì—ëŠ” ë‹¤ì‹œ ì„¤ì¹˜í•  í•„ìš” ì—†ìŠµë‹ˆë‹¤.
 #devtools::install_github("cardiomoon/Kormaps")
 library(Kormaps)
-~~~
-
-
-
-~~~{.output}
-FALSE Error in library(Kormaps): there is no package called 'Kormaps'
-
-~~~
-
-
-
-~~~{.r}
 library(tmap)
-~~~
-
-
-
-~~~{.output}
-FALSE Error in library(tmap): there is no package called 'tmap'
-
-~~~
-
-
-
-~~~{.r}
 library(raster)
 ~~~
 
-
-
-~~~{.output}
-FALSE Error in library(raster): there is no package called 'raster'
-
-~~~
-
-2010<eb>…„ <ec>‹œ/<eb>„, <ec>‹œ/êµ<b0>/êµ<ac>, <ec>/ë©<b4>/<eb>™ 3<eb>‹¨ê³<84> `Kormaps` <ed>Œ©<ed>‚¤ì§€<ec>— <eb>‚´<ec>¥<eb>œ <ed>–‰<ec> •êµ¬ì—­ì§€<eb>„<eb>Š” <eb>‹¤<ec>Œê³<bc> ê°™ë‹¤.
+2010ë…„ ì‹œ/ë„, ì‹œ/êµ°/êµ¬, ì/ë©´/ë™ 3ë‹¨ê³„ `Kormaps` íŒ©í‚¤ì§€ì— ë‚´ì¥ëœ í–‰ì •êµ¬ì—­ì§€ë„ëŠ” ë‹¤ìŒê³¼ ê°™ë‹¤.
 
 
 ~~~{.r}
 p1 <- qtm(kormap1)
-~~~
-
-
-
-~~~{.output}
-FALSE Error in eval(expr, envir, enclos): could not find function "qtm"
-
-~~~
-
-
-
-~~~{.r}
 p2 <- qtm(kormap2)
-~~~
-
-
-
-~~~{.output}
-FALSE Error in eval(expr, envir, enclos): could not find function "qtm"
-
-~~~
-
-
-
-~~~{.r}
 p3 <- qtm(kormap3)
-~~~
 
-
-
-~~~{.output}
-FALSE Error in eval(expr, envir, enclos): could not find function "qtm"
-
-~~~
-
-
-
-~~~{.r}
 multiplot(p1, p2, p3, cols = 3)
 ~~~
 
+<img src="fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
 
-~~~{.output}
-FALSE Error in multiplot(p1, p2, p3, cols = 3): object 'p1' not found
-
-~~~
-
-
-`submap()` <ed>•¨<ec>ˆ˜ë¥<bc> <ec>‚¬<ec>š©<ed>•˜<ec>—¬ <eb><8c>€<ed>•œë¯¼êµ­ <ed>Š¹<ec> • ì§€<ec>—­<ec>„ ë½‘ì•„<eb>‚´<ec>„œ ë³„ë„ë¡<9c> ì§€ë¦¬ì •ë³´ë<a5><bc> <ec>‹œê°í™” <ed>•  <ec>ˆ˜ <ec>ˆ<eb>‹¤.
+`submap()` í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ì—¬ ëŒ€í•œë¯¼êµ­ íŠ¹ì • ì§€ì—­ì„ ë½‘ì•„ë‚´ì„œ ë³„ë„ë¡œ ì§€ë¦¬ì •ë³´ë¥¼ ì‹œê°í™” í•  ìˆ˜ ìˆë‹¤.
 
 
 ~~~{.r}
-daejeon.lvl.3 <-  submap(korpopmap3, enc2utf8("<U+FFFD>€<U+FFFD><U+FFFD>"))
-qtm(daejeon.lvl.3,"ê°€êµ<U+FFFD>ê³<U+FFFD>ê°€êµ<U+FFFD>")+tm_layout(fontfamily="AppleGothic")
+daejeon.lvl.3 <-  submap(korpopmap3, enc2utf8("ëŒ€ì „"))
+qtm(daejeon.lvl.3,"ê°€êµ¬_ê³„_ê°€êµ¬")+tm_layout(fontfamily="AppleGothic")
 ~~~
 
+<img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
 
+ì°¸ê³ , `names(korpopmap1@data)` ëª…ë ¹ì–´ë¥¼ í†µí•´ì„œ ì¸êµ¬ì´ì¡°ì‚¬(2010ë…„)ì— í¬í•¨ëœ ë°ì´í„°ë„ í™•ì¸í•  ìˆ˜ ìˆë‹¤.
 
-~~~{.output}
-FALSE Error: invalid multibyte character in parser at line 1
+### 2. `Kormaps`, `leaflet` íŒ©í‚¤ì§€ í™œìš© ì§€ë¦¬ì •ë³´ ì‹œê°í™” [^kormaps-02]
 
-~~~
+[^kormaps-02]: [Kormaps íŒ¨í‚¤ì§€ë¥¼ ì´ìš©í•œ ë‹¨ê³„êµ¬ë¶„ë„ ì‰½ê²Œ ê·¸ë¦¬ê¸°(2)](http://rpubs.com/cardiomoon/159305)
 
-ì°¸ê³ , `names(korpopmap1@data)` ëª…ë ¹<ec>–´ë¥<bc> <ed>†µ<ed>•´<ec>„œ <ec>¸êµ¬ì´ì¡°ì‚¬(2010<eb>…„)<ec>— <ed>¬<ed>•¨<eb>œ <eb>°<ec>´<ed>„°<eb>„ <ed>™•<ec>¸<ed>•  <ec>ˆ˜ <ec>ˆ<eb>‹¤.
-
-### 2. `Kormaps`, `leaflet` <ed>Œ©<ed>‚¤ì§€ <ed>™œ<ec>š© ì§€ë¦¬ì •ë³<b4> <ec>‹œê°í™” [^kormaps-02]
-
-[^kormaps-02]: [Kormaps <ed>Œ¨<ed>‚¤ì§€ë¥<bc> <ec>´<ec>š©<ed>•œ <eb>‹¨ê³„êµ¬ë¶„ë„ <ec>‰½ê²<8c> ê·¸ë¦¬ê¸<b0>(2)](http://rpubs.com/cardiomoon/159305)
-
-[leaflet](https://rstudio.github.io/leaflet/) <ed>Œ©<ed>‚¤ì§€<eb>Š” <ec>¸<ed>„°<eb>™<ed>‹°ë¸<8c> ì§€<eb>„ë¡<9c> ê°€<ec>¥ <ec>¸ê¸°ìˆ<eb>Š” <ec>˜¤<ed>”ˆ<ec>†Œ<ec>Š¤ <ec>ë°”ìŠ¤<ed>¬ë¦½íŠ¸ <eb>¼<ec>´ë¸ŒëŸ¬ë¦¬ë¡œ 
-[<eb>‰´<ec>š•<ed><83>€<ec>„ì¦<88>](http://www.nytimes.com/projects/elections/2013/nyc-primary/mayor/map.html), 
-[<ec>›Œ<ec>‹±<ed>„´<ed>¬<ec>Š¤<ed>Š¸](http://www.washingtonpost.com/sf/local/2013/11/09/washington-a-world-apart/), 
-[GitHub](https://github.com/blog/1528-there-s-a-map-for-that), [<ed>”Œë¦¬ì»¤](https://www.flickr.com/map) ê°™ì<9d>€ êµ<ad><eb>‚´<ec>™¸ <ec>œ ëª<85> <ec>›¹<ec>‚¬<ec>´<ed>Š¸<ec>—<ec>„œ <ec>‚¬<ec>š©<eb>˜ê³<a0> <ec>ˆ<eb>‹¤.
+[leaflet](https://rstudio.github.io/leaflet/) íŒ©í‚¤ì§€ëŠ” ì¸í„°ë™í‹°ë¸Œ ì§€ë„ë¡œ ê°€ì¥ ì¸ê¸°ìˆëŠ” ì˜¤í”ˆì†ŒìŠ¤ ìë°”ìŠ¤í¬ë¦½íŠ¸ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¡œ 
+[ë‰´ìš•íƒ€ì„ì¦ˆ](http://www.nytimes.com/projects/elections/2013/nyc-primary/mayor/map.html), 
+[ì›Œì‹±í„´í¬ìŠ¤íŠ¸](http://www.washingtonpost.com/sf/local/2013/11/09/washington-a-world-apart/), 
+[GitHub](https://github.com/blog/1528-there-s-a-map-for-that), [í”Œë¦¬ì»¤](https://www.flickr.com/map) ê°™ì€ êµ­ë‚´ì™¸ ìœ ëª… ì›¹ì‚¬ì´íŠ¸ì—ì„œ ì‚¬ìš©ë˜ê³  ìˆë‹¤.
 
 
 
 ~~~{.r}
 library(leaflet)
-blue_palette <- colorNumeric(palette="Blues",domain=korpopmap3$ê°€êµ<U+FFFD>ê³<U+FFFD>ê°€êµ<U+FFFD>)
-households <- paste0(korpopmap3@data$name,": ",korpopmap3@data$ê°€êµ<U+FFFD>ê³<U+FFFD>ê°€êµ<U+FFFD>)
+blue_palette <- colorNumeric(palette="Blues",domain=korpopmap3$ê°€êµ¬_ê³„_ê°€êµ¬)
+households <- paste0(korpopmap3@data$name,": ",korpopmap3@data$ê°€êµ¬_ê³„_ê°€êµ¬)
 
 leaflet(korpopmap3) %>%
   addTiles() %>%
@@ -161,16 +85,13 @@ leaflet(korpopmap3) %>%
               smoothFactor = 0.2,
               fillOpacity = .8, 
               popup=households,
-              color= ~blue_palette(korpopmap3@data$ê°€êµ<U+FFFD>ê³<U+FFFD>ê°€êµ<U+FFFD>))
+              color= ~blue_palette(korpopmap3@data$ê°€êµ¬_ê³„_ê°€êµ¬))
 ~~~
 
 
 
 ~~~{.output}
-FALSE Error: <text>:2:66: unexpected input
-FALSE 1: library(leaflet)
-FALSE 2: blue_palette <- colorNumeric(palette="Blues",domain=korpopmap3$ê°€
-FALSE                                                                     ^
+FALSE Error in html_screenshot(x): Please install the webshot package (if not on CRAN, try devtools::install_github("wch/webshot"))
 
 ~~~
 

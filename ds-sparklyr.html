@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">스파크 + dplyr – sparklyr</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>윈도우, 리눅스, 맥 환경에서 <code>sparklyr</code> 팩키지를 설치한다.</li>
+<li>RStudio 프리뷰 버젼을 설치하여 스파크를 편하게 활용한다.</li>
+</ul>
+</div>
+</section>
+<p><img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="37%" /></p>
+<h3 id="sparklyr-설치-윈도우">1. <code>sparklyr</code> 설치 (윈도우)</h3>
+<p><code>sparklyr</code>는 <code>dplyr</code>을 스파크 환경에서 사용할 수 있도록 구현된 팩키지다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="윈도우-사전-준비"><span class="glyphicon glyphicon-pushpin"></span>윈도우 사전 준비</h3>
+</div>
+<div class="panel-body">
+<p>윈도우 환경에서 <code>sparklyr</code>을 설치하려면 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=13523">Microsoft Visual C++ 2010 SP1 Redistributable Package</a>을 다운로드받아 &gt; 설치한다.</p>
+</div>
+</aside>
+<ol style="list-style-type: decimal">
+<li><a href="http://spark.apache.org/downloads.html">Download Apache Spark</a> 사이트를 방문하여 스파크-하둡을 다운로드 한다.
+<ul>
+<li>스파크 버젼 1.6.2. : <code>spark-1.6.2-bin-hadoop2.6.tgz</code> 버전을 다운로드 받아 설치한다.</li>
+<li>스파크 버젼 2.0.0. : <code>spark-2.0.0-bin-hadoop2.7.tgz</code> 버전은 설치가 안되는 경우가 있다.</li>
+</ul></li>
+<li>다운로드 받은 파일의 압축을 풀게 되면 <code>spark-1.6.2-bin-hadoop2.6</code> 디렉토리가 생성된다.
+<ul>
+<li>작업하기 편한 장소로 압축 푼 스파크-하둡 디렉토리를 이동시킨다. 예를 들어, <code>C:/spark-1.6.2-bin-hadoop2.6</code></li>
+</ul></li>
+<li>RStudio에서 <code>sparklyr</code> 팩키지를 설치한다.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. sparklyr 설치</span>
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstudio/sparklyr&quot;</span>)
+<span class="kw">library</span>(sparklyr)
+
+<span class="co"># 2. SPARK_HOME 지정</span>
+<span class="kw">Sys.setenv</span>(<span class="dt">SPARK_HOME=</span><span class="st">&quot;C:/spark-1.6.2-bin-hadoop2.6&quot;</span>)
+
+<span class="co"># 3. 스파크 클러스터 로컬에 설치 </span>
+sc &lt;-<span class="st"> </span><span class="kw">spark_connect</span>(<span class="dt">master=</span><span class="st">&quot;local&quot;</span>)
+
+<span class="co"># 4. iris 데이터셋 작업 준비 완료</span>
+<span class="kw">library</span>(dplyr)
+iris_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris)
+<span class="co"># The following columns have been renamed:</span>
+<span class="co"># - &quot;Sepal.Length&quot; =&gt; &quot;Sepal_Length&quot; (#1)</span>
+<span class="co"># - &quot;Sepal.Width&quot;  =&gt; &quot;Sepal_Width&quot;  (#2)</span>
+<span class="co"># - &quot;Petal.Length&quot; =&gt; &quot;Petal_Length&quot; (#3)</span>
+<span class="co"># - &quot;Petal.Width&quot;  =&gt; &quot;Petal_Width&quot;  (#4)</span>
+<span class="kw">src_tbls</span>(sc)
+<span class="co"># [1] &quot;iris&quot;</span></code></pre></div>
+<h3 id="sparklyr-설치-유닉스-계열">2. <code>sparklyr</code> 설치 유닉스 계열</h3>
+<p>유닉스 계열(맥, 리눅스)에서 <code>sparklyr</code> 설치는 더욱 쉽다. <a href="http://spark.rstudio.com/">sparklyr - R interface for Apache Spark</a> 안내지침에 따라 명령어를 타이핑하거나 복사하여 붙여 넣으면 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. sparklyr 팩키지 설치</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstudio/sparklyr&quot;</span>)
+
+<span class="co"># 2. 스파크가 설치되지 않는 경우 설치 (스파크 버젼 1.6.1)</span>
+<span class="kw">library</span>(sparklyr)
+<span class="kw">spark_install</span>(<span class="dt">version =</span> <span class="st">&quot;1.6.1&quot;</span>)
+
+<span class="co"># 3. 스파크 인스턴스 생성</span>
+<span class="kw">library</span>(sparklyr)
+sc &lt;-<span class="st"> </span><span class="kw">spark_connect</span>(<span class="dt">master =</span> <span class="st">&quot;local&quot;</span>)
+
+<span class="co"># 4. 예제 R 데이터프레임을 스파크에 복사</span>
+<span class="kw">library</span>(dplyr)
+iris_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris)
+<span class="kw">install.packages</span>(<span class="st">&quot;nycflights13&quot;</span>)
+<span class="kw">install.packages</span>(<span class="st">&quot;Lahman&quot;</span>)
+flights_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, nycflights13::flights, <span class="st">&quot;flights&quot;</span>)
+batting_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, Lahman::Batting, <span class="st">&quot;batting&quot;</span>)
+
+<span class="co"># 5. 데이터 테이블 확인</span>
+<span class="kw">src_tbls</span>(sc)
+<span class="co"># [1] &quot;batting&quot; &quot;flights&quot; &quot;iris&quot;  </span></code></pre></div>
+<h3 id="sparklyr-rstudio-활용">3. <code>sparklyr</code> RStudio 활용</h3>
+<p><code>sparklyr</code> RStudio 에서 편한게 사용할 수 있도록 다양한 기능을 제공하고 있다. 이를 위해서 <a href="https://www.rstudio.com/products/rstudio/download/preview/">RStudio v0.99.1273 Preview</a> 버젼을 다운로드해서 설치한다. <strong>Spark</strong> 탭이 별도로 생성되고 이를 통해 스파크에 대한 전반적인 상황을 확인할 수 있다.</p>
+<p><img src="fig/ds-sparklyr-rstudio.png" alt="RStudio Spark 인터페이스" width="77%" /></p>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
