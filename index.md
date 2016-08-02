@@ -66,6 +66,7 @@ title: 데이터 과학
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [웹스크래핑(Web Scraping)](data-scraping.html)
+1. [스파크 + dplyr -- sparklyr](ds-sparklyr.html)    
 
 
 > ## 참고 자료 {.prereq}
