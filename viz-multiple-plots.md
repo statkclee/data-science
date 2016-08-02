@@ -36,11 +36,30 @@ mainfont: NanumGothic
 library(gridExtra)
 ~~~
 
+
+
+~~~{.output}
+Error in library(gridExtra): there is no package called 'gridExtra'
+
+~~~
+
 ### `gapminder` 데이터와 `ggplot2` 팩키지를 불러온다. 
 
 
 ~~~{.r}
 library(gapminder)
+~~~
+
+
+
+~~~{.output}
+Error in library(gapminder): there is no package called 'gapminder'
+
+~~~
+
+
+
+~~~{.r}
 library(ggplot2)
 ~~~
 
@@ -54,14 +73,43 @@ p_dens <- ggplot(gapminder, aes(x = gdpPercap)) + geom_density() + scale_x_log10
   theme(axis.text.x = element_blank(),
         axis.ticks = element_blank(),
         axis.title.x = element_blank())
+~~~
+
+
+
+~~~{.output}
+Error in ggplot(gapminder, aes(x = gdpPercap)): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.r}
 p_scatter <- ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
   geom_point() + scale_x_log10()
+~~~
+
+
+
+~~~{.output}
+Error in ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.r}
 #p_both <- arrangeGrob(p_dens, p_scatter, nrow = 2, heights = c(0.35, 0.65))
 #print(p_both)
 grid.arrange(p_dens, p_scatter, nrow = 2, heights = c(0.35, 0.65))
 ~~~
 
-<img src="fig/arrangeGrob-demo-1.png" title="plot of chunk arrangeGrob-demo" alt="plot of chunk arrangeGrob-demo" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): could not find function "grid.arrange"
+
+~~~
 
 [R Graph Catalog](http://shinyapps.stat.ubc.ca/r-graph-catalog/)에 `arrangeGrob()`를 사용한 사례를 많이 찾을 수 있다.
 

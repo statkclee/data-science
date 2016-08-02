@@ -11,7 +11,9 @@ subtitle: 스파크 + dplyr -- sparklyr
 
 <img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="37%" />
 
-### 1. `sparklyr` 설치 (윈도우)
+### 1. `sparklyr` 설치 (윈도우) [^sparklyr-windows]
+
+[^sparklyr-windows]: [Running Apache Spark with sparklyr and R in Windows](http://yokekeong.com/running-apache-spark-with-sparklyr-and-r-in-windows/)
 
 `sparklyr`는 `dplyr`을 스파크 환경에서 사용할 수 있도록 구현된 팩키지다.
 
@@ -49,7 +51,9 @@ src_tbls(sc)
 # [1] "iris"
 ~~~    
 
-### 2. `sparklyr` 설치 유닉스 계열
+### 2. `sparklyr` 설치 유닉스 계열 [^sparklyr]
+
+[^sparklyr]: [sparklyr — R interface for Apache Spark](http://spark.rstudio.com/)
 
 유닉스 계열(맥, 리눅스)에서 `sparklyr` 설치는 더욱 쉽다. [sparklyr - R interface for Apache Spark](http://spark.rstudio.com/) 안내지침에 따라 명령어를 타이핑하거나 복사하여 붙여 넣으면 된다.
 

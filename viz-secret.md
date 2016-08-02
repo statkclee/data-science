@@ -33,8 +33,39 @@ mainfont: NanumGothic
 
 ~~~{.r}
 library(gapminder)
+~~~
+
+
+
+~~~{.output}
+Error in library(gapminder): there is no package called 'gapminder'
+
+~~~
+
+
+
+~~~{.r}
 life_exp <- gapminder$lifeExp
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.r}
 year <- gapminder$year
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'gapminder' not found
+
 ~~~
 
 문제는 `ggplot2`가 믿을 수 없을 정도로 강력히 데이터프레임에 존재하는 변수를 선호함에 있다;
@@ -62,7 +93,12 @@ Error: ggplot2 doesn't know how to deal with data of class uneval
 ggplot(data = gapminder, aes(x = year, y = life_exp)) + geom_jitter()
 ~~~
 
-<img src="fig/data-in-situ-1.png" title="plot of chunk data-in-situ" alt="plot of chunk data-in-situ" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in ggplot(data = gapminder, aes(x = year, y = life_exp)): object 'gapminder' not found
+
+~~~
 
 
 국가별, 대륙별, 년도별 데이터를 필터링하면 어떨까?
@@ -128,7 +164,7 @@ cor(year, lifeExp, data = gapminder)
 
 
 ~~~{.output}
-Error in cor(year, lifeExp, data = gapminder): 사용되지 않은 인자 (data = gapminder)
+Error in cor(year, lifeExp, data = gapminder): unused argument (data = gapminder)
 
 ~~~
 
@@ -142,7 +178,7 @@ cor(gapminder$year, gapminder$lifeExp)
 
 
 ~~~{.output}
-[1] 0.4356112
+Error in is.data.frame(y): object 'gapminder' not found
 
 ~~~
 
@@ -165,7 +201,7 @@ with(gapminder,
 
 
 ~~~{.output}
-[1] 0.4356112
+Error in with(gapminder, cor(year, lifeExp)): object 'gapminder' not found
 
 ~~~
 
@@ -182,7 +218,7 @@ gapminder %$%
 
 
 ~~~{.output}
-[1] 0.4356112
+Error in eval(expr, envir, enclos): object 'gapminder' not found
 
 ~~~
 
@@ -214,15 +250,39 @@ gapminder %$%
 suppressPackageStartupMessages(library(tidyr))
 korea_dat <- gapminder %>%
   filter(country == "Korea, Rep.")
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.r}
 korea_tidy <- korea_dat %>%
   gather(key = var, value = value, pop, lifeExp, gdpPercap)
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'korea_dat' not found
+
+~~~
+
+
+
+~~~{.r}
 dim(korea_dat)
 ~~~
 
 
 
 ~~~{.output}
-[1] 12  6
+Error in eval(expr, envir, enclos): object 'korea_dat' not found
 
 ~~~
 
@@ -235,7 +295,7 @@ dim(korea_tidy)
 
 
 ~~~{.output}
-[1] 36  5
+Error in eval(expr, envir, enclos): object 'korea_tidy' not found
 
 ~~~
 
@@ -253,11 +313,28 @@ dim(korea_tidy)
 ~~~{.r}
 p <- ggplot(korea_tidy, aes(x = year, y = value)) +
   facet_wrap(~ var, scales="free_y")
+~~~
+
+
+
+~~~{.output}
+Error in ggplot(korea_tidy, aes(x = year, y = value)): object 'korea_tidy' not found
+
+~~~
+
+
+
+~~~{.r}
 p + geom_point() + geom_line() +
   scale_x_continuous(breaks = seq(1950, 2011, 15))
 ~~~
 
-<img src="fig/korea-1.png" title="plot of chunk korea" alt="plot of chunk korea" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'p' not found
+
+~~~
 
 #### 요약
 

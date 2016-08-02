@@ -1,7 +1,7 @@
 ---
 layout: page
-title: лЌ°мќґн„° кіјн•™
-subtitle: м‹њк°Ѓн™”
+title: <eb>Ќ°<ec>ќґ<ed>„° кіјн•™
+subtitle: <ec>‹њк°Ѓн™”
 output:
   html_document: 
     keep_md: yes
@@ -12,29 +12,29 @@ mainfont: NanumGothic
 
 
 
-> ## н•™мЉµ лЄ©н‘њ  {.objectives}
+> ## <ed>•™<ec>Љµ лЄ©н‘њ  {.objectives}
 >
-> * лЌ°мќґн„° м‹њк°Ѓн™”мќ м¤‘мљ”м„±мќ„ мќґн•ґн•њл‹¤.
-> * м‹њк°Ѓн™” м–јк°њлҐј н†µн•ґ м‹њк°Ѓн™”лҐј лЄ©м Ѓкіј л°©н–Ґмќ„ мќґн•ґн•њл‹¤.
+> * <eb>Ќ°<ec>ќґ<ed>„° <ec>‹њк°Ѓн™”<ec>ќ м¤‘мљ”<ec>„±<ec>ќ„ <ec>ќґ<ed>•ґ<ed>•њ<eb>‹¤.
+> * <ec>‹њк°Ѓн™” <ec>–јк°њл<a5><bc> <ed>†µ<ed>•ґ <ec>‹њк°Ѓн™”лҐ<bc> лЄ©м Ѓкі<bc> л°©н–Ґ<ec>ќ„ <ec>ќґ<ed>•ґ<ed>•њ<eb>‹¤.
 
 
-### Anscombe 4мў…лҐ лЌ°мќґн„°(Anscombe's Quartet) [^anscombe] [^anscombe-jstor]
+### Anscombe 4мў…лҐ <eb>Ќ°<ec>ќґ<ed>„°(Anscombe's Quartet) [^anscombe] [^anscombe-jstor]
 
-AnscombeлЉ” 1973л…„ лЏ™мќјн•њ н†µкі„лџ‰мќ„ к°–лЉ” 4мў…лҐ лЌ°мќґн„°м…‹мќ„ л§Њл“¤м–ґм„њ м‹њк°Ѓн™”мќ м¤‘мљ”м„±мќ„ кіµк°њн–€л‹¤.
+Anscombe<eb>Љ” 1973<eb>…„ <eb>Џ™<ec>ќј<ed>•њ <ed>†µкі„лџ‰<ec>ќ„ к°–лЉ” 4мў…лҐ <eb>Ќ°<ec>ќґ<ed>„°<ec>…‹<ec>ќ„ л§Њл“¤<ec>–ґ<ec>„њ <ec>‹њк°Ѓн™”<ec>ќ м¤‘мљ”<ec>„±<ec>ќ„ кіµк°њ<ed>–€<eb>‹¤.
 
-|  н†µкі„лџ‰     |   к°’  |
+|  <ed>†µкі„лџ‰     |   к°<92>  |
 |-------------|-------|
-|  нЏ‰к· (`x`)  |  9    |
+|  <ed>Џ‰к·<a0>(`x`)  |  9    |
 |  л¶„м‚°(`x`)  |  11   |
-|  нЏ‰к· (`y`)  |  7.5  |
+|  <ed>Џ‰к·<a0>(`y`)  |  7.5  |
 |  л¶„м‚°(`y`)  |  4.1  |
-|  мѓЃкґЂкі„м€   |  0.82  |
-|  нљЊк·Ђм‹ќ     |  y = 3.0 + 0.5*x |
+|  <ec>ѓЃкґЂкі„м€   |  0.82  |
+|  <ed>љЊк·Ђ<ec>‹ќ     |  y = 3.0 + 0.5*x |
 
 
 
 [^anscombe]: [Anscombe quartet](https://en.wikipedia.org/wiki/Anscombe%27s_quartet)
-[^anscombe-jstor]: Anscombe, F. J. (1973). "Graphs in Statistical Analysis". American Statistician 27 (1): 17вЂ“21.
+[^anscombe-jstor]: Anscombe, F. J. (1973). "Graphs in Statistical Analysis". American Statistician 27 (1): 17<e2>Ђ<93>21.
 
 
 
@@ -47,10 +47,9 @@ anscombe
 
 
 ~~~{.output}
-Source: local data frame [11 x 8]
-
+# A tibble: 11 x 8
       x1    x2    x3    x4    y1    y2    y3    y4
-   (dbl) (dbl) (dbl) (dbl) (dbl) (dbl) (dbl) (dbl)
+   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1     10    10    10     8  8.04  9.14  7.46  6.58
 2      8     8     8     8  6.95  8.14  6.77  5.76
 3     13    13    13     8  7.58  8.74 12.74  7.71
@@ -65,11 +64,11 @@ Source: local data frame [11 x 8]
 
 ~~~
 
-#### Anscombe лЌ°мќґн„°м…‹ 4мў… кё°м€ н†µкі„лџ‰
+#### Anscombe <eb>Ќ°<ec>ќґ<ed>„°<ec>…‹ 4мў<85> кё°м€ <ed>†µкі„лџ‰
 
 
 ~~~{.r}
-# x1, x2, x3, x4 нЏ‰к· 
+# x1, x2, x3, x4 <U+653C><U+3E64>Џ‰к·ге<U+3E30>
 anscombe %>% select(x1,x2,x3,x4) %>% 
 summarize(x1Mean=round(mean(x1),1), y2Mean=round(mean(x2),2), y3Mean=round(mean(x3),1), y4Mean=round(mean(x4),1))
 ~~~
@@ -77,10 +76,9 @@ summarize(x1Mean=round(mean(x1),1), y2Mean=round(mean(x2),2), y3Mean=round(mean(
 
 
 ~~~{.output}
-Source: local data frame [1 x 4]
-
+# A tibble: 1 x 4
   x1Mean y2Mean y3Mean y4Mean
-   (dbl)  (dbl)  (dbl)  (dbl)
+   <dbl>  <dbl>  <dbl>  <dbl>
 1      9      9      9      9
 
 ~~~
@@ -96,10 +94,9 @@ summarize(x1Var=round(var(x1),1), x2Var=round(var(x2),1), x3Var=round(var(x3),1)
 
 
 ~~~{.output}
-Source: local data frame [1 x 4]
-
+# A tibble: 1 x 4
   x1Var x2Var x3Var x4Var
-  (dbl) (dbl) (dbl) (dbl)
+  <dbl> <dbl> <dbl> <dbl>
 1    11    11    11    11
 
 ~~~
@@ -107,7 +104,7 @@ Source: local data frame [1 x 4]
 
 
 ~~~{.r}
-# y1, y2, y3, y4 нЏ‰к· 
+# y1, y2, y3, y4 <U+653C><U+3E64>Џ‰к·ге<U+3E30>
 anscombe %>% select(y1,y2,y3,y4) %>% 
 summarize(y1Mean=round(mean(y1),1), y2Mean=round(mean(y2),2), y3Mean=round(mean(y3),1), y4Mean=round(mean(y4),1))
 ~~~
@@ -115,10 +112,9 @@ summarize(y1Mean=round(mean(y1),1), y2Mean=round(mean(y2),2), y3Mean=round(mean(
 
 
 ~~~{.output}
-Source: local data frame [1 x 4]
-
+# A tibble: 1 x 4
   y1Mean y2Mean y3Mean y4Mean
-   (dbl)  (dbl)  (dbl)  (dbl)
+   <dbl>  <dbl>  <dbl>  <dbl>
 1    7.5    7.5    7.5    7.5
 
 ~~~
@@ -134,10 +130,9 @@ summarize(y1Var=round(var(y1),1), y2Var=round(var(y2),1), y3Var=round(var(y3),1)
 
 
 ~~~{.output}
-Source: local data frame [1 x 4]
-
+# A tibble: 1 x 4
   y1Var y2Var y3Var y4Var
-  (dbl) (dbl) (dbl) (dbl)
+  <dbl> <dbl> <dbl> <dbl>
 1   4.1   4.1   4.1   4.1
 
 ~~~
@@ -145,7 +140,7 @@ Source: local data frame [1 x 4]
 
 
 ~~~{.r}
-# x1:y1 ~ x4:y4 мѓЃкґЂкі„м€
+# x1:y1 ~ x4:y4 <U+653C><U+3E63>ѓЃкґЂкі„м€
 anscombe %>% 
 summarise(cor1=round(cor(x1,y1),2), cor2=round(cor(x2,y2),2), cor3=round(cor(x3,y3),2),cor4=round(cor(x4,y4),2))
 ~~~
@@ -153,10 +148,9 @@ summarise(cor1=round(cor(x1,y1),2), cor2=round(cor(x2,y2),2), cor3=round(cor(x3,
 
 
 ~~~{.output}
-Source: local data frame [1 x 4]
-
+# A tibble: 1 x 4
    cor1  cor2  cor3  cor4
-  (dbl) (dbl) (dbl) (dbl)
+  <dbl> <dbl> <dbl> <dbl>
 1  0.82  0.82  0.82  0.82
 
 ~~~
@@ -164,7 +158,7 @@ Source: local data frame [1 x 4]
 
 
 ~~~{.r}
-# y1:x1-x4 ~ y1:x1-x4 нљЊк·Ђл¶„м„ќ
+# y1:x1-x4 ~ y1:x1-x4 <U+653C><U+3E64>љЊк·Ђл¶„м„ќ
 lm_fit <- function(y1, x1, dat) {
   the_fit <- lm(y1 ~ x1, dat)
   setNames(data.frame(t(coef(the_fit))), c("intercept", "slope"))
@@ -227,7 +221,7 @@ intercept     slope
 ~~~
 
 
-#### Anscombe лЌ°мќґн„°м…‹ 4мў… м‹њк°Ѓн™”
+#### Anscombe <eb>Ќ°<ec>ќґ<ed>„°<ec>…‹ 4мў<85> <ec>‹њк°Ѓн™”
 
 
 ~~~{.r}
@@ -246,17 +240,17 @@ multiplot(p1, p2, p3, p4, cols=2, main="Anscombe's Quartet")
 
 ~~~
 
-### м‹њк°Ѓн™” [^tamara] 
+### <ec>‹њк°Ѓн™” [^tamara] 
 
-м»ґн“Ён„°лҐј кё°л°мњјлЎњ н•њ м‹њк°Ѓн™” м‹њмЉ¤н…њмќЂ м‹њк°Ѓм ЃмњјлЎњ лЌ°мќґн„°лҐј н‘њн„н•ЁмњјлЎњ мќён•ґм„њ 
-м‚¬лћЊл“¤мќґ мћ‘м—…мќ„ лЌ”мљ± нљЁмњЁм ЃмњјлЎњ м€н–‰н•  м€ мћ€лЏ„лЎќ лЏ•лЉ”л‹¤.
+м»ґн“Ё<ed>„°лҐ<bc> кё°л°<ec>њјлЎ<9c> <ed>•њ <ec>‹њк°Ѓн™” <ec>‹њ<ec>Љ¤<ed>…њ<ec><9d>Ђ <ec>‹њк°Ѓм Ѓ<ec>њјлЎ<9c> <eb>Ќ°<ec>ќґ<ed>„°лҐ<bc> <ed>‘њ<ed>„<ed>•Ё<ec>њјлЎ<9c> <ec>ќё<ed>•ґ<ec>„њ 
+<ec>‚¬<eb>ћЊ<eb>“¤<ec>ќґ <ec>ћ‘<ec>—…<ec>ќ„ <eb>Ќ”<ec>љ± <ed>љЁ<ec>њЁ<ec> Ѓ<ec>њјлЎ<9c> <ec>€<ed>–‰<ed>•  <ec>€ <ec>ћ€<eb>Џ„лЎ<9d> <eb>Џ•<eb>Љ”<eb>‹¤.
 
-м—¬кё°м„њ м‹њк°Ѓн™”к°Ђ м Ѓн•©н•њ мѓЃн™©мќЂ мќёкіµм§ЂлЉҐ л°Џ м „м‚¬н™”лҐј н†µн•ґ м‚¬лћЊмќ„ лЊЂмІґн•кё° ліґл‹¤лЉ” мќёк°„лЉҐл Ґмќ„ м¦ќк°•м‹њн‚¤лЉ”лЌ° мњ мљ©н•л‹¤.
-л”°лќјм„њ, м™„м „ мћђлЏ™н™” н•ґкІ°м±…мќґ мЎґмћ¬н•кі  м‹ лў°м„±мќґ мћ€лЉ” кІЅмљ° м‹њк°Ѓн™”к°Ђ к·ёл‹¤м§Ђ н•„мљ”н•м§ЂлЉ” м•ЉлЉ”л‹¤.
-лђн•њ, л§ЋмќЂ л¶„м„ќл¬ём њм—ђлЉ” м–ґл–¤ м§€л¬ёмќ„ лЌм ём•ј лђлЉ”м§Ђ м‚¬м „м—ђ м•Њкі  мћ€лЉ” кІЅмљ°к°Ђ м Ѓм–ґ, лЄ…м„ёк°Ђ л¶„лЄ…н•м§Ђ м•ЉлЉ” кІЅмљ°к°Ђ мћ€лЉ”лЌ°,
-мќґлџ° лЄ©м Ѓм—ђ мњ мљ©н•л‹¤.
+<ec>—¬кё°м„њ <ec>‹њк°Ѓн™”к°Ђ <ec> Ѓ<ed>•©<ed>•њ <ec>ѓЃ<ed>™©<ec><9d>Ђ <ec>ќёкіµм<a7>Ђ<eb>ЉҐ л°<8f> <ec> „<ec>‚¬<ed>™”лҐ<bc> <ed>†µ<ed>•ґ <ec>‚¬<eb>ћЊ<ec>ќ„ <eb><8c>ЂмІґн•кё<b0> ліґл‹¤<eb>Љ” <ec>ќёк°„лЉҐ<eb> Ґ<ec>ќ„ м¦ќк°•<ec>‹њ<ed>‚¤<eb>Љ”<eb>Ќ° <ec>њ <ec>љ©<ed>•<eb>‹¤.
+<eb>”°<eb>ќј<ec>„њ, <ec>™„<ec> „ <ec>ћђ<eb>Џ™<ed>™” <ed>•ґкІ°м±…<ec>ќґ мЎґмћ¬<ed>•кі<a0> <ec>‹ лў°м„±<ec>ќґ <ec>ћ€<eb>Љ” кІЅмљ° <ec>‹њк°Ѓн™”к°Ђ к·ёл‹¤м§Ђ <ed>•„<ec>љ”<ed>•м§Ђ<eb>Љ” <ec>•Љ<eb>Љ”<eb>‹¤.
+<eb>ђ<ed>•њ, л§Ћм<9d>Ђ л¶„м„ќл¬ём њ<ec>—ђ<eb>Љ” <ec>–ґ<eb>–¤ м§€л¬ё<ec>ќ„ <eb>Ќ<ec> ё<ec>•ј <eb>ђ<eb>Љ”м§Ђ <ec>‚¬<ec> „<ec>—ђ <ec>•Њкі<a0> <ec>ћ€<eb>Љ” кІЅмљ°к°Ђ <ec> Ѓ<ec>–ґ, лЄ…м„ёк°Ђ л¶„лЄ…<ed>•м§Ђ <ec>•Љ<eb>Љ” кІЅмљ°к°Ђ <ec>ћ€<eb>Љ”<eb>Ќ°,
+<ec>ќґ<eb>џ° лЄ©м Ѓ<ec>—ђ <ec>њ <ec>љ©<ed>•<eb>‹¤.
 
-> ### м‹њк°Ѓн™” {.callout}
+> ### <ec>‹њк°Ѓн™” {.callout}
 > 
 > "Computer-based visualization systems provide visual representations of datasets
  designed to help people carry out tasks more effectively" -- Tamara Munzner
@@ -264,9 +258,9 @@ multiplot(p1, p2, p3, p4, cols=2, main="Anscombe's Quartet")
 
 [^tamara]: [Tamara Munzner. Visualization Analysis and Design. A K Peters Visualization Series, CRC Press, 2014](http://www.cs.ubc.ca/~tmm/vadbook/)
 
-#### м‹њк°Ѓн™”к°Ђ м™њ н•„мљ”н•њк°Ђ?
+#### <ec>‹њк°Ѓн™”к°Ђ <ec>™њ <ed>•„<ec>љ”<ed>•њк°Ђ?
 
-**мќём§Ђл¶Ђн•(cognitive load)**лҐј **м‹њк°Ѓм Ѓ м§Ђк°Ѓ(perception)**мњјлЎњ л°”кї” н•ґл‹№ мћ‘м—…мќ„ лЌ”мљ± нљЁкіјм ЃмњјлЎњ мІл¦¬н•лЉ”лЌ° м‹њк°Ѓн™”лҐј м‚¬мљ©н•њл‹¤.
+**<ec>ќём§Ђл¶Ђ<ed>•(cognitive load)**лҐ<bc> **<ec>‹њк°Ѓм Ѓ м§Ђк°<81>(perception)**<ec>њјлЎ<9c> л°”кї” <ed>•ґ<eb>‹№ <ec>ћ‘<ec>—…<ec>ќ„ <eb>Ќ”<ec>љ± <ed>љЁкіјм Ѓ<ec>њјлЎ<9c> мІл¦¬<ed>•<eb>Љ”<eb>Ќ° <ec>‹њк°Ѓн™”лҐ<bc> <ec>‚¬<ec>љ©<ed>•њ<eb>‹¤.
 
 
 ~~~{.r}
@@ -296,9 +290,9 @@ women
 
 ~~~
 
-`women` лЌ°мќґн„°к°Ђ м •л ¬мќґ лђм–ґ мћ€м–ґм„њ, м‹ мћҐмќґ м»¤м§ђм—ђ л”°лќј мІґм¤‘мќґ м¦ќк°Ђн•лЉ” кІѓмќ„ м•Њ м€ мћ€м§Ђл§Њ, лЌ°мќґн„°л§Њ ліґкі  мќґн•ґн•л ¤л©ґ
-мќём§Ђм ЃмњјлЎњ лЌ°мќґн„° н•њм¤„мќ„ мќЅкі  лЁёл¦¬м†ЌмњјлЎњ мѓќк°Ѓн•кі , л‘ђлІ€м§ё м¤„мќ„ мќЅкі  мѓќк°Ѓн•кі , ... мќґлџ° кіјм •мќ„ л°ліµн•л©ґм„њ мќём§Ђм Ѓ л¶Ђн•к°Ђ м¦ќк°Ђн•кІЊ лђњл‹¤.
-н•м§Ђл§Њ, м‹њк°Ѓм ЃмњјлЎњ н‘њн„н•кІЊ лђл©ґ н•њл€€м—ђ м‹ мћҐкіј мІґм¤‘ кґЂкі„лҐј ліј м€ мћ€л‹¤.
+`women` <eb>Ќ°<ec>ќґ<ed>„°к°Ђ <ec> •<eb> ¬<ec>ќґ <eb>ђ<ec>–ґ <ec>ћ€<ec>–ґ<ec>„њ, <ec>‹ <ec>ћҐ<ec>ќґ м»¤м§ђ<ec>—ђ <eb>”°<eb>ќј мІґм¤‘<ec>ќґ м¦ќк<b0>Ђ<ed>•<eb>Љ” кІѓмќ„ <ec>•Њ <ec>€ <ec>ћ€м§Ђл§<8c>, <eb>Ќ°<ec>ќґ<ed>„°л§<8c> ліґкі  <ec>ќґ<ed>•ґ<ed>•<eb> ¤л©<b4>
+<ec>ќём§Ђ<ec> Ѓ<ec>њјлЎ<9c> <eb>Ќ°<ec>ќґ<ed>„° <ed>•њм¤„мќ„ <ec>ќЅкі<a0> лЁёл¦¬<ec>†Ќ<ec>њјлЎ<9c> <ec>ѓќк°Ѓн•кі<a0>, <eb>‘ђлІ€м§ё м¤„мќ„ <ec>ќЅкі<a0> <ec>ѓќк°Ѓн•кі<a0>, ... <ec>ќґ<eb>џ° кіјм •<ec>ќ„ л°ліµ<ed>•л©ґм„њ <ec>ќём§Ђ<ec> Ѓ л¶Ђ<ed>•к°Ђ м¦ќк<b0>Ђ<ed>•кІ<8c> <eb>ђњ<eb>‹¤.
+<ed>•м§Ђл§<8c>, <ec>‹њк°Ѓм Ѓ<ec>њјлЎ<9c> <ed>‘њ<ed>„<ed>•кІ<8c> <eb>ђл©<b4> <ed>•њ<eb>€€<ec>—ђ <ec>‹ <ec>ћҐкі<bc> мІґм¤‘ кґЂкі„л<a5><bc> лі<bc> <ec>€ <ec>ћ€<eb>‹¤.
 
 
 ~~~{.r}
@@ -308,39 +302,39 @@ women %>% ggplot(aes(y=weight, x=height)) + geom_point(color='blue', size=2) +
 
 <img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
-#### м‹њк°Ѓн™” л¶„м„ќ м–јк°њ кµ¬м„±мљ”м†Њ
+#### <ec>‹њк°Ѓн™” л¶„м„ќ <ec>–јк°<9c> кµ¬м„±<ec>љ”<ec>†Њ
 
-м‹њк°Ѓн™” л¶„м„ќ м–јк°њлЉ” 4к°Ђм§Ђ л¶Ђл¶„мњјлЎњ кµ¬м„±лђњл‹¤. 
+<ec>‹њк°Ѓн™” л¶„м„ќ <ec>–јк°њлЉ” 4к°Ђм§Ђ л¶Ђл¶„мњјлЎ<9c> кµ¬м„±<eb>ђњ<eb>‹¤. 
 
-- м „л¬ёмЃм—­ : мµњмў… м‚¬мљ©мћђ кі к°ќмќґ л€„кµ°мќёк°Ђ?
-- м¶”мѓЃн™”
-    + м „л¬ёмЃм—­мќ кµ¬мІґм Ѓмќё м ђмќ„ м‹њк°Ѓн™” мљ©м–ґлЎњ лІ€м—­
-        * **лЌ°мќґн„° м¶”мѓЃн™”** : м‹њк°Ѓн™”н•лЉ” кІѓмќґ л¬ґм—‡(what)мќёк°Ђ?
-        * **мћ‘м—… м¶”мѓЃн™”** : м™њ(why) м‚¬мљ©мћђк°Ђ л€€мќ„ лЏЊл¦¬лЉ”к°Ђ?
-- н‘њн„м–‘м‹ќ(idiom)
-    + лЌ°мќґн„°к°Ђ м–ґл–»кІЊ(How) м‹њк°Ѓн™”лђлЉ”к°Ђ?
-    	* **м‹њк°Ѓм Ѓ мќёмЅ”л”© н‘њн„м–‘м‹ќ** : м‹њк°Ѓн™”н•лЉ” л°©лІ•
-    	* **мѓЃнёмћ‘мљ© н‘њн„м–‘м‹ќ** : мЎ°мћ‘н•лЉ” л°©лІ•
-- м•Њкі л¦¬м¦
-	+ нљЁмњЁм Ѓ м—°м‚°л°©лІ•    	
+- <ec> „л¬ёмЃ<ec>—­ : мµњмў… <ec>‚¬<ec>љ©<ec>ћђ кі к°ќ<ec>ќґ <eb>€„кµ°мќёк°Ђ?
+- м¶”мѓЃ<ed>™”
+    + <ec> „л¬ёмЃ<ec>—­<ec>ќ кµ¬мІґ<ec> Ѓ<ec>ќё <ec> ђ<ec>ќ„ <ec>‹њк°Ѓн™” <ec>љ©<ec>–ґлЎ<9c> лІ€м—­
+        * **<eb>Ќ°<ec>ќґ<ed>„° м¶”мѓЃ<ed>™”** : <ec>‹њк°Ѓн™”<ed>•<eb>Љ” кІѓмќґ л¬ґм—‡(what)<ec>ќёк°Ђ?
+        * **<ec>ћ‘<ec>—… м¶”мѓЃ<ed>™”** : <ec>™њ(why) <ec>‚¬<ec>љ©<ec>ћђк°Ђ <eb>€€<ec>ќ„ <eb>ЏЊл¦¬лЉ”к°Ђ?
+- <ed>‘њ<ed>„<ec>–‘<ec>‹ќ(idiom)
+    + <eb>Ќ°<ec>ќґ<ed>„°к°Ђ <ec>–ґ<eb>–»кІ<8c>(How) <ec>‹њк°Ѓн™”<eb>ђ<eb>Љ”к°Ђ?
+    	* **<ec>‹њк°Ѓм Ѓ <ec>ќёмЅ”л”© <ed>‘њ<ed>„<ec>–‘<ec>‹ќ** : <ec>‹њк°Ѓн™”<ed>•<eb>Љ” л°©лІ•
+    	* **<ec>ѓЃ<ed>ё<ec>ћ‘<ec>љ© <ed>‘њ<ed>„<ec>–‘<ec>‹ќ** : мЎ°мћ‘<ed>•<eb>Љ” л°©лІ•
+- <ec>•Њкі л¦¬м¦<98>
+	+ <ed>љЁ<ec>њЁ<ec> Ѓ <ec>—°<ec>‚°л°©лІ•    	
 
 [Munzner, Tamara. "A nested model for visualization design and validation." Visualization and Computer Graphics, IEEE Transactions on 15.6 (2009): 921-928.](http://www.cs.ubc.ca/~tmm/talks/iv09/nestedmodel-4x4.pdf)
 
 <img src="fig/viz-framework.png" alt="RStudio" width="77%" />
 
-#### м‹њк°Ѓн™” л¶„м„ќ м ‘к·јл°©н–Ґ
+#### <ec>‹њк°Ѓн™” л¶„м„ќ <ec> ‘к·јл°©<ed>–Ґ
 
-м‹њк°Ѓн™” м‹њмЉ¤н…њ м‹¤н–‰м‹њк°„, л©”лЄЁл¦¬ м‚¬мљ©лџ‰ л“±мќ„ мёЎм •н•кі , м—°м‚° ліµмћЎм„±мќ„ л¶„м„ќн•лЉ” м•Њкі л¦¬м¦ мћ‘м—…мќЂ м»ґн“Ён„° кіјн•™мћђмќ лЄ«мќґл‹¤.
-м—¬лџ¬к°Ђм§Ђ лЊЂм•€ м‹њмЉ¤н…њ м•„н‚¤н…ЌмІлҐј м •л‹№н™”н•кі  м‹њк°Ѓм Ѓ мќёмЅ”л”© л°©лІ•кіј мѓЃнёмћ‘мљ©н•лЉ” н‘њн„м–‘м‹ќмќ„ м„¤кі„н•лЉ” кІѓмќЂ м‹њмЉ¤н…њ м„¤кі„мћђмќ лЄ«мќґл‹¤.
-м‹њк°Ѓн™” м‹њмЉ¤н…њ кІ°кіјл¬јмќ„ м •лџ‰м ЃмњјлЎњ л¶„м„ќн•кі , м‚¬мљ©мћђ мќёк°„м—ђ лЊЂн•њ м‹¤н—мќ„ м¶”м§„н•лЉ” кІѓмќЂ мќём§Ђм‹¬л¦¬н•™мћђмќ лЄ«мќґл‹¤.
-мќґлҐј к°ђм‹ёкі  мћ€лЉ” лЌ°мќґн„° м¶”мѓЃн™”м™Ђ мћ‘м—…м¶”мѓЃн™”к°Ђ мћ€лЉ”лЌ°, м‹њмЉ¤н…њ м„¤кі„мћђк°Ђ м•ћл‹Ём—ђм„њ м„¤кі„н•л©ґ н›„н–‰л‹Ём—ђм„њ мќём§Ђм‹¬л¦¬н•™мћђк°Ђ кІЂм¦ќн•кі ,
-м»ґн“Ён„° кіјн•™мћђк°Ђ к°њл°њн•лЉ” кµ¬мЎ°лҐј к°–лЉ”л‹¤.
+<ec>‹њк°Ѓн™” <ec>‹њ<ec>Љ¤<ed>…њ <ec>‹¤<ed>–‰<ec>‹њк°<84>, л©”лЄЁл¦<ac> <ec>‚¬<ec>љ©<eb>џ‰ <eb>“±<ec>ќ„ мёЎм •<ed>•кі<a0>, <ec>—°<ec>‚° ліµмћЎ<ec>„±<ec>ќ„ л¶„м„ќ<ed>•<eb>Љ” <ec>•Њкі л¦¬м¦<98> <ec>ћ‘<ec>—…<ec><9d>Ђ м»ґн“Ё<ed>„° кіјн•™<ec>ћђ<ec>ќ лЄ«мќґ<eb>‹¤.
+<ec>—¬<eb>џ¬к°Ђм§Ђ <eb><8c>Ђ<ec>•€ <ec>‹њ<ec>Љ¤<ed>…њ <ec>•„<ed>‚¤<ed>…ЌмІл<a5><bc> <ec> •<eb>‹№<ed>™”<ed>•кі<a0> <ec>‹њк°Ѓм Ѓ <ec>ќёмЅ”л”© л°©лІ•кі<bc> <ec>ѓЃ<ed>ё<ec>ћ‘<ec>љ©<ed>•<eb>Љ” <ed>‘њ<ed>„<ec>–‘<ec>‹ќ<ec>ќ„ <ec>„¤кі„н•<eb>Љ” кІѓм<9d>Ђ <ec>‹њ<ec>Љ¤<ed>…њ <ec>„¤кі„мћђ<ec>ќ лЄ«мќґ<eb>‹¤.
+<ec>‹њк°Ѓн™” <ec>‹њ<ec>Љ¤<ed>…њ кІ°кіјл¬јмќ„ <ec> •<eb>џ‰<ec> Ѓ<ec>њјлЎ<9c> л¶„м„ќ<ed>•кі<a0>, <ec>‚¬<ec>љ©<ec>ћђ <ec>ќёк°„м—ђ <eb><8c>Ђ<ed>•њ <ec>‹¤<ed>—<ec>ќ„ м¶”м§„<ed>•<eb>Љ” кІѓм<9d>Ђ <ec>ќём§Ђ<ec>‹¬л¦¬н•™<ec>ћђ<ec>ќ лЄ«мќґ<eb>‹¤.
+<ec>ќґлҐ<bc> к°ђм‹ёкі<a0> <ec>ћ€<eb>Љ” <eb>Ќ°<ec>ќґ<ed>„° м¶”мѓЃ<ed>™”<ec><99>Ђ <ec>ћ‘<ec>—…м¶”мѓЃ<ed>™”к°Ђ <ec>ћ€<eb>Љ”<eb>Ќ°, <ec>‹њ<ec>Љ¤<ed>…њ <ec>„¤кі„мћђк°Ђ <ec>•ћ<eb>‹Ё<ec>—ђ<ec>„њ <ec>„¤кі„н•л©<b4> <ed>›„<ed>–‰<eb>‹Ё<ec>—ђ<ec>„њ <ec>ќём§Ђ<ec>‹¬л¦¬н•™<ec>ћђк°Ђ кІЂм¦ќн•кі<a0>,
+м»ґн“Ё<ed>„° кіјн•™<ec>ћђк°Ђ к°њл°њ<ed>•<eb>Љ” кµ¬мЎ°лҐ<bc> к°–лЉ”<eb>‹¤.
 
-мќґ лЄЁл“  м‹њмћ‘мќЂ м „л¬ёмЃм—­м—ђм„њ л¬ём њм ђмќ„ мќём‹ќн•кі  кё°мЎґмќ лЏ„кµ¬лҐј м‚¬мљ©н•лЉ” лЄ©н‘њ м‚¬мљ©мћђлҐј кґЂмёЎн•лЉ” кІѓм—ђм„њ м‹њмћ‘лђлЉ”лЌ° мќґлЉ” мќёлҐн•™мћђ, лЇјмЎ±м§ЂлќјлЉ” л¶„м•јм™Ђ м—°кґЂлђњл‹¤.
-л”°лќјм„њ, кё°м€ м¤‘м‹¬мњјлЎњ л°–мњјлЎњ нЌјм ёл‚к°€ м€лЏ„ мћ€м§Ђл§Њ, л¬ём њн•ґкІ°мћ‘м—…мњјлЎњ м‹њк°Ѓн™”лҐј н™њмљ©н•лЉ” кІѓлЏ„ к°ЂлЉҐн•њ м ‘к·јлІ•мќґл‹¤.
+<ec>ќґ лЄЁл“  <ec>‹њ<ec>ћ‘<ec><9d>Ђ <ec> „л¬ёмЃ<ec>—­<ec>—ђ<ec>„њ л¬ём њ<ec> ђ<ec>ќ„ <ec>ќё<ec>‹ќ<ed>•кі<a0> кё°мЎґ<ec>ќ <eb>Џ„кµ¬л<a5><bc> <ec>‚¬<ec>љ©<ed>•<eb>Љ” лЄ©н‘њ <ec>‚¬<ec>љ©<ec>ћђлҐ<bc> кґЂмёЎн•<eb>Љ” кІѓм—ђ<ec>„њ <ec>‹њ<ec>ћ‘<eb>ђ<eb>Љ”<eb>Ќ° <ec>ќґ<eb>Љ” <ec>ќёлҐн•™<ec>ћђ, лЇјмЎ±м§Ђ<eb>ќј<eb>Љ” л¶„м•ј<ec><99>Ђ <ec>—°кґЂ<eb>ђњ<eb>‹¤.
+<eb>”°<eb>ќј<ec>„њ, кё°м€ м¤‘м‹¬<ec>њјлЎ<9c> л°–мњјлЎ<9c> <ed>Ќј<ec> ё<eb>‚к°<88> <ec>€<eb>Џ„ <ec>ћ€м§Ђл§<8c>, л¬ём њ<ed>•ґкІ°мћ‘<ec>—…<ec>њјлЎ<9c> <ec>‹њк°Ѓн™”лҐ<bc> <ed>™њ<ec>љ©<ed>•<eb>Љ” кІѓлЏ„ к°Ђ<eb>ЉҐ<ed>•њ <ec> ‘к·јлІ•<ec>ќґ<eb>‹¤.
 
-> ### м‹њк°Ѓн™” лЏ„кµ¬{.callout}
+> ### <ec>‹њк°Ѓн™” <eb>Џ„кµ<ac>{.callout}
 > 
-> - **лЄ…л №н•(imperative)**: "л°©лІ•(how)"м—ђ мґ€м ђ, Processing, OpenGL, prefuse
-> - **м„ м–ён•(declarative)**: "л¬ґм—‡(what)"м—ђ мґ€м ђ, D3, ggplot2, Protovis 
+> - **лЄ…л №<ed>•(imperative)**: "л°©лІ•(how)"<ec>—ђ мґ€м ђ, Processing, OpenGL, prefuse
+> - **<ec>„ <ec>–ё<ed>•(declarative)**: "л¬ґм—‡(what)"<ec>—ђ мґ€м ђ, D3, ggplot2, Protovis 
 
