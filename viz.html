@@ -89,10 +89,9 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(anscombe)
 anscombe &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(anscombe)
 anscombe</code></pre></div>
-<pre class="output"><code>Source: local data frame [11 x 8]
-
+<pre class="output"><code># A tibble: 11 x 8
       x1    x2    x3    x4    y1    y2    y3    y4
-   (dbl) (dbl) (dbl) (dbl) (dbl) (dbl) (dbl) (dbl)
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1     10    10    10     8  8.04  9.14  7.46  6.58
 2      8     8     8     8  6.95  8.14  6.77  5.76
 3     13    13    13     8  7.58  8.74 12.74  7.71
@@ -109,46 +108,41 @@ anscombe</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x1, x2, x3, x4 평균</span>
 anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(x1,x2,x3,x4) %&gt;%<span class="st"> </span>
 <span class="kw">summarize</span>(<span class="dt">x1Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x1),<span class="dv">1</span>), <span class="dt">y2Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x2),<span class="dv">2</span>), <span class="dt">y3Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x3),<span class="dv">1</span>), <span class="dt">y4Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code>Source: local data frame [1 x 4]
-
+<pre class="output"><code># A tibble: 1 x 4
   x1Mean y2Mean y3Mean y4Mean
-   (dbl)  (dbl)  (dbl)  (dbl)
+   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 1      9      9      9      9
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x1, x2, x3, x4 분산</span>
 anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(x1,x2,x3,x4) %&gt;%<span class="st"> </span>
 <span class="kw">summarize</span>(<span class="dt">x1Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x1),<span class="dv">1</span>), <span class="dt">x2Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x2),<span class="dv">1</span>), <span class="dt">x3Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x3),<span class="dv">1</span>), <span class="dt">x4Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code>Source: local data frame [1 x 4]
-
+<pre class="output"><code># A tibble: 1 x 4
   x1Var x2Var x3Var x4Var
-  (dbl) (dbl) (dbl) (dbl)
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1    11    11    11    11
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># y1, y2, y3, y4 평균</span>
 anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(y1,y2,y3,y4) %&gt;%<span class="st"> </span>
 <span class="kw">summarize</span>(<span class="dt">y1Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y1),<span class="dv">1</span>), <span class="dt">y2Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y2),<span class="dv">2</span>), <span class="dt">y3Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y3),<span class="dv">1</span>), <span class="dt">y4Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code>Source: local data frame [1 x 4]
-
+<pre class="output"><code># A tibble: 1 x 4
   y1Mean y2Mean y3Mean y4Mean
-   (dbl)  (dbl)  (dbl)  (dbl)
+   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 1    7.5    7.5    7.5    7.5
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># y1, y2, y3, y4 분산</span>
 anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(y1,y2,y3,y4) %&gt;%<span class="st"> </span>
 <span class="kw">summarize</span>(<span class="dt">y1Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y1),<span class="dv">1</span>), <span class="dt">y2Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y2),<span class="dv">1</span>), <span class="dt">y3Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y3),<span class="dv">1</span>), <span class="dt">y4Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code>Source: local data frame [1 x 4]
-
+<pre class="output"><code># A tibble: 1 x 4
   y1Var y2Var y3Var y4Var
-  (dbl) (dbl) (dbl) (dbl)
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1   4.1   4.1   4.1   4.1
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x1:y1 ~ x4:y4 상관계수</span>
 anscombe %&gt;%<span class="st"> </span>
 <span class="kw">summarise</span>(<span class="dt">cor1=</span><span class="kw">round</span>(<span class="kw">cor</span>(x1,y1),<span class="dv">2</span>), <span class="dt">cor2=</span><span class="kw">round</span>(<span class="kw">cor</span>(x2,y2),<span class="dv">2</span>), <span class="dt">cor3=</span><span class="kw">round</span>(<span class="kw">cor</span>(x3,y3),<span class="dv">2</span>),<span class="dt">cor4=</span><span class="kw">round</span>(<span class="kw">cor</span>(x4,y4),<span class="dv">2</span>))</code></pre></div>
-<pre class="output"><code>Source: local data frame [1 x 4]
-
+<pre class="output"><code># A tibble: 1 x 4
    cor1  cor2  cor3  cor4
-  (dbl) (dbl) (dbl) (dbl)
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1  0.82  0.82  0.82  0.82
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># y1:x1-x4 ~ y1:x1-x4 회귀분석</span>

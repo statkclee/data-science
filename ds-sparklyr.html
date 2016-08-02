@@ -51,7 +51,7 @@
 </div>
 </section>
 <p><img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="37%" /></p>
-<h3 id="sparklyr-설치-윈도우">1. <code>sparklyr</code> 설치 (윈도우)</h3>
+<h3 id="sparklyr-설치-윈도우-sparklyr-windows">1. <code>sparklyr</code> 설치 (윈도우) <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
 <p><code>sparklyr</code>는 <code>dplyr</code>을 스파크 환경에서 사용할 수 있도록 구현된 팩키지다.</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
@@ -93,7 +93,7 @@ iris_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris)
 <span class="co"># - &quot;Petal.Width&quot;  =&gt; &quot;Petal_Width&quot;  (#4)</span>
 <span class="kw">src_tbls</span>(sc)
 <span class="co"># [1] &quot;iris&quot;</span></code></pre></div>
-<h3 id="sparklyr-설치-유닉스-계열">2. <code>sparklyr</code> 설치 유닉스 계열</h3>
+<h3 id="sparklyr-설치-유닉스-계열-sparklyr">2. <code>sparklyr</code> 설치 유닉스 계열 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
 <p>유닉스 계열(맥, 리눅스)에서 <code>sparklyr</code> 설치는 더욱 쉽다. <a href="http://spark.rstudio.com/">sparklyr - R interface for Apache Spark</a> 안내지침에 따라 명령어를 타이핑하거나 복사하여 붙여 넣으면 된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. sparklyr 팩키지 설치</span>
 <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)
@@ -121,6 +121,13 @@ batting_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, La
 <h3 id="sparklyr-rstudio-활용">3. <code>sparklyr</code> RStudio 활용</h3>
 <p><code>sparklyr</code> RStudio 에서 편한게 사용할 수 있도록 다양한 기능을 제공하고 있다. 이를 위해서 <a href="https://www.rstudio.com/products/rstudio/download/preview/">RStudio v0.99.1273 Preview</a> 버젼을 다운로드해서 설치한다. <strong>Spark</strong> 탭이 별도로 생성되고 이를 통해 스파크에 대한 전반적인 상황을 확인할 수 있다.</p>
 <p><img src="fig/ds-sparklyr-rstudio.png" alt="RStudio Spark 인터페이스" width="77%" /></p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://yokekeong.com/running-apache-spark-with-sparklyr-and-r-in-windows/">Running Apache Spark with sparklyr and R in Windows</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://spark.rstudio.com/">sparklyr — R interface for Apache Spark</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
         </div>
       </div>
       </article>
