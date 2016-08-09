@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">R 언어</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>R 언어의 역사를 이해한다.</li>
+<li></li>
+</ul>
+</div>
+</section>
+<h3 id="r-언어-역사">1. R 언어 역사</h3>
+<h3 id="r-시작-환경설정-r-startup-r-finding-location-r-rprofile-customization">2. R 시작 환경설정 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+<p>R 시작환경을 설정하여 일일이 설정하지 않고, R이 시작될 때 자동으로 실행되어 바로 작업을 수행하게 시키면 처음에는 수고스럽지만 장기적으로 많은 이익이 된다. 자동으로 실행될 정보를 저장할 파일은 크게 두가지로 나뉜다: <code>.Rprofile</code>, <code>Rprofile.site</code>. 두 파일의 차이점은 <code>Rprofile.site</code>는 모든 사용자에게 영향을 미친다는 점이고, <code>.Rprofile</code> 파일은 해당 사용자만 영향을 준다는 점에서 차이가 난다. 먼저 <code>Rprofile.site</code> 파일을 찾아본다. <code>R.home(component = &quot;home&quot;)</code> 명령어를 R 콘솔에서 입력하면 찾는데 도움이 될 수 있다.</p>
+<ul>
+<li>맥 OS X: <code>/Library/Frameworks/R.framework/Resources/etc/</code></li>
+<li>윈도우: `C:/Program Files/R/R-3.3.1/etc’ (R 버젼에 따라 차이가 남)</li>
+<li>리눅스(우분투): <code>/etc/R/</code></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span><span class="kw">R.home</span>(<span class="dt">component =</span> <span class="st">&quot;home&quot;</span>)
+[<span class="dv">1</span>] <span class="st">&quot;C:/PROGRA~1/R/R-33~1.1&quot;</span></code></pre></div>
+<p><code>.Rprofile</code> 파일은 사용자 작업 디렉토리를 통해 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span><span class="kw">path.expand</span>(<span class="st">&quot;~&quot;</span>)
+[<span class="dv">1</span>] <span class="st">&quot;C:/Users/kcl/Documents&quot;</span></code></pre></div>
+<p>그래도 찾을 수 없는 경우 다음 명령어를 통해 해당 파일을 찾아낸다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>candidates &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="kw">Sys.getenv</span>(<span class="st">&quot;R_PROFILE&quot;</span>),
+...                  <span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_HOME&quot;</span>), <span class="st">&quot;etc&quot;</span>, <span class="st">&quot;Rprofile.site&quot;</span>),
+...                  <span class="kw">Sys.getenv</span>(<span class="st">&quot;R_PROFILE_USER&quot;</span>),
+...                  <span class="kw">file.path</span>(<span class="kw">getwd</span>(), <span class="st">&quot;.Rprofile&quot;</span>) )
+$<span class="st"> </span>
+<span class="er">$</span><span class="st"> </span><span class="kw">Filter</span>(file.exists, candidates)</code></pre></div>
+<pre class="output"><code>[1] &quot;C:/PROGRA~1/R/R-33~1.1/etc/Rprofile.site&quot;</code></pre>
+<h4 id="rprofile-rprofile.site-예제">2.1. <code>.Rprofile</code>, <code>Rprofile.site</code> 예제</h4>
+<p><code>.Rprofile</code>, <code>Rprofile.site</code> 파일에 적용하고자 하는 부분을 찾아 다음과 같이 설정한다. 자주 사용하는 기능을 넣어 특히, <code>.First</code> 함수에 넣어 두어 자동으로 시작되게 하고, <code>.Last</code> 함수에는 그와 반대로 R을 끄고 나갈 때 설정한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># options(papersize=&quot;a4&quot;)</span>
+<span class="co"># options(editor=&quot;notepad&quot;)</span>
+<span class="co"># options(pager=&quot;internal&quot;)</span>
+
+<span class="co"># set the default help type</span>
+<span class="co"># options(help_type=&quot;text&quot;)</span>
+  <span class="kw">options</span>(<span class="dt">help_type=</span><span class="st">&quot;html&quot;</span>)
+
+<span class="co"># set a site library</span>
+<span class="co"># .Library.site &lt;- file.path(chartr(&quot;\\&quot;, &quot;/&quot;, R.home()), &quot;site-library&quot;)</span>
+
+<span class="co"># set a CRAN mirror</span>
+<span class="kw">local</span>({r &lt;-<span class="st"> </span><span class="kw">getOption</span>(<span class="st">&quot;repos&quot;</span>)
+      r[<span class="st">&quot;CRAN&quot;</span>] &lt;-<span class="st"> &quot;https://cran.us.r-project.org&quot;</span>
+      <span class="kw">options</span>(<span class="dt">repos=</span>r)})
+ 
+<span class="kw">options</span>(<span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
+ 
+<span class="kw">options</span>(<span class="dt">max.print=</span><span class="dv">100</span>)
+ 
+<span class="kw">options</span>(<span class="dt">scipen=</span><span class="dv">10</span>)
+ 
+<span class="co"># options(show.signif.stars=FALSE)</span>
+ 
+<span class="kw">options</span>(<span class="dt">menu.graphics=</span><span class="ot">FALSE</span>)
+ 
+<span class="kw">options</span>(<span class="dt">prompt=</span><span class="st">&quot;$ &quot;</span>)
+<span class="kw">options</span>(<span class="dt">continue=</span><span class="st">&quot;... &quot;</span>)
+ 
+<span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">80</span>)
+ 
+utils::<span class="kw">rc.settings</span>(<span class="dt">ipck=</span><span class="ot">TRUE</span>)
+ 
+.First &lt;-<span class="st"> </span>function(){
+  if(<span class="kw">interactive</span>()){
+    <span class="kw">library</span>(utils)
+    <span class="kw">timestamp</span>(,<span class="dt">prefix=</span><span class="kw">paste</span>(<span class="st">&quot;##------ [&quot;</span>,<span class="kw">getwd</span>(),<span class="st">&quot;] &quot;</span>,<span class="dt">sep=</span><span class="st">&quot;&quot;</span>)) 
+  }
+}
+ 
+.Last &lt;-<span class="st"> </span>function(){
+  if(<span class="kw">interactive</span>()){
+    hist_file &lt;-<span class="st"> </span><span class="kw">Sys.getenv</span>(<span class="st">&quot;R_HISTFILE&quot;</span>)
+    if(hist_file==<span class="st">&quot;&quot;</span>) hist_file &lt;-<span class="st"> &quot;~/.RHistory&quot;</span>
+    <span class="kw">savehistory</span>(hist_file)
+  }
+}
+ 
+ 
+sshhh &lt;-<span class="st"> </span>function(a.package){
+  <span class="kw">suppressWarnings</span>(<span class="kw">suppressPackageStartupMessages</span>(
+    <span class="kw">library</span>(a.package, <span class="dt">character.only=</span><span class="ot">TRUE</span>)))
+}
+
+pkgs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;tidyr&quot;</span>, <span class="st">&quot;psych&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;Amelia&quot;</span>, <span class="st">&quot;ROCR&quot;</span>, <span class="st">&quot;caret&quot;</span>, <span class="st">&quot;pscl&quot;</span>, <span class="st">&quot;AER&quot;</span>, <span class="st">&quot;parallel&quot;</span>, <span class="st">&quot;mboost&quot;</span>, <span class="st">&quot;earth&quot;</span>, <span class="st">&quot;gbm&quot;</span>, <span class="st">&quot;randomForest&quot;</span>, <span class="st">&quot;devtools&quot;</span>, <span class="st">&quot;testthat&quot;</span>)
+new.pkgs &lt;-<span class="st"> </span><span class="kw">setdiff</span>(pkgs, <span class="kw">rownames</span>(utils::<span class="kw">installed.packages</span>()))
+if (<span class="kw">length</span>(new.pkgs)) utils::<span class="kw">install.packages</span>(new.pkgs, <span class="dt">repos =</span> <span class="st">&quot;http://cran.us.r-project.org&quot;</span>)
+ 
+auto.loads &lt;-<span class="st"> </span><span class="kw">c</span>(pkgs)
+ 
+if(<span class="kw">interactive</span>()){
+  <span class="kw">invisible</span>(<span class="kw">sapply</span>(auto.loads, sshhh))
+}
+ 
+<span class="co"># welcome &lt;- iconv(&quot;기계와 더불어 사는 세상을 상상합니다!!!&quot;, to = &quot;UTF-8&quot;)</span>
+ 
+<span class="kw">message</span>(<span class="st">&quot;Yesterday is history</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;Tomorrow is a mystery</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;but today is a gift</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="st">&quot;That is why it is called the present.</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre></div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://www.statmethods.net/interface/customizing.html">Quick-R - Customizing Startup</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://stackoverflow.com/questions/13735745/locate-the-rprofile-file-generating-default-options/13736073#13736073">locate the “.Rprofile” file generating default options</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://www.r-bloggers.com/fun-with-rprofile-and-customizing-r-startup/">Fun with .Rprofile and customizing R startup</a><a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

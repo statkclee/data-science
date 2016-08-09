@@ -1,7 +1,7 @@
 ---
 layout: page
-title: 데이터 과학
-subtitle: 데이터 시각화(ggplot2, ggvis)
+title: <eb>��<ec>��<ed>�� 과학
+subtitle: <eb>��<ec>��<ed>�� <ec>��각화(ggplot2, ggvis)
 output:
   html_document: 
     keep_md: yes
@@ -14,40 +14,47 @@ mainfont: NanumGothic
 
 
 
-> ## 학습 목표 [^data-carpentry-ggplot2] {.objectives}
+> ## <ed>��<ec>�� 목표 [^data-carpentry-ggplot2] {.objectives}
 >
-> * `ggplot2` 팩키지로 데이터를 시각화한다. 
-> * 고난도 복잡한 시각화 산출물을 `ggplot2` 팩키지를 활용하여 단계적으로 구축한다.
+> * `ggplot2` <ed>��<ed>��지�<9c> <eb>��<ec>��<ed>���<bc> <ec>��각화<ed>��<eb>��. 
+> * 고난<eb>�� 복잡<ed>�� <ec>��각화 <ec>��출물<ec>�� `ggplot2` <ed>��<ed>��지�<bc> <ed>��<ec>��<ed>��<ec>�� <eb>��계적<ec>���<9c> 구축<ed>��<eb>��.
 > * Figshare [surveys.csv](http://files.figshare.com/1919744/surveys.csv), [mammals data](http://figshare.com/articles/Portal_Project_Teaching_Database/1314459)
-데이터를 활용하여 시각화를 실습한다.
+<eb>��<ec>��<ed>���<bc> <ed>��<ec>��<ed>��<ec>�� <ec>��각화�<bc> <ec>��<ec>��<ed>��<eb>��.
 
 [^data-carpentry-ggplot2]: [Data Carpentry R lessons on ecology](http://www.datacarpentry.org/R-ecology/)
 
 
-### `ggplot2`로 시각화를 하는 이유
+### `ggplot2`�<9c> <ec>��각화�<bc> <ed>��<eb>�� <ec>��<ec>��
 
-R에 기본적으로 시각화를 위한 다양한 기능이 존재하지만, `ggplot2`가 기본으로 제공되는 R 시각화 기능 위에 더욱 강력한 기능을 제공한다.
-기본적인 R 기능도 상대적으로 다른 소프트웨어 서비스나 제품과 비교가 되지 않을 정도록 강력하다. 이런 점에서 R은 참 겸손하다는 생각이 든다.
+R<ec>�� 기본<ec>��<ec>���<9c> <ec>��각화�<bc> <ec>��<ed>�� <eb>��<ec>��<ed>�� 기능<ec>�� 존재<ed>��지�<8c>, `ggplot2`가 기본<ec>���<9c> <ec>��공되<eb>�� R <ec>��각화 기능 <ec>��<ec>�� <eb>��<ec>�� 강력<ed>�� 기능<ec>�� <ec>��공한<eb>��.
+기본<ec>��<ec>�� R 기능<eb>�� <ec>��<eb><8c>�<ec>��<ec>���<9c> <eb>���<b8> <ec>��<ed>��<ed>��<ec>��<ec>�� <ec>��비스<eb>�� <ec>��<ed>���<bc> 비교가 <eb>��지 <ec>��<ec>�� <ec>��<eb>���<9d> 강력<ed>��<eb>��. <ec>��<eb>�� <ec>��<ec>��<ec>�� R<ec><9d>� �<b8> 겸손<ed>��<eb>��<eb>�� <ec>��각이 <eb>��<eb>��.
 
-### 데이터 다운로드와 시각화 툴체인 준비
+### <eb>��<ec>��<ed>�� <eb>��<ec>��로드<ec><99>� <ec>��각화 <ed>��체인 준�<84>
 
 
 ~~~{.r}
-# read_csv로 csv 파일을 불러 읽어온다.
+# read_csv�<U+393C><U+3E63> csv <U+653C><U+3E64>��<U+653C><U+3E63>��<U+653C><U+3E63>�� 불러 <U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E62>��.
 library(readr)
-# 시각화를 위한 ggplot2 팩키지를 불러 읽어온다. 
+# <U+653C><U+3E63>��각화�<U+623C><U+3E63> <U+653C><U+3E63>��<U+653C><U+3E64>�� ggplot2 <U+653C><U+3E64>��<U+653C><U+3E64>��지�<U+623C><U+3E63> 불러 <U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E62>��. 
 library(ggplot2)
-# ggplot2에 입력데이터로 사용될 데이터를 전처리한다.
+# ggplot2<U+653C><U+3E63>�� <U+653C><U+3E63>��<U+653C><U+3E62>��<U+653C><U+3E62>��<U+653C><U+3E63>��<U+653C><U+3E64>���<U+393C><U+3E63> <U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E62>�� <U+653C><U+3E62>��<U+653C><U+3E63>��<U+653C><U+3E64>���<U+623C><U+3E63> <U+653C><U+3E63>��처리<U+653C><U+3E64>��<U+653C><U+3E62>��.
 library(dplyr)
-# 데이터를 불러온다.
+# <U+653C><U+3E62>��<U+653C><U+3E63>��<U+653C><U+3E64>���<U+623C><U+3E63> 불러<U+653C><U+3E63>��<U+653C><U+3E62>��.
 surveys.dat <- read_csv("http://files.figshare.com/1919744/surveys.csv")
 ~~~
 
-[figshare](https://figshare.com/)[^figshare-wired] 사이트에서 데이터를 가져온다. `surveys.csv` 데이터는 포획된 동물에 관한 측정정보가 담겨 있다.
 
-### 시각화를 위한 데이터 전처리 과정
 
-다운로드 받은 데이터에 대한 요약정보를 `summary` 함수를 사용해서 살펴본다.
+~~~{.output}
+FALSE Error in open.connection(con, "rb"): Timeout was reached
+
+~~~
+
+[figshare](https://figshare.com/)[^figshare-wired] <ec>��<ec>��<ed>��<ec>��<ec>�� <eb>��<ec>��<ed>���<bc> 가<ec>��<ec>��<eb>��. `surveys.csv` <eb>��<ec>��<ed>��<eb>�� <ed>��<ed>��<eb>�� <eb>��물에 관<ed>�� 측정<ec>��보�<b0>� <eb>���<a8> <ec>��<eb>��.
+
+### <ec>��각화�<bc> <ec>��<ed>�� <eb>��<ec>��<ed>�� <ec>��처리 과정
+
+<eb>��<ec>��로드 받�<9d>� <eb>��<ec>��<ed>��<ec>�� <eb><8c>�<ed>�� <ec>��<ec>��<ec>��보�<a5><bc> `summary` <ed>��<ec>���<bc> <ec>��<ec>��<ed>��<ec>�� <ec>��<ed>��본다.
 
 
 ~~~{.r}
@@ -57,51 +64,35 @@ summary(surveys.dat)
 
 
 ~~~{.output}
-   record_id         month             day             year     
- Min.   :    1   Min.   : 1.000   Min.   : 1.00   Min.   :1977  
- 1st Qu.: 8888   1st Qu.: 4.000   1st Qu.: 9.00   1st Qu.:1984  
- Median :17775   Median : 6.000   Median :16.00   Median :1990  
- Mean   :17775   Mean   : 6.474   Mean   :16.11   Mean   :1990  
- 3rd Qu.:26662   3rd Qu.: 9.000   3rd Qu.:23.00   3rd Qu.:1997  
- Max.   :35549   Max.   :12.000   Max.   :31.00   Max.   :2002  
-                                                                
-    plot_id      species_id            sex            hindfoot_length
- Min.   : 1.0   Length:35549       Length:35549       Min.   : 2.00  
- 1st Qu.: 5.0   Class :character   Class :character   1st Qu.:21.00  
- Median :11.0   Mode  :character   Mode  :character   Median :32.00  
- Mean   :11.4                                         Mean   :29.29  
- 3rd Qu.:17.0                                         3rd Qu.:36.00  
- Max.   :24.0                                         Max.   :70.00  
-                                                      NA's   :4111   
-     weight      
- Min.   :  4.00  
- 1st Qu.: 20.00  
- Median : 37.00  
- Mean   : 42.67  
- 3rd Qu.: 48.00  
- Max.   :280.00  
- NA's   :3266    
+Error in summary(surveys.dat): object 'surveys.dat' not found
 
 ~~~
 
-#### 1 단계 - 결측값 제거
+#### 1 <eb>���<84> - 결측�<92> <ec>���<b0>
 
-데이터셋에 일부 결측정보가 `summary` 실행결과를 보여주고 있어, 이를 제거한다. 
-각 변수마다 결측치가 있어 이를 한땀 한땀 정성스럽게 결측정보를 제거하는 대신에 `dplyr` 파이프 연산자를 사용하여
-일괄적으로 처리한다.
+<eb>��<ec>��<ed>��<ec>��<ec>�� <ec>��부 결측<ec>��보�<b0>� `summary` <ec>��<ed>��결과�<bc> 보여주고 <ec>��<ec>��, <ec>���<bc> <ec>��거한<eb>��. 
+�<81> 변<ec>��마다 결측치�<b0>� <ec>��<ec>�� <ec>���<bc> <ed>��<eb><95>� <ed>��<eb><95>� <ec>��<ec>��<ec>��<eb>���<8c> 결측<ec>��보�<a5><bc> <ec>��거하<eb>�� <eb><8c>�<ec>��<ec>�� `dplyr` <ed>��<ec>��<ed>�� <ec>��<ec>��<ec>���<bc> <ec>��<ec>��<ed>��<ec>��
+<ec>��괄적<ec>���<9c> 처리<ed>��<eb>��.
 
 
 ~~~{.r}
 surveys.complete <- surveys.dat %>%
-                    filter(species_id != "") %>%       # species_id 결측값 제거
-                    filter(!is.na(weight)) %>%          # weight 결측값 제거
-                    filter(!is.na(hindfoot_length))     # hindfoot_length 결측값 제거
+                    filter(species_id != "") %>%       # species_id 결측�<U+FFFD> <U+FFFD>�거
+                    filter(!is.na(weight)) %>%          # weight 결측�<U+FFFD> <U+FFFD>�거
+                    filter(!is.na(hindfoot_length))     # hindfoot_length 결측�<U+FFFD> <U+FFFD>�거
 ~~~
-#### 2 단계 - 미미한 자료 제거
 
-개체수가 적은 종이 많아서, 개체수 기준 10 보다 적은 종은 제거하기로 한다.
-먼저 `group_by` 함수로 개체종을 그룹으로 군집화하고, `tally` 함수로 각 종별로 개체수를 세고, 
-내부인자로 `sort=TRUE` 를 넣어서 내림차순으로 정렬한다. 
+
+
+~~~{.output}
+FALSE Error in eval(expr, envir, enclos): object 'surveys.dat' not found
+
+~~~
+#### 2 <eb>���<84> - 미�<af>�한 <ec>���<8c> <ec>���<b0>
+
+개체<ec>��가 <ec>��<ec><9d>� 종이 많아<ec>��, 개체<ec>�� 기�<a4>� 10 보다 <ec>��<ec><9d>� 종�<9d>� <ec>��거하기로 <ed>��<eb>��.
+먼�<a0>� `group_by` <ed>��<ec>���<9c> 개체종을 그룹<ec>���<9c> 군집<ed>��<ed>���<a0>, `tally` <ed>��<ec>���<9c> �<81> 종별�<9c> 개체<ec>���<bc> <ec>���<a0>, 
+<eb>��부<ec>��<ec>���<9c> `sort=TRUE` �<bc> <eb>��<ec>��<ec>�� <eb>��림차<ec>��<ec>���<9c> <ec>��<eb>��<ed>��<eb>��. 
 
 
 
@@ -109,76 +100,101 @@ surveys.complete <- surveys.dat %>%
 species.counts <- surveys.complete %>%
   group_by(species_id) %>%
   tally(sort=TRUE)
+~~~
 
+
+
+~~~{.output}
+FALSE Error in eval(expr, envir, enclos): object 'surveys.complete' not found
+
+~~~
+
+
+
+~~~{.r}
 tail(species.counts)
 ~~~
 
 
 
 ~~~{.output}
-FALSE Source: local data frame [6 x 2]
-FALSE 
-FALSE   species_id     n
-FALSE        (chr) (int)
-FALSE 1         PH    31
-FALSE 2         PI     8
-FALSE 3         RO     8
-FALSE 4         OX     5
-FALSE 5         PX     2
-FALSE 6         RX     2
+FALSE Error in tail(species.counts): object 'species.counts' not found
 
 ~~~
 
-개체수가 10개 미만인 종을 제거하고, 시각화를 위한 기본 데이터셋 준비를 완료한다.
+개체<ec>��가 10�<9c> 미만<ec>�� 종을 <ec>��거하�<a0>, <ec>��각화�<bc> <ec>��<ed>�� 기본 <eb>��<ec>��<ed>��<ec>�� 준비�<a5><bc> <ec>��료한<eb>��.
 
 
 ~~~{.r}
 frequent.species <- species.counts %>%
                     filter(n >= 10) %>%
                     select(species_id)
+~~~
 
+
+
+~~~{.output}
+FALSE Error in eval(expr, envir, enclos): object 'species.counts' not found
+
+~~~
+
+
+
+~~~{.r}
 surveys.complete <- surveys.complete %>%
            filter(species_id %in% frequent.species$species_id)
 ~~~
 
-#### 기본 R 시각화 기능 활용
 
-`weight`를 예측변수 `x` 위치에 두고, 종속변수 `hindfoot_length`를 `y`에 두고 R 기본 시각화 산점도를 도식화해 보자.
+
+~~~{.output}
+FALSE Error in eval(expr, envir, enclos): object 'surveys.complete' not found
+
+~~~
+
+#### 기본 R <ec>��각화 기능 <ed>��<ec>��
+
+`weight`�<bc> <ec>��측�<b3>�<ec>�� `x` <ec>��치에 <eb>���<a0>, 종속변<ec>�� `hindfoot_length`�<bc> `y`<ec>�� <eb>���<a0> R 기본 <ec>��각화 <ec>��<ec>��<eb>���<bc> <eb>��<ec>��<ed>��<ed>�� 보자.
 
 
 ~~~{.r}
 plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length)
 ~~~
 
-<img src="fig/base-plot-1.png" title="plot of chunk base-plot" alt="plot of chunk base-plot" style="display: block; margin: auto;" />
 
-### `ggplot2` 팩키지로 시각화
 
-`ggplot2`를 사용해서 R 기본 내장된 시각화 기능을 대신하여 동일한 작업을 수행할 수 있다.
+~~~{.output}
+Error in plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length): object 'surveys.complete' not found
 
-데이터프레임 데이터에서 복잡하고 정교한 시각화 산출물을  `ggplot2` 팩키지로 생성할 수 있다.
-기본설정만으로 최소의 노력으로 출판 품질 시각화 산출물을 만들어 낼 수 있다.
+~~~
 
-`ggplot2` 시각화 산출물은 시각화 요소를 차곡차곡 추가해 나가면서 만들어 간다.
+### `ggplot2` <ed>��<ed>��지�<9c> <ec>��각화
 
-`ggplot2`  시각화 산출물은 다음 단계로 만들어 나간다:
+`ggplot2`�<bc> <ec>��<ec>��<ed>��<ec>�� R 기본 <eb>��<ec>��<eb>�� <ec>��각화 기능<ec>�� <eb><8c>�<ec>��<ed>��<ec>�� <eb>��<ec>��<ed>�� <ec>��<ec>��<ec>�� <ec>��<ed>��<ed>�� <ec>�� <ec>��<eb>��.
 
-- `data` 인자로 특정 데이터프레임과 플롯을 묶어 연결시킨다.
+<eb>��<ec>��<ed>��<ed>��<eb>��<ec>�� <eb>��<ec>��<ed>��<ec>��<ec>�� 복잡<ed>���<a0> <ec>��교한 <ec>��각화 <ec>��출물<ec>��  `ggplot2` <ed>��<ed>��지�<9c> <ec>��<ec>��<ed>�� <ec>�� <ec>��<eb>��.
+기본<ec>��<ec>��만으�<9c> 최소<ec>�� <eb>��<eb>��<ec>���<9c> 출판 <ed>���<88> <ec>��각화 <ec>��출물<ec>�� 만들<ec>�� <eb>�� <ec>�� <ec>��<eb>��.
+
+`ggplot2` <ec>��각화 <ec>��출물<ec><9d>� <ec>��각화 <ec>��<ec>���<bc> 차곡차곡 추�<b0>�<ed>�� <eb>��가면서 만들<ec>�� 간다.
+
+`ggplot2`  <ec>��각화 <ec>��출물<ec><9d>� <eb>��<ec>�� <eb>��계로 만들<ec>�� <eb>��간다:
+
+- `data` <ec>��<ec>���<9c> <ed>��<ec>�� <eb>��<ec>��<ed>��<ed>��<eb>��<ec>���<bc> <ed>���<af><ec>�� 묶어 <ec>��결시<ed>��<eb>��.
 
 
 ~~~{.r}
 ggplot(data = surveys.complete)
 ~~~
 
-- 미적 요소를 `aes` 로 정의해서, 플롯축에 데이터 변수를 매핑하고, 크기, 모양, 색상 등을 시각화한다. 
+- 미적 <ec>��<ec>���<bc> `aes` �<9c> <ec>��<ec>��<ed>��<ec>��, <ed>���<af>축에 <eb>��<ec>��<ed>�� 변<ec>���<bc> 매핑<ed>���<a0>, <ed>���<b0>, 모양, <ec>��<ec>�� <eb>��<ec>�� <ec>��각화<ed>��<eb>��. 
 
 
 ~~~{.r}
 ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length))
 ~~~
 
-- 데이터에 대한 시각적 표현(점, 선, 막대 등)을 하는데 `geoms` 을 사용해서 플롯에 반영한다. 
-플롯에 `geoms`를 추가하는데 `+` 연산자를 사용한다::
+- <eb>��<ec>��<ed>��<ec>�� <eb><8c>�<ed>�� <ec>��각적 <ed>��<ed>��(<ec>��, <ec>��, 막�<8c>� <eb>��)<ec>�� <ed>��<eb>��<eb>�� `geoms` <ec>�� <ec>��<ec>��<ed>��<ec>�� <ed>���<af><ec>�� 반영<ed>��<eb>��. 
+<ed>���<af><ec>�� `geoms`�<bc> 추�<b0>�<ed>��<eb>��<eb>�� `+` <ec>��<ec>��<ec>���<bc> <ec>��<ec>��<ed>��<eb>��::
 
 
 ~~~{.r}
@@ -186,16 +202,21 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point()
 ~~~
 
-<img src="fig/first-ggplot-1.png" title="plot of chunk first-ggplot" alt="plot of chunk first-ggplot" style="display: block; margin: auto;" />
 
-> #### 주의 사항 {.callout}
+
+~~~{.output}
+Error in ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)): object 'surveys.complete' not found
+
+~~~
+
+> #### 주의 <ec>��<ed>�� {.callout}
 >
-> - `ggplot` 함수에 넣은 어떤 것도 추가한 `geom` 계층을 통해 반영된다. 즉, 보편적인 플롯 설정이다.
-> - `aes()`에 설정한 `x`축, `y`축도 여기에 포함된다.
+> - `ggplot` <ed>��<ec>��<ec>�� <eb>��<ec><9d>� <ec>��<eb>�� 것도 추�<b0>�<ed>�� `geom` 계층<ec>�� <ed>��<ed>�� 반영<eb>��<eb>��. �<89>, 보편<ec>��<ec>�� <ed>���<af> <ec>��<ec>��<ec>��<eb>��.
+> - `aes()`<ec>�� <ec>��<ec>��<ed>�� `x`�<95>, `y`축도 <ec>��기에 <ed>��<ed>��<eb>��<eb>��.
 
-### 플롯 변경하기
+### <ed>���<af> 변경하�<b0>
 
-- 투명도(transparaency, alpha)를 추가한다.
+- <ed>��명도(transparaency, alpha)�<bc> 추�<b0>�<ed>��<eb>��.
 
 
 ~~~{.r}
@@ -203,9 +224,14 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point(alpha=0.1)
 ~~~
 
-<img src="fig/first-ggplot-alpha-1.png" title="plot of chunk first-ggplot-alpha" alt="plot of chunk first-ggplot-alpha" style="display: block; margin: auto;" />
 
-- 색상을 추가한다.
+
+~~~{.output}
+Error in ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)): object 'surveys.complete' not found
+
+~~~
+
+- <ec>��<ec>��<ec>�� 추�<b0>�<ed>��<eb>��.
 
 
 ~~~{.r}
@@ -213,11 +239,16 @@ ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)) +
   geom_point(alpha=0.1, color = "blue")
 ~~~
 
-<img src="fig/first-ggplot-alpha-color-1.png" title="plot of chunk first-ggplot-alpha-color" alt="plot of chunk first-ggplot-alpha-color" style="display: block; margin: auto;" />
 
-### 상자 그림
 
-각 종별로 체중 분포를 시각화한다.
+~~~{.output}
+Error in ggplot(data = surveys.complete, aes(x = weight, y = hindfoot_length)): object 'surveys.complete' not found
+
+~~~
+
+### <ec>��<ec>�� 그림
+
+�<81> 종별�<9c> 체중 분포�<bc> <ec>��각화<ed>��<eb>��.
 
 
 ~~~{.r}
@@ -225,9 +256,14 @@ ggplot(data = surveys.complete, aes(x = species_id,  y = weight)) +
                    geom_boxplot()
 ~~~
 
-<img src="fig/boxplot-1.png" title="plot of chunk boxplot" alt="plot of chunk boxplot" style="display: block; margin: auto;" />
 
-상자그림에 점을 추가해서, 특이한 관측점과 많이 관측된 측정값을 볼 수 있다.
+
+~~~{.output}
+Error in ggplot(data = surveys.complete, aes(x = species_id, y = weight)): object 'surveys.complete' not found
+
+~~~
+
+<ec>��<ec>��그림<ec>�� <ec>��<ec>�� 추�<b0>�<ed>��<ec>��, <ed>��<ec>��<ed>�� 관측점�<bc> 많이 관측된 측정값을 �<bc> <ec>�� <ec>��<eb>��.
 
 
 ~~~{.r}
@@ -236,19 +272,24 @@ ggplot(data = surveys.complete, aes(x = species_id, y = weight)) +
                    geom_boxplot(alpha = 0)
 ~~~
 
-<img src="fig/boxplot-with-points-1.png" title="plot of chunk boxplot-with-points" alt="plot of chunk boxplot-with-points" style="display: block; margin: auto;" />
 
-상기 시각화 산출물에서 상자그림이 지터 계층 위에 놓인 방식에 주목한다.
-`geoms` 순서를 조정하고, 투명도를 조절해 플롯에 계층을 쌓는 방식을 제어한다.
 
-> ### 도전과제 {.challenge}
+~~~{.output}
+Error in ggplot(data = surveys.complete, aes(x = species_id, y = weight)): object 'surveys.complete' not found
+
+~~~
+
+<ec>���<b0> <ec>��각화 <ec>��출물<ec>��<ec>�� <ec>��<ec>��그림<ec>�� 지<ed>�� 계층 <ec>��<ec>�� <eb>��<ec>�� 방식<ec>�� 주목<ed>��<eb>��.
+`geoms` <ec>��<ec>���<bc> 조정<ed>���<a0>, <ed>��명도�<bc> 조절<ed>�� <ed>���<af><ec>�� 계층<ec>�� <ec>��<eb>�� 방식<ec>�� <ec>��<ec>��<ed>��<eb>��.
+
+> ### <eb>��<ec>��과제 {.challenge}
 >
-> `hindfoot_length`에 대한 상자그림을 생성한다.
+> `hindfoot_length`<ec>�� <eb><8c>�<ed>�� <ec>��<ec>��그림<ec>�� <ec>��<ec>��<ed>��<eb>��.
 
-### 시계열 데이터 시각화
+### <ec>��계열 <eb>��<ec>��<ed>�� <ec>��각화
 
-각 종별로 년도별 개체수를 계산한다.
-이 작업을 수행하기 위해서는 먼저 데이터를 그룹집단화하고, 각 그룹마다 해당 레코드 개수를 센다.
+�<81> 종별�<9c> <eb>��<eb>���<84> 개체<ec>���<bc> 계산<ed>��<eb>��.
+<ec>�� <ec>��<ec>��<ec>�� <ec>��<ed>��<ed>���<b0> <ec>��<ed>��<ec>��<eb>�� 먼�<a0>� <eb>��<ec>��<ed>���<bc> 그룹집단<ed>��<ed>���<a0>, �<81> 그룹마다 <ed>��<eb>�� <eb>��코드 개수�<bc> <ec>��<eb>��.
 
 
 
@@ -258,7 +299,14 @@ yearly.counts <- surveys.complete %>%
                  tally
 ~~~
 
-`x`축에 연도, `y` 축에 개수를 놓고 직선으로 시간에 따라 경과한 정보를 시각화한다.
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'surveys.complete' not found
+
+~~~
+
+`x`축에 <ec>��<eb>��, `y` 축에 개수�<bc> <eb>���<a0> 직선<ec>���<9c> <ec>��간에 <eb>��<eb>�� 경과<ed>�� <ec>��보�<a5><bc> <ec>��각화<ed>��<eb>��.
 
 
 ~~~{.r}
@@ -266,10 +314,15 @@ ggplot(data = yearly.counts, aes(x = year, y = n)) +
                   geom_line()
 ~~~
 
-<img src="fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
 
-불행하게도, 상기 그래프는 원하는 바가 아닌데, 이유는 모든 종에 대해 데이터를 시각화하게 명령어를 전송했기 때문이다.
-`species_id`로 시각화한 데이터를 쪼갠 후에 `ggplot` 명령어로 시각화하게 한다.
+
+~~~{.output}
+Error in ggplot(data = yearly.counts, aes(x = year, y = n)): object 'yearly.counts' not found
+
+~~~
+
+불행<ed>��게도, <ec>���<b0> 그래<ed>��<eb>�� <ec>��<ed>��<eb>�� 바�<b0>� <ec>��<eb>��<eb>��, <ec>��<ec>��<eb>�� 모든 종에 <eb><8c>�<ed>�� <eb>��<ec>��<ed>���<bc> <ec>��각화<ed>���<8c> 명령<ec>���<bc> <ec>��<ec>��<ed>���<b0> <eb>��문이<eb>��.
+`species_id`�<9c> <ec>��각화<ed>�� <eb>��<ec>��<ed>���<bc> 쪼갠 <ed>��<ec>�� `ggplot` 명령<ec>���<9c> <ec>��각화<ed>���<8c> <ed>��<eb>��.
 
 
 ~~~{.r}
@@ -277,9 +330,14 @@ ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id)) +
   geom_line()
 ~~~
 
-<img src="fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
-색상을 추가하게 되면, 그래프에서 개체를 식별하게 된다.
+
+~~~{.output}
+Error in ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id)): object 'yearly.counts' not found
+
+~~~
+
+<ec>��<ec>��<ec>�� 추�<b0>�<ed>���<8c> <eb>���<b4>, 그래<ed>��<ec>��<ec>�� 개체�<bc> <ec>��별하�<8c> <eb>��<eb>��.
 
 
 ~~~{.r}
@@ -287,13 +345,18 @@ ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id, color = sp
   geom_line()
 ~~~
 
-<img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in ggplot(data = yearly.counts, aes(x = year, y = n, group = species_id, : object 'yearly.counts' not found
+
+~~~
 
 ###  측면보여주기(faceting)
 
-`ggplot` 에는 *측면 보여주기(faceting)* 라는 특수한 기능이 있어서, 특정 요인에 따라
-그래프 하나를 다수 그래프로 쪼갤 수 있다. 예를 들어, 각 종마다 시계열 그래프를 별도로 
-도식화할 수 있다.
+`ggplot` <ec>��<eb>�� *측면 보여주기(faceting)* <eb>��<eb>�� <ed>��<ec>��<ed>�� 기능<ec>�� <ec>��<ec>��<ec>��, <ed>��<ec>�� <ec>��<ec>��<ec>�� <eb>��<eb>��
+그래<ed>�� <ed>��<eb>���<bc> <eb>��<ec>�� 그래<ed>���<9c> 쪼갤 <ec>�� <ec>��<eb>��. <ec>���<bc> <eb>��<ec>��, �<81> 종마<eb>�� <ec>��계열 그래<ed>���<bc> 별도�<9c> 
+<eb>��<ec>��<ed>��<ed>�� <ec>�� <ec>��<eb>��.
 
 
 ~~~{.r}
@@ -301,14 +364,19 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
   geom_line() + facet_wrap(~species_id)
 ~~~
 
-<img src="fig/first-facet-1.png" title="plot of chunk first-facet" alt="plot of chunk first-facet" style="display: block; margin: auto;" />
 
-관측된 각 개체 성별에 따라 그래프에 직선을 쪼개고자 한다.
-이 작업을 수행하려면, 성별로 그룹을 만들어 데이터프레임에 개수를 세어야 된다.
 
-> ### 도전과제 {.challenge}
+~~~{.output}
+Error in ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)): object 'yearly.counts' not found
+
+~~~
+
+관측된 �<81> 개체 <ec>��별에 <eb>��<eb>�� 그래<ed>��<ec>�� 직선<ec>�� 쪼개고자 <ed>��<eb>��.
+<ec>�� <ec>��<ec>��<ec>�� <ec>��<ed>��<ed>��<eb>���<b4>, <ec>��별로 그룹<ec>�� 만들<ec>�� <eb>��<ec>��<ed>��<ed>��<eb>��<ec>��<ec>�� 개수�<bc> <ec>��<ec>��<ec>�� <eb>��<eb>��.
+
+> ### <eb>��<ec>��과제 {.challenge}
 >
-> - 데이터프레임을 필터링해서 "F" 혹은 "M" 값을 갖는 레코드만 갖도록 작업한다.
+> - <eb>��<ec>��<ed>��<ed>��<eb>��<ec>��<ec>�� <ed>��<ed>��링해<ec>�� "F" <ed>��<ec><9d>� "M" 값을 갖는 <eb>��코드�<8c> 갖도�<9d> <ec>��<ec>��<ed>��<eb>��.
 >  
 > 
 > 
@@ -319,7 +387,14 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >            filter(sex %in% sex_values)
 > ~~~
 > 
-> - 연도(`year`), 개체 신원정보(`special_id`), 성(`sex`) 별로 그룹을 만든다.
+> 
+> 
+> ~~~{.output}
+> Error in eval(expr, envir, enclos): object 'surveys.complete' not found
+> 
+> ~~~
+> 
+> - <ec>��<eb>��(`year`), 개체 <ec>��<ec>��<ec>���<b4>(`special_id`), <ec>��(`sex`) 별로 그룹<ec>�� 만든<eb>��.
 >
 > 
 > ~~~{.r}
@@ -327,8 +402,15 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >                      group_by(year, species_id, sex) %>%
 >                      tally
 > ~~~
+> 
+> 
+> 
+> ~~~{.output}
+> Error in eval(expr, envir, enclos): object 'surveys.complete' not found
+> 
+> ~~~
 >
-> - (개별 그래프 내부에) 성별로 쪼개는 측면보여주기 플롯을 생성한다.
+> - (개별 그래<ed>�� <eb>��부<ec>��) <ec>��별로 쪼개<eb>�� 측면보여주기 <ed>���<af><ec>�� <ec>��<ec>��<ed>��<eb>��.
 >
 > 
 > ~~~{.r}
@@ -336,10 +418,15 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ species_id)
 > ~~~
 > 
-> <img src="fig/facet-by-species-and-sex-1.png" title="plot of chunk facet-by-species-and-sex" alt="plot of chunk facet-by-species-and-sex" style="display: block; margin: auto;" />
+> 
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, : object 'yearly.sex.counts' not found
+> 
+> ~~~
 >
-> - 논문출판으로 흰색 배경이 좀더 가독성을 좋게 한다.
-> ` theme_bw()` 함수를 사용해서 흰색 배경을 적용한다.
+> - <eb>��문출<ed>��<ec>���<9c> <ed>��<ec>�� 배경<ec>�� 좀<eb>�� 가<eb>��<ec>��<ec>�� 좋게 <ed>��<eb>��.
+> ` theme_bw()` <ed>��<ec>���<bc> <ec>��<ec>��<ed>��<ec>�� <ed>��<ec>�� 배경<ec>�� <ec>��<ec>��<ed>��<eb>��.
 > 
 > 
 > ~~~{.r}
@@ -347,10 +434,15 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ species_id) + theme_bw()
 > ~~~
 > 
-> <img src="fig/facet-by-species-and-sex-white-bg-1.png" title="plot of chunk facet-by-species-and-sex-white-bg" alt="plot of chunk facet-by-species-and-sex-white-bg" style="display: block; margin: auto;" />
 > 
-> > - 종대신에 성별로 색상을 입혀서 그래프 가독성을 좋게 만들 수 있다.
-> > (종은 이미 별도 그래프로 시각화되어서, 더 잘 식별하게 만들 필요는 없다.)
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = species_id, : object 'yearly.sex.counts' not found
+> 
+> ~~~
+> 
+> > - 종�<8c>�<ec>��<ec>�� <ec>��별로 <ec>��<ec>��<ec>�� <ec>��<ed><98>�<ec>�� 그래<ed>�� 가<eb>��<ec>��<ec>�� 좋게 만들 <ec>�� <ec>��<eb>��.
+> > (종�<9d>� <ec>���<b8> 별도 그래<ed>���<9c> <ec>��각화<eb>��<ec>��<ec>��, <eb>�� <ec>�� <ec>��별하�<8c> 만들 <ed>��<ec>��<eb>�� <ec>��<eb>��.)
 > 
 > 
 > 
@@ -359,23 +451,45 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ species_id) + theme_bw()
 > ~~~
 > 
-> <img src="fig/facet-by-species-and-sex-colored-1.png" title="plot of chunk facet-by-species-and-sex-colored" alt="plot of chunk facet-by-species-and-sex-colored" style="display: block; margin: auto;" />
 > 
-> > - 연도에 걸쳐 각 종별로 평균 체중을 시각화한다.
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, : object 'yearly.sex.counts' not found
+> 
+> ~~~
+> 
+> > - <ec>��<eb>��<ec>�� 걸쳐 �<81> 종별�<9c> <ed>���<a0> 체중<ec>�� <ec>��각화<ed>��<eb>��.
 > 
 > 
 > ~~~{.r}
 > yearly.weight <- surveys.complete %>%
 >                  group_by(year, species_id, sex) %>%
 >                  summarise(avg_weight = mean(weight, na.rm = TRUE))
+> ~~~
+> 
+> 
+> 
+> ~~~{.output}
+> Error in eval(expr, envir, enclos): object 'surveys.complete' not found
+> 
+> ~~~
+> 
+> 
+> 
+> ~~~{.r}
 > ggplot(data = yearly.weight, aes(x=year, y=avg_weight, color = species_id, group = species_id)) +
 >   geom_line() + theme_bw()
 > ~~~
 > 
-> <img src="fig/average-weight-timeseries-1.png" title="plot of chunk average-weight-timeseries" alt="plot of chunk average-weight-timeseries" style="display: block; margin: auto;" />
 > 
-> > - 시각화를 왜 이런 단계를 밟아서 도식화 절차를 거친다고 생각하는가?
-> > - 수컷과 암컷 체중이 상당히 차이가 나서 성별로 별도 시각화를 수행한다.
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.weight, aes(x = year, y = avg_weight, color = species_id, : object 'yearly.weight' not found
+> 
+> ~~~
+> 
+> > - <ec>��각화�<bc> <ec>�� <ec>��<eb>�� <eb>��계�<a5><bc> 밟아<ec>�� <eb>��<ec>��<ed>�� <ec>��차�<a5><bc> 거친<eb>���<a0> <ec>��각하<eb>��가?
+> > - <ec>��컷과 <ec>���<b7> 체중<ec>�� <ec>��<eb>��<ed>�� 차이가 <eb>��<ec>�� <ec>��별로 별도 <ec>��각화�<bc> <ec>��<ed>��<ed>��<eb>��.
 > 
 > 
 > ~~~{.r}
@@ -383,13 +497,18 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   geom_line() + facet_wrap(~ sex) + theme_bw()
 > ~~~
 > 
-> <img src="fig/average-weight-time-facet_sex-1.png" title="plot of chunk average-weight-time-facet_sex" alt="plot of chunk average-weight-time-facet_sex" style="display: block; margin: auto;" />
-> 지금까지 시각화 결과가 상당히 좋았지만, 아직 출판하기에는 많이 부족하다.
-> 시각화 산출물 결과를 향상할 수 있는 다른 방법은 무엇이 있을까?
-> `ggplot2` [컨닝쪽지(cheat sheet)](https://www.rstudio.com/wp-content/uploads/2015/08/ggplot2-cheatsheet.pdf)를 
-> 참조하고, 적어도 세가지 아이디어를 적어본다.
 > 
-> `x`축과 `y`축에 'year'와 'n' 보다 더 많은 정보를 전달하도록 변경하고, 그래프에 제목을 추가한다.
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.weight, aes(x = year, y = avg_weight, color = species_id, : object 'yearly.weight' not found
+> 
+> ~~~
+> 지금까지 <ec>��각화 결과가 <ec>��<eb>��<ed>�� 좋았지�<8c>, <ec>���<81> 출판<ed>��기에<eb>�� 많이 부족하<eb>��.
+> <ec>��각화 <ec>��출물 결과�<bc> <ed>��<ec>��<ed>�� <ec>�� <ec>��<eb>�� <eb>���<b8> 방법<ec><9d>� 무엇<ec>�� <ec>��<ec>���<8c>?
+> `ggplot2` [컨닝쪽�<a7>�(cheat sheet)](https://www.rstudio.com/wp-content/uploads/2015/08/ggplot2-cheatsheet.pdf)�<bc> 
+> 참조<ed>���<a0>, <ec>��<ec>��<eb>�� <ec>��가지 <ec>��<ec>��<eb>��<ec>���<bc> <ec>��<ec>��본다.
+> 
+> `x`축과 `y`축에 'year'<ec><99>� 'n' 보다 <eb>�� 많�<9d>� <ec>��보�<a5><bc> <ec>��<eb>��<ed>��<eb>���<9d> 변경하�<a0>, 그래<ed>��<ec>�� <ec>��목을 추�<b0>�<ed>��<eb>��.
 > 
 > 
 > ~~~{.r}
@@ -401,10 +520,15 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >        y = 'Number of species') + theme_bw()
 > ~~~
 > 
-> <img src="fig/number_species_year_with_right_labels-1.png" title="plot of chunk number_species_year_with_right_labels" alt="plot of chunk number_species_year_with_right_labels" style="display: block; margin: auto;" />
 > 
-> 이제 좀더 나아져서 훨씬 더 많은 정보를 주는 `x`, `y` 축 명칭으로 바꿨지만, 가독성이 떨어지고 있다.
-> 글자 크기를 변경하고 글자체도 변경한다.
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, : object 'yearly.sex.counts' not found
+> 
+> ~~~
+> 
+> <ec>��<ec>�� 좀<eb>�� <eb>��<ec>��<ec>��<ec>�� <ed>��<ec>�� <eb>�� 많�<9d>� <ec>��보�<a5><bc> 주는 `x`, `y` �<95> 명칭<ec>���<9c> 바꿨지�<8c>, 가<eb>��<ec>��<ec>�� <eb>��<ec>��지�<a0> <ec>��<eb>��.
+> 글<ec>�� <ed>��기�<a5><bc> 변경하�<a0> 글<ec>��체도 변경한<eb>��.
 > 
 > 
 > ~~~{.r}
@@ -417,11 +541,16 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >   theme(text=element_text(size=16, family="Arial")) + theme_bw()
 > ~~~
 > 
-> <img src="fig/number_species_year_with_right_labels_xfont_size-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_size" alt="plot of chunk number_species_year_with_right_labels_xfont_size" style="display: block; margin: auto;" />
 > 
-> 조작을 한 다음에, `x` 축이 여전히 적절한 가독성을 전달하고 있지 않음을 볼 수 있다.
-> 라벨 방향을 변경해서 서로 겹쳐지지 않도록 수평 혹은 수직방향으로 바꾼다.
-> 90도 각도를 사용하거나, 대각선 방향으로 라벨방향을 변경하도록 적절한 각도로 바꾸는 실험을 진행한다. 
+> 
+> ~~~{.output}
+> Error in ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, : object 'yearly.sex.counts' not found
+> 
+> ~~~
+> 
+> 조작<ec>�� <ed>�� <eb>��<ec>��<ec>��, `x` 축이 <ec>��<ec>��<ed>�� <ec>��<ec>��<ed>�� 가<eb>��<ec>��<ec>�� <ec>��<eb>��<ed>���<a0> <ec>��지 <ec>��<ec>��<ec>�� �<bc> <ec>�� <ec>��<eb>��.
+> <eb>���<a8> 방향<ec>�� 변경해<ec>�� <ec>���<9c> 겹쳐지지 <ec>��<eb>���<9d> <ec>��<ed>�� <ed>��<ec><9d>� <ec>��직방<ed>��<ec>���<9c> 바꾼<eb>��.
+> 90<eb>�� 각도�<bc> <ec>��<ec>��<ed>��거나, <eb><8c>�각선 방향<ec>���<9c> <eb>��벨방<ed>��<ec>�� 변경하<eb>���<9d> <ec>��<ec>��<ed>�� 각도�<9c> 바꾸<eb>�� <ec>��<ed>��<ec>�� 진행<ed>��<eb>��. 
 > 
 > 
 > ~~~{.r}
@@ -437,20 +566,25 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 >          y = 'Number of species')
 > ~~~
 > 
-> <img src="fig/number_species_year_with_right_labels_xfont_orientation-1.png" title="plot of chunk number_species_year_with_right_labels_xfont_orientation" alt="plot of chunk number_species_year_with_right_labels_xfont_orientation" style="display: block; margin: auto;" />
 > 
-> 이제, 라벨을 키워서 가독성이 더 좋아졌지만, 개선할 여지는 남아 있다.
-> 시간을 5분만 더 들여서 더 나은 시각화 산출물을 만들어 내도록 하나 혹은 두가지 작업을 시도해 본다.
-> `ggplot2` 컨닝 쪽지를 사용해서, 상기 시각화 산출물에 적용할  영감을 받아본다.
 > 
-> 다음에 몇가지 생각난 것이 있다:
+> ~~~{.output}
+> Error in ggplot(data = yearly.sex.counts, aes(x = year, y = n, color = sex, : object 'yearly.sex.counts' not found
 > 
-> - 선 두께를 변경할 수 있는지 살펴본다.
-> - 범례(legend) 명칭을 변경할 방법을 살펴본다. 범례 라벨은 어떤가?
-> - 외양을 좋게 하는데 다른 색상 팔레트를 사용한다. (http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/)
+> ~~~
 > 
-> 완벽한 시각화 산출물이 도출되면, 선호하는 그림파일 형식으로 저장한다.
-> 그림 폭과 높이를 지정해서 크기를 쉽게 변경한다.
+> <ec>��<ec>��, <eb>��벨을 <ed>��<ec>��<ec>�� 가<eb>��<ec>��<ec>�� <eb>�� 좋아졌�<a7>��<8c>, 개선<ed>�� <ec>��지<eb>�� <eb>��<ec>�� <ec>��<eb>��.
+> <ec>��간을 5분만 <eb>�� <eb>��<ec>��<ec>�� <eb>�� <eb>��<ec><9d>� <ec>��각화 <ec>��출물<ec>�� 만들<ec>�� <eb>��<eb>���<9d> <ed>��<eb>�� <ed>��<ec><9d>� <eb>��가지 <ec>��<ec>��<ec>�� <ec>��<eb>��<ed>�� 본다.
+> `ggplot2` 컨닝 쪽�<a7>��<bc> <ec>��<ec>��<ed>��<ec>��, <ec>���<b0> <ec>��각화 <ec>��출물<ec>�� <ec>��<ec>��<ed>��  <ec>��감을 받아본다.
+> 
+> <eb>��<ec>��<ec>�� 몇�<b0>�지 <ec>��각난 것이 <ec>��<eb>��:
+> 
+> - <ec>�� <eb>��께�<a5><bc> 변경할 <ec>�� <ec>��<eb>��지 <ec>��<ed>��본다.
+> - 범�<a1>�(legend) 명칭<ec>�� 변경할 방법<ec>�� <ec>��<ed>��본다. 범�<a1>� <eb>��벨�<9d>� <ec>��<eb>��가?
+> - <ec>��<ec>��<ec>�� 좋게 <ed>��<eb>��<eb>�� <eb>���<b8> <ec>��<ec>�� <ed>��<eb>��<ed>���<bc> <ec>��<ec>��<ed>��<eb>��. (http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/)
+> 
+> <ec>��벽한 <ec>��각화 <ec>��출물<ec>�� <eb>��출되�<b4>, <ec>��<ed>��<ed>��<eb>�� 그림<ed>��<ec>�� <ed>��<ec>��<ec>���<9c> <ec><a0>�<ec>��<ed>��<eb>��.
+> 그림 <ed>���<bc> <eb>��<ec>���<bc> 지<ec>��<ed>��<ec>�� <ed>��기�<a5><bc> <ec>���<8c> 변경한<eb>��.
 > 
 > 
 > ~~~{.r}
@@ -458,10 +592,10 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 > ~~~
 
 
-> ### `Error in plot.new() : figure margins too large` 시각화 문제 해결 {.callout}
+> ### `Error in plot.new() : figure margins too large` <ec>��각화 문제 <ed>���<b0> {.callout}
 >
-> 그림에 좌우상하 여백(margin)이 맞지 않는 오류가 발생하는 경우 
-> 좌우상하 여백을 기본설정 `par(mar=c(1,1,1,1))` 명령어를 통해 해결한다. 
+> 그림<ec>�� 좌우<ec>��<ed>�� <ec>���<b1>(margin)<ec>�� 맞�<a7>� <ec>��<eb>�� <ec>��류�<b0>� 발생<ed>��<eb>�� 경우 
+> 좌우<ec>��<ed>�� <ec>��백을 기본<ec>��<ec>�� `par(mar=c(1,1,1,1))` 명령<ec>���<bc> <ed>��<ed>�� <ed>��결한<eb>��. 
 >
 > ~~~ {.r}
 > plot(x = surveys.complete$weight, y = surveys.complete$hindfoot_length)
@@ -481,6 +615,6 @@ ggplot(data = yearly.counts, aes(x = year, y = n, color = species_id)) +
 
 
 
-### 참고자료
+### 참고<ec>���<8c>
 
 [^figshare-wired]: ["figshare wants to open up scientific data to the world"](http://www.wired.co.uk/news/archive/2014-07/25/figshare)
