@@ -1,14 +1,4 @@
----
-layout: page
-title: 데이터 과학
-subtitle: ggvis
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
 
 
 
@@ -41,27 +31,27 @@ mtcars %>% ggvis(~wt, ~mpg) %>%
            layer_smooths()
 ~~~
 
-<!--html_preserve--><div id="plot_id460137769-container" class="ggvis-output-container">
-<div id="plot_id460137769" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id156612407-container" class="ggvis-output-container">
+<div id="plot_id156612407" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id460137769_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id460137769" data-renderer="svg">SVG</a>
+<a id="plot_id156612407_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id156612407" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id460137769_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id460137769" data-renderer="canvas">Canvas</a>
+<a id="plot_id156612407_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id156612407" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id460137769_download" class="ggvis-download" data-plot-id="plot_id460137769">Download</a>
+<a id="plot_id156612407_download" class="ggvis-download" data-plot-id="plot_id156612407">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id460137769_spec = {
+var plot_id156612407_spec = {
   "data": [
     {
       "name": ".0",
@@ -220,12 +210,12 @@ var plot_id460137769_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id460137769").parseSpec(plot_id460137769_spec);
+ggvis.getPlot("plot_id156612407").parseSpec(plot_id156612407_spec);
 </script><!--/html_preserve-->
 
 #### 2.2. `ggvis` 선그림
@@ -240,27 +230,27 @@ mtcars %>% ggvis(~wt, ~mpg) %>%
            layer_smooths()
 ~~~
 
-<!--html_preserve--><div id="plot_id813305678-container" class="ggvis-output-container">
-<div id="plot_id813305678" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id569508776-container" class="ggvis-output-container">
+<div id="plot_id569508776" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id813305678_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id813305678" data-renderer="svg">SVG</a>
+<a id="plot_id569508776_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id569508776" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id813305678_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id813305678" data-renderer="canvas">Canvas</a>
+<a id="plot_id569508776_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id569508776" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id813305678_download" class="ggvis-download" data-plot-id="plot_id813305678">Download</a>
+<a id="plot_id569508776_download" class="ggvis-download" data-plot-id="plot_id569508776">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id813305678_spec = {
+var plot_id569508776_spec = {
   "data": [
     {
       "name": ".0/arrange1",
@@ -422,12 +412,12 @@ var plot_id813305678_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id813305678").parseSpec(plot_id813305678_spec);
+ggvis.getPlot("plot_id569508776").parseSpec(plot_id569508776_spec);
 </script><!--/html_preserve-->
 
 #### 2.3. `ggvis` 히스토그램, 밀도 그래프, 막대 그래프
@@ -441,27 +431,27 @@ mtcars %>% ggvis(~mpg) %>%
            layer_histograms(width=7)
 ~~~
 
-<!--html_preserve--><div id="plot_id825545188-container" class="ggvis-output-container">
-<div id="plot_id825545188" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id637449401-container" class="ggvis-output-container">
+<div id="plot_id637449401" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id825545188_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id825545188" data-renderer="svg">SVG</a>
+<a id="plot_id637449401_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id637449401" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id825545188_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id825545188" data-renderer="canvas">Canvas</a>
+<a id="plot_id637449401_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id637449401" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id825545188_download" class="ggvis-download" data-plot-id="plot_id825545188">Download</a>
+<a id="plot_id637449401_download" class="ggvis-download" data-plot-id="plot_id637449401">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id825545188_spec = {
+var plot_id637449401_spec = {
   "data": [
     {
       "name": ".0/bin1/stack2",
@@ -587,12 +577,12 @@ var plot_id825545188_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id825545188").parseSpec(plot_id825545188_spec);
+ggvis.getPlot("plot_id637449401").parseSpec(plot_id637449401_spec);
 </script><!--/html_preserve-->
 
 `layer_densities()` 함수에 `fill:="orange"`로 색상 인자로 넘겨 밀도 그래프를 완성한다.
@@ -603,27 +593,27 @@ mtcars %>% ggvis(~mpg) %>%
            layer_densities(fill:="orange")
 ~~~
 
-<!--html_preserve--><div id="plot_id897982248-container" class="ggvis-output-container">
-<div id="plot_id897982248" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id785345552-container" class="ggvis-output-container">
+<div id="plot_id785345552" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id897982248_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id897982248" data-renderer="svg">SVG</a>
+<a id="plot_id785345552_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id785345552" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id897982248_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id897982248" data-renderer="canvas">Canvas</a>
+<a id="plot_id785345552_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id785345552" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id897982248_download" class="ggvis-download" data-plot-id="plot_id897982248">Download</a>
+<a id="plot_id785345552_download" class="ggvis-download" data-plot-id="plot_id785345552">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id897982248_spec = {
+var plot_id785345552_spec = {
   "data": [
     {
       "name": ".0/density1",
@@ -775,12 +765,12 @@ var plot_id897982248_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id897982248").parseSpec(plot_id897982248_spec);
+ggvis.getPlot("plot_id785345552").parseSpec(plot_id785345552_spec);
 </script><!--/html_preserve-->
 
 `layer_bars()` 함수에 `fill:="orange"`로 색상 인자로 넘겨 막대 그래프를 완성한다.
@@ -791,27 +781,27 @@ mtcars %>% ggvis(~factor(cyl)) %>%
            layer_bars(fill:="orange")
 ~~~
 
-<!--html_preserve--><div id="plot_id254518347-container" class="ggvis-output-container">
-<div id="plot_id254518347" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id938805834-container" class="ggvis-output-container">
+<div id="plot_id938805834" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id254518347_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id254518347" data-renderer="svg">SVG</a>
+<a id="plot_id938805834_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id938805834" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id254518347_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id254518347" data-renderer="canvas">Canvas</a>
+<a id="plot_id938805834_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id938805834" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id254518347_download" class="ggvis-download" data-plot-id="plot_id254518347">Download</a>
+<a id="plot_id938805834_download" class="ggvis-download" data-plot-id="plot_id938805834">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id254518347_spec = {
+var plot_id938805834_spec = {
   "data": [
     {
       "name": ".0/count1/stack2",
@@ -934,12 +924,12 @@ var plot_id254518347_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id254518347").parseSpec(plot_id254518347_spec);
+ggvis.getPlot("plot_id938805834").parseSpec(plot_id938805834_spec);
 </script><!--/html_preserve-->
 
 ### 3. 인터랙티브 상호작용 시각화
@@ -973,27 +963,27 @@ Generating a static (non-dynamic, non-interactive) version of the plot.
 
 ~~~
 
-<!--html_preserve--><div id="plot_id346438119-container" class="ggvis-output-container">
-<div id="plot_id346438119" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id454917097-container" class="ggvis-output-container">
+<div id="plot_id454917097" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id346438119_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id346438119" data-renderer="svg">SVG</a>
+<a id="plot_id454917097_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id454917097" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id346438119_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id346438119" data-renderer="canvas">Canvas</a>
+<a id="plot_id454917097_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id454917097" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id346438119_download" class="ggvis-download" data-plot-id="plot_id346438119">Download</a>
+<a id="plot_id454917097_download" class="ggvis-download" data-plot-id="plot_id454917097">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id346438119_spec = {
+var plot_id454917097_spec = {
   "data": [
     {
       "name": ".0",
@@ -1004,7 +994,7 @@ var plot_id346438119_spec = {
           "wt": "number"
         }
       },
-      "values": "\"reactive_360083512\",\"mpg\",\"wt\"\n\"black\",21,2.62\n\"black\",21,2.875\n\"black\",22.8,2.32\n\"black\",21.4,3.215\n\"black\",18.7,3.44\n\"black\",18.1,3.46\n\"black\",14.3,3.57\n\"black\",24.4,3.19\n\"black\",22.8,3.15\n\"black\",19.2,3.44\n\"black\",17.8,3.44\n\"black\",16.4,4.07\n\"black\",17.3,3.73\n\"black\",15.2,3.78\n\"black\",10.4,5.25\n\"black\",10.4,5.424\n\"black\",14.7,5.345\n\"black\",32.4,2.2\n\"black\",30.4,1.615\n\"black\",33.9,1.835\n\"black\",21.5,2.465\n\"black\",15.5,3.52\n\"black\",15.2,3.435\n\"black\",13.3,3.84\n\"black\",19.2,3.845\n\"black\",27.3,1.935\n\"black\",26,2.14\n\"black\",30.4,1.513\n\"black\",15.8,3.17\n\"black\",19.7,2.77\n\"black\",15,3.57\n\"black\",21.4,2.78"
+      "values": "\"reactive_271071264\",\"mpg\",\"wt\"\n\"black\",21,2.62\n\"black\",21,2.875\n\"black\",22.8,2.32\n\"black\",21.4,3.215\n\"black\",18.7,3.44\n\"black\",18.1,3.46\n\"black\",14.3,3.57\n\"black\",24.4,3.19\n\"black\",22.8,3.15\n\"black\",19.2,3.44\n\"black\",17.8,3.44\n\"black\",16.4,4.07\n\"black\",17.3,3.73\n\"black\",15.2,3.78\n\"black\",10.4,5.25\n\"black\",10.4,5.424\n\"black\",14.7,5.345\n\"black\",32.4,2.2\n\"black\",30.4,1.615\n\"black\",33.9,1.835\n\"black\",21.5,2.465\n\"black\",15.5,3.52\n\"black\",15.2,3.435\n\"black\",13.3,3.84\n\"black\",19.2,3.845\n\"black\",27.3,1.935\n\"black\",26,2.14\n\"black\",30.4,1.513\n\"black\",15.8,3.17\n\"black\",19.7,2.77\n\"black\",15,3.57\n\"black\",21.4,2.78"
     },
     {
       "name": "scale/x",
@@ -1060,7 +1050,7 @@ var plot_id346438119_spec = {
             "value": 50
           },
           "fill": {
-            "field": "data.reactive_360083512"
+            "field": "data.reactive_271071264"
           },
           "x": {
             "scale": "x",
@@ -1109,12 +1099,12 @@ var plot_id346438119_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id346438119").parseSpec(plot_id346438119_spec);
+ggvis.getPlot("plot_id454917097").parseSpec(plot_id454917097_spec);
 </script><!--/html_preserve-->
 
 데이터프레임 변수에서 직접 값을 추출해서 `input_select` 선택값으로 선택하는 것도 가능하다.
@@ -1135,39 +1125,39 @@ Generating a static (non-dynamic, non-interactive) version of the plot.
 
 ~~~
 
-<!--html_preserve--><div id="plot_id989713523-container" class="ggvis-output-container">
-<div id="plot_id989713523" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id992770996-container" class="ggvis-output-container">
+<div id="plot_id992770996" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id989713523_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id989713523" data-renderer="svg">SVG</a>
+<a id="plot_id992770996_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id992770996" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id989713523_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id989713523" data-renderer="canvas">Canvas</a>
+<a id="plot_id992770996_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id992770996" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id989713523_download" class="ggvis-download" data-plot-id="plot_id989713523">Download</a>
+<a id="plot_id992770996_download" class="ggvis-download" data-plot-id="plot_id992770996">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id989713523_spec = {
+var plot_id992770996_spec = {
   "data": [
     {
       "name": ".0",
       "format": {
         "type": "csv",
         "parse": {
-          "reactive_720881056": "number",
+          "reactive_367739549": "number",
           "mpg": "number",
           "wt": "number"
         }
       },
-      "values": "\"reactive_720881056\",\"mpg\",\"wt\"\n21,21,2.62\n21,21,2.875\n22.8,22.8,2.32\n21.4,21.4,3.215\n18.7,18.7,3.44\n18.1,18.1,3.46\n14.3,14.3,3.57\n24.4,24.4,3.19\n22.8,22.8,3.15\n19.2,19.2,3.44\n17.8,17.8,3.44\n16.4,16.4,4.07\n17.3,17.3,3.73\n15.2,15.2,3.78\n10.4,10.4,5.25\n10.4,10.4,5.424\n14.7,14.7,5.345\n32.4,32.4,2.2\n30.4,30.4,1.615\n33.9,33.9,1.835\n21.5,21.5,2.465\n15.5,15.5,3.52\n15.2,15.2,3.435\n13.3,13.3,3.84\n19.2,19.2,3.845\n27.3,27.3,1.935\n26,26,2.14\n30.4,30.4,1.513\n15.8,15.8,3.17\n19.7,19.7,2.77\n15,15,3.57\n21.4,21.4,2.78"
+      "values": "\"reactive_367739549\",\"mpg\",\"wt\"\n21,21,2.62\n21,21,2.875\n22.8,22.8,2.32\n21.4,21.4,3.215\n18.7,18.7,3.44\n18.1,18.1,3.46\n14.3,14.3,3.57\n24.4,24.4,3.19\n22.8,22.8,3.15\n19.2,19.2,3.44\n17.8,17.8,3.44\n16.4,16.4,4.07\n17.3,17.3,3.73\n15.2,15.2,3.78\n10.4,10.4,5.25\n10.4,10.4,5.424\n14.7,14.7,5.345\n32.4,32.4,2.2\n30.4,30.4,1.615\n33.9,33.9,1.835\n21.5,21.5,2.465\n15.5,15.5,3.52\n15.2,15.2,3.435\n13.3,13.3,3.84\n19.2,19.2,3.845\n27.3,27.3,1.935\n26,26,2.14\n30.4,30.4,1.513\n15.8,15.8,3.17\n19.7,19.7,2.77\n15,15,3.57\n21.4,21.4,2.78"
     },
     {
       "name": "scale/fill",
@@ -1245,7 +1235,7 @@ var plot_id989713523_spec = {
           },
           "fill": {
             "scale": "fill",
-            "field": "data.reactive_720881056"
+            "field": "data.reactive_367739549"
           },
           "x": {
             "scale": "x",
@@ -1271,7 +1261,7 @@ var plot_id989713523_spec = {
     {
       "orient": "right",
       "fill": "fill",
-      "title": "reactive_720881056"
+      "title": "reactive_367739549"
     }
   ],
   "axes": [
@@ -1300,12 +1290,12 @@ var plot_id989713523_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id989713523").parseSpec(plot_id989713523_spec);
+ggvis.getPlot("plot_id992770996").parseSpec(plot_id992770996_spec);
 </script><!--/html_preserve-->
 
 ### 4. `ggvis` 범례와 축서식 
@@ -1322,27 +1312,27 @@ mtcars %>%
   add_axis("x", title = "Weight(차체 중량)")
 ~~~
 
-<!--html_preserve--><div id="plot_id642770714-container" class="ggvis-output-container">
-<div id="plot_id642770714" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id539132682-container" class="ggvis-output-container">
+<div id="plot_id539132682" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id642770714_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id642770714" data-renderer="svg">SVG</a>
+<a id="plot_id539132682_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id539132682" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id642770714_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id642770714" data-renderer="canvas">Canvas</a>
+<a id="plot_id539132682_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id539132682" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id642770714_download" class="ggvis-download" data-plot-id="plot_id642770714">Download</a>
+<a id="plot_id539132682_download" class="ggvis-download" data-plot-id="plot_id539132682">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id642770714_spec = {
+var plot_id539132682_spec = {
   "data": [
     {
       "name": ".0",
@@ -1487,12 +1477,12 @@ var plot_id642770714_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id642770714").parseSpec(plot_id642770714_spec);
+ggvis.getPlot("plot_id539132682").parseSpec(plot_id539132682_spec);
 </script><!--/html_preserve-->
 
 ~~~{.r}
@@ -1524,27 +1514,27 @@ mtcars %>%
   scale_numeric("fill", range = c("red", "yellow"))
 ~~~
 
-<!--html_preserve--><div id="plot_id715352388-container" class="ggvis-output-container">
-<div id="plot_id715352388" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id827658042-container" class="ggvis-output-container">
+<div id="plot_id827658042" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id715352388_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id715352388" data-renderer="svg">SVG</a>
+<a id="plot_id827658042_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id827658042" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id715352388_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id715352388" data-renderer="canvas">Canvas</a>
+<a id="plot_id827658042_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id827658042" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id715352388_download" class="ggvis-download" data-plot-id="plot_id715352388">Download</a>
+<a id="plot_id827658042_download" class="ggvis-download" data-plot-id="plot_id827658042">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id715352388_spec = {
+var plot_id827658042_spec = {
   "data": [
     {
       "name": ".0",
@@ -1722,10 +1712,10 @@ var plot_id715352388_spec = {
     "duration": 250,
     "renderer": "svg",
     "hover_duration": 0,
-    "width": 504,
-    "height": 504
+    "width": 672,
+    "height": 480
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id715352388").parseSpec(plot_id715352388_spec);
+ggvis.getPlot("plot_id827658042").parseSpec(plot_id827658042_spec);
 </script><!--/html_preserve-->
