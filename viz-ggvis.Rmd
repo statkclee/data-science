@@ -15,7 +15,7 @@ source("tools/chunk-options.R")
 knitr::opts_chunk$set(error = TRUE)
 ```
 
-### 1. `ggvis` 개요
+### 1. `ggvis` 개요 
 
 [ggvis](http://ggvis.rstudio.com/)는 R의 강력한 데이터 분석엔진을 HTML5와 자바스크립트를 결합하여 인터랙티브 상호작용과 화면출력을 접목하고자 [Winston Chang](https://github.com/wch)이 주도되어 개발되었다. 물론 그래픽 문법(Grammer of Graphics)과 ggplot2에 기반하고 있다.
 
