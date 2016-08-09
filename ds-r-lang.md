@@ -129,3 +129,16 @@ if(interactive()){
 message("Yesterday is history\n", "Tomorrow is a mystery\n", "but today is a gift\n", "That is why it is called the present.\n")
 ~~~
 
+다시 R 세션을 시작하면 출력결과가 다음과 같이 나타난다.
+
+~~~ {.output}
+Restarting R session...
+
+Yesterday is history
+Tomorrow is a mystery
+but today is a gift
+That is why it is called the present.
+
+##------ [D:/ds/chatbot] Tue Aug 09 10:36:47 2016 ------##
+$ 
+~~~
