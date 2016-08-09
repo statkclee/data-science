@@ -42,7 +42,10 @@ library(ggplot2)
 # ggplot2에 입력데이터로 사용될 데이터를 전처리한다.
 library(dplyr)
 # 데이터를 불러온다.
-surveys.dat <- read_csv("http://files.figshare.com/1919744/surveys.csv")
+download.file("https://ndownloader.figshare.com/files/2292169",
+              "portal_data_joined.csv")
+
+surveys.dat <- read.csv('portal_data_joined.csv')
 ```
 
 [figshare](https://figshare.com/)[^figshare-wired] 사이트에서 데이터를 가져온다. `surveys.csv` 데이터는 포획된 동물에 관한 측정정보가 담겨 있다.
