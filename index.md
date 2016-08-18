@@ -67,6 +67,7 @@ title: 데이터 과학
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [웹스크래핑(Web Scraping)](data-scraping.html)
 1. [스파크 + dplyr -- sparklyr](ds-sparklyr.html)    
+1. [야구 MLB](ds-baseball-mlb.html)    
 
 
 > ## 참고 자료 {.prereq}
