@@ -115,6 +115,38 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-d
 </ul>
 </div>
 </aside>
+<h4 id="json-데이터-가져오기">3.1. JSON 데이터 가져오기</h4>
+<p>JSON 팩키지에는 다양한 팩키지가 존재한다. 역시 R이 발전한 이유인 다양성과 유연성이 JSON에도 존재하는 것이 확인된다. <a href="https://cran.r-project.org/web/packages/jsonlite/index.html"><code>jsonlite</code></a> 최근에 업데이트되어 사용하는 것도 좋을 듯 하다.</p>
+<p>JSON 데이터를 R로 불러오는 경우 JSON 파일 형식에 특별히 신경을 써야한다. 우선 JSON 로그 데이터가 많은 경우 쉘에서 전처리 작업을 통해 <code>sample.json</code> 파일 형식으로 JSON 데이터를 준비한 후, <code>fromJSON</code> 함수로 불러오면 R에서 작업할 수 있는 데이터프레임으로 변환된다.</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/jsonlite/index.html">jsonlite</a>: <a href="https://cran.r-project.org/web/packages/RJSONIO/index.html">RJSONIO</a>를 포크해서 시작했으나 완전히 새롭게 작성됨.</li>
+<li><a href="https://cran.r-project.org/web/packages/RJSONIO/index.html">RJSONIO</a>: 저자 Duncan Temple Lang</li>
+<li><a href="https://cran.r-project.org/web/packages/rjson/index.html">rjson</a></li>
+<li><a href="https://cran.r-project.org/web/packages/tidyjson/index.html">tidyjson</a> : JSON을 깔끔한 tidy 형식으로 변환.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(jsonlite)</code></pre></div>
+<pre class="output"><code>Loading required package: methods
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sample.json &lt;-
+<span class="st">&#39;[</span>
+<span class="st">  {&quot;Name&quot; : &quot;Mario&quot;, &quot;Age&quot; : 32, &quot;Occupation&quot; : &quot;Plumber&quot;}, </span>
+<span class="st">  {&quot;Name&quot; : &quot;Peach&quot;, &quot;Age&quot; : 21, &quot;Occupation&quot; : &quot;Princess&quot;},</span>
+<span class="st">  {},</span>
+<span class="st">  {&quot;Name&quot; : &quot;Bowser&quot;, &quot;Occupation&quot; : &quot;Koopa&quot;}</span>
+<span class="st">]&#39;</span>
+sample.df &lt;-<span class="st"> </span><span class="kw">fromJSON</span>(sample.json)
+sample.df</code></pre></div>
+<pre class="output"><code>    Name Age Occupation
+1  Mario  32    Plumber
+2  Peach  21   Princess
+3   &lt;NA&gt;  NA       &lt;NA&gt;
+4 Bowser  NA      Koopa
+</code></pre>
+<p>JSON 쉘관련 전처리 작업에 유용하게 사용되는 명령어를 정리하면 다음과 같다.</p>
+<p><code>sample-file.json</code> 파일에 행바뀜 마지막에 <code>,</code>를 추가하는 명령어는 <code>sed -i ':a;N;$!ba;s/\n/,\n/g'</code>이고, 첫줄에 <code>[</code>, 마지막 줄에 <code>]</code>을 넣어 위와 같이 <code>sample.json</code> 파일이 되도록 JSON 파일을 준비한다.</p>
+<pre class="shell"><code>$ sed -i &#39;:a;N;$!ba;s/\n/,\n/g&#39; sample-file.json
+$ sed -i &#39;1i [&#39; sample-file.json
+$ echo &quot;]&quot; &gt;&gt; sample-file.json</code></pre>
 <h3 id="r-데이터-가져오기">4. R 데이터 가져오기</h3>
 <p>R로 데이터를 불러와야만 자료분석을 시작이 시작된다. 전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 <a href="http://www.statmethods.net/input/importingdata.html">statmethods.net</a> 사이트에 소개되어 있다.</p>
 <ul>

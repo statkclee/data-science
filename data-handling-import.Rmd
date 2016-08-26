@@ -121,6 +121,7 @@ JSON 데이터를 준비한 후, `fromJSON` 함수로 불러오면 R에서 작�
 * [tidyjson](https://cran.r-project.org/web/packages/tidyjson/index.html) : JSON을 깔끔한 tidy 형식으로 변환.
 
 ``` {r data-import-json, warning=FALSE}
+library(jsonlite)
 sample.json <-
 '[
   {"Name" : "Mario", "Age" : 32, "Occupation" : "Plumber"}, 
