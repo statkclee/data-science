@@ -106,6 +106,45 @@ API를 통해 데이터가 제공되지 않는 경우, `rvest` 팩키지를 통�
 > - HTML: `library(rvest)`, `rvest`는 파이썬 뷰티풀숩(Beautiful Soup)에 해당
 
 
+#### 3.1. JSON 데이터 가져오기
+
+JSON 팩키지에는 다양한 팩키지가 존재한다. 역시 R이 발전한 이유인 다양성과 유연성이 JSON에도 존재하는 것이 확인된다. 
+[`jsonlite`](https://cran.r-project.org/web/packages/jsonlite/index.html) 최근에 업데이트되어 사용하는 것도 좋을 듯 하다.
+
+
+JSON 데이터를 R로 불러오는 경우 JSON 파일 형식에 특별히 신경을 써야한다. 우선 JSON 로그 데이터가 많은 경우 쉘에서 전처리 작업을 통해 `sample.json` 파일 형식으로 
+JSON 데이터를 준비한 후, `fromJSON` 함수로 불러오면 R에서 작업할 수 있는 데이터프레임으로 변환된다.
+
+* [jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html): [RJSONIO](https://cran.r-project.org/web/packages/RJSONIO/index.html)를 포크해서 시작했으나 완전히 새롭게 작성됨.
+* [RJSONIO](https://cran.r-project.org/web/packages/RJSONIO/index.html): 저자 Duncan Temple Lang
+* [rjson](https://cran.r-project.org/web/packages/rjson/index.html)
+* [tidyjson](https://cran.r-project.org/web/packages/tidyjson/index.html) : JSON을 깔끔한 tidy 형식으로 변환.
+
+``` {r data-import-json, warning=FALSE}
+sample.json <-
+'[
+  {"Name" : "Mario", "Age" : 32, "Occupation" : "Plumber"}, 
+  {"Name" : "Peach", "Age" : 21, "Occupation" : "Princess"},
+  {},
+  {"Name" : "Bowser", "Occupation" : "Koopa"}
+]'
+sample.df <- fromJSON(sample.json)
+sample.df
+```
+
+JSON 쉘관련 전처리 작업에 유용하게 사용되는 명령어를 정리하면 다음과 같다.
+
+`sample-file.json` 파일에 행바뀜 마지막에 `,`를 추가하는 명령어는 `sed -i ':a;N;$!ba;s/\n/,\n/g'`이고,
+첫줄에 `[`, 마지막 줄에 `]`을 넣어 위와 같이 `sample.json` 파일이 되도록 JSON 파일을 준비한다.
+
+~~~ {.shell}
+$ sed -i ':a;N;$!ba;s/\n/,\n/g' sample-file.json
+$ sed -i '1i [' sample-file.json
+$ echo "]" >> sample-file.json
+~~~
+
+
+
 ### 4. R 데이터 가져오기
 
 R로 데이터를 불러와야만 자료분석을 시작이 시작된다.  전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 [statmethods.net](http://www.statmethods.net/input/importingdata.html) 사이트에 소개되어 있다.
