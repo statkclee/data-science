@@ -69,6 +69,7 @@ title: 데이터 과학
 1. [스파크 + dplyr -- sparklyr](ds-sparklyr.html)    
 1. [함수형 프로그래밍 -- `purrr`](ds-fp.html)
     - [측도와 R 자료구조](ds-data-structure.html)
+    - [R 함수 작성](ds-fp-write-fn.html)
 1. [야구 MLB](ds-baseball-mlb.html)    
 
 
