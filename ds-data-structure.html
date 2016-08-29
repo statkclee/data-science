@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">측도와 R 자료구조</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>통계학에서 다루는 측정에 대해 살펴보고, 측정 척도에 대한 이론적 배경을 이해한다.</li>
+<li>원자벡터와 리스트 차이를 살펴본다.</li>
+<li><code>NULL</code>, <code>NA</code> 특수 자료형을 이해한다.</li>
+<li>범주형 자료를 표현하는 요인 자료형을 이해한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="측정-변수의-구분-stevens-measurement-winner-measurement">1. 측정 변수의 구분 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p><img src="fig/stat-stevens-measurement.png" alt="측정 분류" width="77%" /></p>
+<p>명목형, 순서형, 구간형, 비율형 네가지로 측정 척도를 구분한다. 측정 척도에 따라 유의미한 통계량도 함께 정해진다. 자세한 사항은 <a href="http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf">Stevens, Stanley Smith. “On the theory of scales of measurement.” (1946).</a> 논문을 참조한다.</p>
+<h3 id="자료구조-기본">2. 자료구조 기본</h3>
+<p>R에서 기본으로 사용하는 벡터 자료형은 <strong>원자 벡터(Atomic Vector)</strong> 와 <strong>리스트(List)</strong> 로 나눠진다. 원자 벡터에는 6가지 자료형이 있고, logical, integer, double, character, complex, raw, 총 6 개가 있으며 주로, 논리형, 정수형, 부동소수점형, 문자형, 4가지를 많이 사용한다. 리스트는 재귀 벡터(recursive vector)라고도 불리는데 리스트는 다른 리스트를 포함할 수 있기 때문이다. <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">자료형(Type)</th>
+<th align="left">모드(Mode)</th>
+<th align="left">저장모드(Storage Mode)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">logical</td>
+<td align="left">logical</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>integer</strong></td>
+<td align="left">numeric</td>
+<td align="left">integer</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>double</strong></td>
+<td align="left">numeric</td>
+<td align="left">double</td>
+</tr>
+<tr class="even">
+<td align="left">complex</td>
+<td align="left">complex</td>
+<td align="left">complex</td>
+</tr>
+<tr class="odd">
+<td align="left">character</td>
+<td align="left">character</td>
+<td align="left">character</td>
+</tr>
+<tr class="even">
+<td align="left">raw</td>
+<td align="left">raw</td>
+<td align="left">raw</td>
+</tr>
+</tbody>
+</table>
+<p>따라서, 원자벡터는 동질적(homogeneous)이고, 리스트는 상대적으로 이질적(heterogeneous)이다.</p>
+<p>모든 벡터는 두가지 성질(Property)을 갖는데, 자료형과 길이로 이를 확인하는데 <code>typeof()</code>와 <code>length()</code> 함수를 사용해서 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a &lt;-<span class="st"> </span><span class="kw">list</span>(
+    <span class="dt">a =</span> <span class="dv">1</span>:<span class="dv">3</span>,
+    <span class="dt">b =</span> <span class="st">&quot;a string&quot;</span>,
+    <span class="dt">c =</span> pi,
+    <span class="dt">d =</span> <span class="kw">list</span>(-<span class="dv">1</span>, -<span class="dv">5</span>)
+)
+  
+<span class="kw">typeof</span>(a)</code></pre></div>
+<pre class="output"><code>[1] &quot;list&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(a)  </code></pre></div>
+<pre class="output"><code>[1] 4
+</code></pre>
+<p>모드 함수는 객체의 모드를 리턴하고, 클래스 함수는 클래스를 리턴한다. 가장 흔하게 만나는 객체 모드는 숫자, 문자, 로직 모드다. 때때로 리스트와 데이터프레임과 같이 하나의 객체안에 여러 모드를 포함하기도 한다.<br />
+리스트(List)는 데이터를 저장하는 유연하며 강력한 방법으로 <code>sapply</code> 함수와 함께 가장 빈번하게 사용되는 자료형이다. 리스트형 자료 <code>a</code>를 세가지 숫자형, 문자형, 숫자형, 리스트 네가지 자료형을 포함하게 작성한다. <code>sapply</code> 함수를 이용하여 <code>mode</code>와 <code>class</code> 인자를 넣어줌으로써, 각각 자료형의 모드와 자료형을 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(a, mode)</code></pre></div>
+<pre class="output"><code>          a           b           c           d 
+  &quot;numeric&quot; &quot;character&quot;   &quot;numeric&quot;      &quot;list&quot; 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(a, class)</code></pre></div>
+<pre class="output"><code>          a           b           c           d 
+  &quot;integer&quot; &quot;character&quot;   &quot;numeric&quot;      &quot;list&quot; 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(a[<span class="dv">4</span>])</code></pre></div>
+<pre class="output"><code>List of 1
+ $ d:List of 2
+  ..$ : num -1
+  ..$ : num -5
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(a[[<span class="dv">4</span>]])</code></pre></div>
+<pre class="output"><code>List of 2
+ $ : num -1
+ $ : num -5
+</code></pre>
+<p><img src="fig/ds-fp-list.png" alt="리스트에서 하위 리스트 뽑아내기" width="50%" /></p>
+<p>리스트는 이질적인 객체를 담을 수 있다는 점에서 동질적인 것만 담을 수 있어 한계가 있는 원자벡터보다 쓰임새가 다르다. 회귀분석 결과 산출되는 <code>lm</code> 결과값은 다양한 정보를 담을 수 있는 리스트로 표현된다.</p>
+<ul>
+<li>리스트 생성 : <code>list()</code></li>
+<li>하위 리스트 추출 : <code>[</code></li>
+<li>리스트에 담긴 원소값 추출 : <code>[[</code>, <code>$</code> → 연산작업을 통해 위계를 갖는 구조를 제거한다.</li>
+</ul>
+<p>범주형 자료를 R에 저장하기 위해서 요인(Factor) 클래스를 사용하며 요인 클래스를 사용하여 자료를 저장할 경우 저장공간을 절약할 수 있다. 요인은 내부적으로 숫자(value)로 저장을 하고 레이블(value label)을 사용하여 표시하여 저장공간을 절약한다.</p>
+<p>날짜와 시간도 중요한 R에서 자주 사용되는 중요한 데이터 자료형으로 별도로 다룬다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h4 id="자료형-확인"><span class="glyphicon glyphicon-pushpin"></span>자료형 확인</h4>
+</div>
+<div class="panel-body">
+<p>각각의 데이터 형식에 맞는지를 다양한 테스트 함수(<code>is.</code>)를 이용하여 데이터 형식을 확인할 수 있다.</p>
+<ul>
+<li><code>is.list</code> : 리스트 형식인 확인</li>
+<li><code>is.factor</code> : 팩터 형식인지 확인</li>
+<li><code>is.numeric</code> : 숫자형인지 확인</li>
+<li><code>is.data.frame</code> : 데이터 프레임형인지 확인</li>
+<li><code>is.character</code> : 문자형인지 확인</li>
+</ul>
+</div>
+</aside>
+<h4 id="null과-na-결측벡터와-결측값">2.2. <code>NULL</code>과 <code>NA</code> 결측벡터와 결측값</h4>
+<p>결측되었다는 없다는 것을 표시하는 방법이 두가지 필요하다. 하나는 벡터가 없다는 <code>NULL</code>이고, 벡터 내부에 값이 결측되었다는 <code>NA</code> 다. <code>dataframe$variable &lt;- NULL</code> 명령문을 사용하면 데이터프레임(<code>dataframe</code>)에 변수(<code>variable</code>)를 날려보내는 효과가 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># NULL 자료형과 길이</span>
+<span class="kw">typeof</span>(<span class="ot">NULL</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;NULL&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="ot">NULL</span>)</code></pre></div>
+<pre class="output"><code>[1] 0
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># NA 자료형과 길이</span>
+<span class="kw">typeof</span>(<span class="ot">NA</span>)</code></pre></div>
+<pre class="output"><code>[1] &quot;logical&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="ot">NA</span>)</code></pre></div>
+<pre class="output"><code>[1] 1
+</code></pre>
+<p><code>NA</code>의 중요한 특징은 전염된다는 것이다. 즉, <code>NA</code>에 연산을 가하면 연산결과는 무조건 <code>NA</code>가 된다. <code>NA</code>가 7보다 큰지, 7을 더하고 빼고, 부울 연산을 하든 <code>NA</code>와 연산결과는 무조건 <code>NA</code>가 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span> +<span class="st"> </span><span class="dv">7</span></code></pre></div>
+<pre class="output"><code>[1] NA
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span> /<span class="st"> </span><span class="dv">7</span></code></pre></div>
+<pre class="output"><code>[1] NA
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span> &gt;<span class="st"> </span><span class="dv">7</span></code></pre></div>
+<pre class="output"><code>[1] NA
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">7</span> ==<span class="st"> </span><span class="ot">NA</span></code></pre></div>
+<pre class="output"><code>[1] NA
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span> ==<span class="st"> </span><span class="ot">NA</span></code></pre></div>
+<pre class="output"><code>[1] NA
+</code></pre>
+<h3 id="데이터프레임dataframe">3. 데이터프레임(Dataframe)</h3>
+<p><strong>R</strong> 은 6가지 기본 벡터로 자료를 저장하지만, 이외에 행렬(matrix), 데이터프레임(data.frame), 리스트(list) 자료구조가 있다. 하지만, 자료분석을 위해서 데이터를 데이터셋의 형태로 구성을 해야한다. 데이터셋이 중요한 이유는 자료를 분석하기 위해서 다양한 형태의 개별 자료를 통합적으로 분석하기 위해서다. 이를 위해서 리스트 자료구조로 일단 모으게 된다. 예를 들어 개인 신용분석을 위해서는 개인의 소득, 부채, 성별, 학력 등등의 숫자형, 문자형, 요소(Factor)형 등의 자료를 데이터셋에 담아야 한다. 특히 변수와-관측값 (Variable-Observation) 형식의 자료를 분석하기 위해서는 데이터프레임(<code>data.frame</code>)을 사용한다. 데이터프레임은 모든 변수에 대해서 관측값이 같은 길이를 갖도록 만들어 놓은 것이다.</p>
+<p><img src="fig/data-handling-list-dataframe.png" alt="리스트와 데이터프레임" width="50%" /></p>
+<p>데이터프레임은 <code>data.frame</code> 함수를 사용해서 생성한다. R 객체 구조 파악을 위해서는 간단한 자료의 경우 데이터 형식을 확인할 수 있는 1–2줄 정도의 간단한 스크립트와 명령어를 통해서 확인이 가능하지만, 복잡한 데이터의 구조를 파악하기 위해서는 <code>summary</code> 함수와 <code>str</code> 함수를 통해서 확인해야 한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 벡터를 정의한다.</span>
+name &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mercury&quot;</span>, <span class="st">&quot;Venus&quot;</span>, <span class="st">&quot;Earth&quot;</span>, <span class="st">&quot;Mars&quot;</span>, <span class="st">&quot;Jupiter&quot;</span>, <span class="st">&quot;Saturn&quot;</span>, <span class="st">&quot;Uranus&quot;</span>, <span class="st">&quot;Neptune&quot;</span>)
+type &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Terrestrial planet&quot;</span>, <span class="st">&quot;Terrestrial planet&quot;</span>, <span class="st">&quot;Terrestrial planet&quot;</span>, 
+          <span class="st">&quot;Terrestrial planet&quot;</span>, <span class="st">&quot;Gas giant&quot;</span>, <span class="st">&quot;Gas giant&quot;</span>, <span class="st">&quot;Gas giant&quot;</span>, <span class="st">&quot;Gas giant&quot;</span>)
+diameter &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.382</span>, <span class="fl">0.949</span>, <span class="dv">1</span>, <span class="fl">0.532</span>, <span class="fl">11.209</span>, <span class="fl">9.449</span>, <span class="fl">4.007</span>, <span class="fl">3.883</span>)
+rotation &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">58.64</span>, -<span class="fl">243.02</span>, <span class="dv">1</span>, <span class="fl">1.03</span>, <span class="fl">0.41</span>, <span class="fl">0.43</span>, -<span class="fl">0.72</span>, <span class="fl">0.67</span>)
+rings &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>)
+
+<span class="co"># 벡터를 합쳐서 데이터프레임을 생성</span>
+planets_df &lt;-<span class="kw">data.frame</span>(name, type, diameter, rotation, rings)</code></pre></div>
+<h3 id="범주형-순서형-자료형">3.1. 범주형, 순서형 자료형</h3>
+<p>범주형, 순서형 자료형을 생성하는 경우 주의를 기울여야 한다. <code>factor</code> 함수를 사용해서 요인형 자료형을 생성하는데, 내부적으로 저장공간을 효율적으로 사용하고 속도를 빠르게 하는데 유용한다. 순서를 갖는 범주형의 경우 <code>factor</code> 함수 내부에 <code>levels</code> 인자를 넣어 정의하면 순서 정보가 유지된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 범주형</span>
+animals_vector &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Elephant&quot;</span>, <span class="st">&quot;Giraffe&quot;</span>, <span class="st">&quot;Donkey&quot;</span>, <span class="st">&quot;Horse&quot;</span>)
+factor_animals_vector &lt;-<span class="st"> </span><span class="kw">factor</span>(animals_vector)
+factor_animals_vector</code></pre></div>
+<pre class="output"><code>[1] Elephant Giraffe  Donkey   Horse   
+Levels: Donkey Elephant Giraffe Horse
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 순위형</span>
+temperature_vector &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;High&quot;</span>, <span class="st">&quot;Low&quot;</span>, <span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>, <span class="st">&quot;Medium&quot;</span>)
+factor_temperature_vector &lt;-<span class="st"> </span><span class="kw">factor</span>(temperature_vector, <span class="dt">order =</span> <span class="ot">TRUE</span>, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Low&quot;</span>, <span class="st">&quot;Medium&quot;</span>, <span class="st">&quot;High&quot;</span>))
+factor_temperature_vector</code></pre></div>
+<pre class="output"><code>[1] High   Low    High   Low    Medium
+Levels: Low &lt; Medium &lt; High
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># &quot;M&quot;, &quot;F&quot; 수준</span>
+survey_vector &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>)
+factor_survey_vector &lt;-<span class="st"> </span><span class="kw">factor</span>(survey_vector)
+<span class="kw">levels</span>(factor_survey_vector)</code></pre></div>
+<pre class="output"><code>[1] &quot;F&quot; &quot;M&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># &quot;Female&quot;, &quot;Male&quot; 로 변환</span>
+<span class="kw">levels</span>(factor_survey_vector) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Female&quot;</span>, <span class="st">&quot;Male&quot;</span>)
+<span class="kw">levels</span>(factor_survey_vector)</code></pre></div>
+<pre class="output"><code>[1] &quot;Female&quot; &quot;Male&quot;  
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 문자형 벡터와 요인 벡터</span>
+survey_vector &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>)
+factor_survey_vector &lt;-<span class="st"> </span><span class="kw">factor</span>(survey_vector)
+
+<span class="co"># 문자형 벡터 요약</span>
+<span class="kw">summary</span>(survey_vector)</code></pre></div>
+<pre class="output"><code>   Length     Class      Mode 
+        5 character character 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 요인 벡터 요약</span>
+<span class="kw">summary</span>(factor_survey_vector)</code></pre></div>
+<pre class="output"><code>F M 
+2 3 
+</code></pre>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf">Stevens, Stanley Smith. “On the theory of scales of measurement.” (1946).</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Wiener, Norbert. “A new theory of measurement: a study in the logic of mathematics.” Proceedings of the London Mathematical Society 2.1 (1921): 181-205.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://r4ds.had.co.nz/">Garrett Grolemund &amp; Hadley Wickham, R for Data Science</a><a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

@@ -11,9 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
+
 
 > ## 학습 목표 {.objectives}
 >
@@ -59,7 +57,8 @@ R에서 기본으로 사용하는 벡터 자료형은 **원자 벡터(Atomic Vec
 
 모든 벡터는 두가지 성질(Property)을 갖는데, 자료형과 길이로 이를 확인하는데 `typeof()`와 `length()` 함수를 사용해서 확인한다.
  
-``` {r fp-data-structure-typeof, warning=FALSE, tidy=FALSE}  
+
+~~~{.r}
 a <- list(
     a = 1:3,
 	b = "a string",
@@ -68,8 +67,27 @@ a <- list(
 )
   
 typeof(a)
+~~~
+
+
+
+~~~{.output}
+[1] "list"
+
+~~~
+
+
+
+~~~{.r}
 length(a)  
-```  
+~~~
+
+
+
+~~~{.output}
+[1] 4
+
+~~~
   
 모드 함수는 객체의 모드를 리턴하고, 클래스 함수는 클래스를 리턴한다. 
 가장 흔하게 만나는 객체 모드는 숫자, 문자, 로직 모드다. 
@@ -78,15 +96,62 @@ length(a)
 리스트형 자료 `a`를 세가지 숫자형, 문자형, 숫자형, 리스트 네가지 자료형을 포함하게 작성한다. 
 `sapply` 함수를 이용하여 `mode`와 `class` 인자를 넣어줌으로써, 각각 자료형의 모드와 자료형을 확인한다.
 
-``` {r fp-data-structure-mode, warning=FALSE, tidy=FALSE}  
-sapply(a, mode)
-sapply(a, class)
-```
 
-``` {r fp-data-structure-subset, warning=FALSE, tidy=FALSE}  
+~~~{.r}
+sapply(a, mode)
+~~~
+
+
+
+~~~{.output}
+          a           b           c           d 
+  "numeric" "character"   "numeric"      "list" 
+
+~~~
+
+
+
+~~~{.r}
+sapply(a, class)
+~~~
+
+
+
+~~~{.output}
+          a           b           c           d 
+  "integer" "character"   "numeric"      "list" 
+
+~~~
+
+
+~~~{.r}
 str(a[4])
+~~~
+
+
+
+~~~{.output}
+List of 1
+ $ d:List of 2
+  ..$ : num -1
+  ..$ : num -5
+
+~~~
+
+
+
+~~~{.r}
 str(a[[4]])
-```
+~~~
+
+
+
+~~~{.output}
+List of 2
+ $ : num -1
+ $ : num -5
+
+~~~
 
 <img src="fig/ds-fp-list.png" alt="리스트에서 하위 리스트 뽑아내기" width="50%" />
 
@@ -120,26 +185,125 @@ str(a[[4]])
 벡터 내부에 값이 결측되었다는 `NA` 다. `dataframe$variable <- NULL` 명령문을 사용하면 데이터프레임(`dataframe`)에 
 변수(`variable`)를 날려보내는 효과가 있다.
 
-``` {r fp-data-structure-null, warning=FALSE, tidy=FALSE}  
+
+~~~{.r}
 # NULL 자료형과 길이
 typeof(NULL)
-length(NULL)
+~~~
 
+
+
+~~~{.output}
+[1] "NULL"
+
+~~~
+
+
+
+~~~{.r}
+length(NULL)
+~~~
+
+
+
+~~~{.output}
+[1] 0
+
+~~~
+
+
+
+~~~{.r}
 # NA 자료형과 길이
 typeof(NA)
+~~~
+
+
+
+~~~{.output}
+[1] "logical"
+
+~~~
+
+
+
+~~~{.r}
 length(NA)
-```
+~~~
+
+
+
+~~~{.output}
+[1] 1
+
+~~~
 
 `NA`의 중요한 특징은 전염된다는 것이다. 즉, `NA`에 연산을 가하면 연산결과는 무조건 `NA`가 된다.
 `NA`가 7보다 큰지, 7을 더하고 빼고, 부울 연산을 하든 `NA`와 연산결과는 무조건 `NA`가 된다.
 
-``` {r fp-data-structure-na, warning=FALSE, tidy=FALSE}  
+
+~~~{.r}
 NA + 7
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
 NA / 7
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
 NA > 7
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
 7 == NA
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
+
+
+
+~~~{.r}
 NA == NA
-```
+~~~
+
+
+
+~~~{.output}
+[1] NA
+
+~~~
 
 ### 3. 데이터프레임(Dataframe)
 
@@ -158,7 +322,8 @@ NA == NA
 복잡한 데이터의 구조를 파악하기 위해서는 `summary` 함수와 `str` 함수를 통해서 확인해야 한다.
 
 
-``` {r df-create}
+
+~~~{.r}
 # 벡터를 정의한다.
 name <- c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune")
 type <- c("Terrestrial planet", "Terrestrial planet", "Terrestrial planet", 
@@ -169,7 +334,7 @@ rings <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
 
 # 벡터를 합쳐서 데이터프레임을 생성
 planets_df <-data.frame(name, type, diameter, rotation, rings)
-```
+~~~
 
 ### 3.1. 범주형, 순서형 자료형
 
@@ -177,39 +342,100 @@ planets_df <-data.frame(name, type, diameter, rotation, rings)
 내부적으로 저장공간을 효율적으로 사용하고 속도를 빠르게 하는데 유용한다.
 순서를 갖는 범주형의 경우 `factor` 함수 내부에 `levels` 인자를 넣어 정의하면 순서 정보가 유지된다.
 
-``` {r data-type-ordinal}
+
+~~~{.r}
 # 범주형
 animals_vector <- c("Elephant", "Giraffe", "Donkey", "Horse")
 factor_animals_vector <- factor(animals_vector)
 factor_animals_vector
+~~~
 
+
+
+~~~{.output}
+[1] Elephant Giraffe  Donkey   Horse   
+Levels: Donkey Elephant Giraffe Horse
+
+~~~
+
+
+
+~~~{.r}
 # 순위형
 temperature_vector <- c("High", "Low", "High","Low", "Medium")
 factor_temperature_vector <- factor(temperature_vector, order = TRUE, levels = c("Low", "Medium", "High"))
 factor_temperature_vector
-```
+~~~
 
-``` {r data-type-factor-level}
+
+
+~~~{.output}
+[1] High   Low    High   Low    Medium
+Levels: Low < Medium < High
+
+~~~
+
+
+~~~{.r}
 # "M", "F" 수준
 survey_vector <- c("M", "F", "F", "M", "M")
 factor_survey_vector <- factor(survey_vector)
 levels(factor_survey_vector)
+~~~
 
+
+
+~~~{.output}
+[1] "F" "M"
+
+~~~
+
+
+
+~~~{.r}
 # "Female", "Male" 로 변환
 levels(factor_survey_vector) <- c("Female", "Male")
 levels(factor_survey_vector)
-```
+~~~
 
-``` {r data-type-factor-summary}
+
+
+~~~{.output}
+[1] "Female" "Male"  
+
+~~~
+
+
+~~~{.r}
 # 문자형 벡터와 요인 벡터
 survey_vector <- c("M", "F", "F", "M", "M")
 factor_survey_vector <- factor(survey_vector)
 
 # 문자형 벡터 요약
 summary(survey_vector)
+~~~
 
+
+
+~~~{.output}
+   Length     Class      Mode 
+        5 character character 
+
+~~~
+
+
+
+~~~{.r}
 # 요인 벡터 요약
 summary(factor_survey_vector)
-```
+~~~
+
+
+
+~~~{.output}
+F M 
+2 3 
+
+~~~
 
 

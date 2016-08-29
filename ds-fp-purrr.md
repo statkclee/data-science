@@ -11,14 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
 
-df <- data.frame(a=c(1,2,3,4,5),
-				 b=c(10,20,30,40,50),
-				 c=c(7,8,6,1,3),
-				 d=c(5,4,6,5,2))
-```
 
 > ## 학습 목표 {.objectives}
 >
@@ -55,7 +48,8 @@ R 함수형 프로그램 작성에 Hadley Wickham이 사용하는 서양식 작�
 `mtcars` 데이터셋 각변수에 대한 평균과 중위수를 계산하는 것을 살펴본다. `for` 루프를 사용하는 경우 객체와 
 구현 패턴에 중점을 두게 되어 `mean`, `median` 함수명만 차이나는 `for` 루프가 두개 생성되었다.
 
-``` {r fp-why-not-for-loop, warning=FALSE, tidy=FALSE}
+
+~~~{.r}
 # 각 변수 평균을 계산
 
 out1 <- vector("double", ncol(mtcars))
@@ -70,21 +64,23 @@ out2 <- vector("double", ncol(mtcars))
 for(i in seq_along(mtcars)) {
 	out2[[i]] <- median(mtcars[[i]], na.rm = TRUE)
 }
-```
+~~~
 
 이를 `purrr` 팩키지를 사용해서 함수형 프로그램으로 작성하면 다음과 같다.
 
-``` {r fp-mtcars-purrr, warning=FALSE, tidy=FALSE}
+
+~~~{.r}
 library(purrr)
 
 means <- map_dbl(mtcars, mean)
 medians <- map_dbl(mtcars, median)
-```
+~~~
 
 
 ### 2. 함수도 인자다.
 
-``` {r fp-functions-argument-ex, warning=FALSE, tidy=FALSE}
+
+~~~{.r}
 col_median <- 
 	function(df) {
 		output <- numeric(length(df))
@@ -111,10 +107,11 @@ col_sd <-
 		}
 		output
 	}
-```
+~~~
 
 
-``` {r fp-function-argument, warning=FALSE, tidy=FALSE}
+
+~~~{.r}
 col_summary <- 
 	function(df, fun) {
 		output <- numeric(length(df))
@@ -124,8 +121,39 @@ col_summary <-
 		output
 	}
 col_summary(df, fun = median)
+~~~
+
+
+
+~~~{.output}
+[1]  3 30  6  5
+
+~~~
+
+
+
+~~~{.r}
 col_summary(df, fun = mean)
+~~~
+
+
+
+~~~{.output}
+[1]  3.0 30.0  5.0  4.4
+
+~~~
+
+
+
+~~~{.r}
 col_summary(df, fun = sd)
-```
+~~~
+
+
+
+~~~{.output}
+[1]  1.581139 15.811388  2.915476  1.516575
+
+~~~
 
 

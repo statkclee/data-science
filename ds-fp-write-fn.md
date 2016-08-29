@@ -11,9 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
+
 
 > ## 학습 목표 {.objectives}
 >
@@ -29,7 +27,8 @@ source("tools/chunk-options.R")
 $$ f(x)_{\text{척도조정}} = \frac{x-min(x)}{max(x)-min(x)} $$
 
 
-``` {r fp-duplication, warning=FALSE, tidy=FALSE}
+
+~~~{.r}
 df <- data.frame(a=c(1,2,3,4,5),
 				 b=c(10,20,30,40,50),
 				 c=c(7,8,6,1,3),
@@ -43,7 +42,19 @@ df$c <- (df$c - min(df$c, na.rm = TRUE)) /
 df$d <- (df$d - min(df$d, na.rm = TRUE)) /
         (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
 df        
-```
+~~~
+
+
+
+~~~{.output}
+     a         b         c    d
+1 0.00  0.000000 0.8571429 0.75
+2 0.25 -1.111111 1.0000000 0.50
+3 0.50 -2.222222 0.7142857 1.00
+4 0.75 -3.333333 0.0000000 0.75
+5 1.00 -4.444444 0.2857143 0.00
+
+~~~
 
 상기 R 코드는 측도를 모두 맞춰서 변수 4개(`a`, `b`, `c`, `d`)를 비교하거나 향후 분석을 위한 것이다. 
 하지만, 읽어야 되는 코드가 중복되고 길어 코드를 작성한 개발자의 **의도** 가 의도적이지는 않지만 숨겨졌다.
@@ -68,8 +79,8 @@ df
 생겨나는 중복과 반복에 의한 실수를 줄일 수 있게 되고, 향후 코드를 갱신할 때도 도움이 된다.
 
 
-``` {r fp-write-fn, warning=FALSE, tidy=FALSE}
 
+~~~{.r}
 rescale <- function(x){
               rng <- range(x, na.rm = TRUE)
               (x - rng[1]) / (rng[2] - rng[1])
@@ -79,15 +90,16 @@ df$a <- rescale(df$a)
 df$b <- rescale(df$b)
 df$c <- rescale(df$c)
 df$d <- rescale(df$d)
-```
+~~~
 
 또다른 방법은 함수형 프로그래밍을 사용하는 것으로 함수명을 반복적으로 사용하는 것조차도 피할 수 있다.
 
 
-``` {r fp-write-purrr, warning=FALSE, tidy=FALSE}
+
+~~~{.r}
 library(purrr)
 df[] <- map(df, rescale)
-```
+~~~
 
 ### 3. 함수를 작성하는 방법
 
@@ -100,32 +112,37 @@ df[] <- map(df, rescale)
 
 2. 기능이 구현되어 동작이 제대로 되는지 확인되는 R코드를 작성한다. 
 
-``` {r fp-write-fn-01, eval=FALSE}
+
+~~~{.r}
 (df$a - min(df$a, na.rm = TRUE)) / (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
-```
+~~~
 
 3. 확장가능하게 임시 변수를 사용해서 위에서 구현된 코드를 다시 작성한다. 
 
-``` {r fp-write-fn-02, eval=FALSE}
-( x - min( x , na.rm = TRUE)) / (max( x , na.rm = TRUE) - min( x , na.rm = TRUE))
-```
 
-``` {r fp-write-fn-03, eval=FALSE}
+~~~{.r}
+( x - min( x , na.rm = TRUE)) / (max( x , na.rm = TRUE) - min( x , na.rm = TRUE))
+~~~
+
+
+~~~{.r}
 x <- df$a
 ( x - min( x , na.rm = TRUE)) / (max( x , na.rm = TRUE) - min( x , na.rm = TRUE))
-```
+~~~
 
 4. 함수 작성의도를 명확히 하도록 다시 코드를 작성한다.
 
-``` {r fp-write-fn-04, eval=FALSE}
+
+~~~{.r}
 x <- df$a
 rng <- range(x, na.rm = TRUE)
 (x - rng[1]) / (rng[2] - rng[1])
-```
+~~~
 
 5. 최종적으로 재작성한 코드를 함수로 변환한다.
 
-``` {r fp-write-fn-05, eval=FALSE}
+
+~~~{.r}
 x <- df$a
 
 rescale <- function(x){
@@ -134,7 +151,7 @@ rescale <- function(x){
 			}
 
 rescale(x)
-```
+~~~
 
 ### 4. 좋은 함수
 
