@@ -30,7 +30,7 @@ mainfont: NanumGothic
 
 
 ~~~{.output}
-FALSE [1] "/Library/Frameworks/R.framework/Versions/3.2/Resources/library"
+FALSE [1] "C:/Program Files/R/R-3.3.1/library"
 
 ~~~
 
@@ -69,9 +69,10 @@ search()
 
 
 ~~~{.output}
-FALSE [1] ".GlobalEnv"        "package:knitr"     "package:stats"    
-FALSE [4] "package:graphics"  "package:grDevices" "package:utils"    
-FALSE [7] "package:datasets"  "Autoloads"         "package:base"
+FALSE  [1] ".GlobalEnv"        "package:knitr"     "package:stats"    
+FALSE  [4] "package:graphics"  "package:grDevices" "package:utils"    
+FALSE  [7] "package:datasets"  ".env"              "Autoloads"        
+FALSE [10] "package:base"
 
 ~~~
 

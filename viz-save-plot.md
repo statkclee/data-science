@@ -139,11 +139,83 @@ ggsave("fig-io-practice.png", p)
 ~~~{.r}
 suppressPackageStartupMessages(library(ggplot2))
 library(gapminder)
+~~~
+
+
+
+~~~{.output}
+Error in library(gapminder): there is no package called 'gapminder'
+
+~~~
+
+
+
+~~~{.r}
 p <- ggplot(gapminder, aes(x = year, y = lifeExp)) + geom_jitter()
+~~~
+
+
+
+~~~{.output}
+Error in ggplot(gapminder, aes(x = year, y = lifeExp)): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.r}
 p1 <- p + ggtitle("scale = 0.6")
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'p' not found
+
+~~~
+
+
+
+~~~{.r}
 p2 <- p + ggtitle("scale = 2")
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'p' not found
+
+~~~
+
+
+
+~~~{.r}
 p3 <- p + ggtitle("base_size = 20") + theme_grey(base_size = 20)
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'p' not found
+
+~~~
+
+
+
+~~~{.r}
 p4 <- p + ggtitle("base_size = 3") + theme_grey(base_size = 3)
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'p' not found
+
+~~~
+
+
+
+~~~{.r}
 ggsave("img/fig-io-practice-scale-0.3.png", p1, scale = 0.6)
 ~~~
 
@@ -151,6 +223,13 @@ ggsave("img/fig-io-practice-scale-0.3.png", p1, scale = 0.6)
 
 ~~~{.output}
 Saving 4.2 x 4.2 in image
+
+~~~
+
+
+
+~~~{.output}
+Error in grid.draw(plot): object 'p1' not found
 
 ~~~
 
@@ -169,6 +248,13 @@ Saving 14 x 14 in image
 
 
 
+~~~{.output}
+Error in grid.draw(plot): object 'p2' not found
+
+~~~
+
+
+
 ~~~{.r}
 ggsave("img/fig-io-practice-base-size-20.png", p3)
 ~~~
@@ -182,6 +268,13 @@ Saving 7 x 7 in image
 
 
 
+~~~{.output}
+Error in grid.draw(plot): object 'p3' not found
+
+~~~
+
+
+
 ~~~{.r}
 ggsave("img/fig-io-practice-base-size-3.png", p4)
 ~~~
@@ -190,6 +283,13 @@ ggsave("img/fig-io-practice-base-size-3.png", p4)
 
 ~~~{.output}
 Saving 7 x 7 in image
+
+~~~
+
+
+
+~~~{.output}
+Error in grid.draw(plot): object 'p4' not found
 
 ~~~
 <table width="800px" height="100%" border="1">
@@ -289,10 +389,27 @@ YAML 전문에 `keep_md: true`로 설정하면, 그림이 파일에 저장된다
 
 ~~~{.r}
 p <- ggplot(gapminder, aes(x = year, y = lifeExp)) + geom_jitter()
+~~~
+
+
+
+~~~{.output}
+Error in ggplot(gapminder, aes(x = year, y = lifeExp)): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.r}
 p
 ~~~
 
-<img src="fig/scatterplot-lifeExp-vs-year-1.png" title="plot of chunk scatterplot-lifeExp-vs-year" alt="plot of chunk scatterplot-lifeExp-vs-year" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'p' not found
+
+~~~
 
 상기 명령어를 실행하면 적합하게 명명된 그림 파일이 생성된다.
 
