@@ -163,7 +163,7 @@ ggmap(krMap)
 
 - [Thematic Cartography and Geovisualization](http://www.amazon.com/Thematic-Cartography-Geovisualization-3rd-Edition/dp/0132298341)
 - [Web Cartography: Map Design for Interactive and Mobile Devices](https://www.crcpress.com/Web-Cartography-Map-Design-for-Interactive-and-Mobile-Devices/Muehlenhaus/9781439876220)
-- [R Development Translation Team (Korean)](http://www.openstatistics.net/)
+- [R Development Translation Team (Korean)](http://www.openstatistics.net/) 
 
 ### R 언어 참고 웹사이트
 

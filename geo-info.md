@@ -1,7 +1,7 @@
 ---
 layout: page
-title: <eb>Ќ°<ec>ќґ<ed>„° кіјн•™
-subtitle: м§Ђл¦¬м •лі<b4> <ec>‹њк°Ѓн™”
+title: лЌ°мќґн„° кіјн•™
+subtitle: м§Ђл¦¬м •ліґ м‹њк°Ѓн™”
 output:
   html_document: 
     keep_md: yes
@@ -11,29 +11,29 @@ mainfont: NanumGothic
 ---
 
 
-> ## <ed>•™<ec>Љµ лЄ©н‘њ {.objectives}
+> ## н•™мЉµ лЄ©н‘њ {.objectives}
 >
-> *  м§Ђл¦¬м •лі<b4> <ec>‹њк°Ѓн™”лҐ<bc> <ec>њ„<ed>•њ кё°ліё к°њл…ђ<ec>ќ„ <ed>•™<ec>Љµ<ed>•њ<eb>‹¤.
+> *  м§Ђл¦¬м •ліґ м‹њк°Ѓн™”лҐј мњ„н•њ кё°ліё к°њл…ђмќ„ н•™мЉµн•њл‹¤.
 
 
 
-[м§Ђ<eb>Џ„<ed>•™(Cartography)](https://en.wikipedia.org/wiki/Cartography)<eb>Љ” м§Ђ<eb>Џ„лҐ<bc> <ec> њ<ec>ћ‘<ed>•<eb>Љ” л°©м‹ќ<ec>ќґ<eb>‹¤. <ed>Љ№<ec> •<ed>•њ лЄ©м Ѓ<ec>—ђ <eb>”°<eb>ќј <ed>Љ№<ec>€<ed>•њ мЈјм њ <ed>№<ec><9d>Ђ <eb>‚ґ<ec>љ©л§Њмќ„ <eb>‚<ed><83>Ђ<eb>‚ґ<ec>–ґ к·ёл¦° м§Ђ<eb>Џ„лҐ<bc> **[мЈјм њ<eb>Џ„(Thematic Map)](https://ko.wikipedia.org/wiki/м§Ђ<eb>Џ„<ec>ќ_мў…лҐ)** <eb>ќјкі<a0> <ed>•њ<eb>‹¤.  <ec>–ґ<eb>Љђ <ec>‹њ<ec> ђ<ec>—ђ<ec>„њ<ec>ќ <ec>ќјкё<b0> <ec>ѓЃ<ed>™©<ec>ќ„ <eb>‚<ed><83>Ђ<eb>‚ё кё°мѓЃ<eb>Џ„, <ec>љґ<ec> „<ed>•  <eb>•Њ <ec>“°<ec>ќґ<eb>Љ” <eb>Џ„лЎњлЏ„, <ed>•­<ed>•ґ<ed>•  <eb>•Њ <ec>“°<ec>ќґ<eb>Љ” <ed>•ґ<eb>Џ„, <ed>†µкі„к°’<ec>ќ„ м§Ђ<eb>Џ„<ec>—ђ к·ёл ¤ <eb>„Ј<ec><9d>Ђ <ed>†µкі<84> м§Ђ<eb>Џ„ <eb>“±<ec>ќґ мў‹м<9d>Ђ <ec>‚¬лЎЂ<eb>‹¤.
+[м§ЂлЏ„н•™(Cartography)](https://en.wikipedia.org/wiki/Cartography)лЉ” м§ЂлЏ„лҐј м њмћ‘н•лЉ” л°©м‹ќмќґл‹¤. нЉ№м •н•њ лЄ©м Ѓм—ђ л”°лќј нЉ№м€н•њ мЈјм њ н№мќЂ л‚ґмљ©л§Њмќ„ л‚нѓЂл‚ґм–ґ к·ёл¦° м§ЂлЏ„лҐј **[мЈјм њлЏ„(Thematic Map)](https://ko.wikipedia.org/wiki/м§ЂлЏ„мќ_мў…лҐ)** лќјкі  н•њл‹¤.  м–ґлЉђ м‹њм ђм—ђм„њмќ мќјкё° мѓЃн™©мќ„ л‚нѓЂл‚ё кё°мѓЃлЏ„, мљґм „н•  л•Њ м“°мќґлЉ” лЏ„лЎњлЏ„, н•­н•ґн•  л•Њ м“°мќґлЉ” н•ґлЏ„, н†µкі„к°’мќ„ м§ЂлЏ„м—ђ к·ёл ¤ л„ЈмќЂ н†µкі„ м§ЂлЏ„ л“±мќґ мў‹мќЂ м‚¬лЎЂл‹¤.
 
-м§Ђл¦¬м •ліґл<a5><bc> <ed>‘њ<ed>„<ed>•кё<b0> <ec>њ„<ed>•ґ<ec>„њ<eb>Љ” <eb>‹¤<ec>ќЊкі<bc> к°™м<9d>Ђ кё°ліё <ec>љ”<ec>†Њк°Ђ <ed>•„<ec>љ”<ed>•<eb>‹¤.
+м§Ђл¦¬м •ліґлҐј н‘њн„н•кё° мњ„н•ґм„њлЉ” л‹¤мќЊкіј к°™мќЂ кё°ліё мљ”м†Њк°Ђ н•„мљ”н•л‹¤.
 
-1. `.shp` <ed>™•<ec>ћҐ<ec>ћђлҐ<bc> к°–лЉ” м§Ђ<eb>Џ„<ec> •лі<b4> <ed>ЊЊ<ec>ќј
-2. <eb><8c>Ђ<ed>•њлЇјкµ­<ec>—ђ <eb><8c>Ђ<ed>•њ кё°ліё м§Ђл¦¬м •лі<b4>: <ec>њ„<eb>Џ„ кІЅлЏ„ 
+1. `.shp` н™•мћҐмћђлҐј к°–лЉ” м§ЂлЏ„м •ліґ нЊЊмќј
+2. лЊЂн•њлЇјкµ­м—ђ лЊЂн•њ кё°ліё м§Ђл¦¬м •ліґ: мњ„лЏ„ кІЅлЏ„ 
 
-### 1. м§Ђл¦¬м •лі<b4> <ed>ЊЊ<ec>ќј(SHP)
+### 1. м§Ђл¦¬м •ліґ нЊЊмќј(SHP)
 
-<eb><8c>Ђ<ed>•њлЇјкµ­ <ec>„ј<ec>„њ<ec>Љ¤<ec>љ© <ed>–‰<ec> •кµ¬м—­кІЅкі„(<ec>‹њкµ°кµ¬) <ec>ћђлЈЊлЉ” [<ed>†µкі„м<a7>Ђл¦¬м •ліґм„њл№„мЉ¤](http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp) <ec>‚¬<ec>ќґ<ed>Љё<ec>—ђ<ec>„њ <ec>ћђлЈЊм‹ мІ<ad><ec>ќ„ <ed>•л©<b4> <ec>–»<ec>ќ„ <ec>€ <ec>ћ€<eb>‹¤. к·ёл¦¬кі<a0>, <ec> њкіµлђ<eb>Љ” <ec>ћђ<ec>„ё<ed>•њ <ed>•<ec>‹ќ<ec>—ђ <eb><8c>Ђ<ed>•њ <ec> •ліґлЉ” *<ec>ћђлЈЊм‹ мІ<ad>* &rarr; *<ec>ћђлЈЊм њкі<b5> лЄ©лЎќ*<ec>ќ„ м°ёмЎ°<ed>•њ<eb>‹¤. <ed>№<ec><9d>Ђ, [Encaion](https://goo.gl/KyHR46) кµ¬к<b8>Ђ <eb>“њ<eb>ќј<ec>ќґлёЊм—ђ<ec>„њ м§Ѓм ‘ <eb>‹¤<ec>љґлЎњл“њ л°›мќ„ <ec>€<eb>Џ„ <ec>ћ€<eb>‹¤. <ed>†µкі„мІ­<ec>њјлЎ<9c> <ec>‹ мІ<ad><ed>•л©<b4> <ec>Љ№<ec>ќёк№Њм<a7>Ђ <ec>€<ec>ќј<ec>ќґ <ec>†Њ<ec>љ”<eb>ђл©<b0> <ed>–‰<ec> •мІл¦¬<ec>ќј кё°м<a4>Ђ<ec>њјлЎ<9c> мІл¦¬<eb>ђл©<b0> <eb>‹¤<ec>љґлЎњл“њ к°Ђ<eb>ЉҐ<ed>•њ кё°к°„<eb>Џ„ 1мЈјмќј<ec>ќґ<eb>‹¤.
+лЊЂн•њлЇјкµ­ м„јм„њмЉ¤мљ© н–‰м •кµ¬м—­кІЅкі„(м‹њкµ°кµ¬) мћђлЈЊлЉ” [н†µкі„м§Ђл¦¬м •ліґм„њл№„мЉ¤](http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp) м‚¬мќґнЉём—ђм„њ мћђлЈЊм‹ мІ­мќ„ н•л©ґ м–»мќ„ м€ мћ€л‹¤. к·ёл¦¬кі , м њкіµлђлЉ” мћђм„ён•њ н•м‹ќм—ђ лЊЂн•њ м •ліґлЉ” *мћђлЈЊм‹ мІ­* &rarr; *мћђлЈЊм њкіµ лЄ©лЎќ*мќ„ м°ёмЎ°н•њл‹¤. н№мќЂ, [Encaion](https://goo.gl/KyHR46) кµ¬кёЂ л“њлќјмќґлёЊм—ђм„њ м§Ѓм ‘ л‹¤мљґлЎњл“њ л°›мќ„ м€лЏ„ мћ€л‹¤. н†µкі„мІ­мњјлЎњ м‹ мІ­н•л©ґ мЉ№мќёк№Њм§Ђ м€мќјмќґ м†Њмљ”лђл©° н–‰м •мІл¦¬мќј кё°м¤ЂмњјлЎњ мІл¦¬лђл©° л‹¤мљґлЎњл“њ к°ЂлЉҐн•њ кё°к°„лЏ„ 1мЈјмќјмќґл‹¤.
 
-  * [GADM](http://www.gadm.org/) <eb>Ќ°<ec>ќґ<ed>„°лІ мќґ<ec>Љ¤<ec>—ђ<ec>„њ *Country*<ec>—ђ<ec>„њ **South Korea*<ec>ќ„ <ec>„ <ed>ѓќ<ed>•кі<a0>, *File Format*<ec>—ђ<ec>„њ *Shapefile*<ec>ќ„ <ec>„ <ed>ѓќ<ed>•<ec>—¬ <eb>‹¤<ec>љґлЎњл“њ<ed>•њ<eb>‹¤.
-  * [DIVA-GIS](http://www.diva-gis.org/gdata) <ec>‚¬<ec>ќґ<ed>Љё<ec>—ђ<ec>„њ<eb>Џ„ <ec>ћђ<ec>њ лЎњмќґ <ed>•њкµ<ad><ec>ќ„ <ed>Џ¬<ed>•Ё<ed>•њ <ec>—¬<eb>џ¬кµ<ad>к°Ђ м§Ђ<eb>Џ„лҐ<bc> <eb>‹¤<ec>љґлЎњл“њ л°›мќ„ <ec>€ <ec>ћ€<eb>‹¤.
+  * [GADM](http://www.gadm.org/) лЌ°мќґн„°лІ мќґмЉ¤м—ђм„њ *Country*м—ђм„њ **South Korea*мќ„ м„ нѓќн•кі , *File Format*м—ђм„њ *Shapefile*мќ„ м„ нѓќн•м—¬ л‹¤мљґлЎњл“њн•њл‹¤.
+  * [DIVA-GIS](http://www.diva-gis.org/gdata) м‚¬мќґнЉём—ђм„њлЏ„ мћђмњ лЎњмќґ н•њкµ­мќ„ нЏ¬н•Ён•њ м—¬лџ¬кµ­к°Ђ м§ЂлЏ„лҐј л‹¤мљґлЎњл“њ л°›мќ„ м€ мћ€л‹¤.
 
-- [<ed>†µкі„м<a7>Ђ<ec>—­кІЅкі„](http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp)
+- [н†µкі„м§Ђм—­кІЅкі„](http://sgis.kostat.go.kr/contents/shortcut/shortcut_05.jsp)
 - [Global Administrative Areas](http://www.gadm.org/country)
-- [<ed><8c>Ђ <ed>Џ¬<ed>ђЃ GitHub](https://github.com/southkorea/southkorea-maps)
+- [нЊЂ нЏ¬нђЃ GitHub](https://github.com/southkorea/southkorea-maps)
 
 ~~~ {.python}
 FILEMAP = {
@@ -46,60 +46,37 @@ FILEMAP = {
             ('skorea-municipalities.RData','http://biogeo.ucdavis.edu/data/gadm2/R/KOR_adm2.RData')]
 ~~~
 
-### 2.м§Ђл¦¬м •лі<b4> <ec>‹њк°Ѓн™”лҐ<bc> <ec>њ„<ed>•њ <eb><8c>Ђ<ed>•њлЇјкµ­ <ec> •лі<b4>
+### 2.м§Ђл¦¬м •ліґ м‹њк°Ѓн™”лҐј мњ„н•њ лЊЂн•њлЇјкµ­ м •ліґ
 
-<eb><8c>Ђ<ed>•њлЇјкµ­ м§Ђ<eb>Џ„<ec>—ђ кґЂ<ed>•њ <ec>ќјл°м •ліґмќ кІЅлЏ„лІ”мњ„<eb>Љ” 124 -- 132, <ec>њ„<eb>Џ„лІ”мњ„<eb>Љ” 33 -- 43 <ec>ќґ<eb>‹¤. 
+лЊЂн•њлЇјкµ­ м§ЂлЏ„м—ђ кґЂн•њ мќјл°м •ліґмќ кІЅлЏ„лІ”мњ„лЉ” 124 -- 132, мњ„лЏ„лІ”мњ„лЉ” 33 -- 43 мќґл‹¤. 
 
-> ### <eb><8c>Ђ<ed>•њлЇјкµ­ <ec>њ„<eb>Џ„<ec><99>Ђ кІЅлЏ„ [^kor-lonlat] {.callout}
+> ### лЊЂн•њлЇјкµ­ мњ„лЏ„м™Ђ кІЅлЏ„ [^kor-lonlat] {.callout}
 >
-> #### <eb><8c>Ђ<ed>•њлЇјкµ­ <ec> „мІ<b4>
-> - к·№лЏ™: кІЅмѓЃл¶ЃлЏ„ <ec>љёл¦‰кµ°<ec>ќ <eb>Џ…<eb>Џ„ <eb>Џ™<eb>‹Ё <eb>Џ™кІ<bd> 131В° 52<e2>Ђ<b2>20", 
-> - к·№м„њ: <ed>Џ‰<ec>•€л¶ЃлЏ„ <ec>љ©мІњкµ° <ec>‹ <eb>Џ„л©<b4> л§€м•€<eb>Џ„ <ec>„њ<eb>‹Ё <eb>Џ™кІ<bd> 124В° 11<e2>Ђ<b2>45"
-> - к·№л‚Ё: <ec> њмЈјлЏ„ <eb>‚Ё<ec> њмЈјкµ° <eb><8c>Ђ<ec> •<ec>ќЌ л§€лќј<eb>Џ„ <eb>‚Ё<eb>‹Ё л¶Ѓмњ„ 33В° 06<e2>Ђ<b2>40"
-> - к·№л¶Ѓ: <ed>•ЁкІЅл¶Ѓ<eb>Џ„ <ec>Ё<ec>„±кµ<b0> <eb>‚Ё<ec>–‘л©<b4> л¶Ѓл‹Ё л¶Ѓмњ„ 43В° 00<e2>Ђ<b2>35"
+> #### лЊЂн•њлЇјкµ­ м „мІґ
+> - к·№лЏ™: кІЅмѓЃл¶ЃлЏ„ мљёл¦‰кµ°мќ лЏ…лЏ„ лЏ™л‹Ё лЏ™кІЅ 131В° 52вЂІ20", 
+> - к·№м„њ: нЏ‰м•€л¶ЃлЏ„ мљ©мІњкµ° м‹ лЏ„л©ґ л§€м•€лЏ„ м„њл‹Ё лЏ™кІЅ 124В° 11вЂІ45"
+> - к·№л‚Ё: м њмЈјлЏ„ л‚Ём њмЈјкµ° лЊЂм •мќЌ л§€лќјлЏ„ л‚Ёл‹Ё л¶Ѓмњ„ 33В° 06вЂІ40"
+> - к·№л¶Ѓ: н•ЁкІЅл¶ЃлЏ„ мЁм„±кµ° л‚Ём–‘л©ґ л¶Ѓл‹Ё л¶Ѓмњ„ 43В° 00вЂІ35"
 >
-> #### л¶Ѓн•њ <ec> њ<ec>™ё
-> - к·№лЏ™: кІЅмѓЃл¶ЃлЏ„ <ec>љёл¦‰кµ°<ec>ќ <eb>Џ…<eb>Џ„(<e7>ЌЁеі<b6>)лЎ<9c> <eb>Џ™кІ<bd> 131В° 52<e2>Ђ<b2>, 
-> - к·№м„њ: <ec> „<eb>ќј<eb>‚Ё<eb>Џ„ <ec>‹ <ec>•€кµ°мќ <ec>†Њ<ed>ќ‘<ec>‚°<eb>Џ„(е°Џй»‘е±±еі¶)лЎ<9c> <eb>Џ™кІ<bd> 125В° 04<e2>Ђ<b2>, 
-> - к·№л¶Ѓ: к°•м›ђ<eb>Џ„ кі м„±кµ<b0> <ed>„<eb>‚ґл©<b4> <ec>†Ў<ed>„м§„мњјлЎ<9c> л¶Ѓмњ„ 38В° 27<e2>Ђ<b2>, 
-> - к·№л‚Ё: <ec> њмЈјлЏ„ <eb>‚Ё<ec> њмЈјкµ° л§€лќј<eb>Џ„(й¦¬зѕ…еі<b6>)лЎ<9c> л¶Ѓмњ„ 33В° 06<e2>ЂІмќґ<eb>‹¤.
+> #### л¶Ѓн•њ м њм™ё
+> - к·№лЏ™: кІЅмѓЃл¶ЃлЏ„ мљёл¦‰кµ°мќ лЏ…лЏ„(зЌЁеі¶)лЎњ лЏ™кІЅ 131В° 52вЂІ, 
+> - к·№м„њ: м „лќјл‚ЁлЏ„ м‹ м•€кµ°мќ м†Њнќ‘м‚°лЏ„(е°Џй»‘е±±еі¶)лЎњ лЏ™кІЅ 125В° 04вЂІ, 
+> - к·№л¶Ѓ: к°•м›ђлЏ„ кі м„±кµ° н„л‚ґл©ґ м†Ўн„м§„мњјлЎњ л¶Ѓмњ„ 38В° 27вЂІ, 
+> - к·№л‚Ё: м њмЈјлЏ„ л‚Ём њмЈјкµ° л§€лќјлЏ„(й¦¬зѕ…еі¶)лЎњ л¶Ѓмњ„ 33В° 06вЂІмќґл‹¤.
 
-#### 2.1 `rworldmap` <ed>Њ©<ed>‚¤м§ЂлҐ<bc> <ed>™њ<ec>љ©<ed>•њ м§Ђ<eb>Џ„ к·ёл¦¬кё<b0> кё°мґ€
+#### 2.1 `rworldmap` нЊ©н‚¤м§ЂлҐј н™њмљ©н•њ м§ЂлЏ„ к·ёл¦¬кё° кё°мґ€
 
-м§Ђ<eb>Џ„к°Ђ кµ¬н•ґмЎЊмњјл©<b4> лІ”мњ„лҐ<bc> <ed>•њ<ec> •<ed>•кё<b0> <ec>њ„<ed>•ґ к·№м ђ(extreme point) <ec> •ліґл<a5><bc> <ec>•Њ<ec>•„<eb>‚ґ<eb>Љ” кІѓмќґ м¤‘мљ”<ed>•<eb>‹¤.
-[<eb>‚Ё<ed>•њ к·№л‹Ё<ec> •лі<b4>](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea)
-<ec>њ„<ed>‚¤<ed>”ј<eb>””<ec>•„<ec>—ђ<ec>„њ <ed>™•<ec>ќё<ed>•њ к·№м ђ<ec> •ліґл<a5><bc> <ec>‚¬<ec>љ©<ed>•<ec>—¬ <eb>‚Ё<ed>•њ<ed>•ґ м§Ђ<eb>Џ„лҐ<bc> к·ёл ¤ліёл‹¤. 
+м§ЂлЏ„к°Ђ кµ¬н•ґмЎЊмњјл©ґ лІ”мњ„лҐј н•њм •н•кё° мњ„н•ґ к·№м ђ(extreme point) м •ліґлҐј м•Њм•„л‚ґлЉ” кІѓмќґ м¤‘мљ”н•л‹¤.
+[л‚Ён•њ к·№л‹Ём •ліґ](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea)
+мњ„н‚¤н”јл””м•„м—ђм„њ н™•мќён•њ к·№м ђм •ліґлҐј м‚¬мљ©н•м—¬ л‚Ён•њн•ґ м§ЂлЏ„лҐј к·ёл ¤ліёл‹¤. 
 
 
 ~~~{.r}
 #install.packages(rworldmap)
 library(rworldmap)
-~~~
-
-
-
-~~~{.output}
-FALSE Error in library(rworldmap): there is no package called 'rworldmap'
-
-~~~
-
-
-
-~~~{.r}
 library(ggmap)
 korea.map <- getMap(resolution = "high")
-~~~
 
-
-
-~~~{.output}
-FALSE Error in eval(expr, envir, enclos): could not find function "getMap"
-
-~~~
-
-
-
-~~~{.r}
 south.korea.limits <- geocode(c(
   "Daegang-ri, Hyeonnae-myeon, County of Goseong, Gangwon",
   "Marado, Daejeong-eup, Seogwipo, Jeju",
@@ -131,15 +108,10 @@ plot(korea.map,
 )
 ~~~
 
+<img src="fig/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
 
-
-~~~{.output}
-FALSE Error in plot(korea.map, xlim = range(south.korea.limits$lon), ylim = range(south.korea.limits$lat), : object 'korea.map' not found
-
-~~~
-
-[<eb>‚Ё<ed>•њ к·№л‹Ё<ec> •лі<b4>](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea) м¤<91> <ec>„¬<ec>ќ„ <ec> њ<ec>™ё<ed>•њ 
-ліён† лҐ<bc> кё°м<a4>Ђ<ec>њјлЎ<9c> м§Ђл¦¬м •ліґл<a5><bc> <ec>‹њк°Ѓн™”<ed>•л©<b4> <eb>‹¤<ec>ќЊкі<bc> к°™л‹¤.
+[л‚Ён•њ к·№л‹Ём •ліґ](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea) м¤‘ м„¬мќ„ м њм™ён•њ 
+ліён† лҐј кё°м¤ЂмњјлЎњ м§Ђл¦¬м •ліґлҐј м‹њк°Ѓн™”н•л©ґ л‹¤мќЊкіј к°™л‹¤.
 
 
 ~~~{.r}
@@ -173,34 +145,29 @@ plot(korea.map,
 )
 ~~~
 
+<img src="fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
+[^kor-lonlat]: [лЊЂн•њлЇјкµ­мќ мњ„лЏ„м™Ђ кІЅлЏ„лҐј м•Њкі  м‹¶м–ґмљ”](http://tip.daum.net/question/3092152)
 
-~~~{.output}
-FALSE Error in plot(korea.map, xlim = range(south.korea.mainland.limits$lon), : object 'korea.map' not found
+#### 2.2 `ggmap` нЊ©н‚¤м§ЂлҐј н™њмљ©н•њ м§ЂлЏ„ к·ёл¦¬кё° кё°мґ€
 
-~~~
-
-[^kor-lonlat]: [<eb><8c>Ђ<ed>•њлЇјкµ­<ec>ќ <ec>њ„<eb>Џ„<ec><99>Ђ кІЅлЏ„лҐ<bc> <ec>•Њкі<a0> <ec>‹¶<ec>–ґ<ec>љ”](http://tip.daum.net/question/3092152)
-
-#### 2.2 `ggmap` <ed>Њ©<ed>‚¤м§ЂлҐ<bc> <ed>™њ<ec>љ©<ed>•њ м§Ђ<eb>Џ„ к·ёл¦¬кё<b0> кё°мґ€
-
-`ggmap` APIлҐ<bc> <ed>™њ<ec>љ©<ed>•<ec>—¬ м§Ђ<eb>Џ„лҐ<bc> к·ёл¦°<eb>‹¤.
+`ggmap` APIлҐј н™њмљ©н•м—¬ м§ЂлЏ„лҐј к·ёл¦°л‹¤.
 
 
 ~~~{.r}
 library(ggmap)
-# <U+653C><U+3E63>њ„м№лге<U+3E35><U+623C><U+3E63> м§Ђ<U+653C><U+3E63> •<U+653C><U+3E64>•њ<U+653C><U+3E62>‹¤.
-krLocation <- c(124.11, 33.06, 131.52, 43.00) #мўЊмёЎ<U+653C><U+3E64>•<U+653C><U+3E62>‹ЁкІЅлЏ„, мўЊмёЎ<U+653C><U+3E64>•<U+653C><U+3E62>‹Ё<U+653C><U+3E63>њ„<U+653C><U+3E62>Џ„, <U+653C><U+3E63>љ°мёЎмѓЃ<U+653C><U+3E62>‹ЁкІЅлЏ„, <U+653C><U+3E63>љ°мёЎмѓЃ<U+653C><U+3E62>‹Ё<U+653C><U+3E63>њ„<U+653C><U+3E62>Џ„
+# мњ„м№лҐј м§Ђм •н•њл‹¤.
+krLocation <- c(124.11, 33.06, 131.52, 43.00) #мўЊмёЎн•л‹ЁкІЅлЏ„, мўЊмёЎн•л‹Ёмњ„лЏ„, мљ°мёЎмѓЃл‹ЁкІЅлЏ„, мљ°мёЎмѓЃл‹Ёмњ„лЏ„
 southKrLocation <- c(125.04, 33.06, 131.52, 38.27)
-#krLocation <- c(lon=126, lat=37) # <U+653C><U+3E62><U+383C><U+3E63>Ђ<U+653C><U+3E64>•њлЇјкµ­ <U+653C><U+3E63>„њ<U+653C><U+3E63>љё
+#krLocation <- c(lon=126, lat=37) # лЊЂн•њлЇјкµ­ м„њмљё
 krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, toner, watercolor
 ggmap(krMap)
 ~~~
 
 <img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
 
-`googlemap`<ec>ќґ <ec>њ„<eb>Џ„кІЅлЏ„ м§Ђ<eb>Џ„м¤‘м•™, `stamen`, `openstreetmap`, `cloudmade`<eb>Љ” 
-<ec>њ„<eb>Џ„кІЅлЏ„ <ec>ѓЃ<ec>ћђ<ed>‘њкё°л<a5><bc> к¶ЊмћҐ<ed>•њ<eb>‹¤.
+`googlemap`мќґ мњ„лЏ„кІЅлЏ„ м§ЂлЏ„м¤‘м•™, `stamen`, `openstreetmap`, `cloudmade`лЉ” 
+мњ„лЏ„кІЅлЏ„ мѓЃмћђн‘њкё°лҐј к¶ЊмћҐн•њл‹¤.
 
 
 ~~~{.r}
@@ -208,38 +175,38 @@ krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FAL
 ggmap(krMap)
 ~~~
 
-### 3. м§Ђл¦¬м •ліґмІл¦<ac> <ed>€ґмІґмќё [^1]
+### 3. м§Ђл¦¬м •ліґмІл¦¬ н€ґмІґмќё [^1]
 
-<img src="fig/R_SAGA_GE_logo.jpg" alt="LAMP<ec><99>Ђ Dockerк°Ђ <ec>„¤м№лђњ <ec>љ°л¶„н€¬ кіµмљ© <ec>ќґлЇём<a7>Ђ" width="40%" /> 
+<img src="fig/R_SAGA_GE_logo.jpg" alt="LAMPм™Ђ Dockerк°Ђ м„¤м№лђњ мљ°л¶„н€¬ кіµмљ© мќґлЇём§Ђ" width="40%" /> 
 
 [^1]: http://spatial-analyst.net/wiki/index.php?title=Main_Page
 
-- <ec>¤<ed>”€ GIS <ec>†Њ<ed>”„<ed>Љё<ec>›Ё<ec>–ґ
+- м¤н”€ GIS м†Њн”„нЉём›Ём–ґ
     - [System for Automated Geoscientific Analyses (SAGA GIS)](https://en.wikipedia.org/wiki/SAGA_GIS)
     - [Geographic Resources Analysis Support System (GRASS GIS)](https://en.wikipedia.org/wiki/GRASS_GIS)
 - [TileMill](https://www.mapbox.com/tilemill/)
-- KML л§€нЃ¬<ec>—… <ec>–ё<ec>–ґ
+- KML л§€нЃ¬м—… м–ём–ґ
     - [Keyhole Markup Language, KML](https://en.wikipedia.org/wiki/Keyhole_Markup_Language)
 
 
-### 4. м§Ђл¦¬м •лі<b4> <ec>‹њк°Ѓн™” <ec>‚¬лЎЂ
+### 4. м§Ђл¦¬м •ліґ м‹њк°Ѓн™” м‚¬лЎЂ
 
-- лЇёкµ­ <eb><8c>Ђ<ec>„ (2012) [<eb>‰ґ<ec>љ•<ed><83>Ђ<ec>ћ„м¦<88> President Map](http://elections.nytimes.com/2012/results/president)
-- лЇёкµ­ л№€кі¤<ec>њЁ <ec> •лі<b4> <ec>‹њк°Ѓн™” [The Topography of Poverty in the United States](http://www.cdc.gov/pcd/issues/2007/oct/07_0091.htm)
+- лЇёкµ­ лЊЂм„ (2012) [л‰ґмљ•нѓЂмћ„м¦€ President Map](http://elections.nytimes.com/2012/results/president)
+- лЇёкµ­ л№€кі¤мњЁ м •ліґ м‹њк°Ѓн™” [The Topography of Poverty in the United States](http://www.cdc.gov/pcd/issues/2007/oct/07_0091.htm)
 - [http://indiemapper.com/](http://indiemapper.com/app/learnmore.php?l=choropleth)
 
 
-### м°ёкі <ec>ћђлЈ<8c>
+### м°ёкі мћђлЈЊ
 
 - [Thematic Cartography and Geovisualization](http://www.amazon.com/Thematic-Cartography-Geovisualization-3rd-Edition/dp/0132298341)
 - [Web Cartography: Map Design for Interactive and Mobile Devices](https://www.crcpress.com/Web-Cartography-Map-Design-for-Interactive-and-Mobile-Devices/Muehlenhaus/9781439876220)
-- [R Development Translation Team (Korean)](http://www.openstatistics.net/)
+- [R Development Translation Team (Korean)](http://www.openstatistics.net/) 
 
-### R <ec>–ё<ec>–ґ м°ёкі  <ec>›№<ec>‚¬<ec>ќґ<ed>Љё
+### R м–ём–ґ м°ёкі  м›№м‚¬мќґнЉё
 
 - [spatial.ly](http://spatial.ly/r/)
 - [Spatial data in R: Using R as a GIS](https://pakillo.github.io/R-GIS-tutorial/)
 - [Introduction to Spatial Data and ggplot2](http://rpubs.com/RobinLovelace/intro-spatial)
-- [Spatial analysis in R: <eb>ћ­м»¤мЉ¤<ed>„° <eb><8c>Ђ<ed>•™](http://www.maths.lancs.ac.uk/~rowlings/Teaching/- Sheffield2013/index.html)
+- [Spatial analysis in R: лћ­м»¤мЉ¤н„° лЊЂн•™](http://www.maths.lancs.ac.uk/~rowlings/Teaching/- Sheffield2013/index.html)
 - [Notes on Spatial Data Operations in R](https://dl.dropboxusercontent.com/u/9577903/- broomspatial.pdf)
 - [Making maps with R](http://www.molecularecologist.com/2012/09/making-maps-with-r/)

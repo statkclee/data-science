@@ -9,19 +9,20 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
     <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
     <meta charset="UTF-8" />
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
     
-      ga('create', 'UA-59802572-16', 'auto');
+      ga('create', 'UA-59802572-17', 'auto');
       ga('send', 'pageview');
     
     </script>
@@ -29,26 +30,28 @@
   <body class="lesson">
     <div class="container card">
       <div class="banner">
-        <a href="http://xwmooc.net" title="xwMOOC">
-          <img alt="xwMOOC banner" src="img/xwMOOC.png" />
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
         </a>
       </div>
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <h1 class="title">데이터 과학</h1>
-          <h2 class="subtitle">RStudio</h2>
+          <h2 class="subtitle">RStudio 개발환경과 단축키</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>RStudio 데이터 과학 툴체인 아키텍처를 이해한다.</li>
-<li>아키텍처 각 구성요소와 연관성을 이해한다.</li>
+<li>RStudio 개발환경 인프라를 기반으로 한 데이터 과학 툴체인 아키텍처를 이해한다.</li>
+<li>데이터과학 공학을 기반으로 한 아키텍처 각 구성요소와 연관성을 이해한다.</li>
+<li>RStudio IDE 개발환경을 살펴보고, 자주 활용하는 단축키를 숙지한다.</li>
 </ul>
 </div>
 </section>
+<h3 id="rstudio-개발환경-인프라">1. RStudio 개발환경 인프라</h3>
 <p>RStudio 진영에서 제안하는 데이터 과학 툴체인은 다음과 같이 구성된다.</p>
 <p><code>readr</code> 팩키지를 비롯한 다양한 데이터 가져오기 팩키지를 통해서 파일 형식 데이터 뿐만 아니라 서비스형식의 데이터도 불러올 수 있고, 필요에 따라서는 <code>rvest</code>를 활용하여 크롤링해서 데이터를 긁어 오는 것도 가능하다.</p>
 <p><code>tidyr</code> 팩키지를 활용하여 데이터를 깔끔히 정제한 뒤에 <code>dplyr</code>에 내장된 데이터 분석 동사를 활용하여 자유자재로 분석을 수행하고 나서, 이를 시각화와 모형화를 위한 입력값으로 활용한다.</p>
@@ -56,18 +59,189 @@
 <p>데이터를 불러와서, 변환한고, 분석하고, 모형개발과 시각화, 그리고 최종 데이터과학제품으로 이어지는 전체 과정은 R 코드와 문서를 버젼제어 해야하고, 동시에 팩키지 관리도 이루어져야 재현가능한 과학과 제품개발이 가능해진다. 소스코드제어를 위해 R에서는 Git과 GitHub를 연결해서 사용하고, 팩키지 관리를 위해서는 <code>packrat</code>를 사용하여 팩키지 대상과 팩키지 버젼도 이력관리한다.</p>
 <p>물론 이 모든 것은 RStudio IDE 라는 R전용 GUI 통합개발환경 위에서 개발이 가능하다.</p>
 <p><img src="fig/rstudio-data-science-architecture.png" alt="RStudio" width="77%" /></p>
+<h3 id="rstudio에서-가장-많이-사용하는-단축키-1-2">2. RStudio에서 가장 많이 사용하는 단축키 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p><a href="https://ko.wikipedia.org/wiki/통합_개발_환경">통합개발환경(Integrated Development Environment, IDE)</a>은 소프트웨어를 개발할 때, 코딩, 디버깅, 컴파일, 배포 등 프로그램 개발과 관련된 모든 작업을 하나의 통합된 개발환경에서 작업할 수 있도록 환경을 제공하는 소프트웨어다. RStudio는 데이터 과학 언어 R을 위한 특화된 통합 개발환경을 제공하고 있다.</p>
+<p><img src="fig/rstudio-IDE-cheatsheet.png" alt="RStudio IDE" width="57%" /></p>
+<blockquote>
+<p>키보드 특수키 설정 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> {.callout}</p>
+<ul>
+<li>⌘ : Command (명령키, <code>&amp;#8984;</code>)</li>
+<li>^ : Control (컨트롤키, <code>&amp;#94;</code>) 혹은 ✲ (윈도) ⎈ (리눅스)</li>
+<li>⎇ : Alt (알트키, <code>&amp;#9095;</code>)</li>
+<li>⏎ : Enter (엔터키, <code>&amp;#9166;</code>)</li>
+<li>⇧ : Shift (쉬프트키, <code>&amp;#8679;</code>)</li>
+<li>⌥ : Option (옵션키, <code>&amp;#8997;</code>)</li>
+<li>↹ : Tab (탭키, <code>&amp;#8633;</code>)</li>
+<li>↑ : Upwards Arrow (윗쪽 화살표, <code>&amp;#8593;</code>)</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th align="center">단축키</th>
+<th align="center">윈도우</th>
+<th align="center">맥</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">마지막 명령어</td>
+<td align="center">↑</td>
+<td align="center">↑</td>
+</tr>
+<tr class="even">
+<td align="center">마지막 매칭 명령어</td>
+<td align="center">^ + ↑</td>
+<td align="center">⌘ + ↑</td>
+</tr>
+<tr class="odd">
+<td align="center">자동 탭완성</td>
+<td align="center">↹</td>
+<td align="center">↹</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">—- <strong>실행</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">선택영역 실행</td>
+<td align="center">^ + ⏎</td>
+<td align="center">⌘ + ⏎</td>
+</tr>
+<tr class="even">
+<td align="center">Source</td>
+<td align="center">^ + ⇧ + S</td>
+<td align="center">⌘ + ⇧ + S</td>
+</tr>
+<tr class="odd">
+<td align="center">Source + 메아리(Echo)</td>
+<td align="center">^ + ⇧ + ⏎</td>
+<td align="center">⌘ + ⇧ + ⏎</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">—- <strong>화면 전환</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">코딩 패널창 전환</td>
+<td align="center">^ + 1</td>
+<td align="center">^ + 1</td>
+</tr>
+<tr class="even">
+<td align="center">콘솔 패널창 전환</td>
+<td align="center">^ + 2</td>
+<td align="center">^ + 2</td>
+</tr>
+<tr class="odd">
+<td align="center"></td>
+<td align="center">—- <strong>코딩 단축키</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center"><code>&lt;-</code></td>
+<td align="center">⎇ + -</td>
+<td align="center">⌥ + -</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>%&gt;%</code></td>
+<td align="center">^ + ⇧ + M</td>
+<td align="center">⌘ + ⌥ + M</td>
+</tr>
+<tr class="even">
+<td align="center">주석처리</td>
+<td align="center">^ + ⇧ + C</td>
+<td align="center">^ + ⌥ + C</td>
+</tr>
+<tr class="odd">
+<td align="center">주석제거</td>
+<td align="center">^ + ⇧ + /</td>
+<td align="center">^ + ⌥ + /</td>
+</tr>
+<tr class="even">
+<td align="center">실행취소</td>
+<td align="center">^ + Z</td>
+<td align="center">⌘ + Z</td>
+</tr>
+<tr class="odd">
+<td align="center">다시 실행</td>
+<td align="center">^ + ⇧ + Z</td>
+<td align="center">⌘ + ⇧ + Z</td>
+</tr>
+<tr class="even">
+<td align="center">단축키 참조</td>
+<td align="center">⎇ + ⇧ + Z</td>
+<td align="center">⌥ + ⇧ + Z</td>
+</tr>
+<tr class="odd">
+<td align="center">다중커서</td>
+<td align="center">^ +⎇ + ↑</td>
+<td align="center">^ + ⌥ + ↑</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">^ +⎇ + ↓</td>
+<td align="center">^ + ⌥ + ↓</td>
+</tr>
+<tr class="odd">
+<td align="center"></td>
+<td align="center">^ +⎇ + 클릭</td>
+<td align="center">^ + ⌥ + 클릭</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center">—- <strong>찾기 및 바꾸기</strong> —-</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">줄 찾아가기</td>
+<td align="center">⇧ + ⎇ + G</td>
+<td align="center">⌘ + ⇧ + ⌥ + G</td>
+</tr>
+<tr class="even">
+<td align="center">찾기 바꾸기</td>
+<td align="center">^ + F</td>
+<td align="center">⌘ + F</td>
+</tr>
+<tr class="odd">
+<td align="center">파일에서 찾기</td>
+<td align="center">^ + ⇧ + F</td>
+<td align="center">⌘ + ⇧ + F</td>
+</tr>
+<tr class="even">
+<td align="center">모두 접기</td>
+<td align="center">⎇ + O</td>
+<td align="center">⌘ + ⌥ + O</td>
+</tr>
+<tr class="odd">
+<td align="center">모두 펴기</td>
+<td align="center">⎇ + ⇧ + O</td>
+<td align="center">⌘ + ⌥ + ⇧ + O</td>
+</tr>
+</tbody>
+</table>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.rstudio.com/resources/webinars/rstudio-essentials-webinar-series-part-1/">Programming Part 1 (Writing code in RStudio)</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf">RStudio IDE Cheat Sheet</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://xahlee.info/comp/unicode_computing_symbols.html">Unicode: Keyboard Symbols ⌘ ↵ ⇥ ⌫ ↓ ☾ ⎋</a><a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
         </div>
       </div>
       </article>
       <div class="footer">
-        <a class="label swc-blue-bg" href="http://xwmooc.net">xwMOOC</a>
-        <a class="label swc-blue-bg" href="https://github.com/statkclee/data-science">Source</a>
-        <a class="label swc-blue-bg" href="mailto:i@xwmooc.net">Contact</a>
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
         <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
     <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
