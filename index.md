@@ -22,6 +22,10 @@ title: 데이터 과학
     - [들어가며](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/01-intro.html)
     - [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
     - [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
+1. [함수형 프로그래밍 -- `purrr`](ds-fp.html)
+    - [측도와 R 자료구조](ds-data-structure.html)
+    - [R 함수 작성](ds-fp-write-fn.html)
+    - [R 함수형 프로그래밍](ds-fp-purrr.html)
 1. [RStudio](rstudio.html)
     - [RStudio 활용 코드작성](rstudio-writing-code.html)
     - [시간데이터](data-handling-timendate.html)
@@ -67,10 +71,6 @@ title: 데이터 과학
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [웹스크래핑(Web Scraping)](data-scraping.html)
 1. [스파크 + dplyr -- sparklyr](ds-sparklyr.html)    
-1. [함수형 프로그래밍 -- `purrr`](ds-fp.html)
-    - [측도와 R 자료구조](ds-data-structure.html)
-    - [R 함수 작성](ds-fp-write-fn.html)
-    - [R 함수형 프로그래밍](ds-fp-purrr.html)
 1. [야구 MLB](ds-baseball-mlb.html)    
 
 
