@@ -4,35 +4,35 @@
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
     <title>Software Carpentry: 데이터 과학</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-17', 'auto');
-      ga('send', 'pageview');
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
@@ -81,12 +81,27 @@
 <li><a href="ds-fp-write-fn.html">R 함수 작성</a></li>
 <li><a href="ds-fp-purrr.html">R 함수형 프로그래밍</a></li>
 </ul></li>
-<li><strong>R 개발 환경 인프라</strong>
+<li><strong>R 개발 환경 인프라</strong> <a href="http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html">데이터 과학 툴체인 - 파이썬</a>
 <ul>
 <li><a href="ds-virtual-window.html">윈도우 환경 가상 개발환경</a></li>
+<li><a href="toolchain-shiny-rstudio.html">한글처리 가능한 RStudio 개발환경</a><br />
+</li>
 <li><a href="rstudio.html">RStudio 개발환경과 단축키</a></li>
 <li><a href="ds-sparklyr.html">스파크 + dplyr – sparklyr</a><br />
 </li>
+<li><a href="ds-spark-hadoop-install.html">SparkR 하둡 클러스터 설치</a></li>
+<li><a href="ds-h2o-spark-hadoop.html"><span class="math inline">\(H_2 O\)</span> 하둡 스파크 클러스터 설치</a></li>
+<li><a href="toolchain-docker-basic.html">도커(Docker) 기초</a>
+<ul>
+<li><a href="toolchain-docker-dockerfile.html">도커(Docker) - Dockerfile</a></li>
+<li><a href="toolchain-docker-r.html">데이터 과학 도커 - R</a><br />
+</li>
+<li><a href="toolchain-docker-r-pkgs.html">데이터 과학 도커 - R 팩키지</a><br />
+</li>
+</ul></li>
+<li><a href="toolchain-ci-travis.html">지속적 통합(CI) - Travis</a><br />
+</li>
+<li><a href="toolchain-travis-github.html">지속적 통합(CI) - GitHub</a></li>
 </ul></li>
 <li><a href="data-handling.html">데이터 정제</a>
 <ul>
@@ -125,21 +140,6 @@
 <li><a href="shiny-reactive.html">Shiny 반응형 웹앱 개발</a><br />
 </li>
 <li><a href="shiny-frontend.html">Shiny 프론트엔트 개발</a></li>
-</ul></li>
-<li><a href="http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html">데이터 과학 툴체인 - 파이썬</a>
-<ul>
-<li><a href="toolchain-shiny-rstudio.html">한글처리 RStudio 개발환경</a></li>
-<li><a href="toolchain-docker-basic.html">도커(Docker) 기초</a>
-<ul>
-<li><a href="toolchain-docker-dockerfile.html">도커(Docker) - Dockerfile</a></li>
-<li><a href="toolchain-docker-r.html">데이터 과학 도커 - R</a><br />
-</li>
-<li><a href="toolchain-docker-r-pkgs.html">데이터 과학 도커 - R 팩키지</a><br />
-</li>
-</ul></li>
-<li><a href="toolchain-ci-travis.html">지속적 통합(CI) - Travis</a><br />
-</li>
-<li><a href="toolchain-travis-github.html">지속적 통합(CI) - GitHub</a></li>
 </ul></li>
 <li><a href="data-product.html">데이터 제품</a>
 <ul>
@@ -183,16 +183,16 @@
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
