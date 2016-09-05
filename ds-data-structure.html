@@ -191,7 +191,11 @@
 <pre class="output"><code>[1] NA
 </code></pre>
 <h3 id="데이터프레임dataframe">3. 데이터프레임(Dataframe)</h3>
-<p><strong>R</strong> 은 6가지 기본 벡터로 자료를 저장하지만, 이외에 행렬(matrix), 데이터프레임(data.frame), 리스트(list) 자료구조가 있다. 하지만, 자료분석을 위해서 데이터를 데이터셋의 형태로 구성을 해야한다. 데이터셋이 중요한 이유는 자료를 분석하기 위해서 다양한 형태의 개별 자료를 통합적으로 분석하기 위해서다. 이를 위해서 리스트 자료구조로 일단 모으게 된다. 예를 들어 개인 신용분석을 위해서는 개인의 소득, 부채, 성별, 학력 등등의 숫자형, 문자형, 요소(Factor)형 등의 자료를 데이터셋에 담아야 한다. 특히 변수와-관측값 (Variable-Observation) 형식의 자료를 분석하기 위해서는 데이터프레임(<code>data.frame</code>)을 사용한다. 데이터프레임은 모든 변수에 대해서 관측값이 같은 길이를 갖도록 만들어 놓은 것이다.</p>
+<h3 id="벡터-행렬-배열-데이터프레임">3.1. 벡터, 행렬, 배열, 데이터프레임</h3>
+<p>가장 많이 사용되는 논리형, 문자형, 숫자형을 통해 자료분석 및 모형개발을 진행하게 되고, 경우에 따라서 동일한 자료형을 모은 경우 이를 행렬로 표현할 수 있고, 행렬을 모아 RGB 시각 데이터를 위한 배열(Array)로 표현한다. 데이터프레임은 서로 다른 자료형을 모아 넣은 것이다.</p>
+<p><img src="fig/ds-data-structure-pictogram.png" alt="R 자료구조" width="77%" /></p>
+<h3 id="데이터프레임">3.2. 데이터프레임</h3>
+<p><strong>R</strong> 은 6가지 기본 벡터로 자료를 저장하지만, 이외에 행렬(matrix), 데이터프레임(data.frame), 리스트(list) 자료구조가 있다. 하지만, 자료분석을 위해서 데이터를 데이터셋의 형태로 구성을 해야한다. 데이터셋이 중요한 이유는 자료를 분석하기 위해서 다양한 형태의 개별 자료를 통합적으로 분석하기 위해서다. 이를 위해서 리스트 자료구조로 일단 모으게 된다. 예를 들어 개인 신용분석을 위해서는 개인의 소득, 부채, 성별, 학력 등등의 숫자형, 문자형, 요인(Factor)형 등의 자료를 데이터셋에 담아야 한다. 특히 변수와-관측값 (Variable-Observation) 형식의 자료를 분석하기 위해서는 데이터프레임(<code>data.frame</code>)을 사용한다. 데이터프레임은 모든 변수에 대해서 관측값이 같은 길이를 갖도록 만들어 놓은 것이다.</p>
 <p><img src="fig/data-handling-list-dataframe.png" alt="리스트와 데이터프레임" width="50%" /></p>
 <p>데이터프레임은 <code>data.frame</code> 함수를 사용해서 생성한다. R 객체 구조 파악을 위해서는 간단한 자료의 경우 데이터 형식을 확인할 수 있는 1–2줄 정도의 간단한 스크립트와 명령어를 통해서 확인이 가능하지만, 복잡한 데이터의 구조를 파악하기 위해서는 <code>summary</code> 함수와 <code>str</code> 함수를 통해서 확인해야 한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 벡터를 정의한다.</span>
@@ -204,7 +208,7 @@ rings &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">F
 
 <span class="co"># 벡터를 합쳐서 데이터프레임을 생성</span>
 planets_df &lt;-<span class="kw">data.frame</span>(name, type, diameter, rotation, rings)</code></pre></div>
-<h3 id="범주형-순서형-자료형">3.1. 범주형, 순서형 자료형</h3>
+<h3 id="범주형-순서형-자료형">3.2. 범주형, 순서형 자료형</h3>
 <p>범주형, 순서형 자료형을 생성하는 경우 주의를 기울여야 한다. <code>factor</code> 함수를 사용해서 요인형 자료형을 생성하는데, 내부적으로 저장공간을 효율적으로 사용하고 속도를 빠르게 하는데 유용한다. 순서를 갖는 범주형의 경우 <code>factor</code> 함수 내부에 <code>levels</code> 인자를 넣어 정의하면 순서 정보가 유지된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 범주형</span>
 animals_vector &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Elephant&quot;</span>, <span class="st">&quot;Giraffe&quot;</span>, <span class="st">&quot;Donkey&quot;</span>, <span class="st">&quot;Horse&quot;</span>)
