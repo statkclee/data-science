@@ -32,7 +32,9 @@ title: 데이터 과학
     - [R 함수 작성](ds-fp-write-fn.html)
     - [R 함수형 프로그래밍](ds-fp-purrr.html)
 1. **R 개발 환경 인프라**
+    - [윈도우 환경 가상 개발환경](ds-virtual-window.html)
     - [RStudio 개발환경과 단축키](rstudio.html)
+    - [스파크 + dplyr -- sparklyr](ds-sparklyr.html)        
 1. [데이터 정제](data-handling.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
@@ -70,7 +72,6 @@ title: 데이터 과학
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [웹스크래핑(Web Scraping)](data-scraping.html)
-1. [스파크 + dplyr -- sparklyr](ds-sparklyr.html)    
 1. [야구 MLB](ds-baseball-mlb.html)    
 
 

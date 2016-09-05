@@ -40,7 +40,7 @@ brewer.pal(n = 8, name = "Dark2")
 
 
 ~~~{.output}
-Error in eval(expr, envir, enclos): 함수 "brewer.pal"를 찾을 수 없습니다
+Error in eval(expr, envir, enclos): could not find function "brewer.pal"
 
 ~~~
 
@@ -65,8 +65,8 @@ $$
 
 
 
-<!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Mon Mar  7 11:07:12 2016 -->
+<!-- html table generated in R 3.3.1 by xtable 1.8-2 package -->
+<!-- Mon Sep 05 16:57:43 2016 -->
 <table border=1>
 <tr> <th> color_name </th> <th> hex </th> <th> red </th> <th> green </th> <th> blue </th>  </tr>
   <tr> <td> blue </td> <td> #0000FF </td> <td align="right"> 0 </td> <td align="right"> 0 </td> <td align="right"> 255 </td> </tr>
@@ -78,8 +78,8 @@ $$
 
 
 
-<!-- html table generated in R 3.2.3 by xtable 1.8-0 package -->
-<!-- Mon Mar  7 11:07:12 2016 -->
+<!-- html table generated in R 3.3.1 by xtable 1.8-2 package -->
+<!-- Mon Sep 05 16:57:43 2016 -->
 <table border=1>
 <tr> <th> color_name </th> <th> hex </th> <th> red </th> <th> green </th> <th> blue </th>  </tr>
   <tr> <td> white, gray100 </td> <td> #FFFFFF </td> <td align="right"> 255 </td> <td align="right"> 255 </td> <td align="right"> 255 </td> </tr>
@@ -172,19 +172,25 @@ HCL 공간을 슬라이스로 나누어 도식화한 것을 보여주고 있다.
 ~~~{.r}
 suppressPackageStartupMessages(library(dplyr))
 library(gapminder)
+~~~
+
+
+
+~~~{.output}
+Error in library(gapminder): there is no package called 'gapminder'
+
+~~~
+
+
+
+~~~{.r}
 str(gapminder)
 ~~~
 
 
 
 ~~~{.output}
-Classes 'tbl_df', 'tbl' and 'data.frame':	1704 obs. of  6 variables:
- $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
- $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
- $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
- $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
- $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
- $ gdpPercap: num  779 821 853 836 740 ...
+Error in str(gapminder): object 'gapminder' not found
 
 ~~~
 
@@ -228,6 +234,17 @@ R 사막 동떨어진 섬에 거주하고 있지만, 이런 관습이 납기를 
 
 
 
+~~~{.output}
+Error in levels(gapminder$country): object 'gapminder' not found
+
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'gapminder' not found
+
+~~~
 
 
 ~~~{.r}
@@ -237,18 +254,7 @@ jdat
 
 
 ~~~{.output}
-Source: local data frame [8 x 6]
-
-     country continent  year lifeExp      pop  gdpPercap
-      (fctr)    (fctr) (int)   (dbl)    (int)      (dbl)
-1    Eritrea    Africa  2007  58.040  4906585   641.3695
-2      Nepal      Asia  2007  63.785 28901790  1091.3598
-3       Chad    Africa  2007  50.651 10238807  1704.0637
-4    Jamaica  Americas  2007  72.567  2780132  7320.8803
-5       Cuba  Americas  2007  78.273 11416987  8948.1029
-6 Costa Rica  Americas  2007  78.782  4133884  9645.0614
-7    Germany    Europe  2007  79.406 82400996 32170.3744
-8     Norway    Europe  2007  80.196  4627926 49357.1902
+Error in eval(expr, envir, enclos): object 'jdat' not found
 
 ~~~
 
@@ -262,7 +268,12 @@ plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      main = "Start your engines ...")
 ~~~
 
-<img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
 
 이름을 지정해서 색상을 명시적으로 명세할 수 있는데, 한개 이상 색상명을 문자벡터로 전달한다.
 점 8 개에 색상이 필요한데, 적은 색상명을 전달하게 되면 재활용이 일어난다.
@@ -273,11 +284,28 @@ plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
 ~~~{.r}
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = "red", main = 'col = "red"')
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
+
+
+
+~~~{.r}
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = c("blue", "orange"), main = 'col = c("blue", "orange")')
 ~~~
 
-<img src="fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="50%" style="display: block; margin: auto;" /><img src="fig/unnamed-chunk-13-2.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="50%" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
 
 작은 양의 정수로 색상을 명세할 수 있는데, 현재 팔레트에 인덱스로 해석되고, `palette()` 함수로 인덱스 값을 확인할 수 있다.
 정수와 색상명을 라벨로 그림에 추가했다. 기본디폴트 설정된 팔레트는 색상이 8개다. 
@@ -287,14 +315,55 @@ plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
 ~~~{.r}
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = 1:n_c, main = paste0('col = 1:', n_c))
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
+
+
+
+~~~{.r}
 with(jdat, text(x = gdpPercap, y = lifeExp, pos = 1))
+~~~
+
+
+
+~~~{.output}
+Error in with(jdat, text(x = gdpPercap, y = lifeExp, pos = 1)): object 'jdat' not found
+
+~~~
+
+
+
+~~~{.r}
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = 1:n_c, main = 'the default palette()')
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
+
+
+
+~~~{.r}
 with(jdat, text(x = gdpPercap, y = lifeExp, labels = palette(),
                 pos = rep(c(1, 3, 1), c(5, 1, 2))))     
 ~~~
 
-<img src="fig/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="50%" style="display: block; margin: auto;" /><img src="fig/unnamed-chunk-14-2.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="50%" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in with(jdat, text(x = gdpPercap, y = lifeExp, labels = palette(), : object 'jdat' not found
+
+~~~
 
 대신에 본인이 정의한 색상벡터를 사용할 수도 있다.
 저자가 의도적으로 가장 모범사례를 모형화했다: 맞춤형 색상을 사용하려면, 
@@ -307,11 +376,28 @@ j_colors <- c('chartreuse3', 'cornflowerblue', 'darkgoldenrod1', 'peachpuff3',
              'mediumorchid2', 'turquoise3', 'wheat4', 'slategray2')
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = j_colors, main = 'custom colors!')
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
+
+
+
+~~~{.r}
 with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_colors,
                 pos = rep(c(1, 3, 1), c(5, 1, 2)))) 
 ~~~
 
-<img src="fig/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_colors, : object 'jdat' not found
+
+~~~
 
 #### 이용가능한 색상은? 기호와 선유형은?
 
@@ -402,11 +488,28 @@ display.brewer.pal(n = 8, name = 'Dark2')
 j_brew_colors <- brewer.pal(n = 8, name = "Dark2")
 plot(lifeExp ~ gdpPercap, jdat, log = 'x', xlim = j_xlim, ylim = j_ylim,
      col = j_brew_colors, main = 'Dark2 qualitative palette from RColorBrewer')
+~~~
+
+
+
+~~~{.output}
+Error in eval(expr, envir, enclos): object 'jdat' not found
+
+~~~
+
+
+
+~~~{.r}
 with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors,
                 pos = rep(c(1, 3, 1), c(5, 1, 2)))) 
 ~~~
 
-<img src="fig/unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+Error in with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors, : object 'jdat' not found
+
+~~~
 
 ### viridis
 
@@ -432,39 +535,7 @@ with(jdat, text(x = gdpPercap, y = lifeExp, labels = j_brew_colors,
 library(dichromat)
 ~~~
 
-`colorschems` 목록에는 17 가지 색상조합이 담겨있는데, 적색과 녹색을 구별하는 능력이 없거나 예외적인
-시력을 갖는 2색시자에게 적합하다.
-
-<img src="fig/dichromat-colorschemes-1.png" title="plot of chunk dichromat-colorschemes" alt="plot of chunk dichromat-colorschemes" style="display: block; margin: auto;" />
-
-`dichmat()` 함수는 색상을 변환해서 다른 형태의 색맹에 근사적인 효과를 구현할 수 있어서,
-후보 색상조합에 대한 효과를 평가할 수 있게 한다. 
-`data("dalton")` 명령어는 256 색상 팔레트를 표현하는 객체를 생성하는데,
-정상 시야로 표현되는 것과, 적록(red-green) 색맹과 청녹(green-blue) 생맹으로 표현되는 것이다.
-
-### 환경 정리
 
 
-~~~{.r}
-par(opar)
-~~~
-
-### 참고문헌
-
-- Achim Zeileis, Kurt Hornik, Paul Murrell (2009). Escaping RGBland: Selecting Colors for Statistical Graphics. 
-  Computational Statistics & Data Analysis, 53(9), 3259-3270 [PDF](http://eeecon.uibk.ac.at/~zeileis/papers/Zeileis+Hornik+Murrell-2009.pdf)
-- `colorspace` [소품문](http://cran.r-project.org/web/packages/colorspace/vignettes/hcl-colors.pdf)
-- Earl F. Glynn, Stowers Institute for Medical Research
-    + `colors()` 함수로 활용가능한 색상명칭 [참고자료](http://research.stowers-institute.org/efg/R/Color/Chart/)
-    + ["Using Color in R"](http://research.stowers-institute.org/efg/Report/UsingColorInR.pdf) 강연.
-- Many Worlds Theory 블로그 포스트 [My favorite RGB color](http://manyworldstheory.com/2013/01/15/my-favorite-rgb-color/)
-- Hadley Wickham, "ggplot2: Elegant Graphics for Data Analysis" Springer (2009)
-    + [SpringerLink](http://ezproxy.library.ubc.ca/login?url=http://link.springer.com.ezproxy.library.ubc.ca/book/10.1007/978-0-387-98141-3/page/1)
-    + [ggplot2 도움말 문서](http://docs.ggplot2.org/current/)
-    + [저자 웹사이트](http://ggplot2.org/book/)
-    + [ggplot2 공식 페이지](http://ggplot2.org/)
-- Bernice E. Rogowitz and Lloyd A. Treinish, 
-  "[Why Should Engineers and Scientists Be Worried About Color?](http://www.research.ibm.com/people/l/lloydt/color/color.HTM)", 
-  IBM Research.
 
 
