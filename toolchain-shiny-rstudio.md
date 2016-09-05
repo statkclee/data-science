@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 한글처리 RStudio 개발환경
+subtitle: 한글처리 가능한 RStudio 개발환경
 ---
 
 > ### 학습 목표 {.objectives}
