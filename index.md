@@ -37,6 +37,7 @@ title: 데이터 과학
     - [RStudio 개발환경과 단축키](rstudio.html)
     - [스파크 + dplyr -- sparklyr](ds-sparklyr.html)        
     - [SparkR 하둡 클러스터 설치](ds-spark-hadoop-install.html)
+    - [$H_2 O$ 하둡 스파크 클러스터 설치](ds-h2o-spark-hadoop.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
         - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
         - [데이터 과학 도커 - R](toolchain-docker-r.html)  
