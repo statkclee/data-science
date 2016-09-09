@@ -14,7 +14,7 @@ mainfont: NanumGothic
 ```{r, include=FALSE}
 setwd("~/swc/data-science")
 source("tools/chunk-options.R")
-````
+```
 
 > ## 학습 목표 [^import-webinar] {.objectives}
 >
@@ -90,22 +90,16 @@ R로 데이터를 불러와야만 자료분석을 시작이 시작된다.
 | AssocProf | B          |  6 |  6 | Male |  97000|
 
 ``` {r readr-data-ingest, warning=FALSE}
-dat <- c(
-         "Prof  B 19  18  Male  139750
-         Prof B 20  16  Male  173200
-         AsstProf B  4   3  Male   79750
-         Prof B 45  39  Male  115000
-         Prof B 40  41  Male  141500
-         AssocProf  B  6   6  Male   97000")
+library(readr)
 
-spec_tsv(dat, col_names = FALSE, na = c("", "NA", "null"))
+spec_tsv("data/salary.txt", col_names = FALSE, na = c("", "NA", "null"))
 ```
 
 `spec_tsv`를 통해 제시된 칼럼형식이 맞는지 점검하고 이를 복사해서 `read_tsv` 파일로 불러 읽어온다.
 마지막으로 칼럼명을 `names` 함수를 사용해서 부여하면 칼럼명 없이 탭구분자로 구분된 파일을 데이터프레임으로 가져오게 된다.
 
 ``` {r readr-data-read_csv, warning=FALSE}
-df <- read_tsv(dat, col_names = FALSE, na = c("", "NA", "null"),
+df <- read_tsv("data/salary.txt", col_names = FALSE, na = c("", "NA", "null"),
                cols(
                  X1 = col_character(),
                  X2 = col_character(),

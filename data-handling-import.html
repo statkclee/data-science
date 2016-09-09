@@ -52,7 +52,7 @@
 </div>
 </section>
 <p><img src="fig/rstudio-data-import.png" alt="RStuio 데이터 가져오기" width="50%" /></p>
-<h3 id="공공데이터-출처">공공데이터 출처</h3>
+<h3 id="공공데이터-출처">1. 공공데이터 출처</h3>
 <p>공공데이터는 과거 로컬디스크에서 <code>. csv</code>, <code>.xlsx</code>, SAS, SPSS, 미니탭 등 형식 파일로 제공되었으나, SQL 데이터베이스에 ODBC, JDBC, DBI 등 인터페이스를 통해 직접 접근하여 데이터를 뽑아올 수도 있고, 인터넷 웹을 통해 XML, JSON 등의 형식으로 받아올 수도 있다.</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
@@ -66,7 +66,23 @@
 </ul>
 </div>
 </aside>
-<h4 id="로컬-데이터">1. 로컬 데이터</h4>
+<p>R로 데이터를 불러와야만 자료분석을 시작이 시작된다. 전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 <a href="http://www.statmethods.net/input/importingdata.html">statmethods.net</a> 사이트에 소개되어 있다.</p>
+<ul>
+<li>CSV : <code>.csv</code> 파일</li>
+<li>Excel : <code>.xlsx</code> 파일</li>
+<li>통계 팩키지
+<ul>
+<li>SPSS : <code>.por</code> 파일</li>
+<li>SAS : <code>xpt</code> 파일</li>
+<li>미니탭 : <code>.mtp</code> 파일</li>
+</ul></li>
+</ul>
+<p>다양한 데이터를 R로 불러와서 작업하는 방법은 <a href="http://blog.datacamp.com/">Datacamp 블로그</a>와 <a href="http://www.r-bloggers.com/">r-bloggers</a>에서 확인이 가능하다.</p>
+<ul>
+<li><a href="http://blog.datacamp.com/r-data-import-tutorial/">This R Data Import Tutorial Is Everything You Need</a></li>
+<li><a href="http://www.r-bloggers.com/importing-data-into-r-part-two/">Importing Data Into R – Part Two</a></li>
+</ul>
+<h3 id="로컬-데이터">2. 로컬 데이터</h3>
 <p>전통적으로 많이 활용하는 방식으로 <code>. csv</code>, <code>.xlsx</code>, SAS, SPSS, 미니탭 등 다양한 파일 형식에 담긴 정보를 R에서 <code>readr</code>, <code>readxl</code>, <code>haven</code> 팩키지를 활용하여 R에서 분석할 수 있는 R 데이터프레임으로 불러온다.</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
@@ -80,9 +96,109 @@
 </ul>
 </div>
 </aside>
-<h4 id="데이터베이스sql">2. 데이터베이스(SQL)</h4>
+<h4 id="readr-데이터-가져오기-datacamp-readr">2.1. <code>readr</code> 데이터 가져오기 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h4>
+<p><code>readr</code>에는 다양한 데이터 가져오기 기능이 제공된다. 다음과 같은 형태의 데이터프레임을 생성하는 것이 목표다. 하지만, 원본 데이터를 살펴보니 탭구분자로 나눠져있고, 칼럼명은 존재하지 않고 첫줄부터 바로 데이터가 들어 있는 형태다. 데이터의 일부를 텍스트 벡터로 불러온다.</p>
+<p><code>spec_tsv</code> 함수를 통해 파일에 포함된 데이터 자료구조에 대해서 확인이 가능하다. <code>col_names = FALSE</code> 명령어로 첫행부터 데이터가 시작된다고 일러준다. 그리고, <code>na = c(&quot;&quot;, &quot;NA&quot;, &quot;null&quot;)</code>을 통해 결측값에 대해서도 확인한다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">professor</th>
+<th align="left">department</th>
+<th align="left">age</th>
+<th align="left">tenure</th>
+<th align="left">gender</th>
+<th align="left">salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Prof</td>
+<td align="left">B</td>
+<td align="left">19</td>
+<td align="left">18</td>
+<td align="left">Male</td>
+<td align="left">139750</td>
+</tr>
+<tr class="even">
+<td align="left">Prof</td>
+<td align="left">B</td>
+<td align="left">20</td>
+<td align="left">16</td>
+<td align="left">Male</td>
+<td align="left">173200</td>
+</tr>
+<tr class="odd">
+<td align="left">AsstProf</td>
+<td align="left">B</td>
+<td align="left">4</td>
+<td align="left">3</td>
+<td align="left">Male</td>
+<td align="left">79750</td>
+</tr>
+<tr class="even">
+<td align="left">Prof</td>
+<td align="left">B</td>
+<td align="left">45</td>
+<td align="left">39</td>
+<td align="left">Male</td>
+<td align="left">115000</td>
+</tr>
+<tr class="odd">
+<td align="left">Prof</td>
+<td align="left">B</td>
+<td align="left">40</td>
+<td align="left">41</td>
+<td align="left">Male</td>
+<td align="left">141500</td>
+</tr>
+<tr class="even">
+<td align="left">AssocProf</td>
+<td align="left">B</td>
+<td align="left">6</td>
+<td align="left">6</td>
+<td align="left">Male</td>
+<td align="left">97000</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
+
+<span class="kw">spec_tsv</span>(<span class="st">&quot;data/salary.txt&quot;</span>, <span class="dt">col_names =</span> <span class="ot">FALSE</span>, <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;null&quot;</span>))</code></pre></div>
+<pre class="output"><code>Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character(),
+  X3 = col_integer(),
+  X4 = col_character(),
+  X5 = col_character(),
+  X6 = col_integer()
+)
+</code></pre>
+<pre class="output"><code>cols(
+  X1 = col_character(),
+  X2 = col_character(),
+  X3 = col_integer(),
+  X4 = col_character(),
+  X5 = col_character(),
+  X6 = col_integer()
+)
+</code></pre>
+<p><code>spec_tsv</code>를 통해 제시된 칼럼형식이 맞는지 점검하고 이를 복사해서 <code>read_tsv</code> 파일로 불러 읽어온다. 마지막으로 칼럼명을 <code>names</code> 함수를 사용해서 부여하면 칼럼명 없이 탭구분자로 구분된 파일을 데이터프레임으로 가져오게 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;data/salary.txt&quot;</span>, <span class="dt">col_names =</span> <span class="ot">FALSE</span>, <span class="dt">na =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;NA&quot;</span>, <span class="st">&quot;null&quot;</span>),
+               <span class="kw">cols</span>(
+                 <span class="dt">X1 =</span> <span class="kw">col_character</span>(),
+                 <span class="dt">X2 =</span> <span class="kw">col_character</span>(),
+                 <span class="dt">X3 =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">X4 =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">X5 =</span> <span class="kw">col_character</span>(),
+                 <span class="dt">X6 =</span> <span class="kw">col_integer</span>())
+               )
+
+<span class="kw">names</span>(df) &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="st">&quot;professor&quot;</span>, <span class="st">&quot;department&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;tenure&quot;</span>, <span class="st">&quot;gender&quot;</span>, <span class="st">&quot;salary&quot;</span>)</code></pre></div>
+<p>탭구분자를 갖는 <code>read_tsv</code> 파일 대신에 콤마 구분자를 갖는 경우 <code>read_csv</code>가 되고, <code>spec_csv</code> 로 칼럼 데이터형을 유추하는 함수명만 달라질 뿐 파일데이터를 데이터프레임으로 불러오는 과정은 동일하다.</p>
+<h3 id="데이터베이스sql">3. 데이터베이스(SQL)</h3>
 <p>데이터베이스에서 R로 데이터를 불러오는 방식은 기본적으로 <code>DBI</code>, <code>RODBC</code> 등 팩키지를 불러와서 적재한다. 목표 데이터베이스에 연결하고, SQL 쿼리를 데이터베이스에 던져 결과를 얻어와서 데이터프레임에 저장한다. 데이터 정합성 검사를 하고 모든 것이 정상적이면 데이터베이스 연결을 끊어 자원을 반납한다.</p>
-<h5 id="데이터베이스-연결-작업흐름">데이터베이스 연결 작업흐름</h5>
+<h4 id="데이터베이스-연결-작업흐름">3.1. 데이터베이스 연결 작업흐름</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1) DBI 팩키지 불러오기</span>
 <span class="kw">library</span>(DBI)
 <span class="co"># 2) 특정 데이터베이스 연결</span>
@@ -93,14 +209,14 @@ db &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(RSQLite::<spa
 <span class="kw">dbGetQuery</span>(db, <span class="st">&quot;SELECT * FROM mtcars&quot;</span>)
 <span class="co"># 4) 연결 끊기</span>
 <span class="kw">dbDisconnect</span>(db)</code></pre></div>
-<h5 id="rstats-db">rstats-db</h5>
+<h4 id="rstats-db">3.2. rstats-db</h4>
 <p>GitHub에 <a href="http://github.com/rstats-db/">rstats-db</a> 저장소에는 <em>MySQL</em>, <em>Postgres</em>, <em>SQLite</em> 등 다양한 데이터베이스에 연결해서 R로 데이터를 가져오는 팩키지가 개발되고 있다. <code>library</code> 함수보다 <code>devtools</code> 함수를 사용해서 연관된 팩키지를 설치하여 데이터를 가져올 필요가 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># http://github.com/rstats-db/</span>
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/DBI&quot;</span>)
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/RPostgres&quot;</span>)
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/RMySQL&quot;</span>)
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-db/RSQLite&quot;</span>)</code></pre></div>
-<h4 id="웹-인터넷-데이터">3. 웹 인터넷 데이터</h4>
+<h3 id="웹-인터넷-데이터">4. 웹 인터넷 데이터</h3>
 <p>최근에 많은 공공데이터가 웹인터넷을 통해 배포되고 있다. XML, JSON이 많이 사용되고 있다. 특히, XML, JSON은 API를 통해 제공되는 정형화된 데이터로 통용되며, 그렇지 않고 데이터가 제공되는 경우 HTML 페이지를 웹스크래핑해서 데이터를 퍼온다.</p>
 <p>XML <code>libxml2</code>에 대응되는 <code>xml2</code> 팩키지를 사용하고, JSON의 경우, <code>jsonlite</code> 팩키지를 사용한다. API를 통해 데이터가 제공되지 않는 경우, <code>rvest</code> 팩키지를 통해 HTML 페이지 데이터를 긁어온다.</p>
 <aside class="callout panel panel-info">
@@ -115,7 +231,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstats-d
 </ul>
 </div>
 </aside>
-<h4 id="json-데이터-가져오기">3.1. JSON 데이터 가져오기</h4>
+<h3 id="json-데이터-가져오기">4.1. JSON 데이터 가져오기</h3>
 <p>JSON 팩키지에는 다양한 팩키지가 존재한다. 역시 R이 발전한 이유인 다양성과 유연성이 JSON에도 존재하는 것이 확인된다. <a href="https://cran.r-project.org/web/packages/jsonlite/index.html"><code>jsonlite</code></a> 최근에 업데이트되어 사용하는 것도 좋을 듯 하다.</p>
 <p>JSON 데이터를 R로 불러오는 경우 JSON 파일 형식에 특별히 신경을 써야한다. 우선 JSON 로그 데이터가 많은 경우 쉘에서 전처리 작업을 통해 <code>sample.json</code> 파일 형식으로 JSON 데이터를 준비한 후, <code>fromJSON</code> 함수로 불러오면 R에서 작업할 수 있는 데이터프레임으로 변환된다.</p>
 <ul>
@@ -147,28 +263,11 @@ sample.df</code></pre></div>
 <pre class="shell"><code>$ sed -i &#39;:a;N;$!ba;s/\n/,\n/g&#39; sample-file.json
 $ sed -i &#39;1i [&#39; sample-file.json
 $ echo &quot;]&quot; &gt;&gt; sample-file.json</code></pre>
-<h3 id="r-데이터-가져오기">4. R 데이터 가져오기</h3>
-<p>R로 데이터를 불러와야만 자료분석을 시작이 시작된다. 전통적인 방법으로 자료분석(로컬 컴퓨터에 파일형태로 저장된 다양한 파일을 불러오는 방법)을 시작할 수 있는 방법이 <a href="http://www.statmethods.net/input/importingdata.html">statmethods.net</a> 사이트에 소개되어 있다.</p>
-<ul>
-<li>CSV : <code>.csv</code> 파일</li>
-<li>Excel : <code>.xlsx</code> 파일</li>
-<li>통계 팩키지
-<ul>
-<li>SPSS : <code>.por</code> 파일</li>
-<li>SAS : <code>xpt</code> 파일</li>
-<li>미니탭 : <code>.mtp</code> 파일</li>
-</ul></li>
-</ul>
-<p>다양한 데이터를 R로 불러와서 작업하는 방법은 <a href="http://blog.datacamp.com/">Datacamp 블로그</a>와 <a href="http://www.r-bloggers.com/">r-bloggers</a>에서 확인이 가능하다.</p>
-<ul>
-<li><a href="http://blog.datacamp.com/r-data-import-tutorial/">This R Data Import Tutorial Is Everything You Need</a></li>
-<li><a href="http://www.r-bloggers.com/importing-data-into-r-part-two/">Importing Data Into R – Part Two</a></li>
-</ul>
-<h3 id="참고자료">참고자료</h3>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://www.rstudio.com/resources/webinars/getting-your-data-into-r/">Getting your data into R</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.datacamp.com/community/open-courses/reading-data-into-r-with-readr">Reading Data into R with readr - Read more at: http://scl.io/0EBruKzk#gs.6PP5zwU</a><a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
         </div>
