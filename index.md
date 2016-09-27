@@ -13,6 +13,7 @@ title: 데이터 과학
 
 1. **[R 언어](ds-r-lang.html)**
     - [두언어 문제](two-language-problem.html) 
+    - [R 환경설정](ds-r-environment.html) 
     - [R 라이브러리](data-science-library.html) 
     - [R로 전자우편 자동 전송](ds-gmail.html)
     - [R 함수 작성](ds-writing-fn.html)
