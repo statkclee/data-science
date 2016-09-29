@@ -45,6 +45,7 @@ title: 데이터 과학
         - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
+    - [윈도우 10 - 우분투 배쉬](ds-windows-bash.html)
 1. [데이터 정제](data-handling.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
