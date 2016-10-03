@@ -149,12 +149,34 @@ That is why it is called the present.
 
 ##------ [D:/ds/chatbot] Tue Aug 09 10:36:47 2016 ------##
 $ </code></pre>
+<h3 id="r-엔진-업그레이드-r-upgrade">3. R 엔진 업그레이드 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h3>
+<p>R 버젼이 3.2.3(2015-12-10) 에서 3.2.4(2016-03-10)로 4개월만에 업그레이드 되었다.</p>
+<p><code>sessionInfo()</code> 명령어를 통해서 현재 버전을 확인한다.</p>
+<p><code>{r r-sessionInfo, eval=FALSE} sessionInfo()</code></p>
+<p>``` {r r-sessionInfo-output, eval=FALSE} R version 3.2.3 (2015-12-10) Platform: x86_64-w64-mingw32/x64 (64-bit) Running under: Windows &gt;= 8 x64 (build 9200)</p>
+<p>locale: [1] LC_COLLATE=Korean_Korea.949 LC_CTYPE=Korean_Korea.949<br />
+[3] LC_MONETARY=Korean_Korea.949 LC_NUMERIC=C<br />
+[5] LC_TIME=Korean_Korea.949</p>
+<p>attached base packages: [1] stats graphics grDevices utils datasets [6] methods base</p>
+<p>loaded via a namespace (and not attached): [1] tools_3.2.3 ```</p>
+<h4 id="r-엔진-업그레이드">3.1. R 엔진 업그레이드</h4>
+<p><a href="http://cran.r-project.org/web/packages/installr/">installr</a> 팩키지를 사용해서 간단히 R 을 최신 버젼으로 업그레이드 한다.</p>
+<p><code>{r r-engine-update, eval=FALSE} install.packages(&quot;installr&quot;) setInternet2(TRUE) installr::updateR()</code></p>
+<p><a href="http://cran.r-project.org/web/packages/installr/">installr</a> 팩키지가 설치되어 있지 않다면, 설치를 하고, 인터넷 연결을 <code>setInternet2(TRUE)</code> 설정하고 나서 <code>installr::updateR()</code> 갱신 명령어를 실행한다. 이후 자세한 사항은 <a href="http://www.r-statistics.com/2015/06/a-step-by-step-screenshots-tutorial-for-upgrading-r-on-windows/">A step by step (screenshots) tutorial for upgrading R on Windows</a> 사이트를 참조한다. 계속 마우스로 누르면 설치가 완료된다.</p>
+<p><img src="fig/library-r-upgrade.png" alt="R 업그레이드" width="50%" /></p>
+<p>``` {r r-engine-update-result, eval=FALSE} R version 3.2.4 (2016-03-10) Platform: x86_64-w64-mingw32/x64 (64-bit) Running under: Windows &gt;= 8 x64 (build 9200)</p>
+<p>locale: [1] LC_COLLATE=Korean_Korea.949 LC_CTYPE=Korean_Korea.949<br />
+[3] LC_MONETARY=Korean_Korea.949 LC_NUMERIC=C<br />
+[5] LC_TIME=Korean_Korea.949</p>
+<p>attached base packages: [1] stats graphics grDevices utils datasets methods base</p>
+<p>loaded via a namespace (and not attached): [1] tools_3.2.4 ```</p>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="http://www.statmethods.net/interface/customizing.html">Quick-R - Customizing Startup</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="http://stackoverflow.com/questions/13735745/locate-the-rprofile-file-generating-default-options/13736073#13736073">locate the “.Rprofile” file generating default options</a><a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p><a href="https://www.r-bloggers.com/fun-with-rprofile-and-customizing-r-startup/">Fun with .Rprofile and customizing R startup</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://www.r-bloggers.com/r-3-2-4-is-released/">R 3.2.4 is released</a><a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
         </div>

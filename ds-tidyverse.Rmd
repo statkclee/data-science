@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: `tidyverse` 데이터 과학 기본체계
+subtitle: tidyverse 데이터 과학 기본체계
 output:
   html_document: 
     keep_md: yes

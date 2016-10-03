@@ -1,13 +1,24 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 데이터 정제
+subtitle: tidyverse 데이터 과학 기본체계
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
+
+
+
 > ## 학습 목표 {.objectives}
 >
-> * 왜 데이터 정제인가?
-> * 데이터 정제 문제에 대한 R진영 해결책을 이해한다.
+> * `tidyverse`와 `messyverse`를 이해한다.
 > * 사람과 컴퓨터를 작업 최적화를 위한 접점을 찾아본다.
+> * 데이터 과학 문제에 대한 R 진영 `tidyverse` 해결책을 이해한다.
+
+### 1. 데이터 과학 문제정의
 
 데이터 정제(Cleansing)는 원데이터를 시각화하거나 모형을 개발을 위해 다음 단계를 준비하는 사전 준비과정이다. 
 하지만, 데이터 정제는 과거 많이 사용된 개념으로 정형화된 데이터베이스 혹은 통계 팩키지에 데이터를 사전 준비하는 과정을 
@@ -23,8 +34,6 @@ subtitle: 데이터 정제
 문제를 기회를 바꿀 수 있다.
 
 <img src="fig/data-science-rationale.png" alt="전통적 문제정의" width="50%" />
-
-### 1. 기본문제 정의틀
 
 데이터 과학은 컴퓨터와 사람이 데이터 프로그래밍 언어 R로 소통하는 과정으로 이해할 수 있다.
 사람이 인지하여 생각한 것을 코딩을 통해 기술하고 이를 컴퓨터에 넣어주면, 컴퓨터가 이를 실행하는 과정이다.
@@ -61,7 +70,8 @@ subtitle: 데이터 정제
 
 #### 2.2. `%>%` 파이프라인 연산자
 
-`dplyr`은 파이프 연산자 [magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)을 가져와서 사용한다. `%>%`은 "then"으로, 혹은 "파이프"" 발음한다.
+`dplyr`은 파이프 연산자 [magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)을 가져와서 사용한다. 
+`%>%`은 "then"으로, 혹은 "파이프" 발음한다.
 
 파이프-필터 스타일을 사용해야 되는 이유는 다음 전통적 R 코드와 파이프를 사용한 코드를 
 살펴보게 되면 확연히 이해할 수 있다. 즉, 괄호를 많이 사용한 R코드는 인지적으로 
@@ -126,6 +136,56 @@ FROM (
 ) AS "_W1"
 WHERE "n" > 10.0
 ~~~
+
+
+### 3. `tidyverse` 선언 [^tidyverse-menifesto]
+
+`tidyverse`는 Hadley Wickham의 오랜 작업을 나름대로의 방식으로 집대성하여 데이터과학을 유사한 방식으로 
+접근하고자 하는 데이터과학자 및 실무자에게 도움을 주고자 한다. 어떻게 보면 오픈소스 운동의 커다란 동력이 될 수도 있다.
+
+[^tidyverse-menifesto]: [The tidy tools manifesto](https://cran.r-project.org/web/packages/tidyverse/)
+
+R 언어 기반의 만개가 넘는 팩키지가 개발되어 활용되고 있으나, 각자의 설계원칙에 맞춰 제각기 개발되고 손을 바꿔 다른 사람들이 
+오랜동안 이어 받아 진행되어 초기 세워진 설계원칙이 많이 무너진 것도 사실이다. 이에 `tidyverse`는 데이터과학에 
+그동안 R 팩키지를 개발하면서 축척된 경험과 노하우를 기반으로 R 설계 원칙을 정립하고자 한다.
+
+엉망진창인 R 도구상자(`messyverse`)와 비교하여 깔끔한 R 도구상자(`tidyverse`)는 깔끔한(tidy) API에 다음과 같은 4가지 원칙을 제시한다.
+
+- 기존 자료구조를 재사용: Reuse existing data structures.
+- 파이프 연산자로 간단한 함수를 조합: Compose simple functions with the pipe.
+- 함수형 프로그래밍을 적극 사용: Embrace functional programming.
+- 기계가 아닌 인간을 위한 설계: Design for humans.
+
+가능하면 기존 자료구조를 재사용한다. `ggplot2`, `dplyr`, `tidyr`을 포함한 대다수 R 팩키지는 칼럼에 변수, 행에 관측점을 갖는 
+직사각형 형태 데이터셋을 가정한다.  그리고, 일부 팩키지는 특정한 변수 자료형에 집중한다. `stringr`은 문자열, `lubridate`는 날짜/시간,
+`forcats`는 요인 자료형에 집중한다.
+
+파이프 연산자로 간단한 함수를 조합하여 시스템 전체의 힘을 극대화한다. 복잡한 문제를 해결하는 강력한 전략은 단순한 많은 조각으로 나누고 
+이를 조합하는 것이다. 단, 각 조각은 격리되어 쉽게 파악되고, 다른 조각과 조합할 수 있는 표준이 성립되어야 된다.
+R에 파이프 연산자를 사용하여 본 전략이 구현되어 있다. `%>%` 연산자는 많은 팩키지에 두루 걸쳐 동작되는 일반적인 결합 방식으로 이를 위해 함수를 
+작성할 때 다음 원칙을 갖고 작성한다.
+
+- 함수를 가능하면 단순하게 작성한다. 일반적으로 각 함수는 한가지 작업을 매우 잘해야 되고, 한 문장으로 함수 존재목적을 기술할 수 있어야 된다.
+- 변형(transformation)과 부작용(side-effect)을 뒤섞지 마라. 함수가 객체를 반환하거나, 부작용을 일으키거나 둘 중 하나만 동작하게 만든다.
+- 함수명은 동사가 되어야 한다. 하지만, 예외로 대다수 함수가 동일한 동사를 사용한다. 예를 들어 `modify`, `add`, `compute` 등을 들 수 있다.
+이런 경우 반복되는 동사가 중복되지 않도록 명사에 집중한다. `ggplot2`가 좋은 예가 되는데 기존 플롯에 좌표, 점, 범례등을 거의 모든 함수가 추가하기 때문이다. 
+
+R은 함수형 언어라 객체지향언어나 다른 언어 패러다임과 싸우려고 하지 말고 받아들여라. 이것이 의미하는 바는 다음과 같다.
+
+- 상태불변 객체: 작성된 코드에 대한 추론이 쉬움.
+- S3, S4 에서 제공하는 제네릭 함수: 상태변형 가능한 상태가 필요하다면, 파이프 내부에서 구현. 
+- for 루프를 추상화한 도구: `apply` 함수 가족과 `purrr` 맵함수
+
+데이터과학에서 병목점으로 문제가 발생되는 곳은 공통적으로 컴퓨터 실행시간(computing time)이 아니라 사람의 생각(thinking time)의 시간이다.
+따라서, 함수명을 작성할 때 생각이 잘 연상되는 이름을 작명하는데 시간을 적절히 안분하고, 명시적이고 긴 명칭을 변수명, 함수명, 
+객체명에 사용하고, 짧은 명칭은 가장 중요한 이름으로 활용한다. RStudio 소스 편집기의 자동완성기능을 사용하는 경우 접두어가 접미어보다 중요하고,
+`stringr`, `xml2`, `rvest` 팩키지를 살펴보면 접두어에 일관된 명칭을 부여한 장점을 알수 있다.
+
+> ### [Hal Abelson](https://en.wikipedia.org/wiki/Hal_Abelson) 명언 {.callout}
+> 
+> - No matter how complex and polished the individual operations are, 
+> it is often the quality of the glue that most directly determines the power of the system.
+> - Programs must be written for people to read, and only incidentally for machines to execute.  
 
 
 
