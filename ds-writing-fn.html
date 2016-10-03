@@ -4,52 +4,157 @@
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
     <title>Software Carpentry: 데이터 과학</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-17', 'auto');
-      ga('send', 'pageview');
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <h1 class="title">데이터 과학</h1>
-          <h2 class="subtitle">R 함수 작성</h2>
+          <h2 class="subtitle">R 프로그래밍 모범사례와 R 함수와 자료구조</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>R 함수를 작성한다.</li>
+<li>R 프로그래밍 모범사례를 살펴본다.</li>
+<li>R 함수 작성방법을 이해한다.</li>
+<li>R 언어 자료구조를 이해한다.</li>
 </ul>
 </div>
 </section>
-<h3 id="함수-작성">1. 함수 작성</h3>
+<h3 id="r-프로그래밍-모범-사례">1. R 프로그래밍 모범 사례</h3>
+<p><a href="http://datascience.la/martin-maechler-invited-talk-at-user-2014-good-practices-in-r-programming/">Martin Maechler</a> useR 2014 컨퍼런스에서 “Good Practice in R Programming” 주제로 발표를 했습니다.</p>
+<ul>
+<li><strong>Rule 1.</strong> Work with source files !
+<ul>
+<li>원본 소스 파일(R Script) 작업하고 이를 통해 객체나 바이너리 산출물 생성로 일원화<br />
+</li>
+<li>Emacs + ESS(Emacs Speacks Statistics) 혹은 Rstudio 같은 IDE(Integrated Development Environment) 사용</li>
+</ul></li>
+<li><strong>Rule 2.</strong> Keep R source well-readable and maintainable
+<ul>
+<li>가독성이 뛰어난 소스 코드는 나중에 유지 보수하기 좋다.</li>
+<li>들여쓰기(identation), 공백, 70~80 칼럼, 주석처리(하나(<code>#</code>)는 코드 끝에, 두개(<code>##</code>)는 일반 주석, 세개(<code>###</code>)는 코드 블록에 사용)</li>
+<li>Sweave 혹은 knitr을 사용한다.</li>
+<li>naming convention을 따른다.</li>
+</ul></li>
+<li><strong>Rule 3.</strong> Do read the documentation
+<ul>
+<li>R 프로그래밍 책을 읽는다.화 V&amp;R “S Programming”</li>
+<li>R 매뉴얼 참조 : An introduction to R, Writing R extentions</li>
+<li>R 패키지 Vignettes</li>
+<li>help.search()</li>
+</ul></li>
+<li><strong>Rule 4.</strong> Do learn from the masters
+<ul>
+<li>John Chambers, Bill Venables, Bill Dunlap, Luke Tierney, Brian Riply, R-core team, Dirk Eddelbuettel, Hadley Wickham</li>
+<li>다른 사람이 작성한 코드를 읽고 배운다. 일종의 Learning by examples.</li>
+<li>부활절 달걀(Easter egg)를 찾아라.</li>
+<li><a href="http://www.r-project.org/doc/Rnews/Rnews_2006-4.pdf">Uwe Ligges, “R Help Desk”, The Newsletter of the R Project Volume 6/4, October 2006</a></li>
+</ul></li>
+</ul>
+<pre class="input"><code>&gt; anybody ? there ???
++ ?
++ &#39;&#39;</code></pre>
+<pre class="output"><code>Contacting Delphi...the oracle is unavailable.
+We apologize for any inconvenience.</code></pre>
+<ul>
+<li><strong>Rule 5.</strong> Do not Copy and Paste!
+<ul>
+<li>이유는 유지보수성이 좋지 않고 복사하면 확장성, 이식성이 떨어진다.</li>
+<li>함수(function)을 작성하고, 큰 함수는 잘게 쪼개 작은 함수로 나누어 작성하고, 함수를 사용한다.</li>
+</ul></li>
+</ul>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h4 id="john-chambers"><span class="glyphicon glyphicon-pushpin"></span>John Chambers</h4>
+</div>
+<div class="panel-body">
+<p>Everything that <strong>exists</strong> is an object;<br />
+Everything that <strong>happens</strong> is a function call.</p>
+</div>
+</aside>
+<ul>
+<li><strong>Rule 6.</strong> Strive for clarity and simplicity
+<ul>
+<li>자기설명가능한 변수명 사용하고, 간결하게 주석을 섞어 작성</li>
+<li>모듈방식 작성</li>
+</ul></li>
+</ul>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h4 id="venables-and-ripley"><span class="glyphicon glyphicon-pushpin"></span>Venables and Ripley</h4>
+</div>
+<div class="panel-body">
+<p>‘’Refine and polish your code in the same way you would polish your English prose’’</p>
+</div>
+</aside>
+<ul>
+<li><strong>Rule 7.</strong> Test your code !
+<ul>
+<li>단위 테스트, 모듈</li>
+<li><code>package.skeleteon()</code>을 통한 패키지 작성: auto-testing, specific testing, documentation.</li>
+<li>R 패키지 <code>tools</code>의 <code>R CMD check</code> 사용, Luke Tierney <code>codetools</code> 사용</li>
+<li>단위 테스트 패키지 <code>RUnit</code>, <code>testthat</code> 사용</li>
+<li>테스트 후에 최적화</li>
+<li>최적화에 두가지 원칙:
+<ul>
+<li>Don’t do it unless you need it.</li>
+<li>Measure, don’t guess, about the speed</li>
+</ul></li>
+<li><code>Rprof()</code>, <code>unix.time()</code>, <code>gc()</code>, R 패키지 <code>rbenchmark</code>, <code>microbenchmark</code>, <code>pdbPROF</code>.</li>
+</ul></li>
+</ul>
+<p><strong>새로 추가된 안내지침</strong></p>
+<ul>
+<li><strong>Rule 8.</strong> Maintain R code in <strong>Packages</strong> (extension of “Test!”)</li>
+<li><strong>Rule 9.</strong> Source code management, Git/GitHub, HG</li>
+<li><strong>Rule 10.</strong> Rscript or R CMD BATCH *.R should “always” work ! -&gt; Reproducible Data Analysis and Research</li>
+</ul>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h4 id="r-코딩-규칙"><span class="glyphicon glyphicon-pushpin"></span>R 코딩 규칙</h4>
+</div>
+<div class="panel-body">
+<p>R 코드를 가독성이 좋으며 이해하기 쉽게 일관되게 작성하는 것이 중요하다. 코딩 규칙에 대한 자세한 사항은 <a href="https://journal.r-project.org/archive/2012-2/RJournal_2012-2_Baaaath.pdf">The State of &gt; Naming Conventions in R</a> 참조한다.</p>
+<ul>
+<li><a href="http://wiki.fhcrc.org/bioc/Coding_Standards">Bioconductor’s coding standards</a></li>
+<li><a href="http://stat405.had.co.nz/r-style.html">Hadley Wickham’s style guide</a></li>
+<li><a href="http://google-styleguide.googlecode.com/svn/trunk/google-r-style.html">Google’s R style guide</a></li>
+<li><a href="http://csgillespie.wordpress.com/2010/11/23/r-style-guide/">Colin Gillespie’s R style guide</a></li>
+</ul>
+</div>
+</aside>
+<h3 id="함수-작성">2. 함수 작성</h3>
 <p>함수를 정의할 때 함수명(<code>my_fun</code>)을 먼저 적고 대입 연산자(<code>&lt;-</code>)를 작성하고 예약어 <code>function</code> 을 적어 나서 인자(<code>arg1</code>, <code>arg2</code>)를 정의한다. 그리고 함수 몸통을 적성한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_fun &lt;-<span class="st"> </span>function(arg1, arg2) {
     함수 몸통부분
@@ -63,7 +168,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add &lt;-<span class="st"> </span>function(x, <span class="dt">y =</span> <span class="dv">1</span>) {
     x +<span class="st"> </span>y
 }</code></pre></div>
-<h4 id="함수-해부">1.1. 함수 해부</h4>
+<h4 id="함수-해부">2.1. 함수 해부</h4>
 <p><code>add</code> 상기 함수를 <code>formals</code>, <code>body</code>, <code>environment</code> 명령어를 통해 해부할 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">formals</span>(add)</code></pre></div>
 <pre class="output"><code>$x
@@ -80,7 +185,7 @@ $y
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">environment</span>(add)</code></pre></div>
 <pre class="output"><code>&lt;environment: R_GlobalEnv&gt;
 </code></pre>
-<h4 id="함수-반환값">1.2. 함수 반환값</h4>
+<h4 id="함수-반환값">2.2. 함수 반환값</h4>
 <p>R에서 명시적으로 <code>return</code> 예약어를 사용해서 반환하기도 하지만, <code>return</code> 예약어로 명시하지 않는 경우 함수몸통부문 마지막 표현식이 평가되어 반환된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span>function(x) {
     if (x &lt;<span class="st"> </span><span class="dv">0</span>) {
@@ -96,7 +201,7 @@ $y
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">f</span>(<span class="dv">15</span>)</code></pre></div>
 <pre class="output"><code>[1] 15
 </code></pre>
-<h4 id="함수는-객체다.">1.3. 함수는 객체다.</h4>
+<h4 id="함수는-객체다.">2.3. 함수는 객체다.</h4>
 <p>함수는 일반 R 객체처럼 다룰 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mean2 &lt;-<span class="st"> </span>mean
 
@@ -110,7 +215,7 @@ $y
 <pre class="output"><code>[1] 3
 </code></pre>
 <p><code>mean</code> 함수로 <code>mean2</code> 객체를 생성시킬 수 있고, 인자를 받아 평균을 계산하고, 이름없는 함수에 인자를 넣어 계산도 가능하다.</p>
-<h3 id="함수-유효-범위scope">2. 함수 유효 범위(Scope)</h3>
+<h3 id="함수-유효-범위scope">3. 함수 유효 범위(Scope)</h3>
 <p>함수 유효범위(Scoping)는 명칭으로 값을 R이 찾는 방법으로 함수 내부에 명칭이 정의하지 않는 경우 한단계 상위 수준에서 R이 자동으로 검색한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">2</span>
 
@@ -174,9 +279,9 @@ m &lt;-<span class="st"> </span>function() {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a</code></pre></div>
 <pre class="output"><code>Error in eval(expr, envir, enclos): 객체 &#39;a&#39;를 찾을 수 없습니다
 </code></pre>
-<h3 id="자료구조">3. 자료구조</h3>
+<h3 id="자료구조">4. 자료구조</h3>
 <p>6가지 <strong>원자 벡터</strong> 와 리스트가 자료구조로 R에 존재한다. 원자벡터는 <code>logical</code>, <code>integer</code>, <code>double</code>, <code>character</code>, <code>complex</code>, <code>raw</code> 가 있고, 자료가 모두 동일해야 한다. 반면에 리스트는 이질적인 원자벡터를 포함할 수 있다.</p>
-<h4 id="결측값">3.1. 결측값</h4>
+<h4 id="결측값">4.1. 결측값</h4>
 <ul>
 <li><code>NULL</code>: 벡터가 존재하지 않는 경우를 표현하는데 사용된다.</li>
 <li><code>NA</code>: 벡터에 빠진 값을 표현하는데 사용된다.</li>
@@ -202,7 +307,7 @@ x</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">is.na</span>(x)</code></pre></div>
 <pre class="output"><code>[1] FALSE FALSE FALSE  TRUE FALSE
 </code></pre>
-<h4 id="na는-전염된다.">3.2. <code>NA</code>는 전염된다.</h4>
+<h4 id="na는-전염된다.">4.2. <code>NA</code>는 전염된다.</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span> +<span class="st"> </span><span class="dv">10</span></code></pre></div>
 <pre class="output"><code>[1] NA
 </code></pre>
@@ -218,7 +323,7 @@ x</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">NA</span> ==<span class="st"> </span><span class="ot">NA</span></code></pre></div>
 <pre class="output"><code>[1] NA
 </code></pre>
-<h4 id="리스트">3.3. 리스트</h4>
+<h4 id="리스트">4.3. 리스트</h4>
 <p>리스트는 다른 형태 객체를 담을 수 있다는 점에서 유용한데, 복잡하게 반환되는 객체는 거의 리스트다. 예를 들어 회귀분석, <code>lm()</code> 에서 반환되는 객체를 살펴보면 쉽게 이해된다.</p>
 <p><code>list()</code> 함수로 리스트를 생성하고, <code>[</code>, <code>[[</code>, <code>$</code> 을 통해 부분집합을 뽑아낸다.</p>
 <ul>
@@ -247,16 +352,16 @@ x</code></pre></div>
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
