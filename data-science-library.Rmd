@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: `tidyverse` 기반 R 팩키지와 라이브러리
+subtitle: tidyverse 기반 R 팩키지와 라이브러리
 output:
   html_document: 
     keep_md: yes
@@ -17,20 +17,31 @@ source("tools/chunk-options.R")
 
 > ## 학습 목표 {.objectives}
 >
-> * `tidyverse`와 `messyverse`를 구분한다.
 > * R 팩키지와 라이브러리를 이해한다.
-> * R을 최신 버젼으로 업그레이드 한다.
 
 
-### 1. R 팩키지와 라이브러리
+### 1. R 팩키지(package) 설치
 
-데이터 과학 모형개발과 자료분석에서 R 팩키지 도구상자를 잘 갖추는 것도 중요한 작업이다.
-다행히도, 최근에 [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/index.html) 팩키지가 새로 나와 많은 부분 체계화되었다.
-사실 오픈소스 프로젝트가 성공되기 위해서 극복해야 되는 중요한 일중의 하나가 너무 많은 소프트웨어 덩어리를 정리하여
-핵심적인 코드를 선별하여 다양성을 갖추면서도 성능과 신뢰성을 확보하는 것이 중요하다.
+R의 강점은 다양한 패키지를 지원하므로 새로이 뭔가 필요한 것을 자체 개발하는 것보다 우선 다른 사람들이 해논 것을 참조하고 
+이를 확대하여 가는 것을 권장한다. R 패키지를 설치하는 방법에 대해서 알아보자. 
+*RStudio* 상에서 R 패키지를 설치하는 방법은 메뉴 상단의 `Tools > Install Packages…` 를 클릭하면 
+`Install Packages` 팝업 메뉴가 나오고 원하는 패키지를 설치하면 된다.
 
-<img src="fig/ds-tidyverse.png" alt="깜끔한 세상" width="77%" />
+`rpart`는 의사결정나무모델 (Decision Tree) 을 구현할 때 자주 사용되는 패키지로 별도로 개발할 필요없이 
+기존의 개발 검증된 `rpart` 팩키지를 사용하는 것도 좋겠다. 
+GUI를 통해서 일일이 설치하는 것도 좋지만, `install.packages`를 통한 명령어를 통해서도 설치가 동일하게 가능하다.
 
+``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+> install.packages("rpart")
+
+trying URL 'http://cran.rstudio.com/bin/windows/contrib/3.1/rpart_4.1-8.zip'
+Content type 'application/zip' length 917885 bytes (896 Kb)
+opened URL downloaded 896 Kb
+
+package ‘rpart’ successfully unpacked and MD5 sums checked
+The downloaded binary packages are in
+  C:\Users\Administrator\AppData\Local\Temp\Rtmp4Ce7l1\downloaded_packages
+```
 
 
 ### 2. 라이브러리 설정  

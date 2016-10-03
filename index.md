@@ -12,9 +12,8 @@ title: 데이터 과학
 ### R과 RStudio 툴체인 데이터 과학 
 
 1. **[R 언어](ds-r-lang.html)**
-    - [두언어 문제](two-language-problem.html) 
-    - [R 환경설정](ds-r-environment.html) 
-    - [R 프로그래밍 모범사례와 R 함수와 자료구조](ds-writing-fn.html)
+    - [R 환경설정과 업데이트](ds-r-environment.html) 
+    - [R 함수와 자료구조, 그리고 R 프로그래밍 모범사례](ds-writing-fn.html)
     - [R로 전자우편 자동 전송](ds-gmail.html)    
 1. [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
     - [위기의 스프레드쉬트](ds-why-not-excel.html)
@@ -28,7 +27,6 @@ title: 데이터 과학
         - [데이터테이블](data-handling-datatable.html)
         - [정렬(Sort)](data-handling-sorting-ex.html) 
         - [SQL](data-handling-sql.html)    
-        - [R 이전 교육자료(2015)](data-handling-old.html)
     - [R 함수 작성](ds-fp-write-fn.html)
     - [R 함수형 프로그래밍](ds-fp-purrr.html)
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
@@ -50,8 +48,9 @@ title: 데이터 과학
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
-    - [데이터 변환(dplyr)](data-handling-dplyr.html)
+    - [데이터 작업(dplyr)](data-handling-dplyr.html)
     - [데이터 내보내기](data-handling-export.html)
+1. [R 팩키지](ds-r-pkgs.html)    
 1. [시각화](viz.html)
     * [R 과 색상](viz-r-colors.html)
     * [ggplot2 색상 제어](viz-ggplot2-control.html)

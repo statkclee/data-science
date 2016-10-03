@@ -142,6 +142,14 @@ WHERE "n" > 10.0
 
 ### 3. `tidyverse` 선언 [^tidyverse-menifesto]
 
+데이터 과학 모형개발과 자료분석에서 R 팩키지 도구상자를 잘 갖추는 것도 중요한 작업이다.
+다행히도, 최근에 [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/index.html) 팩키지가 새로 나와 많은 부분 체계화되었다.
+사실 오픈소스 프로젝트가 성공되기 위해서 극복해야 되는 중요한 일중의 하나가 너무 많은 소프트웨어 덩어리를 정리하여
+핵심적인 코드를 선별하여 다양성을 갖추면서도 성능과 신뢰성을 확보하는 것이 중요하다.
+
+<img src="fig/ds-tidyverse.png" alt="깜끔한 세상" width="97%" />
+
+
 `tidyverse`는 Hadley Wickham의 오랜 작업을 나름대로의 방식으로 집대성하여 데이터과학을 유사한 방식으로 
 접근하고자 하는 데이터과학자 및 실무자에게 도움을 주고자 한다. 어떻게 보면 오픈소스 운동의 커다란 동력이 될 수도 있다.
 

@@ -504,15 +504,38 @@ semi_join(songs, artists, by = "name")
 anti_join(songs, artists, by = "name")
 ```
 
-### `data.table`과 `dplyr` 비교 [^dt-dplyr-comparison]
+> ### `data.table`과 `dplyr` 비교 [^dt-dplyr-comparison]
+> 
+> `data.table`과 `dplyr`은 데이터 변환작업을 수행하지만, 다음 관점에서 살펴볼 필요가 있다.
+> 
+> 1. 속도
+> 1. 메모리 사용량
+> 1. 구문
+> 1. 기능 
 
-`data.table`과 `dplyr`은 데이터 변환작업을 수행하지만, 다음 관점에서 살펴볼 필요가 있다.
+[^dt-dplyr-comparison]: [data.table vs dplyr: can one do something well the other cannot or does poorly?](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly)
 
-1. 속도
-1. 메모리 사용량
-1. 구문
-1. 기능 
 
-### 참고자료
+### 4. `apply` 함수
 
-[^dt-dplyr-comparison]: [data.table vs dplyr: can one do something well the other can't or does poorly?](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly)
+자료는 기본적으로 *벡터(Vector)*를 기본으로 한다. 
+하지만 벡터로 표현될 수 있는 정보량은 한정되어 있으며 이를 하나의 자료 형태로 구조화한 것을 *데이터프레임(dataframe)*으로 볼 수 있다. 
+따라서, 자료분석을 위한 기본 자료구조가 데이터프레임이 된다.
+
+R을 사용하는 방법 중 하나는 반복을 통해 한번에 하나씩 연산을 수행하기 보다 단 한번 *호출(call)*을 통해 전체 벡터 연산을 수행한다. 
+또한 `apply` 함수를 사용해서 행, 열, 리스트에 대해 동일 연산을 수행한다. 
+또한 `reduce`를 사용해서 함수형 프로그래밍도 확장해서 수행한다.
+
+ - `lapply(리스트, 함수)` : 리스트(list) 자료형에 `apply` 함수를 적용하여 데이터를 처리한다.
+ - `sapply(리스트, 함수)` : `lappy` 함수와 동일하나 리스트 대신에 벡터를 반환한다.
+ - `mapply(함수,리스트1,리스트2,...)` : 병렬로 다수 리스트에 대해서 `apply` 함수로 데이터를 처리한다.
+ - `tapply(x,요인변수,함수)` : 요인변수(factor)에 맞춰 `apply` 함수로 데이터를 처리한다. 
+ - `vapply(리스트,함수,...)` : `lappy`의 고속처리 버젼.
+
+가공되지 않은 원자료(raw data)에서 자료를 자유자재로 다룰 수 있도록 수십년동안 수많은 통계/공학자들이 아낌없이 시간을 기부해 주었기 때문에 
+과거에는 전문가들만 할 수 있었던 고도의 어려운 작업도 정확하고 수월하게 수행할 수 있다. 
+
+그 외에도 다양한 팩키지(package)를 파이썬과 마찬가지로 제공하여 R을 선택하는 순간 자료 분석, 모형, 제품화에 대해 강력한 무기를 손에 넣게 된다. 
+
+특히 `SQL`을 통해서 **데이터 조작(Data Manipulation)**에 대한 개념 잡고 `쉘(shell)`을 통한 작업 자동화 개념을 익히고, 
+패키지를 사용하면 추구하는 바를 신속하고 정확하게 달성할 수 있다. 
