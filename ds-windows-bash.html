@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">윈도우 10 - 우분투 배쉬</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>한글 윈도우 10에서 데이터 과학을 위한 개발자 환경을 설정한다.</li>
+<li>윈도우 10 기념 업데이터에서 지원되기 시작한 우분투 배쉬를 즐겨본다.</li>
+</ul>
+</div>
+</section>
+<h3 id="윈도우-10-설치-환경-점검">1. 윈도우 10 설치 환경 점검</h3>
+<p>우분투 배쉬를 윈도우 10에 설치하기 위한 최소 환경은 다음과 같습니다.</p>
+<ul>
+<li>Windows 10 Anniversary Edition – Build 14316, (2016/4/6 이후, Insider Fast Ring 버전으로 설치 가능)</li>
+<li>64 비트 운영체제 (설정 → 시스템 → 정보, Settings → System → About)</li>
+</ul>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="빌드번호가-14316-보다-낮은-경우"><span class="glyphicon glyphicon-pushpin"></span>빌드번호가 14316 보다 낮은 경우</h3>
+</div>
+<div class="panel-body">
+<p>아래 두가지 방법 중 잘되는 것으로 진행: 윈도우즈 업데이트 기능 혹은 윈도우 10 기념 업데이터 버젼을 다운로드하여 설치</p>
+<ul>
+<li>업데이트 정보를 확인하신 후 고급 설정 메뉴에서 Fast Track 여부 확인 (설정 → 업데이트 및 복구 → 고급옵션 → …, Update and Recovery → Advanced option → Fast Track로 설정)</li>
+<li><a href="https://support.microsoft.com/en-us/help/12387/windows-10-update-history">About the Windows 10 Anniversary Update, “Get the Anniversay Update now”</a> 다운로드하여 설치</li>
+</ul>
+</div>
+</aside>
+<p><img src="fig/ds-windows-bash-check.png" alt="설치환경 사전 점검" width="57%" /></p>
+<h3 id="윈도우-10-환경-우분투-배쉬-설치-windows-bash-install">2. 윈도우 10 환경 우분투 배쉬 설치 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<h4 id="개발자-모드-설정">2.1. 개발자 모드 설정</h4>
+<p>설정 → 업데이트 및 복구 → 개발자용 (Settings → Update &amp; Security → For developers) 으로 들어가서 <strong>개발자 모드(Developer Mode)</strong>를 활성화 시킨다. 64비트 운영체제가 아니거나 빌드번호가 14316이 아닌 경우 개발자 모드가 활성화 되지 않는다.</p>
+<p>개발자 모드를 선택하게 되면 부팅을 새로해야 한다.</p>
+<p><img src="fig/ds-windows-bash-developer.png" alt="개발자 모드 활성화" width="57%" /></p>
+<h4 id="windows-subsystem-for-linux-기능-활성화">2.2. Windows Subsystem for Linux 기능 활성화</h4>
+<p>개발자 모드로 부팅을 새로하게 되면 <code>Turn Windows features on or off</code>에서 <code>Windows Subsystem for Linux (beta)</code>을 선택할 수 있게 된다. 제어판 → 프로그램 → 프로그램 및 기능 → Windows 기능 켜기/끄기 를 선택한다.</p>
+<p>영어명으로 <code>Windows Subsystem for Linux (beta)</code>이 <code>Linux용 Windows 하위 시스템(베타)</code>로 명칭 바뀌면서 순서가 조정되었으니 활성화 시킬 때 주의해서 잘 찾도록 한다.</p>
+<p><img src="fig/ds-windows-bash-turnon.png" alt="리눅스용 윈도우 하위 시스템" width="57%" /></p>
+<h4 id="명령-프롬프트-창에서-bash-실행">2.3. 명령 프롬프트 창에서 bash 실행</h4>
+<p>이제 나름 어려운 설정은 모두 마무리 되었으니 명령 프롬프트 열고 bash를 실행한다. 사용자명과 더불어 비밀번호를 등록한다.</p>
+<p><img src="fig/ds-windows-bash-yes.png" alt="리눅스용 윈도우 하위 시스템" width="57%" /></p>
+<h3 id="바로가가-배쉬-아이콘-생성">3. 바로가가 배쉬 아이콘 생성</h3>
+<p><a href="http://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/">How to Install and Use the Linux Bash Shell on Windows 10</a> 같은 외국 블로그를 보면 2.3 과정까지 마치게 되면 시작 메뉴에 <code>Bash on Ubuntu on Windows</code> 아이콘이 생성되는데 한글 윈도우 10에서 나타나지 않아 구글링을 통해 이유를 알아낼 수 있었다.</p>
+<p>`C:&lt;사용자명&gt;Menu&gt; 아래 <strong>Windows.lnk의 Ubuntu에 대한 Bash</strong> 파일이 존재한다. 즉, 번역결과가 잘못 윈도우 시스템에 반영되면서 생겨난 오류로 판단된다. 이를 수정하는 방식은 파일명을 다음과 같이 수정하면 된다.</p>
+<p><strong>Windows.lnk의 Ubuntu에 대한 Bash</strong> → <strong>Bash 윈도우 우분투.lnk</strong></p>
+<p>확장자만 <code>.lnk</code>로 맞춰주면 시작화면에 정상적으로 아이콘이 등록된다.</p>
+<p><img src="fig/ds-windows-bash-icon.png" alt="윈도우 Bash 아이콘" width="97%" /></p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://blogs.msdn.microsoft.com/eva/?p=7633">윈도우 10에서 Bash shell 지원</a><a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
