@@ -45,7 +45,7 @@ title: 데이터 과학
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
     - [윈도우 10 - 우분투 배쉬](ds-windows-bash.html)
-1. [데이터 정제](data-handling.html)
+1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html) 
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
