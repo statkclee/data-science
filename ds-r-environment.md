@@ -1,8 +1,17 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: R 환경설정
+subtitle: R 환경설정과 업데이트
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
+
+
+
 > ## 학습 목표 {.objectives}
 >
 > * R 시작 환경을 이해한다.
@@ -148,11 +157,13 @@ R 버젼이 3.2.3(2015-12-10) 에서 3.2.4(2016-03-10)로 4개월만에 업그�
 
 `sessionInfo()` 명령어를 통해서 현재 버전을 확인한다.
 
-``` {r r-sessionInfo, eval=FALSE}
-sessionInfo()
-```
 
-``` {r r-sessionInfo-output, eval=FALSE}
+~~~{.r}
+sessionInfo()
+~~~
+
+
+~~~{.r}
 R version 3.2.3 (2015-12-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows >= 8 x64 (build 9200)
@@ -168,17 +179,68 @@ attached base packages:
 
 loaded via a namespace (and not attached):
 [1] tools_3.2.3
-```
+~~~
 
-#### 3.1. R 엔진 업그레이드
+#### 3.2. R 엔진 업그레이드 (리눅스)
+
+우분투 trusty R 최신버젼 설치에 대한 자세한 원문은 [CRAN 웹사이트](http://cran.r-project.org/bin/linux/ubuntu/)를 참조한다.
+
+1. `/etc/apt/sources.list` 파일 하단에 `deb http://cran.cnr.berkeley.edu/bin/linux/ubuntu/ trusty/` 내용을 추가한다.
+    - [CRAN 미러](http://cran.r-project.org/mirrors.html)에서 버클리 대학을 선정했다. 다른 곳을 지정해도 된다.
+2. 우분투 보안 APT 키를 가져온다. 
+
+~~~ {.input}
+root@docker:~# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+root@docker:~# gpg --hkp://keyserver keyserver.ubuntu.com:80 --recv-key E084DAB9
+~~~
+3. apt-key에 집어넣는다.
+
+~~~ {.input}
+root@docker:~# gpg -a --export E084DAB9 | sudo apt-key add 
+~~~
+
+4. 바이러리 R을 설치한다. 만약 소스코드에 R 팩키지를 컴파일한다면 `r-base-dev` 도 함께 설치한다.
+
+~~~ {.input}
+root@docker:~# sudo apt-get update && sudo apt-get install r-base
+root@docker:~# sudo apt-get install r-base-dev
+~~~
+
+5. 원문은 [스택오버플러어 웹사이트](http://stackoverflow.com/questions/10476713/how-to-upgrade-r-in-ubuntu)를 참조한다.
+
+~~~ {.output}
+root@docker:~# R
+
+R version 3.2.1 (2015-06-18) -- "World-Famous Astronaut"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R은 자유 소프트웨어이며, 어떠한 형태의 보증없이 배포됩니다.
+또한, 일정한 조건하에서 이것을 재배포 할 수 있습니다.
+배포와 관련된 상세한 내용은 'license()' 또는 'licence()'을 통하여 확인할 수 있습니다.
+
+R은 많은 기여자들이 참여하는 공동프로젝트입니다.
+'contributors()'라고 입력하시면 이에 대한 더 많은 정보를 확인하실 수 있습니다.
+그리고, R 또는 R 패키지들을 출판물에 인용하는 방법에 대해서는 'citation()'을 통해 확인하시길 부탁드립니다.
+
+'demo()'를 입력하신다면 몇가지 데모를 보실 수 있으며, 'help()'를 입력하시면 온라인 도움말을 이용하실 수 있습니다.
+또한, 'help.start()'의 입력을 통하여 HTML 브라우저에 의한 도움말을 사용하실수 있습니다
+R의 종료를 원하시면 'q()'을 입력해주세요.
+
+>
+~~~
+
+
+#### 3.2. R 엔진 업그레이드 (윈도우)
 
 [installr](http://cran.r-project.org/web/packages/installr/) 팩키지를 사용해서 간단히 R 을 최신 버젼으로 업그레이드 한다.
 
-``` {r r-engine-update, eval=FALSE}
+
+~~~{.r}
 install.packages("installr")
 setInternet2(TRUE)
 installr::updateR()
-```
+~~~
 
 [installr](http://cran.r-project.org/web/packages/installr/) 팩키지가 설치되어 있지 않다면,
 설치를 하고, 인터넷 연결을 `setInternet2(TRUE)` 설정하고 나서 `installr::updateR()` 갱신 명령어를 실행한다.
@@ -187,7 +249,8 @@ installr::updateR()
 <img src="fig/library-r-upgrade.png" alt="R 업그레이드" width="50%" />
 
 
-``` {r r-engine-update-result, eval=FALSE}
+
+~~~{.r}
 R version 3.2.4 (2016-03-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows >= 8 x64 (build 9200)
@@ -202,5 +265,21 @@ attached base packages:
 
 loaded via a namespace (and not attached):
 [1] tools_3.2.4
-```
+~~~
+
+### 3.3. 기본 R 쉘 명령어
+
+현재 작업공간을 확인하는 명령어는 `getwd()` 이며, 새로운 작업공간을 설정하는 명령어는 `setwd()` 이다. 
+현재 작업공간이 “C:\” 디렉토리인데 `setwd()` 명령어를 통해서 새로운 작업 공간으로 변경을 했다. 
+이것이 필요한 이유는 R은 기본적으로 자료처리 언어이기 때문에 데이터의 사전 위치를 파악하여 효율적으로 작업할 수 있다.
+
+
+~~~{.r}
+getwd()
+[1] "C:/"
+setwd("D:/01. Work/09. Data_Products")
+getwd()
+[1] "D:/01. Work/09. Data_Products"
+system("ls") # 윈도우에서는 shell("dir"), dir()
+~~~
 

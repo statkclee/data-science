@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: R 프로그래밍 모범사례와 R 함수와 자료구조
+subtitle: R 함수와 자료구조, 그리고 R 프로그래밍 모범사례
 output:
   html_document: 
     keep_md: yes

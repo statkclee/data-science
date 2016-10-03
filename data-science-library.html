@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: </title>
+    <title>Software Carpentry: 데이터 과학</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
@@ -37,23 +37,30 @@
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-          <h1 class="title"></h1>
-          
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">tidyverse 기반 R 팩키지와 라이브러리</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li><code>tidyverse</code>와 <code>messyverse</code>를 구분한다.</li>
 <li>R 팩키지와 라이브러리를 이해한다.</li>
-<li>R을 최신 버젼으로 업그레이드 한다.</li>
 </ul>
 </div>
 </section>
-<h3 id="r-팩키지와-라이브러리">1. R 팩키지와 라이브러리</h3>
-<p>데이터 과학 모형개발과 자료분석에서 R 팩키지 도구상자를 잘 갖추는 것도 중요한 작업이다. 다행히도, 최근에 <a href="https://cran.r-project.org/web/packages/tidyverse/index.html"><code>tidyverse</code></a> 팩키지가 새로 나와 많은 부분 체계화되었다. 사실 오픈소스 프로젝트가 성공되기 위해서 극복해야 되는 중요한 일중의 하나가 너무 많은 소프트웨어 덩어리를 정리하여 핵심적인 코드를 선별하여 다양성을 갖추면서도 성능과 신뢰성을 확보하는 것이 중요하다.</p>
-<p><img src="fig/ds-tidyverse.png" alt="깜끔한 세상" width="77%" /></p>
+<h3 id="r-팩키지package-설치">1. R 팩키지(package) 설치</h3>
+<p>R의 강점은 다양한 패키지를 지원하므로 새로이 뭔가 필요한 것을 자체 개발하는 것보다 우선 다른 사람들이 해논 것을 참조하고 이를 확대하여 가는 것을 권장한다. R 패키지를 설치하는 방법에 대해서 알아보자. <em>RStudio</em> 상에서 R 패키지를 설치하는 방법은 메뉴 상단의 <code>Tools &gt; Install Packages…</code> 를 클릭하면 <code>Install Packages</code> 팝업 메뉴가 나오고 원하는 패키지를 설치하면 된다.</p>
+<p><code>rpart</code>는 의사결정나무모델 (Decision Tree) 을 구현할 때 자주 사용되는 패키지로 별도로 개발할 필요없이 기존의 개발 검증된 <code>rpart</code> 팩키지를 사용하는 것도 좋겠다. GUI를 통해서 일일이 설치하는 것도 좋지만, <code>install.packages</code>를 통한 명령어를 통해서도 설치가 동일하게 가능하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span><span class="kw">install.packages</span>(<span class="st">&quot;rpart&quot;</span>)
+
+trying URL <span class="st">&#39;http://cran.rstudio.com/bin/windows/contrib/3.1/rpart_4.1-8.zip&#39;</span>
+Content type <span class="st">&#39;application/zip&#39;</span> length <span class="dv">917885</span> <span class="kw">bytes</span> (<span class="dv">896</span> Kb)
+opened URL downloaded <span class="dv">896</span> Kb
+
+package ‘rpart’ successfully unpacked and MD5 sums checked
+The downloaded binary packages are in
+  C:\Users\Administrator\AppData\Local\Temp\Rtmp4Ce7l1\downloaded_packages</code></pre></div>
 <h3 id="라이브러리-설정">2. 라이브러리 설정</h3>
 <p><code>.libPaths()</code> 명령어로 현재 팩키지가 설치된 디렉토리를 확인할 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">.libPaths</span>()</code></pre></div>

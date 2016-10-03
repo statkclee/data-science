@@ -2,18 +2,29 @@
 layout: page
 title: 데이터 과학
 subtitle: R 언어
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
+
+
+
+
 > ## 학습 목표 {.objectives}
 >
 > * R 언어의 역사를 이해한다.
-> * 
-
-R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 
-그래픽과 자료분석을 위해 언어 + 팩키지 + 환경이 하나로 묶여있다.
-특히, 컴퓨터 주기억장치 한계가 존재하지만, 오픈 소스로 모든 코드가 공개되어 있어 자유로이 이용이 가능하다. R은 John Chambers가 주축이 되어 벨연구소에서 
-개발된 유닉스와 역사를 함께하는 S을 Ross Ihaka 와 Robert Gentleman이 1996년 구현하여 대중에게 공개하였다. 
+> * 통계 팩키지와 다른 데이터과학 언어를 R 언어과 비교한다.
+> * 사용자와 개발자를 나누는 사회적 장벽을 이해하고, 두언어 문제를 살펴본다.
+> * R 언어 시작과 끝을 맛본다.
 
 ### 1. 통계팩키지 SAS/SPSS/Stata 주요 구성요소 비교 [^r4sas-spss]
+
+R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자료분석을 위해 언어 + 팩키지 + 환경이 하나로 묶여있다.
+특히, 컴퓨터 주기억장치 한계가 존재하지만, 오픈 소스로 모든 코드가 공개되어 있어 자유로이 이용이 가능하다. R은 John Chambers가 주축이 되어 벨연구소에서 
+개발된 유닉스와 역사를 함께하는 S을 Ross Ihaka 와 Robert Gentleman이 1996년 구현하여 대중에게 공개하였다. 
 
 [^r4sas-spss]: [Muenchen, Robert A. R for SAS and SPSS users. Springer Science & Business Media, 2011.](http://www.springer.com/us/book/9780387094182)
 
@@ -27,6 +38,204 @@ R은 현존하는 가장 강력한 통계 컴퓨팅 언어로,
 
 이와 비교하여 R은 5가지 구성요소가 **언어 + 팩키지 + 환경** 으로 구성된다는 점에서 차이가 크다.
 
+### 2. 두 언어 문제 [^Ousterhout-dichotomy]
 
-### 2. 
+<iframe width="320" height="200" src="https://www.youtube.com/embed/B9moDuSYzGo" frameborder="0" allowfullscreen></iframe>
+
+[^Ousterhout-dichotomy]: [Ousterhout dichotomy](https://en.wikipedia.org/wiki/Ousterhout%27s_dichotomy)
+
+[ODSC East 2016 - Stefan Karpinski - "Solving the Two Language Problem"](https://www.youtube.com/watch?v=B9moDuSYzGo)
+
+| 시스템 언어  | Ousterhout 이분법  | 스크립트 언어  |
+|-------------|-------------|-------------|
+|   정적       |     --      |     동적     |
+|   컴파일      |     --      |    인터프리터 |
+| 사용자정의 자료형|     --      |  표준 자료형 |
+|   빠른 속도   |     --      |   늦은 속도   |
+|   어려움       |     --      |   쉬움     |
+
+두 언어 문제로 인해 편리함을 위해 파이썬, R, Matlab을 사용하고 C/C++, 포트란 시스템 언어로 모든 힘든 작업을 수행한다.
+시스템 언어와 스크립트 언어의 두가지 문제점을 해결하기 위해서 두가지 다른 언어의 장점을 취하고 이를 보완하려는 노력이 지속적으로 경주되고 있다.
+
+<img src="fig/data-scientist-languages.png" alt="데이터 과학자 언어" width="50%">
+
+과거 데이터 과학자가 선형대수, 통계&시각화, 속도, 통합작업과 관련하여 다양한 언어와 도구를 익혀야 했지만,
+2010년 중반을 넘어서는 현시점에서 파이썬과 R을 함께 사용하는 것으로 중지가 모아지고 있다.
+
+### 3. R 시작과 끝 (맛보기)
+
+R이 설치되고, 필요한 패키지가 준비되면 분석에 사용할 데이터를 작업 메모리상에 올려야 한다. 
+분석 데이터를 R 작업공간에 준비하는 방법은 어려가지가 있다. 
+Web URL을 활용한 웹 데이터를 가져오거나, `read.table`을 이용한 로컬 디스크 상의 데이터를 메모리로 불러올 수 있다.
+
+
+~~~{.r}
+abalone <- read.csv(url("http://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data"), header=F)
+names(abalone) <- c("Sex","Length","Diameter","Height","Whole weight","Shucked weight","Viscera weight","Shell weight","Rings")
+head(abalone)
+~~~
+
+
+
+~~~{.output}
+FALSE   Sex Length Diameter Height Whole weight Shucked weight Viscera weight
+FALSE 1   M  0.455    0.365  0.095       0.5140         0.2245         0.1010
+FALSE 2   M  0.350    0.265  0.090       0.2255         0.0995         0.0485
+FALSE 3   F  0.530    0.420  0.135       0.6770         0.2565         0.1415
+FALSE 4   M  0.440    0.365  0.125       0.5160         0.2155         0.1140
+FALSE 5   I  0.330    0.255  0.080       0.2050         0.0895         0.0395
+FALSE 6   I  0.425    0.300  0.095       0.3515         0.1410         0.0775
+FALSE   Shell weight Rings
+FALSE 1        0.150    15
+FALSE 2        0.070     7
+FALSE 3        0.210     9
+FALSE 4        0.155    10
+FALSE 5        0.055     7
+FALSE 6        0.120     8
+
+~~~
+
+
+
+~~~{.r}
+#   Sex Length Diameter Height Whole weight Shucked weight  Viscera weight Shell weight Rings
+# 1   M  0.455    0.365  0.095       0.5140         0.2245          0.1010        0.150    15
+# 2   M  0.350    0.265  0.090       0.2255         0.0995          0.0485        0.070     7
+# 3   F  0.530    0.420  0.135       0.6770         0.2565          0.1415        0.210     9
+# 4   M  0.440    0.365  0.125       0.5160         0.2155          0.1140        0.155    10
+# 5   I  0.330    0.255  0.080       0.2050         0.0895          0.0395        0.055     7
+# 6   I  0.425    0.300  0.095       0.3515         0.1410          0.0775        0.120     8
+~~~
+
+분석을 진행하기 위해서 간단한 R 스크립트를 작성하여 보자. 
+메뉴상단의 `File > New File > R Script` 혹은 `CTRL+SHIFT+N` 단축키를 사용하여 데이터 분석 결과를 스크립트로 작성하여 저장할 수 있다. 
+분석이 완료된 스크립트는 `SimpleR.R`로 저장한다.
+
+
+~~~{.r}
+# 기본 분석 스크립트
+# abalone <- read.csv("abalone.csv")
+table(abalone$Sex)
+~~~
+
+
+
+~~~{.output}
+FALSE 
+FALSE    F    I    M 
+FALSE 1307 1342 1528
+
+~~~
+
+
+
+~~~{.r}
+plot(Length ~ Sex, data=abalone)
+~~~
+
+<img src="fig/r-lang-table-plot-1.png" title="plot of chunk r-lang-table-plot" alt="plot of chunk r-lang-table-plot" style="display: block; margin: auto;" />
+
+자료 분석 결과는 코드, 데이터, 그래프, 테이블로 나타나게 되며, 
+이를 하나의 문서로 각각 정리하는 것은 매우 수고스러운 일이며 기본적으로 기계나 컴퓨터가 해야되는 일중의 하나이다. 
+이를 위해서 RStudio의 Notebook 기능을 사용한다. 
+먼저 RStudio의 Notebook 도 `knitr` 패키지와 `Rmarkdown` 같은 패키지를 기반으로 하지만 
+`knitr` 패키지를 설치하면 모든 의존성을 자동으로 해결해 준다. 
+`knitr` 패키지를 설치한 후에 메뉴상단의 `File > Compile Notebook…` 을 클릭하면 
+팝업메뉴가 뜨며 제목과 저자를 표시하면 코드, 데이터, 그래프, 테이블 등 정리된 결과를 HTML 파일로 얻을 수 있다. 
+
+R 코드, 그림, 테이블, 텍스트와 함께 하나의 작업파일로 데이터 제품을 만들 수 있다. 
+노트북(Notebook), 마크다운(Markdown), HTML, LaTex 등 총 4가지 방법이 있으나 
+RStudio를 사용할 경우 내장된 노트북 기능을 사용하는 것도 좋은 방법이며, 
+마크다운, LaTex, HTML등 친숙한 방법을 사용할 수도 있다.
+
+| **Markup 시스템** | **입력파일(Input)** | **리포트파일(Output)** |
+|-------------------|---------------------|------------------------|
+| 노트북            | `.R`                | `.html` (`.md` 경유)   |
+| 마크다운          | `.Rmd`              | `.html` (`.md` 경유)   |
+| HTML	            | `.Rhtml`            | `.html`                |
+| `LaTeX`           | `.Rnw`              | `.pdf` (.tex 경유)     |
+
+
+RStudio_RMarkdown 을 이용하여 작업파일을 만든 후에 `knit HTML` 버튼을 누루면 HTML 파일을 바로 얻을 수 있다. 
+
+어느 소프트웨어도 마찬가지지만 사용하다보면 오류가 발생하고 이를 확인해야 할 때가 있다. 
+`RStudio`의 경우 `Help>Diagnostics>Show log files` 를 통해서 확인가능하다. 
+`R`과 `Rstudio` 관련 도움말은 구글 검색이나, [stack exchange](http://stackexchange.com/)를 통해 얻을 수 있다. 
+작업을 하다면 콘솔화면을 깨끗이하고 다시 시작하고 싶은 경우가 있다. 
+윈도나 도스의 경우 `cls` 명령어가 있는데 R에는 딱히 그런 명령어가 없다. 이런 경우 사용자 정의 함수를 하나 만들어서 실행할 수 있다. 
+
+
+~~~{.r}
+cls <- function() cat(rep("\n",50))
+cls()
+~~~
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+하지만, 매번 R을 실행할 때마다 반복적으로 해야되기 때문에 R이 시작될 때 자동으로 설정을 하는 방법은 초기 실행 환경파일에 이를 적용하는 것이다. 
+`C:\Program Files\R\R-3.1.0\library\base\R\RProfile` 파일을 텍스트 편집기로 열어 하단에 `cls` 함수를 적어두고 저장한다. 
+혹은, `CTRL+L` 키를 눌러 화면을 깨끗이하며 커서를 맨 위 상단으로 이동한다.
+
+
+~~~{.r}
+….
+local({
+    br <- Sys.getenv("R_BROWSER", NA_character_)
+    if(!is.na(br)) options(browser = br)
+    tests_startup <- Sys.getenv("R_TESTS")
+    if(nzchar(tests_startup)) source(tests_startup)
+})
+
+# 사용자 정의함수
+cls <- function() cat(rep("\n",50))
+~~~
 

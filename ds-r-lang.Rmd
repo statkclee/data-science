@@ -132,7 +132,7 @@ cls()
 `C:\Program Files\R\R-3.1.0\library\base\R\RProfile` 파일을 텍스트 편집기로 열어 하단에 `cls` 함수를 적어두고 저장한다. 
 혹은, `CTRL+L` 키를 눌러 화면을 깨끗이하며 커서를 맨 위 상단으로 이동한다.
 
-``` {r r-lang-cls-rprofile, message=FALSE, warning=FALSE, comment=FALSE}
+``` {r r-lang-cls-rprofile, message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 ….
 local({
     br <- Sys.getenv("R_BROWSER", NA_character_)
@@ -143,5 +143,5 @@ local({
 
 # 사용자 정의함수
 cls <- function() cat(rep("\n",50))
-```
+``` 
 
