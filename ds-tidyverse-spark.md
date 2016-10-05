@@ -41,29 +41,29 @@ mainfont: NanumGothic
 개발할 적절한 R 팩키지 도구상자가 필요하다. 이를 과거에 `hadleyverse`, 현재는 `tidyverse`라고 부른다.
 
 - **가져오기**
-  - readr : 데이터 가져오기
-  -DBI : 데이터베이스
-  -haven: SPSS, SAS, Stata
-  -httr: 웹 APIs
-  -jsonlite: JSON
-  -readxl: 엑셀
-  -rvest: 웹스크래핑
-  -xml2: XML
+    - readr : 데이터 가져오기
+    -DBI : 데이터베이스
+    -haven: SPSS, SAS, Stata
+    -httr: 웹 APIs
+    -jsonlite: JSON
+    -readxl: 엑셀
+    -rvest: 웹스크래핑
+    -xml2: XML
 - **데이터정제**
-  - dplyr : 데이터 조작
-  - tidyr : 데이터 깔끔화
-  - purrr : 함수형 프로그래밍
-  - tibble : 최신 데이터프레임
+    - dplyr : 데이터 조작
+    - tidyr : 데이터 깔끔화
+    - purrr : 함수형 프로그래밍
+    - tibble : 최신 데이터프레임
 - **시각화**
-  - ggplot2 : 데이터 시각화
+    - ggplot2 : 데이터 시각화
 - **모형 자동화**  
-  - modelr : 파이프라인 내부 모형개발
-  - broom : 모형산출물을 깔끔한 데이터로 변환
+    - modelr : 파이프라인 내부 모형개발
+    - broom : 모형산출물을 깔끔한 데이터로 변환
 - **의사소통**
-  - rmakrdown : 마크다운 문서화
-  - bookdown : 다양한 출력물 산출(pdf, html, ePub등)
-  - shiny : 웹응용프로그램, 동적 대쉬보드
-  - flexdashboard : 정적 인터랙티브 대쉬보드
+    - rmakrdown : 마크다운 문서화
+    - bookdown : 다양한 출력물 산출(pdf, html, ePub등)
+    - shiny : 웹응용프로그램, 동적 대쉬보드
+    - flexdashboard : 정적 인터랙티브 대쉬보드
 
 <img src="fig/spark-ds-tidyverse.png" alt="깔끔한 세상" width="77%" />
 
@@ -78,4 +78,77 @@ R 팩키지는 함수에 대한 단위테스트(`testthat`)와 함수 도움말�
 포함되게 된다.
 
 <img src="fig/spark-ds-code-fn-pkgs.png" alt="코드, 함수, 팩키지" width="77%" />
+
+### 2. R 스파크 클러스터 설치 
+
+진정한 분산처리를 위해서 클라우드나 자체 IDC 내부에 설치해야 맞다. 
+하지만, 멀티코어와 충분한 주기억장치를 갖는 노트북이나 데스크탑 PC를 보유한 경우 직접 스파크 클러스터를 설치하는 것도 좋다.
+
+1. 우분투 설치
+1. 자바 설치
+1. R 설치 (3.2.3)
+1. RStudio Preview 설치
+1. `libcurl4-openssl-dev`, `libssl-dev` 설치: `devtools` 의존성
+1. devtools 설치
+1. sparklyr 설치
+1. 스파크와 하둡 설치
+
+<img src="fig/spark-ds-setup.png" alt="스파크 클러스터 설치" width="57%" />
+
+데이터과학에서 재현성이 무척이나 중요한 요소다. 우분투 16.04. 이미지를 기반으로 R 스파크 클러스터를 생성한다.
+우분투 16.04 LTS 버젼을 기반으로 설치를 한 뒤에 자바를 설치한다. 우분투 터미널을 열고 다음과 같은 순서대로 `openjdk`를 설치한다.
+
+
+~~~{.r}
+$ sudo add-apt-repository ppa:openjdk-r/ppa
+$ sudo apt-get update
+$ sudo apt-get install -y openjdk-8-jdk
+~~~
+
+R을 설치한 뒤에 [`RStudio Preview`](https://www.rstudio.com/products/rstudio/download/preview/)를 설치하면, 
+스파크와 하둡 설치에 필요한 사항을 상당부분 자동으로 알아서 해준다.
+
+> ### `sparklyr`로 설치하면 좋은 점 {.callout}
+> 
+> 윈도우 환경에서 하둡을 돌리기 위해서는 [Hadoop winutils](https://github.com/steveloughran/winutils), 즉 
+> `winutils.exe` 파일을 특정 폴더 예를 들면, `C:\spark-1.6.2-bin-hadoop2.6\tmp\hadoop\bin` 복사해서 넣어야 된다.
+> 그 외에도 `C:\Users\<USERNAME>\AppData\Local\rstudio\spark\Cache\spark-1.6.2-bin-hadoop2.6\bin\` 권한 설정을 별도로 해줘야 하는
+> 문제도 해결해야 된다. [^sparklyr-windows-install]
+
+[^sparklyr-windows-install]: [运行Apache星火与sparklyr和R在Windows](http://yokekeong.com/running-apache-spark-with-sparklyr-and-r-in-windows/)
+
+`sparklyr`을 설치하기 위해서는 `devtools`가 필요하고, `devtools`가 잘 설치되기 위해서는 `libcurl4-openssl-dev`, `libssl-dev`을
+배쉬쉘에서 설치해야 된다. 
+
+
+~~~{.r}
+$ sudo apt-get install libcurl4-openssl-dev libssl-dev
+~~~
+
+이런 과정을 거치게 되면 `RStudio` 통합개발환경을 띄울 준비가 되었다. 이제 RStudio 화면에서 다음과 같은 명령어를 순차적으로
+실행한다.
+
+
+~~~{.r}
+install.packages("devtools", dependencies = TRUE)
+devtools::install_github("hadley/devtools") # 최신 버젼을 원하는 경우 
+
+# 1. sparklyr 설치
+devtools::install_github("rstudio/sparklyr")
+library(sparklyr)
+spark_available_versions()
+spark_install(version = "1.6.2", hadoop_version = "2.6")
+
+# 2. 스파크 클러스터 생성
+library(dplyr)
+sc <- spark_connect(master = "local")
+
+# 3. iris 데이터셋 불러오기ibrary(dplyr)
+iris_tbl <- copy_to(sc, iris)
+~~~
+
+`sc` 스파크 컨텍스트가 생성되면 `iris` R 데이터프레임을 `copy_to` 명령어로 스파크 데이터프레임 
+`iris_tbl`로 생성하면 스파크 클러스터에서 데이터를 분석할 준비를 마치게 된다.
+
+
 
