@@ -141,6 +141,44 @@ $ sudo apt-get install libgdal1-dev libproj-dev
 RStudio IDE를 다운로드 받아 GUI를 사용할 경우 *다음* 버튼을 여러번 누르면 바로 개발환경 설정이 된다.
 명령라인 인터페이스를 사용하는 경우 다음 클라우드 환경에서 R개발환경 설정을 참고하기 바란다.
 
+> ### 가장최신 R 설치 [^r-latest-install] {.callout}
+> 
+> ~~~ {.shell}
+> $ codename=$(lsb_release -c -s)
+> $ echo "deb http://cran.fhcrc.org/bin/linux/ubuntu $codename/" | sudo tee -a /etc/apt/sources.list > /dev/null
+> $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+> $ sudo add-apt-repository ppa:marutter/rdev
+> $ sudo apt-get update
+> $ sudo apt-get upgrade
+> $ sudo apt-get install r-base r-base-dev
+> ~~~
+
+[^r-latest-install]: [How to install latest version of R on Ubuntu 12.04 LTS?](http://askubuntu.com/questions/614530/how-to-install-latest-version-of-r-on-ubuntu-12-04-lts)
+
+
+> ### RStudio 설치 {.callout}
+> 
+> [Download RStudio Server](https://www.rstudio.com/products/rstudio/download-server-2/)로
+> 가서 RStudio 서버를 다운로드하고 설치한다.
+> 
+> ~~~ {.shell}
+> $ sudo apt-get install gdebi-core
+> $ wget https://download2.rstudio.org/rstudio-server-0.99.902-amd64.deb
+> $ sudo gdebi rstudio-server-0.99.902-amd64.deb
+> ~~~
+> 
+> `rstudio`를 사용자로 등록하고 나서 웹브라우져를 열고 `http://localhost:8787`에 접속하고 나서,
+> `rstudio` 계정으로 로그인한다.
+> 
+> ~~~ {.shell}
+> parallels@ubuntu:~/spark-1.6.1$ sudo useradd -m rstudio
+> parallels@ubuntu:~/spark-1.6.1$ sudo passwd rstudio
+> Enter new UNIX password: 
+> Retype new UNIX password: 
+> passwd: password updated successfully
+> ~~~
+
+
 ### 3. 클라우드 환경 R 개발환경 설정
 
 [소프트레이어(SoftLayer)](http://www.softlayer.com/m-ko/) 웹인터페이스를 사용하는 것도 가능하지만 API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오고 가장컴퓨터 주문도 가능하다.
