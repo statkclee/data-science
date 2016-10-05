@@ -154,6 +154,37 @@ $ sudo apt-get install libgdal-dev
 $ sudo apt-get install libgdal1-dev libproj-dev</code></pre>
 <h3 id="리눅스나-맥에서-r-개발환경-설정">2. 리눅스나 맥에서 R 개발환경 설정</h3>
 <p>리눅스나 맥에서 R 개발환경을 설정하는 것은 매우 직관적이다. RStudio IDE를 다운로드 받아 GUI를 사용할 경우 <em>다음</em> 버튼을 여러번 누르면 바로 개발환경 설정이 된다. 명령라인 인터페이스를 사용하는 경우 다음 클라우드 환경에서 R개발환경 설정을 참고하기 바란다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="가장최신-r-설치-r-latest-install"><span class="glyphicon glyphicon-pushpin"></span>가장최신 R 설치 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+</div>
+<div class="panel-body">
+<pre class="shell"><code>$ codename=$(lsb_release -c -s)
+$ echo &quot;deb http://cran.fhcrc.org/bin/linux/ubuntu $codename/&quot; | sudo tee -a /etc/apt/sources.list &gt; /dev/null
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+$ sudo add-apt-repository ppa:marutter/rdev
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install r-base r-base-dev</code></pre>
+</div>
+</aside>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="rstudio-설치"><span class="glyphicon glyphicon-pushpin"></span>RStudio 설치</h3>
+</div>
+<div class="panel-body">
+<p><a href="https://www.rstudio.com/products/rstudio/download-server-2/">Download RStudio Server</a>로 가서 RStudio 서버를 다운로드하고 설치한다.</p>
+<pre class="shell"><code>$ sudo apt-get install gdebi-core
+$ wget https://download2.rstudio.org/rstudio-server-0.99.902-amd64.deb
+$ sudo gdebi rstudio-server-0.99.902-amd64.deb</code></pre>
+<p><code>rstudio</code>를 사용자로 등록하고 나서 웹브라우져를 열고 <code>http://localhost:8787</code>에 접속하고 나서, <code>rstudio</code> 계정으로 로그인한다.</p>
+<pre class="shell"><code>parallels@ubuntu:~/spark-1.6.1$ sudo useradd -m rstudio
+parallels@ubuntu:~/spark-1.6.1$ sudo passwd rstudio
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully</code></pre>
+</div>
+</aside>
 <h3 id="클라우드-환경-r-개발환경-설정">3. 클라우드 환경 R 개발환경 설정</h3>
 <p><a href="http://www.softlayer.com/m-ko/">소프트레이어(SoftLayer)</a> 웹인터페이스를 사용하는 것도 가능하지만 API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오고 가장컴퓨터 주문도 가능하다.</p>
 <p>먼저, 소프트레이어 계정정보에 악의적인 사용을 막기위해서 계정정보 <code>API Access Information</code> 아래 <code>Allowed IPs</code>를 <code>ifconfig</code> 명령을 통해서 등록한다. 다음 소프트레이어 API 문서를 참고해서 다음과 같이 파이썬 코드를 작성하고 실행한다.</p>
@@ -435,6 +466,7 @@ root@shiny-sl:~#</code></pre>
 <hr />
 <ol>
 <li id="fn1"><p><a href="http://askubuntu.com/questions/614530/how-to-install-latest-version-of-r-on-ubuntu-12-04-lts">How to install latest version of R on Ubuntu 12.04 LTS? [duplicate]</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://askubuntu.com/questions/614530/how-to-install-latest-version-of-r-on-ubuntu-12-04-lts">How to install latest version of R on Ubuntu 12.04 LTS?</a><a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
         </div>

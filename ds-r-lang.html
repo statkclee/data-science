@@ -106,7 +106,17 @@
 <p>두 언어 문제로 인해 편리함을 위해 파이썬, R, Matlab을 사용하고 C/C++, 포트란 시스템 언어로 모든 힘든 작업을 수행한다. 시스템 언어와 스크립트 언어의 두가지 문제점을 해결하기 위해서 두가지 다른 언어의 장점을 취하고 이를 보완하려는 노력이 지속적으로 경주되고 있다.</p>
 <p><img src="fig/data-scientist-languages.png" alt="데이터 과학자 언어" width="50%"></p>
 <p>과거 데이터 과학자가 선형대수, 통계&amp;시각화, 속도, 통합작업과 관련하여 다양한 언어와 도구를 익혀야 했지만, 2010년 중반을 넘어서는 현시점에서 파이썬과 R을 함께 사용하는 것으로 중지가 모아지고 있다.</p>
-<h3 id="r-시작과-끝-맛보기">3. R 시작과 끝 (맛보기)</h3>
+<h3 id="왜-r-언어인가-r-rank-r-r4stats">3. 왜 R 언어인가? <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h3>
+<p><a href="http://www.rexeranalytics.com/">Rexer Analytics</a>가 2015년 응답자 1,220명을 대상으로 실시한 결과 R이 데이터 분석 소프트웨어 분야에서 압도적인 1위 위치를 점유하고 있음을 확인할 수 있다.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><img src="fig/rexersurveyalltools2015.png" alt="Rexer Analytics 설문조사 2015 (응답자 1,220)" width="70%"></td>
+<td align="left"><img src="fig/ieee-r-ranking.png" alt="IEEE 조사" width="70%"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="r-시작과-끝-맛보기">4. R 시작과 끝 (맛보기)</h3>
 <p>R이 설치되고, 필요한 패키지가 준비되면 분석에 사용할 데이터를 작업 메모리상에 올려야 한다. 분석 데이터를 R 작업공간에 준비하는 방법은 어려가지가 있다. Web URL을 활용한 웹 데이터를 가져오거나, <code>read.table</code>을 이용한 로컬 디스크 상의 데이터를 메모리로 불러올 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">abalone &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">url</span>(<span class="st">&quot;http://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data&quot;</span>), <span class="dt">header=</span>F)
 <span class="kw">names</span>(abalone) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Sex&quot;</span>,<span class="st">&quot;Length&quot;</span>,<span class="st">&quot;Diameter&quot;</span>,<span class="st">&quot;Height&quot;</span>,<span class="st">&quot;Whole weight&quot;</span>,<span class="st">&quot;Shucked weight&quot;</span>,<span class="st">&quot;Viscera weight&quot;</span>,<span class="st">&quot;Shell weight&quot;</span>,<span class="st">&quot;Rings&quot;</span>)
@@ -196,6 +206,8 @@ cls &lt;-<span class="st"> </span>function() <span class="kw">cat</span>(<span c
 <ol>
 <li id="fn1"><p><a href="http://www.springer.com/us/book/9780387094182">Muenchen, Robert A. R for SAS and SPSS users. Springer Science &amp; Business Media, 2011.</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="https://en.wikipedia.org/wiki/Ousterhout%27s_dichotomy">Ousterhout dichotomy</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://spectrum.ieee.org/static/interactive-the-top-programming-languages#index">Interactive-The Top Programming Languages</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://r4stats.com/articles/popularity/">The Popularity of Data Analysis Software</a><a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
         </div>
