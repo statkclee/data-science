@@ -9,18 +9,18 @@ title: 데이터 과학
 > "The future is here, it's just not evenly distributed yet."  
 >                                                           - William Gibson
 
-### R과 RStudio 툴체인 데이터 과학 
+### R, RStudio, `tidyverse`, 스파크와 함께하는 데이터 과학 
 
 1. **[R 언어](ds-r-lang.html)**
     - [R 환경설정과 업데이트](ds-r-environment.html) 
     - [R 함수와 자료구조, 그리고 R 프로그래밍 모범사례](ds-writing-fn.html)
-    - [R로 전자우편 자동 전송](ds-gmail.html)    
 1. [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
     - [위기의 스프레드쉬트](ds-why-not-excel.html)
     - [탈옥(jailbreakr) -- 엑셀에서 탈출... 자유](ds-xls.html)    
     - [들어가며](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/01-intro.html)
     - [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
     - [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
+    - [R로 전자우편 자동 전송](ds-gmail.html)        
 1. [함수형 프로그래밍 -- `purrr`](ds-fp.html)
     - [측도와 R 자료구조](ds-data-structure.html)
         - [시간데이터](data-handling-timendate.html)
@@ -30,12 +30,14 @@ title: 데이터 과학
     - [R 함수 작성](ds-fp-write-fn.html)
     - [R 함수형 프로그래밍](ds-fp-purrr.html)
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
-    - [윈도우 환경 가상 개발환경](ds-virtual-window.html)
+    - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
     - [한글처리 가능한 RStudio 개발환경](toolchain-shiny-rstudio.html)    
-    - [RStudio 개발환경과 단축키](rstudio.html)
-    - [스파크 + dplyr -- sparklyr](ds-sparklyr.html)        
-    - [SparkR 하둡 클러스터 설치](ds-spark-hadoop-install.html)
-    - [$H_2 O$ 하둡 스파크 클러스터 설치](ds-h2o-spark-hadoop.html)
+    - [RStudio 개발환경(IDE)과 단축키](rstudio.html)
+    - **[스파크(Spark)](http://statkclee.github.io/parallel-r/spark-mooc.html)**
+        - [`tidyverse` 스파크](ds-tidyverse-spark.html)   
+            - [`sparklyr` = 스파크 + `dplyr` 설치](ds-sparklyr.html)
+        - [SparkR 하둡 클러스터 설치](ds-spark-hadoop-install.html)
+        - [$H_2 O$ 하둡 스파크 클러스터 설치](ds-h2o-spark-hadoop.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
         - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
         - [데이터 과학 도커 - R](toolchain-docker-r.html)  

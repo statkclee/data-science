@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 스파크 + dplyr -- sparklyr
+subtitle: `sparklyr` = 스파크 + `dplyr` 설치
 ---
 > ## 학습 목표 {.objectives}
 >
