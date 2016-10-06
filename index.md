@@ -69,6 +69,7 @@ title: 데이터 과학
     - [단계구분도(choropleth) 지리정보 시각화](geo-info-choropleth.html)
     - [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
     - [.shp 지도 일부 추출](geo-info-shapefile.html)
+    - [IP 주소 지리정보 시각화](geo-info-ip-address.html)
 1. [Shiny 웹앱](shiny-overview.html)
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
