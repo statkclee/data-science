@@ -4,35 +4,35 @@
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
     <title>Software Carpentry: 데이터 과학</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-17', 'auto');
-      ga('send', 'pageview');
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
@@ -45,23 +45,39 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>데이터 분석용 파이프라인을 이핸한다.</li>
+<li>전체적인 데이터 분석 파이프라인을 살펴본다.</li>
+<li>원천 데이터를 깔끔한 데이터로 변환하는 이유를 이해한다.</li>
 </ul>
 </div>
 </section>
-<h3 id="데이터-분석-파이프라인">데이터 분석 파이프라인</h3>
-<p>데이터 분석은 다른 소프트웨어 개발과 동일하게 <strong>컴퓨터 시간(Computer time)</strong>과 <strong>개발자 시간(Human time)</strong>을 최적화하는 과정으로 볼 수 있다. 최근에 가장 귀중한 자원은 컴퓨터가 아니라 개발자 시간 즉, 사람이다.</p>
-<p>따라서, 사람 시간을 최적화하는 것이 데이터 분석에서 가장 중요한 요소가 되면 그 해답이 <strong>%&gt;%</strong> 즉, <code>magrittr</code> 팩키지에 있다. 프랑스 액센트가 들어간 <a href="https://cran.r-project.org/web/packages/magrittr/">magrittr</a> 팩키지는 개발시간을 단축하고 코드 가독성을 높이고 유지보수성을 높이는 목적을 갖고 있다. 유닉스 쉘, F#, haskell, clojure, method chaining에 영감을 받았다.</p>
-<aside class="callout panel panel-info">
-<div class="panel-heading">
-<h3 id="데이터-분석-정의"><span class="glyphicon glyphicon-pushpin"></span>데이터 분석 정의</h3>
-</div>
-<div class="panel-body">
-<p>데이터 분석은 데이터가 이해되고, 지식이 되고, 통찰을 얻게 되는 과정이다. “Data analysis is the process by which data becomes understanding, knowledge and insight”<br />
-— Hadley Wickham</p>
-</div>
-</aside>
-<h3 id="magrittr-코드와-일반-r-코드-비교-magrittr-vignette"><code>magrittr</code> 코드와 일반 R 코드 비교 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<h3 id="데이터-분석-파이프라인">1. 데이터 분석 파이프라인</h3>
+<p>데이터 분석은 다른 소프트웨어 개발과 동일하게 <strong>컴퓨터 시간(Computer time)</strong>과 <strong>개발자 시간(Human time)</strong>을 최적화하는 과정으로 볼 수 있다. 최근에 가장 희귀하고 귀중한 자원은 컴퓨터가 아니라 개발자 시간 즉, 사람이다.</p>
+<p>따라서, 사람 시간을 최적화하는 것이 데이터 분석에서 가장 중요한 요소가 되면 그 해답이 <strong>%&gt;%</strong> 즉, <code>magrittr</code> 팩키지에도 존재한다. 프랑스 액센트가 들어간 <a href="https://cran.r-project.org/web/packages/magrittr/">magrittr</a> 팩키지는 개발시간을 단축하고 코드 가독성을 높이고 유지보수성을 높이는 목적을 갖고 있다. 유닉스 쉘, <code>F#</code>, haskell, clojure, method chaining에서 영감을 받았다.</p>
+<p><img src="fig/ds-pipeline.png" alt="데이터 과학 파이프라인" width="77%" /></p>
+<p>파일(<code>.csv</code>같은 일반 텍스트 파일, 엑셀같은 이진 파일) 형태, 데이터베이스(SQL, NoSQL) 형태, 웹데이터(JSON, XML) 형태로 존재하는 데이터를 가져와서 이를 분석에 적합한 형태, 즉 <strong>깔끔한 데이터(tidy data)</strong>로 변환을 해야만 한다. 깔끔한 데이터는 기계도 잘 이해하고, 분석가도 잘 이해하는 형태가 되어야 한다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">기계 저장 방식</th>
+<th align="center">사람 이해 방식</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">파일/테이블</td>
+<td align="center">데이터셋(Data set)</td>
+</tr>
+<tr class="even">
+<td align="center">행(row)</td>
+<td align="center">관측점(Observation)</td>
+</tr>
+<tr class="odd">
+<td align="center">열(column)</td>
+<td align="center">변수(Variable)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="magrittr-코드와-일반-r-코드-비교-magrittr-vignette">1.1. <code>magrittr</code> 코드와 일반 R 코드 비교 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h4>
 <p><code>mtcars</code> 데이터셋을 파이프를 통해 데이터를 깔끔하게 정리하는 것과 기존 전통적 방식으로 개발된 코드를 비교해 보자.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 
@@ -89,30 +105,72 @@ x %&gt;%<span class="st"> </span><span class="kw">f</span>(z, .)
 <span class="co"># f(z, x)</span>
 x %&gt;%<span class="st"> </span><span class="kw">f</span>(y) %&gt;%<span class="st"> </span><span class="kw">g</span>(z)
 <span class="co"># g(f(x, y), z)</span></code></pre></div>
-<h3 id="데이터-분석을-위한-파이프라인-팩키지-모음">데이터 분석을 위한 파이프라인 팩키지 모음</h3>
-<p>데이터 분석을 위한 파이프라인은 유닉스 파이프와 마찬가지로 입력유형과 출력유형이 동일해야만 된다는 속성을 만족해야만 된다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="데이터-분석-정의"><span class="glyphicon glyphicon-pushpin"></span>데이터 분석 정의</h3>
+</div>
+<div class="panel-body">
+<p>데이터 분석은 데이터가 이해되고, 지식이 되고, 통찰을 얻게 되는 과정이다.</p>
+<p><em>“Data analysis is the process by which data becomes understanding, knowledge and insight”</em></p>
+<p>— Hadley Wickham</p>
+</div>
+</aside>
+<p><img src="fig/ds-tidyverse.png" alt="깜끔한 세상" width="97%" /></p>
+<h3 id="데이터-과학을-위한-파이프라인-팩키지-모음---tidyverse">2. 데이터 과학을 위한 파이프라인 팩키지 모음 - <code>tidyverse</code></h3>
+<p>데이터 과학을 위한 파이프라인은 유닉스 파이프와 마찬가지로 각 모듈별로 통일된 인터페이스를 유지해야만, 앞선 선행작업을 후행작업과 연결하거나 조합하여 사용한다. 처음으로 데이터를 가져와서 최종적으로 의사소통하는 일련의 과정에 데이터 과학 각 모듈별로 공통된 인터페이스를 갖고 이를 조합하여 연결해내는 과정을 <code>tidyverse</code> 팩키지에 수많은 데이터과학자의 노력이 녹아져 있다.</p>
 <ul>
-<li>tidyr: 깔끔한 데이터를 위한 파이프라인</li>
-<li>dplyr: 데이터 조작을 위한 파이프라인</li>
-<li>ggvis: 시각화를 위한 파이프라인</li>
-<li>rvest: HTML을 위한 파이프라인</li>
-<li>purrr: 리스트를 위한 파이프라인</li>
-<li>xml2: XML을 위한 파이프라인</li>
-<li>stringr: 문자열을 위한 파이프라인</li>
+<li><strong>데이터 가져오기</strong>
+<ul>
+<li>DBI : 데이터베이스</li>
+<li>haven: SPSS, SAS, Stata</li>
+<li>httr: 웹 APIs</li>
+<li>jsonlite: JSON</li>
+<li>readxl: 엑셀</li>
+<li>rvest: 웹스크래핑</li>
+<li>xml2: XML</li>
+<li>readr : 데이터 가져오기</li>
+</ul></li>
+<li><strong>데이터 정제</strong>
+<ul>
+<li>tidyr : 데이터 깔끔화</li>
+<li>dplyr : 데이터 조작</li>
+<li>ggplot2 : 데이터 시각화</li>
+<li>ggvis: 인터랙티브 시각화</li>
+<li>purrr : 함수형 프로그래밍</li>
+</ul></li>
+<li><strong>데이터 자료형</strong>
+<ul>
+<li>tibble : 최신 데이터프레임</li>
+<li>hms : 시간 자료형</li>
+<li>stringr : 문자열 자료형</li>
+<li>lubridate : 날짜/시간 자료형</li>
+<li>forcats : 요인 자료형</li>
+</ul></li>
+<li><strong>모형</strong>
+<ul>
+<li>modelr : 파이프라인 내부 모형개발</li>
+<li>broom : 모형산출물을 깔끔한 데이터로 변환</li>
+</ul></li>
+<li><strong>의사소통</strong>
+<ul>
+<li>rmakrdown : 마크다운 문서화</li>
+<li>bookdown : 다양한 출력물 산출(pdf, html, ePub등)</li>
+<li>flexdashboard : 정적 인터랙티브 대쉬보드</li>
+<li>shiny : 웹응용프로그램, 동적 대쉬보드</li>
+</ul></li>
 </ul>
-<h3 id="깔끔한-데이터-tidyr">1. 깔끔한 데이터 <code>tidyr</code></h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
-<span class="kw">library</span>(readr)
-<span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)
-<span class="kw">library</span>(curl)
+<h4 id="깔끔한-데이터-tidyr">2.1. 깔끔한 데이터 – <code>tidyr</code></h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(tidyr)))
+<span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(readr)))
+<span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)))
+<span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(curl)))
 
 <span class="co"># 데이터 가져오기</span>
 tb &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(<span class="kw">read_csv</span>(<span class="kw">url</span>(<span class="st">&quot;https://raw.githubusercontent.com/hadley/tidyr/master/vignettes/tb.csv&quot;</span>)))
 tb</code></pre></div>
-<pre class="output"><code>FALSE Source: local data frame [5,769 x 22]
-FALSE 
+<pre class="output"><code>FALSE # A tibble: 5,769 × 22
 FALSE     iso2  year   m04  m514  m014 m1524 m2534 m3544 m4554 m5564   m65    mu
-FALSE    (chr) (int) (int) (int) (int) (int) (int) (int) (int) (int) (int) (int)
+FALSE    &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
 FALSE 1     AD  1989    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
 FALSE 2     AD  1990    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
 FALSE 3     AD  1991    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
@@ -123,18 +181,17 @@ FALSE 7     AD  1996    NA    NA     0     0     0     4     1     0     0    NA
 FALSE 8     AD  1997    NA    NA     0     0     1     2     2     1     6    NA
 FALSE 9     AD  1998    NA    NA     0     0     0     1     0     0     0    NA
 FALSE 10    AD  1999    NA    NA     0     0     0     1     1     0     0    NA
-FALSE ..   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...   ...
-FALSE Variables not shown: f04 (int), f514 (int), f014 (int), f1524 (int), f2534
-FALSE   (int), f3544 (int), f4554 (int), f5564 (int), f65 (int), fu (int)
+FALSE # ... with 5,759 more rows, and 10 more variables: f04 &lt;int&gt;, f514 &lt;int&gt;,
+FALSE #   f014 &lt;int&gt;, f1524 &lt;int&gt;, f2534 &lt;int&gt;, f3544 &lt;int&gt;, f4554 &lt;int&gt;,
+FALSE #   f5564 &lt;int&gt;, f65 &lt;int&gt;, fu &lt;int&gt;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 자료분석을 위한 형태로 변형한다.</span>
 tb2 &lt;-<span class="st"> </span>tb %&gt;%
 <span class="st">  </span><span class="kw">gather</span>(demographic, n, m04:fu, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
 tb2</code></pre></div>
-<pre class="output"><code>FALSE Source: local data frame [35,750 x 4]
-FALSE 
+<pre class="output"><code>FALSE # A tibble: 35,750 × 4
 FALSE     iso2  year demographic     n
-FALSE    (chr) (int)       (chr) (int)
+FALSE *  &lt;chr&gt; &lt;int&gt;       &lt;chr&gt; &lt;int&gt;
 FALSE 1     AD  2005         m04     0
 FALSE 2     AD  2006         m04     0
 FALSE 3     AD  2008         m04     0
@@ -145,16 +202,15 @@ FALSE 7     AG  2007         m04     0
 FALSE 8     AL  2005         m04     0
 FALSE 9     AL  2006         m04     1
 FALSE 10    AL  2007         m04     0
-FALSE ..   ...   ...         ...   ...
+FALSE # ... with 35,740 more rows
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 변수를 성별과 연령으로 쪼갠다.</span>
 tb3 &lt;-<span class="st"> </span>tb2 %&gt;%
 <span class="st">  </span><span class="kw">separate</span>(demographic, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;age&quot;</span>), <span class="dv">1</span>)
 tb3</code></pre></div>
-<pre class="output"><code>FALSE Source: local data frame [35,750 x 5]
-FALSE 
+<pre class="output"><code>FALSE # A tibble: 35,750 × 5
 FALSE     iso2  year   sex   age     n
-FALSE    (chr) (int) (chr) (chr) (int)
+FALSE *  &lt;chr&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
 FALSE 1     AD  2005     m    04     0
 FALSE 2     AD  2006     m    04     0
 FALSE 3     AD  2008     m    04     0
@@ -165,16 +221,15 @@ FALSE 7     AG  2007     m    04     0
 FALSE 8     AL  2005     m    04     0
 FALSE 9     AL  2006     m    04     1
 FALSE 10    AL  2007     m    04     0
-FALSE ..   ...   ...   ...   ...   ...
+FALSE # ... with 35,740 more rows
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tb4 &lt;-<span class="st"> </span>tb3 %&gt;%
 <span class="st">  </span><span class="kw">rename</span>(<span class="dt">country =</span> iso2) %&gt;%
 <span class="st">  </span><span class="kw">arrange</span>(country, year, sex, age)
 tb4</code></pre></div>
-<pre class="output"><code>FALSE Source: local data frame [35,750 x 5]
-FALSE 
+<pre class="output"><code>FALSE # A tibble: 35,750 × 5
 FALSE    country  year   sex   age     n
-FALSE      (chr) (int) (chr) (chr) (int)
+FALSE      &lt;chr&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;
 FALSE 1       AD  1996     f   014     0
 FALSE 2       AD  1996     f  1524     1
 FALSE 3       AD  1996     f  2534     1
@@ -185,9 +240,9 @@ FALSE 7       AD  1996     f    65     0
 FALSE 8       AD  1996     m   014     0
 FALSE 9       AD  1996     m  1524     0
 FALSE 10      AD  1996     m  2534     0
-FALSE ..     ...   ...   ...   ...   ...
+FALSE # ... with 35,740 more rows
 </code></pre>
-<h3 id="변환-dplyr">2. 변환 <code>dplyr</code></h3>
+<h4 id="변환-dplyr">2.2. 변환 – <code>dplyr</code></h4>
 <ul>
 <li>select: 데이터테이블에서 변수를 뽑아낸다.</li>
 <li>filter: 값으로 관측점을 뽑아낸다.</li>
@@ -195,19 +250,18 @@ FALSE ..     ...   ...   ...   ...   ...
 <li>summarise: 관측점을 하나로 축약한다. (평균)</li>
 <li>arrange: 관측점을 오름차순, 내림차순으로 정렬한다.</li>
 </ul>
-<h3 id="시각화-ggvis">3. 시각화 <code>ggvis</code></h3>
+<h3 id="시각화-ggvis">2.3. 시각화 – <code>ggvis</code></h3>
 <ul>
 <li>ggplot2</li>
 <li>shiny</li>
 <li>dplyr 파이프라인</li>
 <li>vega</li>
 </ul>
-<h3 id="모형-broom">4. 모형 <code>broom</code></h3>
+<h3 id="모형-broom">2.4. 모형 – <code>broom</code></h3>
 <p>모형은 알려진 패턴을 제거하는데 탁월하다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
-<span class="kw">library</span>(dplyr)
-<span class="kw">library</span>(ggplot2)
-<span class="kw">library</span>(broom)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(tidyr)))
+<span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(ggplot2)))
+<span class="kw">suppressMessages</span>(<span class="kw">suppressWarnings</span>(<span class="kw">library</span>(broom)))
 
 tx &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">readRDS</span>(<span class="st">&quot;tx-housing.rds&quot;</span>) %&gt;%
@@ -218,7 +272,6 @@ tx
 <span class="kw">ggplot</span>(tx, <span class="kw">aes</span>(date, <span class="kw">log</span>(sales))) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> city), <span class="dt">alpha =</span> <span class="dv">1</span>/<span class="dv">2</span>)
 <span class="kw">ggsave</span>(<span class="st">&quot;sales.pdf&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>)
-
 
 <span class="co"># Models as a tool --------------------------------------------------------</span>
 tx &lt;-<span class="st"> </span>tx %&gt;%<span class="st"> </span>
@@ -236,22 +289,22 @@ tx &lt;-<span class="st"> </span>tx %&gt;%<span class="st"> </span>
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>데이터 크기</th>
+<th align="left">구분</th>
+<th align="left">데이터 크기</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>매우 큰 데이터</td>
-<td>컴퓨터 한대 메모리에 저장될 수 없는 크기 : <strong>&gt;5 TB</strong></td>
+<td align="left">매우 큰 데이터</td>
+<td align="left">컴퓨터 한대 메모리에 저장될 수 없는 크기 : <strong>&gt;5 TB</strong></td>
 </tr>
 <tr class="even">
-<td>중간 데이터</td>
-<td>서버 컴퓨터 메모리에 저장할 수 있는 크기 : <strong>10 GB – 5 TB</strong></td>
+<td align="left">중간 데이터</td>
+<td align="left">서버 컴퓨터 메모리에 저장할 수 있는 크기 : <strong>10 GB – 5 TB</strong></td>
 </tr>
 <tr class="odd">
-<td>작은 데이터</td>
-<td>노트북 컴퓨터 메모리에 저장할 수 있는 크기 : **&lt;10 GB</td>
+<td align="left">작은 데이터</td>
+<td align="left">노트북 컴퓨터 메모리에 저장할 수 있는 크기 : **&lt;10 GB |</td>
 </tr>
 </tbody>
 </table>
@@ -273,16 +326,16 @@ tx &lt;-<span class="st"> </span>tx %&gt;%<span class="st"> </span>
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
