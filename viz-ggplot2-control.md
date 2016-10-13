@@ -1,7 +1,7 @@
 ---
 layout: page
-title: <eb>��<ec>��<ed>�� 과학
-subtitle: ggplot2 <ec>��<ec>�� <ec>��<ec>��
+title: 데이터 과학
+subtitle: ggplot2 색상 제어
 output:
   html_document: 
     keep_md: yes
@@ -12,38 +12,38 @@ mainfont: NanumGothic
 
 
 
-### `gapminder` <eb>��<ec>��<ed>�� 준�<84>[^viz-ggplot2-control] 
+### `gapminder` 데이터 준비[^viz-ggplot2-control] 
 
 [^viz-ggplot2-control]: [Taking control of qualitative colors in ggplot2](https://stat545-ubc.github.io/block019_enforce-color-scheme.html)
 
 
-�<ad>가가 2개만 <ed>��<ed>��<eb>�� <ec>��<ec>��<ec>��<eb>��<ec>���<bc> <ec>��<ec>��<ed>�� `gapminder` <eb>��<ec>��<ed>���<bc> 불러<ec>��<eb>��.
+국가가 2개만 포함된 오세아니아를 제외한 `gapminder` 데이터를 불러온다.
 
-<ec>��구수<ec>�� 기반<ed>��<ec>�� �<ad>가 <ec>��<ec>��<ec>�� <ec>��<eb>��<ed>���<a0> <eb>��<ec>�� <eb>��<ec>��<ed>��<eb>�� <ec>��<eb>��<ed>��<eb>��.
-<ec>��<ec>��<eb>�� <ec>��<eb>�� 거품그림<ec>��<ec>�� <ed>�� �<ad>가가 <ec>��<ec><9d>� �<ad>가�<bc> 가리는 것을 방�<a7>�<ed>���<b0> <ec>��<ed>��<ec>��<eb>��.
-<ec>��<ed>��게도, <eb>��<ec>��<ed>�� <ed>��<ec>�� <ec>��<ec>��가 <ec>��각적 <ec>��출물<ec>�� <ec>��<ed>��<ec>�� 미치<eb>�� <ec>��례<eb>��.
-<ed>��지�<8c>, `ggplot2`<eb>�� `lattice` <ed>��<ec><9d>� 기본 그래<ed>�� <ec>��<ec>��<ed>��보다 <ec>��<eb>�� 것에 <eb>�� <ec>��<ed>��<ec>�� 받는<eb>��.
+인구수에 기반해서 국가 요인을 정렬하고 나서 데이터도 정렬한다.
+이유는 아래 거품그림에서 큰 국가가 작은 국가를 가리는 것을 방지하기 위함이다.
+슬프게도, 데이터 행의 순서가 시각적 산출물에 영향을 미치는 사례다.
+하지만, `ggplot2`는 `lattice` 혹은 기본 그래픽 시스템보다 이런 것에 덜 영향을 받는다.
 
-*2015-10-19: GitHub<ec>��<ec>�� 가<ec>��<ec>�� `ggplot2` 버젼 1.0.1.9003 <ec>�� <ec>��<ec>��<ed>��<eb>��.
-`dev` 개발버젼<ec>�� CRAN <ec><a0>�<ec>��<ec>�� 버젼보다 변경사<ed>��<ec>�� 많이 반영<eb>��<ec>�� <ec>��<eb>��!*
+*2015-10-19: GitHub에서 가져온 `ggplot2` 버젼 1.0.1.9003 을 사용한다.
+`dev` 개발버젼이 CRAN 저장소 버젼보다 변경사항이 많이 반영되어 있다!*
 
 
 ~~~{.r}
 library(ggplot2)
 library(gapminder)
+suppressPackageStartupMessages(library(dplyr))
 ~~~
 
 
 
 ~~~{.output}
-Error in library(gapminder): there is no package called 'gapminder'
+Warning: package 'dplyr' was built under R version 3.2.5
 
 ~~~
 
 
 
 ~~~{.r}
-suppressPackageStartupMessages(library(dplyr))
 jdat <- gapminder %>% 
   filter(continent != "Oceania") %>% 
   droplevels() %>% 
@@ -51,19 +51,12 @@ jdat <- gapminder %>%
   arrange(year, country)  
 ~~~
 
+### 점에 대한 크기와 색상 제어
 
+`ggplot2`를 사용해서 전통적 `gapminder` 거품그림을 생성해 나간다.
+기어가고 나서, 걷고, 마지막으로 뛴다.
 
-~~~{.output}
-Error in eval(expr, envir, enclos): object 'gapminder' not found
-
-~~~
-
-### <ec>��<ec>�� <eb><8c>�<ed>�� <ed>��기�<99>� <ec>��<ec>�� <ec>��<ec>��
-
-`ggplot2`�<bc> <ec>��<ec>��<ed>��<ec>�� <ec>��<ed>��<ec>�� `gapminder` 거품그림<ec>�� <ec>��<ec>��<ed>�� <eb>��간다.
-기어가�<a0> <eb>��<ec>��, 걷고, 마�<a7>�막으�<9c> <eb>��<eb>��.
-
-먼�<a0>�, <eb>��<eb>�� <ed>��<eb>���<bc> <ec>��<ec>��<ed>��<ec>�� 간단<ed>�� <ec>��<ec>��<eb>���<bc> <ec>��<ec>��<ed>��<eb>��.
+먼저, 년도 하나를 선정해서 간단한 산점도를 생성한다.
 
 
 ~~~{.r}
@@ -73,120 +66,64 @@ q <-
   filter(year == j_year) %>% 
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   scale_x_log10(limits = c(230, 63000))
-~~~
-
-
-
-~~~{.output}
-Error in eval(expr, envir, enclos): object 'jdat' not found
-
-~~~
-
-
-
-~~~{.r}
 q + geom_point()
 ~~~
 
+<img src="fig/scatterplot-1.png" title="plot of chunk scatterplot" alt="plot of chunk scatterplot" style="display: block; margin: auto;" />
 
-
-~~~{.output}
-Error in q + geom_point(): non-numeric argument to binary operator
-
-~~~
-
-<ec>��<eb>��<eb>��<eb>�� 기호, <ed>���<b0>, <ec>��<ec>��<ec>�� <ec>��<ec>��<ed>��<eb>��.
-<eb>��<ec>�� 불쾌<ed>�� <ec>��<ec>��<ec>�� <ec>��<ec>��<ed>��<ec>��, <ec>��공과 <ec>��<ed>���<bc> <ed>��<ec>��<ed>�� 명확<ed>�� <ed>��<eb>��.
-멎진 <ec>��<ec>��체계�<bc> <ec>��<ec>��<ed>��<eb>��<eb>�� <ec>��교한 조작<ec>�� <ed>�� <ec>��<ec>��<ec>�� 지금�<9d>� <ec>��<eb>��<eb>��.
-배짱<ec>�� 가<ec>��<eb>��!
+제도되는 기호, 크기, 색상을 제어한다.
+다소 불쾌한 설정을 사용해서, 성공과 실패를 확실히 명확히 한다.
+멎진 색상체계를 적용하는데 정교한 조작을 할 시점이 지금은 아니다.
+배짱을 가져라!
 
 
 ~~~{.r}
-## 기호<U+653C><U+3E63>�� <U+653C><U+3E62><U+383C><U+3E63>�<U+653C><U+3E64>�� <U+653C><U+3E64>��기�<U+393C><U+3E39>� <U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E63>�� 채우<U+653C><U+3E62>�� 것을 <U+653C><U+3E63>��<U+653C><U+3E63>��<U+653C><U+3E64>�� <U+653C><U+3E63>�� <U+653C><U+3E63>��<U+653C><U+3E62>��가? 그렇<U+653C><U+3E62>��!
+## 기호에 대한 크기와 색상을 채우는 것을 제어할 수 있는가? 그렇다!
 q + geom_point(pch = 21, size = 8, fill = I("darkorchid1"))
 ~~~
 
+<img src="fig/scatterplot-obnoxious-points-1.png" title="plot of chunk scatterplot-obnoxious-points" alt="plot of chunk scatterplot-obnoxious-points" style="display: block; margin: auto;" />
 
+### 원크기 = 인구수
 
-~~~{.output}
-Error in q + geom_point(pch = 21, size = 8, fill = I("darkorchid1")): non-numeric argument to binary operator
-
-~~~
-
-### <ec>��<ed>���<b0> = <ec>��구수
-
-<ec>��<ed>��기로 <ec>��구수�<bc> 반영<ed>��고자 <ed>��<eb>��. 
-반�<a7>�름을 바로 <ec>��<ec>��<ed>�� <ec>�� <ec>���<b0> <eb>��문에, �<ad>가�<84> <ec>��구에<ec>�� <ec>��<ec>�� <ed>��기�<a5><bc> 결정<ed>��<eb>���<9d> 관계�<a5><bc> $면적 = \pi r^2$<ec>���<9c> <ec>��<ec>��<ed>��<eb>��.
-첫번�<b8> <ec>��<eb>��<ec>��<ec>�� <ec>��부 미비<ec>��<ec>�� 발견<eb>��<ec>��<eb>��: <ec>��<ec>�� <ed>��기�<b0>� <eb>���<b4> <ec>��<ec>���<a0>, <ed>��기별 범�<a1>�<eb>�� <ec>��<ed>��<eb>�� 것이 <ec>��<eb>��<eb>��.
-<eb>��번째 <ec>��<eb>��<ec>��<ec>��, `show_guide = FALSE` <ec>��<ed>��<ec>��<ec>�� <ec>��<ec>��<ec>���<9c> 범�<a1>��<bc> <ec>��겼고, 
-$\sqrt(pop / \pi)$ �<9c> <ec>��<ed>��기�<a5><bc> 매핑<ed>��<ec>�� 명시<ec>��<ec>���<9c> 규모<ec>�� <eb><8c>�<ed>�� 범위�<bc> <ec>��<ec>��<ed>��<ec>�� <ec>��<ec>�� <ed>��기�<a5><bc> 증�<b0>�<ec>��켰다.
+원크기로 인구수를 반영하고자 한다. 
+반지름을 바로 제어할 수 있기 때문에, 국가별 인구에서 원의 크기를 결정하도록 관계를 $면적 = \pi r^2$으로 설정한다.
+첫번째 시도에서 일부 미비점이 발견되었다: 원의 크기가 너무 작았고, 크기별 범례는 원하던 것이 아니다.
+두번째 시도에서, `show_guide = FALSE` 선택옵션 설정으로 범례를 숨겼고, 
+$\sqrt(pop / \pi)$ 로 원크기를 매핑해서 명시적으로 규모에 대한 범위를 설정해서 원의 크기를 증가시켰다.
 
 
 ~~~{.r}
 ## ggplot2 ALERT: size now means size, not radius!
 q + geom_point(aes(size = pop), pch = 21)
-~~~
-
-
-
-~~~{.output}
-Error in q + geom_point(aes(size = pop), pch = 21): non-numeric argument to binary operator
-
-~~~
-
-
-
-~~~{.r}
 (r <- q +
    geom_point(aes(size = pop), pch = 21, show.legend = FALSE) +
    scale_size_continuous(range=c(1,40)))
 ~~~
 
+<img src="fig/scatterplot-population-area-1.png" title="plot of chunk scatterplot-population-area" alt="plot of chunk scatterplot-population-area" width="50%" style="display: block; margin: auto;" /><img src="fig/scatterplot-population-area-2.png" title="plot of chunk scatterplot-population-area" alt="plot of chunk scatterplot-population-area" width="50%" style="display: block; margin: auto;" />
 
+### 요인으로 결정된 색상으로 원을 채워넣는다.
 
-~~~{.output}
-Error in q + geom_point(aes(size = pop), pch = 21, show.legend = FALSE): non-numeric argument to binary operator
-
-~~~
-
-### <ec>��<ec>��<ec>���<9c> 결정<eb>�� <ec>��<ec>��<ec>���<9c> <ec>��<ec>�� 채워<eb>��<eb>��<eb>��.
-
-`aes()` <ed>��<ec>���<bc> <ec>��<ec>��<ed>��<ec>�� <ec>��<ec>��<ec>�� <ec>��<ec>��<ec>���<9c> 매핑<ed>��<eb>��.
-<ec>��<ec>��, `continent` <ec>��<ec>���<bc> <ec>��<eb>�� <ec>��<ec>��조합<ec>�� 맞춰 <ec>��<ec>��<ed>��<eb>��.
-<eb><8c>�륙별 <ed>��<ec>��(facet)<ec>�� <ec>��<ec>��<ed>��<eb>��. <ed>��<ec>��<ec>�� <ec>��<ec>��<ed>��<eb>�� <ec>��<ec>��<eb>�� 맞춤<ed>�� <ec>��<ec>��조합<ec>�� <ec>��<ec>��<ed>��면서 진도<ec>��<ed>��<ec>�� 
-<ec>��검<ed>�� <eb>��가<eb>��<eb>�� <eb>��<ec><9b>�<ec>�� <eb>��<eb>��. 가<eb>�� <ec>��<eb>��<ec>�� <ec>��<eb>�� 모든 �<ad>가가 <eb>��<ec>�� <ec>��조�<a5><bc> <eb>���<b0> <eb>��문에,
-만약 <eb><8c>��<99> <ed>��<ec>��<ec>�� <eb>��<ec>��<ed>�� <ec>��<ec>��<ec>�� <ec>��<ec>�� <ec>��<eb>���<b4>, 뭔�<b0>� <ec>��못된 것을 <ec>��지<ed>�� <ec>�� <ec>���<8c> <eb>��<eb>��.
+`aes()` 함수를 사용해서 요인을 색상으로 매핑한다.
+우선, `continent` 요인과 자동 색상조합에 맞춰 사용한다.
+대륙별 패싯(facet)을 사용한다. 패싯을 사용하는 이유는 맞춤형 색상조합을 사용하면서 진도상황을 
+점검해 나가는데 도움이 된다. 가령 유럽에 있는 모든 국가가 녹색 색조를 띄기 때문에,
+만약 대륙 패싯에 다양한 색상의 원이 있다면, 뭔가 잘못된 것을 인지할 수 있게 된다.
 
 
 ~~~{.r}
 (r <- r + facet_wrap(~ continent) + ylim(c(39, 87)))
-~~~
-
-
-
-~~~{.output}
-Error in eval(expr, envir, enclos): object 'r' not found
-
-~~~
-
-
-
-~~~{.r}
 r + aes(fill = continent)
 ~~~
 
+<img src="fig/scatterplot-continent-fill-1.png" title="plot of chunk scatterplot-continent-fill" alt="plot of chunk scatterplot-continent-fill" width="50%" style="display: block; margin: auto;" /><img src="fig/scatterplot-continent-fill-2.png" title="plot of chunk scatterplot-continent-fill" alt="plot of chunk scatterplot-continent-fill" width="50%" style="display: block; margin: auto;" />
 
+### 국가별 생상조합을 설정한다.
 
-~~~{.output}
-Error in eval(expr, envir, enclos): object 'r' not found
-
-~~~
-
-### �<ad>가�<84> <ec>��<ec>��조합<ec>�� <ec>��<ec>��<ed>��<eb>��.
-
-`gapminder` <ed>��<ed>��지<ec>��<eb>�� <eb><8c>�륙과 �<81> �<ad>가�<84> <ec>��<ec>�� <ed>��<eb>��<ed>��가 <eb>��<eb>��<ec>��<eb>��.
-<ec>���<bc> <eb>��<ec>��, [�<ad>가�<84> <ec>��<ec>��조합](https://github.com/jennybc/gapminder/blob/master/data-raw/gapminder-color-scheme-ggplot2.png)<ec>�� 
-<ed>���<ad><ed>��<eb>��.
+`gapminder` 팩키지에는 대륙과 각 국가별 색상 팔레트가 따라온다.
+예를 들어, [국가별 색상조합](https://github.com/jennybc/gapminder/blob/master/data-raw/gapminder-color-scheme-ggplot2.png)을 
+클릭한다.
 
 
 ~~~{.r}
@@ -196,7 +133,8 @@ str(country_colors)
 
 
 ~~~{.output}
-Error in str(country_colors): object 'country_colors' not found
+ Named chr [1:142] "#7F3B08" "#833D07" "#873F07" "#8B4107" ...
+ - attr(*, "names")= chr [1:142] "Nigeria" "Egypt" "Ethiopia" "Congo, Dem. Rep." ...
 
 ~~~
 
@@ -209,49 +147,47 @@ head(country_colors)
 
 
 ~~~{.output}
-Error in head(country_colors): object 'country_colors' not found
+         Nigeria            Egypt         Ethiopia Congo, Dem. Rep. 
+       "#7F3B08"        "#833D07"        "#873F07"        "#8B4107" 
+    South Africa            Sudan 
+       "#8F4407"        "#934607" 
 
 ~~~
 
-`country_colors` <ec>��<ec>��가 <ec>��<ed>���<b3> <ec>��<ec>�� <ec>��<eb>��<eb>��.
-�<ad>가가 <ec>��<ec>���<9c> <eb><8c>�륙내 <ed>��기로 <ec>��<eb>��<eb>��<ec>�� <ec>��<ec>��, <ec>��<ec>��조합<ec>�� <ec>��<ec>��<eb>�� 로직<ec>�� 반영<ed>���<a0> <ec>��<eb>��.
-<ec>��<ec>��<ec>��<ec>���<9c>, <ec>��<ec>��<ec>��<ec>��<eb>�� <ed>��<ec>�� 그렇지<eb>�� <ec>��지�<8c>, 분석<ec>�� <ed>��<ec>��<ec>��<ec>�� <ec>��존하�<b4> <ec>��<eb>��<eb>��.
+`country_colors` 순서가 알파벳 순이 아니다.
+국가가 실제로 대륙내 크기로 정렬되어 있어, 색상조합이 생성된 로직을 반영하고 있다.
+이상적으로, 실제에서는 항상 그렇지는 않지만, 분석이 행순서에 의존하면 안된다.
 
-### `ggplot2`<ec>�� <ec>��<ec>��<eb>�� <ec>��<ec>��조합<ec>�� 준비한<eb>��.
+### `ggplot2`에 사용될 색상조합을 준비한다.
 
-그래<ed>�� 문법(Grammar of Graphics)<ec>��<ec>��, **scale** <ed>��<ec>��가 <eb>��<ec>��<ed>�� 변<ec>��<ec>��<ec>�� `aes` 미학<ec>�� <eb><8c>�<ed>�� 매핑<ec>�� <ec>��<ec>��<ed>��<eb>��.
-지금까지, <ec>��<eb>��<ec>���<9c> `ggplot2`가 <ec>��<ec>�� / 채우�<b0> scale <ec>�� 결정<eb>��<eb>���<9d> <eb>��버려 <eb>��<ec>��<eb>��.
-<ed>��지�<8c>, 맞춤<ed>�� <ec>��<ec>��조합<ec>�� <ec>��<ec>��<ed>��<eb>���<b4>, `country` <ec>��<ec>��<ec>�� `geom_point`<ec>�� <ec>��<ec>��<ec>�� 채우<eb>��<eb>�� 매핑<ec>�� <eb>��<eb>���<9d> <ec>��<ec>��<ed>��<eb>��.
+그래픽 문법(Grammar of Graphics)에서, **scale** 함수가 데이터 변수에서 `aes` 미학에 대한 매핑을 제어한다.
+지금까지, 자동으로 `ggplot2`가 색상 / 채우기 scale 이 결정되도록 내버려 두었다.
+하지만, 맞춤형 색상조합을 사용하려면, `country` 요인이 `geom_point`에 색상을 채우는데 매핑이 되도록 제어한다.
 
-`scale_fill_manual` <ed>��<ec>���<bc> <ec>��<ec>��<ed>��<eb>��. <ec>��<ec>��<ed>�� 척도�<bc> 맞춤<ed>��<ec>���<9c> <ec>��<ec>��<ed>��<eb>��<eb>�� <ec>��<ec>��<eb>��<eb>�� <ed>��<ec>�� 가�<b1> �<91> 구성<ec>��<ec>��<eb>��.
-<ed>��<ec>�� <ec>��<ec>��<eb>�� `value =`<ec>���<9c> 미학�<92> 벡터�<9c> <ec>���<88> 경우<ec>�� <ec>��<ec>��<ec>�� 채워<eb>��<eb>��<eb>��.
-벡터가 명칭<ec>�� 갖게<eb>���<b4>, 매핑과정<ec>��<ec>�� 참고<eb>��<eb>��. <ec>��<eb>�� 기능<ec>�� 믿을 <ec>�� <ec>��<ec>�� <ec>��<eb>���<9c> <ec>��<ec>��<ed>��<eb>��!
-`country_colors` 가 <ec>�� **<ec>��<ed>��<ed>���<8c> <ec>��<ec>��**<ec>�� <ec>��<ed>��<ed>��<eb>�� <ec>��<ec>��<eb>��.
-<ec>���<bc> <ed>��<ed>�� `country` <ec>��<ec>�� <ec>��준<ec>�� <eb><8c>�<ed>�� <ec>��<ec>��, <eb>��<ec>��<ed>�� <ed>�� <ec>��<ec>��, <ed>��<ec><9d>� <ec>��<ed>��<ed>���<8c> <ec>��<eb>�� �<ad>가가 <ec>��<eb>��<eb>��<ec>��<ec>�� <ed>��<eb>��지<ec>�� 
-관<ed>�� 걱정<ec>�� <eb>��<ec>��준<eb>��.
+`scale_fill_manual` 함수를 사용한다. 이산형 척도를 맞춤형으로 제어하는데 사용되는 함수 가족 중 구성원이다.
+핵심 인자는 `value =`으로 미학값 벡터로 이번 경우에 색상을 채워넣는다.
+벡터가 명칭을 갖게되면, 매핑과정에서 참고된다. 이런 기능이 믿을 수 없을 정도로 유용하다!
+`country_colors` 가 왜 **정확하게 작업**을 수행하는 이유다.
+이를 통해 `country` 요인 수준에 대한 순서, 데이터 행 순서, 혹은 정확하게 어떤 국가가 제도되어야 하는지에 
+관한 걱정을 덜어준다.
 
-### `ggplot2` 거품그림<ec>�� <ec>��<ec>��<ed>��<eb>��.
+### `ggplot2` 거품그림을 생성한다.
 
-<ec>�� 지<ec>��<ec>�� <ec>���<b4> <ec>��기성<ec>�� <ec>��<ec>�� <ec>��<eb>���<9c> <eb>��<ec>��<ed>�� 진다.
-<eb>���<b8> 많�<9d>� 것과 마찬가지�<9c>, <ec>��<ec>�� 모든 것을 <ed>��결하�<b4>, <ec>���<90> <ec>��<eb>��. 
-마�<a7>�막으�<9c> 추�<b0>�<ed>�� 최종 비트 <eb>��개는 `aes()`�<bc> <ec>��<ec>��<ed>��<ec>�� �<ad>가가 <ec>��<ec>��<ec>�� 매칭<eb>���<8c> <ed>���<a0>,
-`scale_fill_manual()`<ec>�� <ec>��<ec>��<ed>��<ec>�� 맞춤<ed>�� <ec>��<ec>��조합<ec>�� 명세<ed>��<eb>��.
+이 지점에 오면 사기성이 있을 정도로 단순해 진다.
+다른 많은 것과 마찬가지로, 앞선 모든 것을 해결하면, 정말 쉽다. 
+마지막으로 추가할 최종 비트 두개는 `aes()`를 사용해서 국가가 색상에 매칭되게 하고,
+`scale_fill_manual()`을 사용해서 맞춤형 색상조합을 명세한다.
 
 
 ~~~{.r}
 r + aes(fill = country) + scale_fill_manual(values = country_colors)
 ~~~
 
+<img src="fig/scatterplot-country-fill-1.png" title="plot of chunk scatterplot-country-fill" alt="plot of chunk scatterplot-country-fill" style="display: block; margin: auto;" />
 
+### 한곳에 모두 모아보자.
 
-~~~{.output}
-Error in eval(expr, envir, enclos): object 'r' not found
-
-~~~
-
-### <ed>��곳에 모두 모아보자.
-
-<ec>��<eb>���<bc> <ec>��<ec>��<ed>��<eb>�� <ec>���<b4> 코드<eb>�� <eb>��<ec>���<bc> 같다.
+제도를 완성하는 전체 코드는 다음과 같다.
 
 
 ~~~{.r}
@@ -266,9 +202,4 @@ jdat %>%
   scale_size_continuous(range = c(1,40)) + ylim(c(39, 87))
 ~~~
 
-
-
-~~~{.output}
-Error in eval(expr, envir, enclos): object 'jdat' not found
-
-~~~
+<img src="fig/scatterplot-country-fill-final-1.png" title="plot of chunk scatterplot-country-fill-final" alt="plot of chunk scatterplot-country-fill-final" style="display: block; margin: auto;" />
