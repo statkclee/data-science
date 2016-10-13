@@ -13,6 +13,7 @@ mainfont: NanumGothic
 
 ```{r, include=FALSE}
 source("tools/chunk-options.R")
+library(dplyr)
 ```
 > ## 학습 목표 {.objectives}
 >
