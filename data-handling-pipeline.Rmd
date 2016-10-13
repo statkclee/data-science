@@ -103,6 +103,7 @@ x %>% f(y) %>% g(z)
 과정을 `tidyverse` 팩키지에 수많은 데이터과학자의 노력이 녹아져 있다.
 
 * **데이터 가져오기**
+    - readr : 데이터 가져오기
     - DBI : 데이터베이스
     - haven: SPSS, SAS, Stata
     - httr: 웹 APIs
