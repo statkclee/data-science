@@ -118,3 +118,82 @@ for(file in file_list) {
 ls(pattern="*.csv")
 ```
 
+### 3. 파케이(parquet) 파일과 스파크 클러스터 설정
+
+[파케이(Parquet)](https://parquet.apache.org/)는 하둡에서 컬럼방식으로 저장 포맷이다. 
+파케이는 프로그래밍 언어, 데이터 모델, 혹은 데이터 처리 엔진과 독립적으로 엔진과
+하둡 생태계에 속한 프로젝트에서 컬럼방식으로 데이터를 효율적으로 저장하여 처리성능을 비약적으로 향상시킬 수 있다.
+
+최초 하둡 파일은 텍스트 형태로 저장되지만, 성능에 문제가 있어 이를 개선하기 위해서
+클라우데라 더그 커팅이 `trevini`, 호튼웍스 오웬 오말리가 `ORC` 파일 포맷을 제안했다. 특히,
+ORC 파일은 압축률이 높고 스키마 구조가 우수해 많은 관심을 가졌지만, 하이브에서만 사용가능하다는 단점이 있었다.
+하지만, 하둡 오픈 생태계의 경쟁관계에 있던 클라우데라와 호트웍스는 통합하지 못하고 독자 노선을 걷는 사이
+트위터에서 **파케이**를 오픈소스로 공개했다. ORC는 GZIP 코덱을 파케이는 스냅피(SNAPPY) 코덱으로 압축을 했다는 점과 
+실행환경에서 차이가 날 뿐 서로 지향하는 바는 동일하다. [^zdnet-parquet]
+
+[^zdnet-parquet]: [하둡 속도 높여라...파일 포맷 대권레이스](http://www.zdnet.co.kr/news/news_view.asp?artice_id=20131211140045)
+
+``` {r spark-launch, eval=FALSE}
+# 1. spark 클러스터 실행
+library(sparklyr)
+library(dplyr)
+
+# 2. SPARK_HOME 설정
+Sys.setenv(SPARK_HOME="C:/spark-1.6.2-bin-hadoop2.6")
+
+# 3. 스파크 클러스터 생성
+config <- spark_config()
+config[["sparklyr.defaultPackages"]] <- NULL
+sc <- spark_connect(master = "local", config = config)
+```
+
+#### 3.1. 파케이(parquet) 파일과 불러오기
+
+파케이 파일은 하둡위에서만 돌아가는 특성으로 인해 인터넷에 아직 많이 공개되어 많이 사용되고 있지 못하다.
+따라서 R 데이터프레임(`iris`, `mtcars`)을 `copy_to` 명령어로 스파크 데이터프레임에 대한 참조값을 생성시킨다.
+이를 바탕으로 `spark_write_parquet` 명령어로 로컬 디스크에 파케이 파일을 생성한다. 
+파일을 열어보면 평소 익숙한 `.csv` 파일과는 다른 형태로 저장되어 있으나 그리 걱정할 것은 없다. 
+
+파케이 파일을 불러오는 명령어는 `spark_read_parquet`으로 앞서 저장시킨 파일에 대한 동일한 경로명과 파일명을 지정하고 넘기면 
+스파크 데이터프레임이 생성된다. 
+
+``` {r read-single-parquet-file, eval=FALSE}
+# 4. iris 데이터셋 불러오기
+iris_tbl <- copy_to(sc, iris)
+mtcars_tbl <- copy_to(sc, mtcars)
+
+spark_write_parquet(iris_tbl, "./03.data/iris_tbl.parquet")
+spark_write_parquet(mtcars_tbl, "./03.data/mtcars_tbl.parquet")
+
+spark_read_parquet(sc, "iris_tbl_back", "./03.data/iris_tbl.parquet")
+spark_read_parquet(sc, "mtcars_tbl_back", "./03.data/mtcars_tbl.parquet")
+```
+
+#### 3.2. 다수 파케이(parquet) 파일과 불러오기
+
+파케이 파일 다수를 불러오는 방식은 여러가지 존재한다.
+데모를 위해서 `iris` 데이터를 50개씩 3등분하고 나서 이를 각기 다른 이름의 파케이 파일로 저장한다.
+그리고 나서 **와일드 카드(`*`)** 문자를 사용해서 특정 디렉토리에 원하는 모든 파일이 잡히도록 설정한다.
+일반적인 파케이 파일 불러오는 방식과 동일하게 명령어를 주면 150개 행이 모두 잡힌 스파크 데이터프레임이 생성된 것이 
+확인될 것이다. 
+
+**주의:** 스키마 구조가 동일해야 분리된 파케이 파일이 정상적인 스파크 데이터프레임으로 변환이 된다. 
+특히, 날짜만 달리하는 경우 스키마 구조만 달리하고 일별 정보만 추가로 생성되는 경우 유용하다.
+
+``` {r read-multiple-parquet-files, eval=FALSE}
+# 5. 다수 parquet 파일
+
+iris_50 <- iris[1:50,]
+iris_100 <- iris[51:100,]
+iris_150 <- iris[101:150,]
+
+iris_50_tbl <- copy_to(sc, iris_50)
+iris_100_tbl <- copy_to(sc, iris_100)
+iris_150_tbl <- copy_to(sc, iris_150)
+
+spark_write_parquet(iris_50_tbl, "./03.data/iris_50_tbl.parquet")
+spark_write_parquet(iris_100_tbl, "./03.data/iris_100_tbl.parquet")
+spark_write_parquet(iris_150_tbl, "./03.data/iris_150_tbl.parquet")
+
+spark_read_parquet(sc, "iris_tbl_back", "./03.data/*.parquet")
+```
