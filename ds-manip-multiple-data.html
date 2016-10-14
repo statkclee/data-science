@@ -38,7 +38,7 @@
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <h1 class="title">데이터 과학</h1>
-          <h2 class="subtitle">데이터 다수 다루기</h2>
+          <h2 class="subtitle">데이터 다수 다루기 - 파케이</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
@@ -267,10 +267,55 @@ cols(
 <pre class="output"><code>[1] &quot;mtcars-01.csv&quot;          &quot;mtcars-02.csv&quot;         
 [3] &quot;mtcars-03.csv&quot;          &quot;portal_data_joined.csv&quot;
 </code></pre>
+<h3 id="파케이parquet-파일과-스파크-클러스터-설정">3. 파케이(parquet) 파일과 스파크 클러스터 설정</h3>
+<p><a href="https://parquet.apache.org/">파케이(Parquet)</a>는 하둡에서 컬럼방식으로 저장 포맷이다. 파케이는 프로그래밍 언어, 데이터 모델, 혹은 데이터 처리 엔진과 독립적으로 엔진과 하둡 생태계에 속한 프로젝트에서 컬럼방식으로 데이터를 효율적으로 저장하여 처리성능을 비약적으로 향상시킬 수 있다.</p>
+<p>최초 하둡 파일은 텍스트 형태로 저장되지만, 성능에 문제가 있어 이를 개선하기 위해서 클라우데라 더그 커팅이 <code>trevini</code>, 호튼웍스 오웬 오말리가 <code>ORC</code> 파일 포맷을 제안했다. 특히, ORC 파일은 압축률이 높고 스키마 구조가 우수해 많은 관심을 가졌지만, 하이브에서만 사용가능하다는 단점이 있었다. 하지만, 하둡 오픈 생태계의 경쟁관계에 있던 클라우데라와 호트웍스는 통합하지 못하고 독자 노선을 걷는 사이 트위터에서 <strong>파케이</strong>를 오픈소스로 공개했다. ORC는 GZIP 코덱을 파케이는 스냅피(SNAPPY) 코덱으로 압축을 했다는 점과 실행환경에서 차이가 날 뿐 서로 지향하는 바는 동일하다. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. spark 클러스터 실행</span>
+<span class="kw">library</span>(sparklyr)
+<span class="kw">library</span>(dplyr)
+
+<span class="co"># 2. SPARK_HOME 설정</span>
+<span class="kw">Sys.setenv</span>(<span class="dt">SPARK_HOME=</span><span class="st">&quot;C:/spark-1.6.2-bin-hadoop2.6&quot;</span>)
+
+<span class="co"># 3. 스파크 클러스터 생성</span>
+config &lt;-<span class="st"> </span><span class="kw">spark_config</span>()
+config[[<span class="st">&quot;sparklyr.defaultPackages&quot;</span>]] &lt;-<span class="st"> </span><span class="ot">NULL</span>
+sc &lt;-<span class="st"> </span><span class="kw">spark_connect</span>(<span class="dt">master =</span> <span class="st">&quot;local&quot;</span>, <span class="dt">config =</span> config)</code></pre></div>
+<h4 id="파케이parquet-파일과-불러오기">3.1. 파케이(parquet) 파일과 불러오기</h4>
+<p>파케이 파일은 하둡위에서만 돌아가는 특성으로 인해 인터넷에 아직 많이 공개되어 많이 사용되고 있지 못하다. 따라서 R 데이터프레임(<code>iris</code>, <code>mtcars</code>)을 <code>copy_to</code> 명령어로 스파크 데이터프레임에 대한 참조값을 생성시킨다. 이를 바탕으로 <code>spark_write_parquet</code> 명령어로 로컬 디스크에 파케이 파일을 생성한다. 파일을 열어보면 평소 익숙한 <code>.csv</code> 파일과는 다른 형태로 저장되어 있으나 그리 걱정할 것은 없다.</p>
+<p>파케이 파일을 불러오는 명령어는 <code>spark_read_parquet</code>으로 앞서 저장시킨 파일에 대한 동일한 경로명과 파일명을 지정하고 넘기면 스파크 데이터프레임이 생성된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 4. iris 데이터셋 불러오기</span>
+iris_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris)
+mtcars_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, mtcars)
+
+<span class="kw">spark_write_parquet</span>(iris_tbl, <span class="st">&quot;./03.data/iris_tbl.parquet&quot;</span>)
+<span class="kw">spark_write_parquet</span>(mtcars_tbl, <span class="st">&quot;./03.data/mtcars_tbl.parquet&quot;</span>)
+
+<span class="kw">spark_read_parquet</span>(sc, <span class="st">&quot;iris_tbl_back&quot;</span>, <span class="st">&quot;./03.data/iris_tbl.parquet&quot;</span>)
+<span class="kw">spark_read_parquet</span>(sc, <span class="st">&quot;mtcars_tbl_back&quot;</span>, <span class="st">&quot;./03.data/mtcars_tbl.parquet&quot;</span>)</code></pre></div>
+<h4 id="다수-파케이parquet-파일과-불러오기">3.2. 다수 파케이(parquet) 파일과 불러오기</h4>
+<p>파케이 파일 다수를 불러오는 방식은 여러가지 존재한다. 데모를 위해서 <code>iris</code> 데이터를 50개씩 3등분하고 나서 이를 각기 다른 이름의 파케이 파일로 저장한다. 그리고 나서 <strong>와일드 카드(<code>*</code>)</strong> 문자를 사용해서 특정 디렉토리에 원하는 모든 파일이 잡히도록 설정한다. 일반적인 파케이 파일 불러오는 방식과 동일하게 명령어를 주면 150개 행이 모두 잡힌 스파크 데이터프레임이 생성된 것이 확인될 것이다.</p>
+<p><strong>주의:</strong> 스키마 구조가 동일해야 분리된 파케이 파일이 정상적인 스파크 데이터프레임으로 변환이 된다. 특히, 날짜만 달리하는 경우 스키마 구조만 달리하고 일별 정보만 추가로 생성되는 경우 유용하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 5. 다수 parquet 파일</span>
+
+iris_50 &lt;-<span class="st"> </span>iris[<span class="dv">1</span>:<span class="dv">50</span>,]
+iris_100 &lt;-<span class="st"> </span>iris[<span class="dv">51</span>:<span class="dv">100</span>,]
+iris_150 &lt;-<span class="st"> </span>iris[<span class="dv">101</span>:<span class="dv">150</span>,]
+
+iris_50_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris_50)
+iris_100_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris_100)
+iris_150_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris_150)
+
+<span class="kw">spark_write_parquet</span>(iris_50_tbl, <span class="st">&quot;./03.data/iris_50_tbl.parquet&quot;</span>)
+<span class="kw">spark_write_parquet</span>(iris_100_tbl, <span class="st">&quot;./03.data/iris_100_tbl.parquet&quot;</span>)
+<span class="kw">spark_write_parquet</span>(iris_150_tbl, <span class="st">&quot;./03.data/iris_150_tbl.parquet&quot;</span>)
+
+<span class="kw">spark_read_parquet</span>(sc, <span class="st">&quot;iris_tbl_back&quot;</span>, <span class="st">&quot;./03.data/*.parquet&quot;</span>)</code></pre></div>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="http://stackoverflow.com/questions/11433432/importing-multiple-csv-files-into-r">Importing multiple .csv files into R</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.zdnet.co.kr/news/news_view.asp?artice_id=20131211140045">하둡 속도 높여라…파일 포맷 대권레이스</a><a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
         </div>

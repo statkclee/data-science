@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 데이터 다수 다루기
+subtitle: 데이터 다수 다루기 - 파케이
 output:
   html_document: 
     keep_md: yes

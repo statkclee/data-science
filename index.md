@@ -52,7 +52,7 @@ title: 데이터 과학
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
     - [데이터 작업(dplyr)](data-handling-dplyr.html)
     - [데이터 내보내기](data-handling-export.html)
-    - [데이터 다수 다루기](ds-manip-multiple-data.html)
+    - [데이터 다수 다루기 - 파케이](ds-manip-multiple-data.html)
 1. [R 팩키지](ds-r-pkgs.html)    
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)  
 1. **다양한 데이터**
