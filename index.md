@@ -15,8 +15,6 @@ title: 데이터 과학
     - [R 환경설정과 업데이트](ds-r-environment.html) 
     - [R 프로그래밍 모범사례 - R 함수와 자료구조](ds-writing-fn.html)
 1. [측도와 R 자료구조](ds-data-structure.html)
-    - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
-        - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
     - **자료구조**
         - [시간데이터](data-handling-timendate.html)
         - [데이터테이블](data-handling-datatable.html)
@@ -28,6 +26,9 @@ title: 데이터 과학
     	- [들어가며](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/01-intro.html)
     	- [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
     	- [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
+    - [`dplyr` 데이터베이스](ds-dplyr-sql.html)        
+    - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
+        - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
 1. [함수형 프로그래밍 -- `purrr`](ds-fp.html)
     - [R 함수 작성](ds-fp-write-fn.html)
     - [R 함수형 프로그래밍](ds-fp-purrr.html)
