@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">dplyr 데이터베이스</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>dplyr</code> 힘과 데이터베이스 힘을 결합한다.</li>
+<li>대용량 데이터베이스와 <code>dplyr</code>을 연결한다.</li>
+<li><code>dplyr</code> 동사 혹은 SQL 질의문을 작성하여 최종 작업문을 생성한다.</li>
+<li><code>collect()</code> 함수를 적용하여 최종 <code>tbl_df()</code> 데이터프레임을 생성시킨다.</li>
+</ul>
+</div>
+</section>
+<h3 id="속도와-저장공간-duke-dplyr-sql">1. 속도와 저장공간 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p>구글 제프딘이 모든 엔지니어가 알아야 되는 속도<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>에 대해 언급한 내용을 정리하면 다음과 같다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">작업</th>
+<th align="center">소요 시간</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">L1 캐쉬 참조</td>
+<td align="center">0.5 ns</td>
+</tr>
+<tr class="even">
+<td align="left">L2 캐쉬 참조</td>
+<td align="center">7 ns</td>
+</tr>
+<tr class="odd">
+<td align="left">주기억장치 참조</td>
+<td align="center">100 ns</td>
+</tr>
+<tr class="even">
+<td align="left">주기억장치에서 1 MB 순차적 읽어 오기</td>
+<td align="center">250,000 ns</td>
+</tr>
+<tr class="odd">
+<td align="left">디스크 검색</td>
+<td align="center">10,000,000 ns</td>
+</tr>
+<tr class="even">
+<td align="left">네트워크에서 1 MB 순차적 읽어 오기</td>
+<td align="center">10,000,000 ns</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math inline">\(10 GB\)</span> 텍스트 파일이 있는 경우 전체 데이터를 순차적으로 불러 읽어들이는 경우 소요되는 시간은 다음과 같다.</p>
+<ul>
+<li>파일을 메모리로 올리는 경우 소요 시간
+<ul>
+<li><span class="math inline">\(10 GB \times (250 \mu s / 1 MB) = 0.25초\)</span></li>
+</ul></li>
+<li>디스크에서 파일에 접근하는데 필요한 소요 시간
+<ul>
+<li><span class="math inline">\(10 GB \times (250 \mu s / 1 MB) = 30초\)</span></li>
+</ul></li>
+</ul>
+<p>만약 <span class="math inline">\(100 GB\)</span> 크기 데이터 파일이 있는 경우는 다음과 같다.</p>
+<ul>
+<li>파일을 메모리로 올리는 경우 소요 시간
+<ul>
+<li><span class="math inline">\(100 GB \times (250 \mu s / 1 MB) = 2.5초\)</span></li>
+</ul></li>
+<li>디스크에서 파일에 접근하는데 필요한 소요 시간
+<ul>
+<li><span class="math inline">\(100 GB \times (250 \mu s / 1 MB) = 300초\)</span></li>
+</ul></li>
+</ul>
+<p>일반적으로 메모리 비용이 훨씬 디스크 비용보다 비싼 반면에, 속도는 메모리가 디스크에 비해 훨씬 빠른다. 데이터가 커지게 되면 메모리를 크게하면 되지만, 메모리는 한정되어 확장성에 문제가 있다.</p>
+<p>이에 대한 해법이 <strong>블록(block)</strong>을 생성하는 것인데 아이디어는 유사한 속성을 갖는 행을 집단으로 묶어 한번에 다수 행을 불러 읽어들이는 것이다. 이런 경우 최적 크기를 결정해야 되는데 풀고자 하는 문제에 따라 최적 크기를 결정하면 된다.</p>
+<h3 id="공공-데이터를-dplyr과-sqlite-데이터베이스로-작업-vignettes-dplyr-db-duke-dplyr-sql">2. 공공 데이터를 <code>dplyr</code>과 SQLite 데이터베이스로 작업 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h3>
+<p><a href="https://catalog.data.gov/dataset?res_format=JSON">교통위반(Traffic Violations)</a> 데이터를 <code>read_csv</code> 함수로 불러읽어 온다. 데이터프레임으로 불러읽어들이면 행이 826,934, 열이 35개가 되고 366 MB가 된다. 저장공간도 문제가 되고 나중에 작업을 위해 바이너리로 압축하여 저장하면 <span class="math inline">\(\frac{1}{10}\)</span> 이상 크기가 줄어 27 MB까지 줄일 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#-----------------------------------------------------------------------------------------</span>
+<span class="co"># 01. 환경설정</span>
+<span class="co">#-----------------------------------------------------------------------------------------</span>
+<span class="kw">library</span>(readr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(RSQLite)
+
+<span class="co">#-----------------------------------------------------------------------------------------</span>
+<span class="co"># 02. 빅데이터 가져오기 및 데이터베이스 연결</span>
+<span class="co">#-----------------------------------------------------------------------------------------</span>
+<span class="co"># https://catalog.data.gov/dataset?res_format=JSON</span>
+park &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://data.montgomerycountymd.gov/api/views/4mse-ku6q/rows.csv?accessType=DOWNLOAD&quot;</span>)
+<span class="kw">dim</span>(park)
+<span class="co"># [1] 826934     35</span>
+
+<span class="kw">saveRDS</span>(park, <span class="st">&quot;./03.data/park.rds&quot;</span>)</code></pre></div>
+<p><code>dplyr</code>에서 데이터베이스에 연결하는 경우 <code>src_sqlite()</code>, <code>src_mysql()</code>, <code>src_postgres()</code>, <code>src_bigquery()</code>를 사용한다. 이렇게 생성된 객체는 내부에 데이터가 전혀없는 깡통이다. 데이터가 크지 않는 경우 <code>copy_to</code> 명령어를 사용해서 마치 R 데이터프레임처럼 원데이터베이스에서 R로 데이터를 흘린다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># SQLite 데이터베이스에 연결</span>
+<span class="kw">dir.create</span>(<span class="st">&quot;./03.data/db&quot;</span>,<span class="dt">showWarnings =</span> <span class="ot">FALSE</span>)
+db &lt;-<span class="st"> </span><span class="kw">src_sqlite</span>(<span class="st">&quot;./03.data/park_db.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+<span class="kw">dir</span>(<span class="st">&quot;./03.data/&quot;</span>)
+
+<span class="co"># SQLite 데이터베이스를 R로 가져옮</span>
+park_sqlite  &lt;-<span class="st"> </span><span class="kw">copy_to</span>(db, park, <span class="dt">temporary =</span> <span class="ot">FALSE</span>)
+park_sqlite</code></pre></div>
+<p><code>tbl(db, sql(&quot;SELECT * FROM park LIMIT 10&quot;))</code> 와 같이 <code>db</code> 연결에 <code>sql()</code> 인자를 넣어 직접 SQL 질의문을 실행시키는 것도 가능하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#-----------------------------------------------------------------------------------------</span>
+<span class="co"># 03. SQL 쿼리문 작성</span>
+<span class="co">#-----------------------------------------------------------------------------------------</span>
+<span class="co"># 1. SQL 문장을 바로 전달가능</span>
+
+<span class="kw">tbl</span>(db, <span class="kw">sql</span>(<span class="st">&quot;SELECT * FROM park LIMIT 10&quot;</span>))
+<span class="co"># Source:   query [?? x 35]</span>
+<span class="co"># Database: sqlite 3.8.6 [./03.data/park_db.sqlite3]</span>
+<span class="co"># </span>
+<span class="co"># `Date Of Stop` `Time Of Stop` Agency                SubAgency</span>
+<span class="co"># &lt;chr&gt;          &lt;dbl&gt;  &lt;chr&gt;                    &lt;chr&gt;</span>
+<span class="co"># 1      09/30/2014          85860    MCP  1st district, Rockville</span>
+<span class="co"># 2      03/31/2015          86340    MCP   2nd district, Bethesda</span>
+<span class="co"># 3      09/30/2014          84600    MCP 5th district, Germantown</span>
+<span class="co"># 4      03/31/2015          86340    MCP 5th district, Germantown</span>
+<span class="co"># 5      03/31/2015          86280    MCP   2nd district, Bethesda</span>
+<span class="co"># 6      03/31/2015          86280    MCP    4th district, Wheaton</span>
+<span class="co"># 7      03/31/2015          86280    MCP    4th district, Wheaton</span>
+<span class="co"># 8      03/31/2015          86280    MCP    4th district, Wheaton</span>
+<span class="co"># 9      03/31/2015          86280    MCP    4th district, Wheaton</span>
+<span class="co"># 10     03/31/2015          86280    MCP    4th district, Wheaton</span>
+<span class="co"># # ... with more rows, and 31 more variables: Description &lt;chr&gt;, Location &lt;chr&gt;, Latitude &lt;dbl&gt;, Longitude &lt;dbl&gt;, Accident &lt;chr&gt;, Belts &lt;chr&gt;,</span>
+<span class="co"># #   `Personal Injury` &lt;chr&gt;, `Property Damage` &lt;chr&gt;, Fatal &lt;chr&gt;, `Commercial License` &lt;chr&gt;, HAZMAT &lt;chr&gt;, `Commercial Vehicle` &lt;chr&gt;,</span>
+<span class="co"># #   Alcohol &lt;chr&gt;, `Work Zone` &lt;chr&gt;, State &lt;chr&gt;, VehicleType &lt;chr&gt;, Year &lt;int&gt;, Make &lt;chr&gt;, Model &lt;chr&gt;, Color &lt;chr&gt;, `Violation Type` &lt;chr&gt;,</span>
+<span class="co"># #   Charge &lt;chr&gt;, Article &lt;chr&gt;, `Contributed To Accident` &lt;chr&gt;, Race &lt;chr&gt;, Gender &lt;chr&gt;, `Driver City` &lt;chr&gt;, `Driver State` &lt;chr&gt;, `DL</span>
+<span class="co"># #   State` &lt;chr&gt;, `Arrest Type` &lt;chr&gt;, Geolocation &lt;chr&gt;</span>
+
+<span class="st">`</span><span class="dt">dplyr</span><span class="st">`</span> 동사를 순차적으로 적용시킬 경우 지연연산이 적용되어 바로 실행되지 않고,
+<span class="st">`</span><span class="dt">collect</span><span class="st">`</span>를 실행할 경우 한방에 실행된다. 결국 최종 질의문 혹은 <span class="st">`</span><span class="dt">dplyr</span><span class="st">`</span> 동사들이 완성되면
+<span class="st">`</span><span class="dt">collect()</span><span class="st">`</span>를 사용하여 데이터베이스에서 데이터를 쭉 끌어내서 <span class="st">`</span><span class="dt">tble_df()</span><span class="st">`</span>을 생성시키는 작업흐름을 갖추게 된다.</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 2. dplyr 동사를 순차적으로 적용하여 한방에 실행</span>
+
+select_sql &lt;-<span class="st"> </span>dplyr::<span class="kw">select</span>(park_sqlite, Agency, Accident, Belts, Geolocation) 
+filter_sql &lt;-<span class="st"> </span>dplyr::<span class="kw">filter</span>(select_sql, Accident==<span class="st">&quot;No&quot;</span> &amp;<span class="st"> </span>Belts ==<span class="st">&quot;No&quot;</span>)
+arrange_sql &lt;-<span class="st"> </span>dplyr::<span class="kw">arrange</span>(filter_sql, Agency)
+<span class="kw">collect</span>(arrange_sql)
+
+<span class="co"># # A tibble: 7,410 × 5</span>
+<span class="co"># Agency Accident Belts                           Geolocation `Personal Injury`</span>
+<span class="co"># &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;                                 &lt;chr&gt;             &lt;chr&gt;</span>
+<span class="co"># 1     MCP       No    No (39.1893121333333, -77.1204492666667)               Yes</span>
+<span class="co"># 2     MCP       No    No (39.0471816666667, -77.0506783333333)               Yes</span>
+<span class="co"># 3     MCP       No    No (39.0471816666667, -77.0506783333333)               Yes</span>
+<span class="co"># 4     MCP       No    No (39.0471816666667, -77.0506783333333)               Yes</span>
+<span class="co"># 5     MCP       No    No         (39.0184883333333, -77.01448)               Yes</span>
+<span class="co"># 6     MCP       No    No                                  &lt;NA&gt;               Yes</span>
+<span class="co"># 7     MCP       No    No                                  &lt;NA&gt;               Yes</span>
+<span class="co"># 8     MCP       No    No                                  &lt;NA&gt;               Yes</span>
+<span class="co"># 9     MCP       No    No (38.9879983333333, -77.0273733333333)               Yes</span>
+<span class="co"># 10    MCP       No    No (38.9879983333333, -77.0273733333333)               Yes</span>
+<span class="co"># # ... with 7,400 more rows</span></code></pre></div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://www2.stat.duke.edu/~cr173/Sta523_Fa14/dplyr_sql.html">dplyr and SQL</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://surana.wordpress.com/2009/01/01/numbers-everyone-should-know/">Numbers everyone should know</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html"><code>dplyr</code> Databases</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://www2.stat.duke.edu/~cr173/Sta523_Fa14/dplyr_sql.html">dplyr and SQL</a><a href="#fnref4">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

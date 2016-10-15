@@ -11,9 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
+
 > ## 학습 목표 {.objectives}
 >
 > * `dplyr` 힘과 데이터베이스 힘을 결합한다.
@@ -70,7 +68,8 @@ $10 GB$ 텍스트 파일이 있는 경우 전체 데이터를 순차적으로 �
 저장공간도 문제가 되고 나중에 작업을 위해 바이너리로 압축하여 저장하면 $\frac{1}{10}$ 이상 크기가 줄어 27 MB까지 줄일 수 있다.
 
 
-``` {r dplyr-import, eval=FALSE}
+
+~~~{.r}
 #-----------------------------------------------------------------------------------------
 # 01. 환경설정
 #-----------------------------------------------------------------------------------------
@@ -87,13 +86,14 @@ dim(park)
 # [1] 826934     35
 
 saveRDS(park, "./03.data/park.rds")
-```
+~~~
 
 `dplyr`에서 데이터베이스에 연결하는 경우 `src_sqlite()`, `src_mysql()`, `src_postgres()`, `src_bigquery()`를 
 사용한다. 이렇게 생성된 객체는 내부에 데이터가 전혀없는 깡통이다.
 데이터가 크지 않는 경우 `copy_to` 명령어를 사용해서 마치 R 데이터프레임처럼 원데이터베이스에서 R로 데이터를 흘린다.
 
-``` {r dplyr-sqlite, eval=FALSE}
+
+~~~{.r}
 # SQLite 데이터베이스에 연결
 dir.create("./03.data/db",showWarnings = FALSE)
 db <- src_sqlite("./03.data/park_db.sqlite3", create = TRUE)
@@ -102,12 +102,13 @@ dir("./03.data/")
 # SQLite 데이터베이스를 R로 가져옮
 park_sqlite  <- copy_to(db, park, temporary = FALSE)
 park_sqlite
-```
+~~~
 
 `tbl(db, sql("SELECT * FROM park LIMIT 10"))` 와 같이 `db` 연결에 `sql()` 인자를 넣어 직접 SQL
 질의문을 실행시키는 것도 가능하다.
 
-``` {r dplyr-sqlite-sql, eval=FALSE}
+
+~~~{.r}
 #-----------------------------------------------------------------------------------------
 # 03. SQL 쿼리문 작성
 #-----------------------------------------------------------------------------------------
@@ -138,9 +139,9 @@ tbl(db, sql("SELECT * FROM park LIMIT 10"))
 `dplyr` 동사를 순차적으로 적용시킬 경우 지연연산이 적용되어 바로 실행되지 않고,
 `collect`를 실행할 경우 한방에 실행된다. 결국 최종 질의문 혹은 `dplyr` 동사들이 완성되면
 `collect()`를 사용하여 데이터베이스에서 데이터를 쭉 끌어내서 `tble_df()`을 생성시키는 작업흐름을 갖추게 된다.
+~~~
 
-
-``` {r dplyr-sqlite-lazyeval, eval=FALSE}
+~~~{.r}
 # 2. dplyr 동사를 순차적으로 적용하여 한방에 실행
 
 select_sql <- dplyr::select(park_sqlite, Agency, Accident, Belts, Geolocation) 
@@ -162,4 +163,4 @@ collect(arrange_sql)
 # 9     MCP       No    No (38.9879983333333, -77.0273733333333)               Yes
 # 10    MCP       No    No (38.9879983333333, -77.0273733333333)               Yes
 # # ... with 7,400 more rows
-```
+~~~
