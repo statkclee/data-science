@@ -197,6 +197,7 @@
 </tr>
 </tbody>
 </table>
+<p><img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="77%" /></p>
 <h3 id="broom-팩키지-3-종세트">2. <code>broom</code> 팩키지 3 종세트</h3>
 <p>후속작업을 이어나갈 수 있도록 모형 출력결과를 처리하는 <code>broom</code> 3종 세트가 준비되어 있다.</p>
 <ul>
@@ -690,11 +691,289 @@
 </tbody>
 </table>
 <h3 id="다수-모형-many-models">4. 다수 모형 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p>다수 모형이 가능한 컴퓨팅 파워가 커감에 따라 수학적으로 엄격하게 접근하거나 비용을 많이 들여 실험을 수행하기 보다는 컴퓨터를 활용한 접근법이 경제적으로도 효과적이며 정확성에서도 높은 품질을 보여주기 때문이다. 하지만, 모형을 하나만 갖을 때보다 다수 모형이 출현하는 경우가 빈번하게 목도된다.</p>
+<ul>
+<li>모수를 달리함</li>
+<li>다른 모형을 적용</li>
+<li>부츠트랩에 따른 반복</li>
+<li>하위집단 모형</li>
+<li>앙상블 투표 모형</li>
+</ul>
+<p>이런 다양한 경우 데이터에 적합시킨 수많은 모형 결과를 저장하여 이를 분석할 필요가 있다. 이런 경우 편리한 방식을 제공하는 팩키지가 <code>broom</code>이다.</p>
+<h4 id="dplyr과-broom-결합-combine-groom-dplyr">4.1. <code>dplyr</code>과 <code>broom</code> 결합 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h4>
+<p><code>broom</code>은 일관된 형식으로 단일 분석결과를 요약하는데 매우 유용하다. 특히, <code>dplyr</code> 팩키지 <code>group_by()</code>, <code>do()</code> 함수와 궁합이 잘 맞는다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##===========================================================================
+## 01. broom &amp; dplyr
+##===========================================================================
+<span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(broom)))
+<span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(dplyr)))
+<span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(ggplot2)))
+
+<span class="kw">data</span>(<span class="st">&quot;Orange&quot;</span>)
+
+<span class="co">#---------------------------------------------------------------------------</span>
+<span class="co"># 1.1. 오렌지 나무 시각화</span>
+<span class="co">#---------------------------------------------------------------------------</span>
+
+<span class="kw">ggplot</span>(Orange, <span class="kw">aes</span>(age, circumference, <span class="dt">color =</span> Tree)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="fig/broom-dplyr-orange-1.png" title="plot of chunk broom-dplyr-orange" alt="plot of chunk broom-dplyr-orange" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---------------------------------------------------------------------------</span>
+<span class="co"># 1.2. 전체 상관분석과 group_by() 나무집단별 상관분석</span>
+<span class="co">#---------------------------------------------------------------------------</span>
+
+<span class="kw">cor</span>(Orange$age, Orange$circumference)</code></pre></div>
+<pre class="output"><code>[1] 0.9135189
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Orange %&gt;%<span class="st"> </span><span class="kw">group_by</span>(Tree) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">correlation =</span> <span class="kw">cor</span>(age, circumference)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(correlation))</code></pre></div>
+<pre class="output"><code># A tibble: 5 × 2
+   Tree correlation
+  &lt;ord&gt;       &lt;dbl&gt;
+1     3   0.9881766
+2     5   0.9877376
+3     2   0.9873624
+4     1   0.9854675
+5     4   0.9844610
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---------------------------------------------------------------------------</span>
+<span class="co"># 1.3. 전체 상관분석과 나무집단별 상관분석</span>
+<span class="co">#---------------------------------------------------------------------------</span>
+
+<span class="kw">cor.test</span>(Orange$age, Orange$circumference)</code></pre></div>
+<pre class="output"><code>
+    Pearson&#39;s product-moment correlation
+
+data:  Orange$age and Orange$circumference
+t = 12.9, df = 33, p-value = 1.931e-14
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.8342364 0.9557955
+sample estimates:
+      cor 
+0.9135189 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Orange %&gt;%<span class="st"> </span><span class="kw">group_by</span>(Tree) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">do</span>(<span class="kw">tidy</span>(<span class="kw">cor.test</span>(.$age, .$circumference)))</code></pre></div>
+<pre class="output"><code>Source: local data frame [5 x 7]
+Groups: Tree [5]
+
+   Tree  estimate statistic      p.value parameter  conf.low conf.high
+  &lt;ord&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1     3 0.9881766  14.41188 2.901046e-05         5 0.9189858 0.9983260
+2     1 0.9854675  12.97258 4.851902e-05         5 0.9012111 0.9979400
+3     5 0.9877376  14.14686 3.177093e-05         5 0.9160865 0.9982635
+4     2 0.9873624  13.93129 3.425041e-05         5 0.9136142 0.9982101
+5     4 0.9844610  12.53575 5.733090e-05         5 0.8946782 0.9977964
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---------------------------------------------------------------------------</span>
+<span class="co"># 1.4. 나무집단별 회귀분석</span>
+<span class="co">#---------------------------------------------------------------------------</span>
+
+Orange %&gt;%<span class="st"> </span><span class="kw">group_by</span>(Tree) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">do</span>(<span class="kw">tidy</span>(<span class="kw">lm</span>(age ~<span class="st"> </span>circumference, <span class="dt">data=</span>.)))</code></pre></div>
+<pre class="output"><code>Source: local data frame [10 x 6]
+Groups: Tree [5]
+
+    Tree          term    estimate  std.error  statistic      p.value
+   &lt;ord&gt;         &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;
+1      3   (Intercept) -209.512321 85.2682904 -2.4570954 5.743323e-02
+2      3 circumference   12.038885  0.8353445 14.4118806 2.901046e-05
+3      1   (Intercept) -264.673437 98.6205569 -2.6837553 4.362351e-02
+4      1 circumference   11.919245  0.9188029 12.9725813 4.851902e-05
+5      5   (Intercept)  -54.484097 76.8862788 -0.7086323 5.102144e-01
+6      5 circumference    8.787132  0.6211365 14.1468610 3.177093e-05
+7      2   (Intercept) -132.439725 83.1314146 -1.5931369 1.720092e-01
+8      2 circumference    7.795225  0.5595479 13.9312907 3.425041e-05
+9      4   (Intercept)  -76.513671 88.2943757 -0.8665747 4.257969e-01
+10     4 circumference    7.169842  0.5719516 12.5357484 5.733090e-05
+</code></pre>
+<p>모든 오렌지 나무를 대상으로 나무연령과 나무둘레를 상관 관계가 <code>0.9135189</code>로 나타나지만, 나무를 집단별로 상관관계를 구하게 되면 <code>0.98...</code>으로 더 높아지는 것이 확인된다.</p>
+<p>각 오렌지 나무 집단별로 회귀분석을 수행하고 이를 <code>tidy</code>로 깔끔하게 정제했다. 하지만, 꼭 그렇게 할 필요는 없고, 전체 모형에 대한 <code>glance()</code>, 각 관측점에 대한 결과 <code>augment()</code>, 그리고 모형 구성요소에 대해 <code>tidy()</code>를 저장하여 후속분석에 입력값으로 사용할 수도 있다.</p>
+<h4 id="추가-후속-분석">추가 후속 분석</h4>
+<ol style="list-style-type: decimal">
+<li>가장 영향이 큰 변수 식별을 위해 p-값 기준으로 정렬</li>
+<li>p-값 히스토그램</li>
+<li>Vocano 그래프를 통해 p-값을 효과크기 추정과 비교</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---------------------------------------------------------------------------</span>
+<span class="co"># 1.5. `tidy` 출력뿐만 아니라 전체 출력결과 재사용</span>
+<span class="co">#---------------------------------------------------------------------------</span>
+<span class="kw">data</span>(mtcars)
+
+lm_mod &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span><span class="kw">group_by</span>(am) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">do</span>(<span class="dt">fit =</span> <span class="kw">lm</span>(wt ~<span class="st"> </span>mpg +<span class="st"> </span>qsec +<span class="st"> </span>gear, .))
+
+lm_mod</code></pre></div>
+<pre class="output"><code>Source: local data frame [2 x 2]
+Groups: &lt;by row&gt;
+
+# A tibble: 2 × 2
+     am      fit
+* &lt;dbl&gt;   &lt;list&gt;
+1     0 &lt;S3: lm&gt;
+2     1 &lt;S3: lm&gt;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># tidy, augment, glance</span>
+lm_mod %&gt;%<span class="st"> </span><span class="kw">tidy</span>(fit)</code></pre></div>
+<pre class="output"><code>Source: local data frame [8 x 6]
+Groups: am [2]
+
+     am        term    estimate  std.error   statistic      p.value
+  &lt;dbl&gt;       &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+1     0 (Intercept)  4.91754623 1.39665675  3.52094116 0.0030879519
+2     0         mpg -0.19188914 0.04428329 -4.33321746 0.0005909953
+3     0        qsec  0.09191361 0.09832067  0.93483509 0.3646797728
+4     0        gear  0.14653754 0.36819363  0.39799041 0.6962441554
+5     1 (Intercept)  4.28307028 3.45859958  1.23838281 0.2469014834
+6     1         mpg -0.10098320 0.02943409 -3.43082488 0.0074984578
+7     1        qsec  0.03983165 0.15112135  0.26357393 0.7980436972
+8     1        gear -0.02288330 0.34878226 -0.06560912 0.9491232955
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm_mod %&gt;%<span class="st"> </span><span class="kw">augment</span>(fit)</code></pre></div>
+<pre class="output"><code>Source: local data frame [32 x 12]
+Groups: am [2]
+
+      am    wt   mpg  qsec  gear  .fitted   .se.fit      .resid       .hat
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+1      0 3.215  21.4 19.44     3 3.037532 0.2481648  0.17746820 0.22627982
+2      0 3.440  18.7 17.02     3 3.333202 0.2083952  0.10679845 0.15956625
+3      0 3.460  18.1 20.22     3 3.742459 0.2556630 -0.28245859 0.24016026
+4      0 3.570  14.3 15.84     3 4.069056 0.2070275 -0.49905571 0.15747857
+5      0 3.190  24.4 20.00     4 2.659874 0.3007101  0.53012646 0.33224734
+6      0 3.150  22.8 22.90     4 3.233446 0.3628134 -0.08344563 0.48365086
+7      0 3.440  19.2 18.30     4 3.501444 0.2989364 -0.06144393 0.32833948
+8      0 3.440  17.8 18.90     4 3.825237 0.2911555 -0.38523690 0.31146937
+9      0 4.070  16.4 17.40     3 3.809474 0.1397045  0.26052626 0.07171104
+10     0 3.730  17.3 17.60     3 3.655156 0.1466485  0.07484376 0.07901707
+# ... with 22 more rows, and 3 more variables: .sigma &lt;dbl&gt;,
+#   .cooksd &lt;dbl&gt;, .std.resid &lt;dbl&gt;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm_mod %&gt;%<span class="st"> </span><span class="kw">glance</span>(fit)</code></pre></div>
+<pre class="output"><code>Source: local data frame [2 x 12]
+Groups: am [2]
+
+     am r.squared adj.r.squared     sigma statistic      p.value    df
+  &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;int&gt;
+1     0 0.6247125     0.5496550 0.5216957  8.323119 0.0017021627     4
+2     1 0.8332251     0.7776335 0.2909423 14.988320 0.0007593904     4
+# ... with 5 more variables: logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;,
+#   deviance &lt;dbl&gt;, df.residual &lt;int&gt;
+</code></pre>
+<h4 id="broom-부츠트랩-groom-bootstrap">4.2. <code>broom</code> 부츠트랩 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h4>
+<p><code>mtcars</code> 데이터셋에서 연비와 차체무게와의 비선형 관계를 회귀식으로 적합해본다. 이러한 비선형 모형을 상정하는 이유는 산점도 결과 차체무게와 연비사이 역의 관계가 파악되기 때문이다. 직관적으로도 고급대형차가 차체무게가 많이 나가고 연비가 떨어지는 것은 널리 알려진 사실이다.</p>
+<p><span class="math display">\[연비 = k \times \frac{1}{차체무게} + \beta\]</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 산점도</span>
+<span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() +<span class="st"> </span>
+<span class="st">  </span>
+<span class="co"># 연비 = 1/차체무게, 비선형 모형 추정</span>
+<span class="st">  </span>
+nlsfit &lt;-<span class="st"> </span><span class="kw">nls</span>(mpg ~<span class="st"> </span>k /<span class="st"> </span>wt +<span class="st"> </span>b, mtcars, <span class="dt">start=</span><span class="kw">list</span>(<span class="dt">k=</span><span class="dv">1</span>, <span class="dt">b=</span><span class="dv">0</span>))</code></pre></div>
+<pre class="output"><code>Error in ggplot(mtcars, aes(wt, mpg)) + geom_point() + nlsfit &lt;- nls(mpg ~ : 함수 &quot;+&lt;-&quot;를 찾을 수 없습니다
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(nlsfit)</code></pre></div>
+<pre class="output"><code>Error in summary(nlsfit): 객체 &#39;nlsfit&#39;를 찾을 수 없습니다
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 데이터와 비선형모형 시각화</span>
+
+<span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">predict</span>(nlsfit)))</code></pre></div>
+<pre class="output"><code>Error in predict(nlsfit): 객체 &#39;nlsfit&#39;를 찾을 수 없습니다
+</code></pre>
+<p><img src="fig/broom-mtcars-nonlinear-1.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" /></p>
+<p>부츠트랩 표본을 100개 뽑아서 사실 더 많이 만들어 모형을 적합해도 된다. <code>tidy</code>함수를 통해 초기값 <code>k=1</code>, <code>b=0</code>으로 두고 비선형 회귀모형을 적합시켜 비선형 회귀계수에 대한 중위수와 95% 신뢰구간값을 추정한다.</p>
+<p>또한, <code>augment</code> 함수로 100개 모형에 대한 관측점별 적합값을 산출하여 이를 시각화한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bootnls &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span><span class="kw">bootstrap</span>(<span class="dv">100</span>) %&gt;%
+<span class="st">  </span><span class="kw">do</span>(<span class="kw">tidy</span>(<span class="kw">nls</span>(mpg ~<span class="st"> </span>k /<span class="st"> </span>wt +<span class="st"> </span>b, <span class="dt">data=</span>., <span class="dt">start=</span><span class="kw">list</span>(<span class="dt">k=</span><span class="dv">1</span>, <span class="dt">b=</span><span class="dv">0</span>))))
+
+<span class="co"># 추정값과 95% 신뢰구간</span>
+alpha &lt;-<span class="st"> </span>.<span class="dv">05</span>
+bootnls %&gt;%<span class="st"> </span><span class="kw">group_by</span>(term) %&gt;%<span class="st"> </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(estimate),
+                                         <span class="dt">low =</span> <span class="kw">quantile</span>(estimate, alpha /<span class="st"> </span><span class="dv">2</span>),
+                                         <span class="dt">high =</span> <span class="kw">quantile</span>(estimate, <span class="dv">1</span> -<span class="st"> </span>alpha /<span class="st"> </span><span class="dv">2</span>))</code></pre></div>
+<pre class="output"><code># A tibble: 2 × 4
+   term    median        low      high
+  &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+1     b  4.351746  0.5599099  7.679257
+2     k 45.595418 37.3312127 59.060347
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 비선형 회귀모형 부츠트랩 시각화 </span>
+bootnls_aug &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span><span class="kw">bootstrap</span>(<span class="dv">100</span>) %&gt;%
+<span class="st">  </span><span class="kw">do</span>(<span class="kw">augment</span>(<span class="kw">nls</span>(mpg ~<span class="st"> </span>k /<span class="st"> </span>wt +<span class="st"> </span>b, <span class="dt">data=</span>., <span class="dt">start=</span><span class="kw">list</span>(<span class="dt">k=</span><span class="dv">1</span>, <span class="dt">b=</span><span class="dv">0</span>)), <span class="dt">data=</span>.))
+
+<span class="kw">ggplot</span>(bootnls_aug, <span class="kw">aes</span>(wt, mpg)) +<span class="st"> </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span>.fitted, <span class="dt">group=</span>replicate), <span class="dt">alpha=</span>.<span class="dv">2</span>)</code></pre></div>
+<p><img src="fig/broom-mtcars-bootstrap-1.png" title="plot of chunk broom-mtcars-bootstrap" alt="plot of chunk broom-mtcars-bootstrap" style="display: block; margin: auto;" /></p>
+<h4 id="broom-k-평균-군집분석-groom-kmeans">4.3. <code>broom</code> k-평균 군집분석 <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></h4>
+<p>k-평균 군집분석에 <code>broom</code>을 사용하여 최적 군집 k 갯수를 계산해 낼 수 있다. 이를 시연하기 위해 몇가지 사전작업을 수행한다. 2차원 평면에 시각화를 위해 주성분분석(<code>prcomp</code>)으로 주요인을 2개를 뽑아내고 이를 바탕으로 k-평균 알고리즘을 군집갯수를 1에서부터 9까지 변화시켜 최적 군집 k 3을 계산해 낸다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(iris)
+<span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Sepal.Length, Sepal.Width, <span class="dt">color =</span> Species)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/iris-kmeans-1.png" title="plot of chunk iris-kmeans" alt="plot of chunk iris-kmeans" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iris_df &lt;-<span class="st"> </span><span class="kw">prcomp</span>(iris[, <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>, <span class="st">&quot;Petal.Length&quot;</span>, <span class="st">&quot;Petal.Width&quot;</span>)])$x[,<span class="dv">1</span>:<span class="dv">2</span>]
+
+kclust &lt;-<span class="st"> </span><span class="kw">kmeans</span>(iris_df, <span class="dt">centers =</span> <span class="dv">3</span>)
+kclust </code></pre></div>
+<pre class="output"><code>K-means clustering with 3 clusters of sizes 50, 61, 39
+
+Cluster means:
+        PC1        PC2
+1 -2.642415 -0.1908850
+2  0.665676  0.3316042
+3  2.346527 -0.2739386
+
+Clustering vector:
+  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 3 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+ [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
+[106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
+[141] 3 3 2 3 3 3 2 3 3 2
+
+Within cluster sum of squares by cluster:
+[1] 13.06924 31.87959 18.87111
+ (between_SS / total_SS =  90.4 %)
+
+Available components:
+
+[1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;    
+[5] &quot;tot.withinss&quot; &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;        
+[9] &quot;ifault&quot;      
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tidy</span>(kclust)</code></pre></div>
+<pre class="output"><code>         x1         x2 size withinss cluster
+1 -2.642415 -0.1908850   50 13.06924       1
+2  0.665676  0.3316042   61 31.87959       2
+3  2.346527 -0.2739386   39 18.87111       3
+</code></pre>
+<p>군집 갯수를 1에서부터 9까지 순차적으로 변화시키면서 k-평균 군집분석을 수행한 값을 <code>kclusts</code> 객체에 저장한다. 이를 바탕으로 모형결과는 <code>tidy</code>, 관측점 결과는 <code>augment</code>, 모형 결과는 <code>glance</code>로 뽑아낸다. 이를 군집수를 바꿔가면서 <code>ggplot</code>, <code>facet_wrap</code>과 조합하여 시각화한다.</p>
+<p>물론 팔꿈치가 꺾이는 3개 지점이 최적 군집이 되는 것도 확인된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최적 군집갯수를 위한 개별 군집분석 후 시각화</span>
+
+kclusts &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">k=</span><span class="dv">1</span>:<span class="dv">9</span>) %&gt;%<span class="st"> </span><span class="kw">group_by</span>(k) %&gt;%<span class="st"> </span><span class="kw">do</span>(<span class="dt">kclust=</span><span class="kw">kmeans</span>(iris_df, .$k)) %&gt;%<span class="st"> </span><span class="kw">ungroup</span>()
+clusters &lt;-<span class="st"> </span>kclusts %&gt;%<span class="st"> </span><span class="kw">group_by</span>(k) %&gt;%<span class="st"> </span><span class="kw">do</span>(<span class="kw">tidy</span>(.$kclust[[<span class="dv">1</span>]]))
+assignments &lt;-<span class="st"> </span>kclusts %&gt;%<span class="st"> </span><span class="kw">group_by</span>(k) %&gt;%<span class="st"> </span><span class="kw">do</span>(<span class="kw">augment</span>(.$kclust[[<span class="dv">1</span>]], iris_df))
+clusterings &lt;-<span class="st"> </span>kclusts %&gt;%<span class="st"> </span><span class="kw">group_by</span>(k) %&gt;%<span class="st"> </span><span class="kw">do</span>(<span class="kw">glance</span>(.$kclust[[<span class="dv">1</span>]]))
+<span class="kw">names</span>(clusters) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;k&quot;</span>, <span class="st">&quot;PC1&quot;</span>, <span class="st">&quot;PC2&quot;</span>, <span class="st">&quot;size&quot;</span>, <span class="st">&quot;withinss&quot;</span>, <span class="st">&quot;cluster&quot;</span>)
+
+p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(assignments, <span class="kw">aes</span>(PC1, PC2)) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color=</span>.cluster)) +<span class="st"> </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>k)
+p1</code></pre></div>
+<p><img src="fig/broom-iris-kmeans-1.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span>p1 +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>clusters, <span class="dt">size=</span><span class="dv">7</span>, <span class="dt">shape=</span><span class="st">&quot;x&quot;</span>)
+p2</code></pre></div>
+<p><img src="fig/broom-iris-kmeans-2.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최적 군집갯수</span>
+<span class="kw">ggplot</span>(clusterings, <span class="kw">aes</span>(k, tot.withinss)) +<span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="fig/broom-iris-kmeans-3.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" /></p>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://cran.r-project.org/web/packages/broom/index.html">broom: Convert Statistical Analysis Objects into Tidy Data Frames</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="http://r4ds.had.co.nz/many-models.html">R for Data Science - 25 Many models</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html">broom and dplyr</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="https://cran.r-project.org/web/packages/broom/vignettes/bootstrapping.html">Tidy bootstrapping with dplyr+broom</a><a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p><a href="https://cran.r-project.org/web/packages/broom/vignettes/kmeans.html">Tidying k-means clustering</a><a href="#fnref5">↩</a></p></li>
 </ol>
 </div>
         </div>

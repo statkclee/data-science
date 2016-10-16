@@ -72,6 +72,9 @@ lmfit <- lm(mpg ~ wt, mtcars)
 | Multiple R-squared:  0.7528, Adjusted R-squared:  0.7446        |                                           |              |
 | F-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10          |                                           |              |
 
+<img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="77%" />
+
+
 ### 2. `broom` 팩키지 3 종세트
 
 후속작업을 이어나갈 수 있도록 모형 출력결과를 처리하는 `broom` 3종 세트가 준비되어 있다.
@@ -236,4 +239,489 @@ Warning: package 'dplyr' was built under R version 3.2.5
 
 [^many-models]: [R for Data Science - 25 Many models](http://r4ds.had.co.nz/many-models.html)
 
+다수 모형이 가능한 컴퓨팅 파워가 커감에 따라 수학적으로 엄격하게 접근하거나 비용을 많이 들여 실험을 수행하기 보다는
+컴퓨터를 활용한 접근법이 경제적으로도 효과적이며 정확성에서도 높은 품질을 보여주기 때문이다. 
+하지만, 모형을 하나만 갖을 때보다 다수 모형이 출현하는 경우가 빈번하게 목도된다.
+
+- 모수를 달리함
+- 다른 모형을 적용
+- 부츠트랩에 따른 반복
+- 하위집단 모형
+- 앙상블 투표 모형 
+
+이런 다양한 경우 데이터에 적합시킨 수많은 모형 결과를 저장하여 이를 분석할 필요가 있다. 이런 경우 편리한 방식을 제공하는 
+팩키지가 `broom`이다.
+
+#### 4.1. `dplyr`과 `broom` 결합 [^combine-groom-dplyr]
+
+[^combine-groom-dplyr]: [broom and dplyr](https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html)
+
+`broom`은 일관된 형식으로 단일 분석결과를 요약하는데 매우 유용하다. 특히, `dplyr` 팩키지
+`group_by()`, `do()` 함수와 궁합이 잘 맞는다.
+
+
+~~~{.r}
+##===========================================================================
+## 01. broom & dplyr
+##===========================================================================
+suppressWarnings(suppressMessages(library(broom)))
+suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(ggplot2)))
+
+data("Orange")
+
+#---------------------------------------------------------------------------
+# 1.1. 오렌지 나무 시각화
+#---------------------------------------------------------------------------
+
+ggplot(Orange, aes(age, circumference, color = Tree)) + 
+  geom_line()
+~~~
+
+<img src="fig/broom-dplyr-orange-1.png" title="plot of chunk broom-dplyr-orange" alt="plot of chunk broom-dplyr-orange" style="display: block; margin: auto;" />
+
+~~~{.r}
+#---------------------------------------------------------------------------
+# 1.2. 전체 상관분석과 group_by() 나무집단별 상관분석
+#---------------------------------------------------------------------------
+
+cor(Orange$age, Orange$circumference)
+~~~
+
+
+
+~~~{.output}
+[1] 0.9135189
+
+~~~
+
+
+
+~~~{.r}
+Orange %>% group_by(Tree) %>% 
+  summarize(correlation = cor(age, circumference)) %>% 
+  arrange(desc(correlation))
+~~~
+
+
+
+~~~{.output}
+# A tibble: 5 × 2
+   Tree correlation
+  <ord>       <dbl>
+1     3   0.9881766
+2     5   0.9877376
+3     2   0.9873624
+4     1   0.9854675
+5     4   0.9844610
+
+~~~
+
+
+
+~~~{.r}
+#---------------------------------------------------------------------------
+# 1.3. 전체 상관분석과 나무집단별 상관분석
+#---------------------------------------------------------------------------
+
+cor.test(Orange$age, Orange$circumference)
+~~~
+
+
+
+~~~{.output}
+
+	Pearson's product-moment correlation
+
+data:  Orange$age and Orange$circumference
+t = 12.9, df = 33, p-value = 1.931e-14
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.8342364 0.9557955
+sample estimates:
+      cor 
+0.9135189 
+
+~~~
+
+
+
+~~~{.r}
+Orange %>% group_by(Tree) %>% 
+  do(tidy(cor.test(.$age, .$circumference)))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [5 x 7]
+Groups: Tree [5]
+
+   Tree  estimate statistic      p.value parameter  conf.low conf.high
+  <ord>     <dbl>     <dbl>        <dbl>     <int>     <dbl>     <dbl>
+1     3 0.9881766  14.41188 2.901046e-05         5 0.9189858 0.9983260
+2     1 0.9854675  12.97258 4.851902e-05         5 0.9012111 0.9979400
+3     5 0.9877376  14.14686 3.177093e-05         5 0.9160865 0.9982635
+4     2 0.9873624  13.93129 3.425041e-05         5 0.9136142 0.9982101
+5     4 0.9844610  12.53575 5.733090e-05         5 0.8946782 0.9977964
+
+~~~
+
+
+
+~~~{.r}
+#---------------------------------------------------------------------------
+# 1.4. 나무집단별 회귀분석
+#---------------------------------------------------------------------------
+
+Orange %>% group_by(Tree) %>% 
+  do(tidy(lm(age ~ circumference, data=.)))
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [10 x 6]
+Groups: Tree [5]
+
+    Tree          term    estimate  std.error  statistic      p.value
+   <ord>         <chr>       <dbl>      <dbl>      <dbl>        <dbl>
+1      3   (Intercept) -209.512321 85.2682904 -2.4570954 5.743323e-02
+2      3 circumference   12.038885  0.8353445 14.4118806 2.901046e-05
+3      1   (Intercept) -264.673437 98.6205569 -2.6837553 4.362351e-02
+4      1 circumference   11.919245  0.9188029 12.9725813 4.851902e-05
+5      5   (Intercept)  -54.484097 76.8862788 -0.7086323 5.102144e-01
+6      5 circumference    8.787132  0.6211365 14.1468610 3.177093e-05
+7      2   (Intercept) -132.439725 83.1314146 -1.5931369 1.720092e-01
+8      2 circumference    7.795225  0.5595479 13.9312907 3.425041e-05
+9      4   (Intercept)  -76.513671 88.2943757 -0.8665747 4.257969e-01
+10     4 circumference    7.169842  0.5719516 12.5357484 5.733090e-05
+
+~~~
+
+모든 오렌지 나무를 대상으로 나무연령과 나무둘레를 상관 관계가 `0.9135189`로 나타나지만,
+나무를 집단별로 상관관계를 구하게 되면 `0.98...`으로 더 높아지는 것이 확인된다.
+
+각 오렌지 나무 집단별로 회귀분석을 수행하고 이를 `tidy`로 깔끔하게 정제했다.
+하지만, 꼭 그렇게 할 필요는 없고, 전체 모형에 대한 `glance()`,
+각 관측점에 대한 결과 `augment()`, 그리고 모형 구성요소에 대해 `tidy()`를 저장하여 후속분석에 
+입력값으로 사용할 수도 있다. 
+
+#### 추가 후속 분석
+
+1. 가장 영향이 큰 변수 식별을 위해 p-값 기준으로 정렬
+1. p-값 히스토그램
+1. Vocano 그래프를 통해 p-값을 효과크기 추정과 비교
+
+
+
+~~~{.r}
+#---------------------------------------------------------------------------
+# 1.5. `tidy` 출력뿐만 아니라 전체 출력결과 재사용
+#---------------------------------------------------------------------------
+data(mtcars)
+
+lm_mod <- mtcars %>% group_by(am) %>% 
+  do(fit = lm(wt ~ mpg + qsec + gear, .))
+
+lm_mod
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [2 x 2]
+Groups: <by row>
+
+# A tibble: 2 × 2
+     am      fit
+* <dbl>   <list>
+1     0 <S3: lm>
+2     1 <S3: lm>
+
+~~~
+
+
+
+~~~{.r}
+# tidy, augment, glance
+lm_mod %>% tidy(fit)
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [8 x 6]
+Groups: am [2]
+
+     am        term    estimate  std.error   statistic      p.value
+  <dbl>       <chr>       <dbl>      <dbl>       <dbl>        <dbl>
+1     0 (Intercept)  4.91754623 1.39665675  3.52094116 0.0030879519
+2     0         mpg -0.19188914 0.04428329 -4.33321746 0.0005909953
+3     0        qsec  0.09191361 0.09832067  0.93483509 0.3646797728
+4     0        gear  0.14653754 0.36819363  0.39799041 0.6962441554
+5     1 (Intercept)  4.28307028 3.45859958  1.23838281 0.2469014834
+6     1         mpg -0.10098320 0.02943409 -3.43082488 0.0074984578
+7     1        qsec  0.03983165 0.15112135  0.26357393 0.7980436972
+8     1        gear -0.02288330 0.34878226 -0.06560912 0.9491232955
+
+~~~
+
+
+
+~~~{.r}
+lm_mod %>% augment(fit)
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [32 x 12]
+Groups: am [2]
+
+      am    wt   mpg  qsec  gear  .fitted   .se.fit      .resid       .hat
+   <dbl> <dbl> <dbl> <dbl> <dbl>    <dbl>     <dbl>       <dbl>      <dbl>
+1      0 3.215  21.4 19.44     3 3.037532 0.2481648  0.17746820 0.22627982
+2      0 3.440  18.7 17.02     3 3.333202 0.2083952  0.10679845 0.15956625
+3      0 3.460  18.1 20.22     3 3.742459 0.2556630 -0.28245859 0.24016026
+4      0 3.570  14.3 15.84     3 4.069056 0.2070275 -0.49905571 0.15747857
+5      0 3.190  24.4 20.00     4 2.659874 0.3007101  0.53012646 0.33224734
+6      0 3.150  22.8 22.90     4 3.233446 0.3628134 -0.08344563 0.48365086
+7      0 3.440  19.2 18.30     4 3.501444 0.2989364 -0.06144393 0.32833948
+8      0 3.440  17.8 18.90     4 3.825237 0.2911555 -0.38523690 0.31146937
+9      0 4.070  16.4 17.40     3 3.809474 0.1397045  0.26052626 0.07171104
+10     0 3.730  17.3 17.60     3 3.655156 0.1466485  0.07484376 0.07901707
+# ... with 22 more rows, and 3 more variables: .sigma <dbl>,
+#   .cooksd <dbl>, .std.resid <dbl>
+
+~~~
+
+
+
+~~~{.r}
+lm_mod %>% glance(fit)
+~~~
+
+
+
+~~~{.output}
+Source: local data frame [2 x 12]
+Groups: am [2]
+
+     am r.squared adj.r.squared     sigma statistic      p.value    df
+  <dbl>     <dbl>         <dbl>     <dbl>     <dbl>        <dbl> <int>
+1     0 0.6247125     0.5496550 0.5216957  8.323119 0.0017021627     4
+2     1 0.8332251     0.7776335 0.2909423 14.988320 0.0007593904     4
+# ... with 5 more variables: logLik <dbl>, AIC <dbl>, BIC <dbl>,
+#   deviance <dbl>, df.residual <int>
+
+~~~
+
+#### 4.2. `broom` 부츠트랩 [^groom-bootstrap]
+
+[^groom-bootstrap]: [Tidy bootstrapping with dplyr+broom](https://cran.r-project.org/web/packages/broom/vignettes/bootstrapping.html)
+
+`mtcars` 데이터셋에서 연비와 차체무게와의 비선형 관계를 회귀식으로 적합해본다.
+이러한 비선형 모형을 상정하는 이유는 산점도 결과 차체무게와 연비사이 역의 관계가 파악되기 때문이다.
+직관적으로도 고급대형차가 차체무게가 많이 나가고 연비가 떨어지는 것은 널리 알려진 사실이다.
+
+$$연비 = k \times \frac{1}{차체무게} + \beta$$
+
+
+~~~{.r}
+# 산점도
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point() + 
+  
+# 연비 = 1/차체무게, 비선형 모형 추정
+  
+nlsfit <- nls(mpg ~ k / wt + b, mtcars, start=list(k=1, b=0))
+~~~
+
+
+
+~~~{.output}
+Error in ggplot(mtcars, aes(wt, mpg)) + geom_point() + nlsfit <- nls(mpg ~ : 함수 "+<-"를 찾을 수 없습니다
+
+~~~
+
+
+
+~~~{.r}
+summary(nlsfit)
+~~~
+
+
+
+~~~{.output}
+Error in summary(nlsfit): 객체 'nlsfit'를 찾을 수 없습니다
+
+~~~
+
+
+
+~~~{.r}
+# 데이터와 비선형모형 시각화
+
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point() + 
+  geom_line(aes(y=predict(nlsfit)))
+~~~
+
+
+
+~~~{.output}
+Error in predict(nlsfit): 객체 'nlsfit'를 찾을 수 없습니다
+
+~~~
+
+<img src="fig/broom-mtcars-nonlinear-1.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" />
+
+부츠트랩 표본을 100개 뽑아서 사실 더 많이 만들어 모형을 적합해도 된다.
+`tidy`함수를 통해 초기값 `k=1`, `b=0`으로 두고 비선형 회귀모형을 적합시켜 비선형 회귀계수에 대한 
+중위수와 95% 신뢰구간값을 추정한다.
+
+또한, `augment` 함수로 100개 모형에 대한 관측점별 적합값을 산출하여 이를 시각화한다.
+
+
+~~~{.r}
+bootnls <- mtcars %>% bootstrap(100) %>%
+  do(tidy(nls(mpg ~ k / wt + b, data=., start=list(k=1, b=0))))
+
+# 추정값과 95% 신뢰구간
+alpha <- .05
+bootnls %>% group_by(term) %>% summarize(median = median(estimate),
+                                         low = quantile(estimate, alpha / 2),
+                                         high = quantile(estimate, 1 - alpha / 2))
+~~~
+
+
+
+~~~{.output}
+# A tibble: 2 × 4
+   term    median        low      high
+  <chr>     <dbl>      <dbl>     <dbl>
+1     b  4.351746  0.5599099  7.679257
+2     k 45.595418 37.3312127 59.060347
+
+~~~
+
+
+
+~~~{.r}
+# 비선형 회귀모형 부츠트랩 시각화 
+bootnls_aug <- mtcars %>% bootstrap(100) %>%
+  do(augment(nls(mpg ~ k / wt + b, data=., start=list(k=1, b=0)), data=.))
+
+ggplot(bootnls_aug, aes(wt, mpg)) + geom_point() +
+  geom_line(aes(y=.fitted, group=replicate), alpha=.2)
+~~~
+
+<img src="fig/broom-mtcars-bootstrap-1.png" title="plot of chunk broom-mtcars-bootstrap" alt="plot of chunk broom-mtcars-bootstrap" style="display: block; margin: auto;" />
+
+#### 4.3. `broom` k-평균 군집분석 [^groom-kmeans]
+
+[^groom-kmeans]: [Tidying k-means clustering](https://cran.r-project.org/web/packages/broom/vignettes/kmeans.html)
+
+k-평균 군집분석에 `broom`을 사용하여 최적 군집 k 갯수를 계산해 낼 수 있다.
+이를 시연하기 위해 몇가지 사전작업을 수행한다.
+2차원 평면에 시각화를 위해 주성분분석(`prcomp`)으로 주요인을 2개를 뽑아내고 이를 바탕으로 k-평균 알고리즘을 
+군집갯수를 1에서부터 9까지 변화시켜 최적 군집 k 3을 계산해 낸다.
+
+
+~~~{.r}
+data(iris)
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) + geom_point()
+~~~
+
+<img src="fig/iris-kmeans-1.png" title="plot of chunk iris-kmeans" alt="plot of chunk iris-kmeans" style="display: block; margin: auto;" />
+
+~~~{.r}
+iris_df <- prcomp(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])$x[,1:2]
+
+kclust <- kmeans(iris_df, centers = 3)
+kclust 
+~~~
+
+
+
+~~~{.output}
+K-means clustering with 3 clusters of sizes 50, 61, 39
+
+Cluster means:
+        PC1        PC2
+1 -2.642415 -0.1908850
+2  0.665676  0.3316042
+3  2.346527 -0.2739386
+
+Clustering vector:
+  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 3 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+ [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
+[106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
+[141] 3 3 2 3 3 3 2 3 3 2
+
+Within cluster sum of squares by cluster:
+[1] 13.06924 31.87959 18.87111
+ (between_SS / total_SS =  90.4 %)
+
+Available components:
+
+[1] "cluster"      "centers"      "totss"        "withinss"    
+[5] "tot.withinss" "betweenss"    "size"         "iter"        
+[9] "ifault"      
+
+~~~
+
+
+
+~~~{.r}
+tidy(kclust)
+~~~
+
+
+
+~~~{.output}
+         x1         x2 size withinss cluster
+1 -2.642415 -0.1908850   50 13.06924       1
+2  0.665676  0.3316042   61 31.87959       2
+3  2.346527 -0.2739386   39 18.87111       3
+
+~~~
+
+군집 갯수를 1에서부터 9까지 순차적으로 변화시키면서 k-평균 군집분석을 수행한 값을 `kclusts` 객체에 저장한다.
+이를 바탕으로 모형결과는 `tidy`, 관측점 결과는 `augment`, 모형 결과는 `glance`로 뽑아낸다.
+이를 군집수를 바꿔가면서 `ggplot`, `facet_wrap`과 조합하여 시각화한다.
+
+물론 팔꿈치가 꺾이는 3개 지점이 최적 군집이 되는 것도 확인된다.
+
+
+~~~{.r}
+# 최적 군집갯수를 위한 개별 군집분석 후 시각화
+
+kclusts <- data.frame(k=1:9) %>% group_by(k) %>% do(kclust=kmeans(iris_df, .$k)) %>% ungroup()
+clusters <- kclusts %>% group_by(k) %>% do(tidy(.$kclust[[1]]))
+assignments <- kclusts %>% group_by(k) %>% do(augment(.$kclust[[1]], iris_df))
+clusterings <- kclusts %>% group_by(k) %>% do(glance(.$kclust[[1]]))
+names(clusters) <- c("k", "PC1", "PC2", "size", "withinss", "cluster")
+
+p1 <- ggplot(assignments, aes(PC1, PC2)) + geom_point(aes(color=.cluster)) + facet_wrap(~ k)
+p1
+~~~
+
+<img src="fig/broom-iris-kmeans-1.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" />
+
+~~~{.r}
+p2 <- p1 + geom_point(data=clusters, size=7, shape="x")
+p2
+~~~
+
+<img src="fig/broom-iris-kmeans-2.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" />
+
+~~~{.r}
+# 최적 군집갯수
+ggplot(clusterings, aes(k, tot.withinss)) + geom_line()
+~~~
+
+<img src="fig/broom-iris-kmeans-3.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" />
 

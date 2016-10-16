@@ -301,7 +301,7 @@ k-평균 군집분석에 `broom`을 사용하여 최적 군집 k 갯수를 계�
 2차원 평면에 시각화를 위해 주성분분석(`prcomp`)으로 주요인을 2개를 뽑아내고 이를 바탕으로 k-평균 알고리즘을 
 군집갯수를 1에서부터 9까지 변화시켜 최적 군집 k 3을 계산해 낸다.
 
-```{r broom-iris-kmeans, warning=FALSE}
+```{r iris-kmeans, warning=FALSE}
 data(iris)
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) + geom_point()
 
