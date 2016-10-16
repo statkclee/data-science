@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">깔끔한 데이터와 모형 – broom</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>깔끔한 3종세트 <code>tidyr</code>, <code>dplyr</code>, <code>broom</code>를 살펴본다.</li>
+</ul>
+</div>
+</section>
+<h3 id="broom-팩키지를-사용해야-되는-이유-cran-broom">1. <code>broom</code> 팩키지를 사용해야 되는 이유 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p><code>broom</code> 팩키지를 꼭 사용해야되는 이유는 R의 성공에서 찾을 수 있다. R이 성공하지 않았다면 이런 고민도, 데이터 과학이 이렇게 관심을 갖게 되지 않았다면 어쩌면 <code>broom</code> 팩키지를 생겨나지 않았을 수도 있다.</p>
+<table style="width:94%;">
+<colgroup>
+<col width="47%" />
+<col width="47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">David Robinson</th>
+<th align="left">Hadley Wickham</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">broom: Converting statistical models to tidy data frames,</td>
+<td align="left">Managing many models with R</td>
+</tr>
+<tr class="even">
+<td align="left"><iframe width="300" height="180" src="https://www.youtube.com/embed/eM3Ha0kTAz4" frameborder="0" allowfullscreen></iframe></td>
+<td align="left"><iframe width="300" height="180" src="https://www.youtube.com/embed/rz3_FDVt9eg" frameborder="0" allowfullscreen></iframe></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lmfit &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="st"> </span>wt, mtcars)
+<span class="co"># summary(lmfit)</span></code></pre></div>
+<p>선형 회귀식을 적합시키게 되면 회귀분석 결과는 4가지 산출결과를 출력한다.</p>
+<ol style="list-style-type: decimal">
+<li>모형 정보: <code>lm(formula = mpg ~ wt, data = mtcars)</code></li>
+<li>관측점 정보: 잔차 등</li>
+<li>구성요소 정보: 회귀계수, t-값, p-값 등</li>
+<li>모형 정보: <span class="math inline">\(R^2\)</span> 값, F-통계량, 편차(deviance)</li>
+</ol>
+<p>하지만, 이런 선형회귀모형 산출물은 다음과 같은 문제점이 목도된다.</p>
+<ol style="list-style-type: decimal">
+<li>회귀계수를 뽑아내는데 다수 단계가 필요하다.
+<ul>
+<li><code>data.frame(coef(summary(lmfit)))</code></li>
+</ul></li>
+<li>회귀계수가 행명칭(<code>row names</code>)라 모형에 바로 엮어 사용하기 번거럽다.
+<ul>
+<li><code>(Intercept)</code>, <code>wt</code>에 변수명이 없음.</li>
+</ul></li>
+<li>데이터프레임 변수명으로 사용하기 부적절하게 표현
+<ul>
+<li><code>Pr(&gt;|t|)</code>을 변수명으로 변경하기 까다로움</li>
+</ul></li>
+<li>출력결과가 저장되지 않고 화면에 출력만 됨.
+<ul>
+<li><code>p-value: 1.294e-10</code></li>
+</ul></li>
+</ol>
+<table style="width:100%;">
+<colgroup>
+<col width="52%" />
+<col width="35%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">회귀 분석 결과</th>
+<th align="left">모형 출력 결과</th>
+<th align="left"><code>broom</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Call:</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">lm(formula = mpg ~ wt, data = mtcars)</td>
+<td align="left">데이터 적합 모형</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Residuals:</td>
+<td align="left">관측점 수준: 잔차, 적합값 등</td>
+<td align="left"><code>augment()</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Min 1Q Median 3Q Max</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">-4.5432 -2.3647 -0.1252 1.4096 6.8727</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Coefficients:</td>
+<td align="left">구성요소 수준: 회귀계수, p-값</td>
+<td align="left"><code>tidy()</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Estimate Std. Error t value Pr(&gt;|t|)</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">(Intercept) 37.2851 1.8776 19.858 &lt; 2e-16 ***</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">wt -5.3445 0.5591 -9.559 1.29e-10 ***</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Signif. codes: 0 ‘<em><strong>’ 0.001 ’</strong>’ 0.01 ’</em>’ 0.05 ‘.’ 0.1 ‘’ 1</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Residual standard error: 3.046 on 30 degrees of freedom</td>
+<td align="left">모형 수준: <span class="math inline">\(R^2\)</span> 값, F-통계량, 편차 등</td>
+<td align="left"><code>glance()</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Multiple R-squared: 0.7528, Adjusted R-squared: 0.7446</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">F-statistic: 91.38 on 1 and 30 DF, p-value: 1.294e-10</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="broom-팩키지-3-종세트">2. <code>broom</code> 팩키지 3 종세트</h3>
+<p>후속작업을 이어나갈 수 있도록 모형 출력결과를 처리하는 <code>broom</code> 3종 세트가 준비되어 있다.</p>
+<ul>
+<li><code>glance</code> : 모형을 한줄로 간략하게 요약한다. 한줄 요약 모형에는 <span class="math inline">\(R^2\)</span>, 수정 <span class="math inline">\(R^2\)</span>, p-값, AIC, BIC, 편차(deviance)등이 포함된다.</li>
+<li><code>tidy</code> : 모형에 대한 통계적 결과물을 요약해서 데이터프레임으로 제공한다. 데이터프레임에는 회귀계수, p-값, 군집분석의 경우 군집별 정보, t-검정, 다-검정의 경우 검정별 정보가 포함된다.</li>
+<li><code>augment</code>: 원 데이터프레임에 칼럼을 추가해서 예측값, 잔차, 군집 배정등 각 관측점별 정보가 덧붙여진다.</li>
+</ul>
+<p><code>tidy</code> 실행결과 <code>Pr(&gt;|t|)</code> p-값을 <code>p.value</code> 칼럼으로 <code>$</code> 을 조합해서 뽑아내기 쉽게 되었다. 물론 <code>coef(summary(lmfit))</code> 수고를 하지 않고도 <code>$</code>을 사용해서 <code>term</code> 칼럼에서 회귀계수 값을 뽑아내기 편리하게 되었다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(broom)
+<span class="kw">tidy</span>(lmfit)</code></pre></div>
+<pre class="output"><code>         term  estimate std.error statistic      p.value
+1 (Intercept) 37.285126  1.877627 19.857575 8.241799e-19
+2          wt -5.344472  0.559101 -9.559044 1.293959e-10
+</code></pre>
+<p><code>augment</code>를 사용해서 일관된 규칙으로 적합값, 잔차 등을 <code>.</code>을 앞에 붙여 활용하기 쉽게 만들어 기존 변수명과 섞이는 일이 없게 되었다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">augment</span>(lmfit))</code></pre></div>
+<pre class="output"><code>          .rownames  mpg    wt  .fitted   .se.fit     .resid       .hat
+1         Mazda RX4 21.0 2.620 23.28261 0.6335798 -2.2826106 0.04326896
+2     Mazda RX4 Wag 21.0 2.875 21.91977 0.5714319 -0.9197704 0.03519677
+3        Datsun 710 22.8 2.320 24.88595 0.7359177 -2.0859521 0.05837573
+4    Hornet 4 Drive 21.4 3.215 20.10265 0.5384424  1.2973499 0.03125017
+5 Hornet Sportabout 18.7 3.440 18.90014 0.5526562 -0.2001440 0.03292182
+6           Valiant 18.1 3.460 18.79325 0.5552829 -0.6932545 0.03323551
+    .sigma      .cooksd  .std.resid
+1 3.067494 1.327407e-02 -0.76616765
+2 3.093068 1.723963e-03 -0.30743051
+3 3.072127 1.543937e-02 -0.70575249
+4 3.088268 3.020558e-03  0.43275114
+5 3.097722 7.599578e-05 -0.06681879
+6 3.095184 9.210650e-04 -0.23148309
+</code></pre>
+<p><code>glance</code> 함수를 사용해서 <span class="math inline">\(R^2\)</span>, 수정 <span class="math inline">\(R^2\)</span>, p-값, AIC, BIC, 편차(deviance) 각종 통계량이 한줄로 정리되었다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glance</span>(lmfit)</code></pre></div>
+<pre class="output"><code>  r.squared adj.r.squared    sigma statistic      p.value df    logLik
+1 0.7528328     0.7445939 3.045882  91.37533 1.293959e-10  2 -80.01471
+       AIC      BIC deviance df.residual
+1 166.0294 170.4266 278.3219          30
+</code></pre>
+<h3 id="broom-팩키지-지원현황">3. <code>broom</code> 팩키지 지원현황</h3>
+<p><code>broom</code> 팩키지가 각 수준별로 활용가능한 현황은 다음과 같다. <code>tidy</code>, <code>augment</code>, <code>glance</code> 3종 세트에 대해 각 모형별로 지원현황을 확인하고 <code>broom</code> 팩키지와 엮어 사용한다.</p>
+<pre class="output"><code>Warning: package &#39;dplyr&#39; was built under R version 3.2.5
+</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Class</th>
+<th align="left"><code>tidy</code></th>
+<th align="left"><code>glance</code></th>
+<th align="left"><code>augment</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">aareg</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">anova</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">aov</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">aovlist</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Arima</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">biglm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">binDesign</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">binWidth</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">boot</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">btergm</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">cch</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">cld</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">coeftest</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">confint.glht</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">coxph</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">cv.glmnet</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">data.frame</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">default</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">density</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">ergm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">felm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">fitdistr</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">ftable</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">gam</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">gamlss</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">geeglm</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">glht</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">glmnet</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">htest</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">kappa</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">kmeans</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">Line</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Lines</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">list</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">lm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">lme</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">manova</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">map</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">matrix</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">merMod</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">mle2</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">multinom</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">nlrq</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">nls</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">NULL</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">pairwise.htest</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">plm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">Polygon</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Polygons</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">power.htest</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">pyears</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">rcorr</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">ridgelm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">rjags</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">roc</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">rowwise_df</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">rq</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">rqs</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">SpatialLinesDataFrame</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">SpatialPolygons</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">SpatialPolygonsDataFrame</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">spec</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">stanfit</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">summary.glht</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">summaryDefault</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">survexp</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">survfit</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">survreg</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">table</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">tbl_df</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">ts</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">TukeyHSD</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">zoo</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="다수-모형-many-models">4. 다수 모형 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://cran.r-project.org/web/packages/broom/index.html">broom: Convert Statistical Analysis Objects into Tidy Data Frames</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://r4ds.had.co.nz/many-models.html">R for Data Science - 25 Many models</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
