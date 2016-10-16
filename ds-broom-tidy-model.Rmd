@@ -73,6 +73,9 @@ lmfit <- lm(mpg ~ wt, mtcars)
 | Multiple R-squared:  0.7528, Adjusted R-squared:  0.7446        |                                           |              |
 | F-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10          |                                           |              |
 
+<img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="77%" />
+
+
 ### 2. `broom` 팩키지 3 종세트
 
 후속작업을 이어나갈 수 있도록 모형 출력결과를 처리하는 `broom` 3종 세트가 준비되어 있다.
@@ -142,4 +145,196 @@ knitr::kable(TidyMethods)
 
 [^many-models]: [R for Data Science - 25 Many models](http://r4ds.had.co.nz/many-models.html)
 
+다수 모형이 가능한 컴퓨팅 파워가 커감에 따라 수학적으로 엄격하게 접근하거나 비용을 많이 들여 실험을 수행하기 보다는
+컴퓨터를 활용한 접근법이 경제적으로도 효과적이며 정확성에서도 높은 품질을 보여주기 때문이다. 
+하지만, 모형을 하나만 갖을 때보다 다수 모형이 출현하는 경우가 빈번하게 목도된다.
+
+- 모수를 달리함
+- 다른 모형을 적용
+- 부츠트랩에 따른 반복
+- 하위집단 모형
+- 앙상블 투표 모형 
+
+이런 다양한 경우 데이터에 적합시킨 수많은 모형 결과를 저장하여 이를 분석할 필요가 있다. 이런 경우 편리한 방식을 제공하는 
+팩키지가 `broom`이다.
+
+#### 4.1. `dplyr`과 `broom` 결합 [^combine-groom-dplyr]
+
+[^combine-groom-dplyr]: [broom and dplyr](https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html)
+
+`broom`은 일관된 형식으로 단일 분석결과를 요약하는데 매우 유용하다. 특히, `dplyr` 팩키지
+`group_by()`, `do()` 함수와 궁합이 잘 맞는다.
+
+```{r broom-dplyr-orange, warning=FALSE}
+##===========================================================================
+## 01. broom & dplyr
+##===========================================================================
+suppressWarnings(suppressMessages(library(broom)))
+suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(ggplot2)))
+
+data("Orange")
+
+#---------------------------------------------------------------------------
+# 1.1. 오렌지 나무 시각화
+#---------------------------------------------------------------------------
+
+ggplot(Orange, aes(age, circumference, color = Tree)) + 
+  geom_line()
+
+#---------------------------------------------------------------------------
+# 1.2. 전체 상관분석과 group_by() 나무집단별 상관분석
+#---------------------------------------------------------------------------
+
+cor(Orange$age, Orange$circumference)
+
+Orange %>% group_by(Tree) %>% 
+  summarize(correlation = cor(age, circumference)) %>% 
+  arrange(desc(correlation))
+
+#---------------------------------------------------------------------------
+# 1.3. 전체 상관분석과 나무집단별 상관분석
+#---------------------------------------------------------------------------
+
+cor.test(Orange$age, Orange$circumference)
+
+Orange %>% group_by(Tree) %>% 
+  do(tidy(cor.test(.$age, .$circumference)))
+
+#---------------------------------------------------------------------------
+# 1.4. 나무집단별 회귀분석
+#---------------------------------------------------------------------------
+
+Orange %>% group_by(Tree) %>% 
+  do(tidy(lm(age ~ circumference, data=.)))
+```
+
+모든 오렌지 나무를 대상으로 나무연령과 나무둘레를 상관 관계가 `0.9135189`로 나타나지만,
+나무를 집단별로 상관관계를 구하게 되면 `0.98...`으로 더 높아지는 것이 확인된다.
+
+각 오렌지 나무 집단별로 회귀분석을 수행하고 이를 `tidy`로 깔끔하게 정제했다.
+하지만, 꼭 그렇게 할 필요는 없고, 전체 모형에 대한 `glance()`,
+각 관측점에 대한 결과 `augment()`, 그리고 모형 구성요소에 대해 `tidy()`를 저장하여 후속분석에 
+입력값으로 사용할 수도 있다. 
+
+#### 추가 후속 분석
+
+1. 가장 영향이 큰 변수 식별을 위해 p-값 기준으로 정렬
+1. p-값 히스토그램
+1. Vocano 그래프를 통해 p-값을 효과크기 추정과 비교
+
+
+```{r broom-dplyr-regression, warning=FALSE}
+#---------------------------------------------------------------------------
+# 1.5. `tidy` 출력뿐만 아니라 전체 출력결과 재사용
+#---------------------------------------------------------------------------
+data(mtcars)
+
+lm_mod <- mtcars %>% group_by(am) %>% 
+  do(fit = lm(wt ~ mpg + qsec + gear, .))
+
+lm_mod
+
+# tidy, augment, glance
+lm_mod %>% tidy(fit)
+lm_mod %>% augment(fit)
+lm_mod %>% glance(fit)
+```
+
+#### 4.2. `broom` 부츠트랩 [^groom-bootstrap]
+
+[^groom-bootstrap]: [Tidy bootstrapping with dplyr+broom](https://cran.r-project.org/web/packages/broom/vignettes/bootstrapping.html)
+
+`mtcars` 데이터셋에서 연비와 차체무게와의 비선형 관계를 회귀식으로 적합해본다.
+이러한 비선형 모형을 상정하는 이유는 산점도 결과 차체무게와 연비사이 역의 관계가 파악되기 때문이다.
+직관적으로도 고급대형차가 차체무게가 많이 나가고 연비가 떨어지는 것은 널리 알려진 사실이다.
+
+$$연비 = k \times \frac{1}{차체무게} + \beta$$
+
+```{r broom-mtcars-nonlinear, warning=FALSE}
+# 산점도
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point() + 
+  
+# 연비 = 1/차체무게, 비선형 모형 추정
+  
+nlsfit <- nls(mpg ~ k / wt + b, mtcars, start=list(k=1, b=0))
+summary(nlsfit)
+
+# 데이터와 비선형모형 시각화
+
+ggplot(mtcars, aes(wt, mpg)) + 
+  geom_point() + 
+  geom_line(aes(y=predict(nlsfit)))
+```
+
+부츠트랩 표본을 100개 뽑아서 사실 더 많이 만들어 모형을 적합해도 된다.
+`tidy`함수를 통해 초기값 `k=1`, `b=0`으로 두고 비선형 회귀모형을 적합시켜 비선형 회귀계수에 대한 
+중위수와 95% 신뢰구간값을 추정한다.
+
+또한, `augment` 함수로 100개 모형에 대한 관측점별 적합값을 산출하여 이를 시각화한다.
+
+```{r broom-mtcars-bootstrap, warning=FALSE}
+bootnls <- mtcars %>% bootstrap(100) %>%
+  do(tidy(nls(mpg ~ k / wt + b, data=., start=list(k=1, b=0))))
+
+# 추정값과 95% 신뢰구간
+alpha <- .05
+bootnls %>% group_by(term) %>% summarize(median = median(estimate),
+                                         low = quantile(estimate, alpha / 2),
+                                         high = quantile(estimate, 1 - alpha / 2))
+
+# 비선형 회귀모형 부츠트랩 시각화 
+bootnls_aug <- mtcars %>% bootstrap(100) %>%
+  do(augment(nls(mpg ~ k / wt + b, data=., start=list(k=1, b=0)), data=.))
+
+ggplot(bootnls_aug, aes(wt, mpg)) + geom_point() +
+  geom_line(aes(y=.fitted, group=replicate), alpha=.2)
+```
+
+#### 4.3. `broom` k-평균 군집분석 [^groom-kmeans]
+
+[^groom-kmeans]: [Tidying k-means clustering](https://cran.r-project.org/web/packages/broom/vignettes/kmeans.html)
+
+k-평균 군집분석에 `broom`을 사용하여 최적 군집 k 갯수를 계산해 낼 수 있다.
+이를 시연하기 위해 몇가지 사전작업을 수행한다.
+2차원 평면에 시각화를 위해 주성분분석(`prcomp`)으로 주요인을 2개를 뽑아내고 이를 바탕으로 k-평균 알고리즘을 
+군집갯수를 1에서부터 9까지 변화시켜 최적 군집 k 3을 계산해 낸다.
+
+```{r broom-iris-kmeans, warning=FALSE}
+data(iris)
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) + geom_point()
+
+iris_df <- prcomp(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])$x[,1:2]
+
+kclust <- kmeans(iris_df, centers = 3)
+kclust 
+
+tidy(kclust)
+```
+
+군집 갯수를 1에서부터 9까지 순차적으로 변화시키면서 k-평균 군집분석을 수행한 값을 `kclusts` 객체에 저장한다.
+이를 바탕으로 모형결과는 `tidy`, 관측점 결과는 `augment`, 모형 결과는 `glance`로 뽑아낸다.
+이를 군집수를 바꿔가면서 `ggplot`, `facet_wrap`과 조합하여 시각화한다.
+
+물론 팔꿈치가 꺾이는 3개 지점이 최적 군집이 되는 것도 확인된다.
+
+```{r broom-iris-kmeans, warning=FALSE}
+# 최적 군집갯수를 위한 개별 군집분석 후 시각화
+
+kclusts <- data.frame(k=1:9) %>% group_by(k) %>% do(kclust=kmeans(iris_df, .$k)) %>% ungroup()
+clusters <- kclusts %>% group_by(k) %>% do(tidy(.$kclust[[1]]))
+assignments <- kclusts %>% group_by(k) %>% do(augment(.$kclust[[1]], iris_df))
+clusterings <- kclusts %>% group_by(k) %>% do(glance(.$kclust[[1]]))
+names(clusters) <- c("k", "PC1", "PC2", "size", "withinss", "cluster")
+
+p1 <- ggplot(assignments, aes(PC1, PC2)) + geom_point(aes(color=.cluster)) + facet_wrap(~ k)
+p1
+
+p2 <- p1 + geom_point(data=clusters, size=7, shape="x")
+p2
+
+# 최적 군집갯수
+ggplot(clusterings, aes(k, tot.withinss)) + geom_line()
+```
 
