@@ -1,0 +1,78 @@
+---
+layout: page
+title: xwMOOC 기계학습
+subtitle: 요인(Factor) - 범주형 자료형
+output:
+  html_document: 
+    keep_md: yes
+    toc: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+ 
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+library(tidyverse)
+library(forcats)
+```
+
+> ### 학습 목표 {.getready}
+>
+> * 신용평점모형 기반 대출 전략을 수립한다.
+> * 승인율에 따른 채무 불이행 부실율을 평가한다.
+
+
+### 1. `forcats` 팩키지 [^forcats-pkg]
+
+[^forcats-pkg]: [forcats: Tools for Working with Categorical Variables (Factors)](https://cran.r-project.org/web/packages/forcats/index.html)
+
+`install.packages("tidyverse")`, `install.packages("forcats")` 명령어를 통해서 
+`library(tidyverse)`, `library(forcats)`를 통해서 명시적으로 팩키지를 불러와서 적재한다. 
+이유는 현시점 기준 아직 `tidyverse`의 핵심 일원은 아니다. 
+
+
+### 2. 요인 기초 [^r4ds-factor]
+
+[^r4ds-factor]: [R for Data Science, 15 Factors](http://r4ds.had.co.nz/factors.html)
+
+요인형 자료형을 문자형 대신 사용하게 되면 두가지 장점이 있는데, 가장 큰 장점은 아마도 오탈자로 생기는 새로운 유형 생성을 억제시킬 수 있다.
+즉, 월은 12개월 밖에 존재하지 않는다. 따라서, 오탈자로 인해 범주가 추가로 생성되는 것을 사전에 방지할 수 있다.
+그리고, 요인형을 자료형을 갖추게 되면 정렬을 쉽게 할 수도 있다.
+
+일반 문자형 벡터을 정렬하게 되면 알파벳순으로 정렬하는데 무의미하다.
+
+``` {r create-factor, warning=FALSE}
+x1 <- c("Dec", "Apr", "Jan", "Mar")
+sort(x1)
+```
+
+`levels` 인자로 수준을 정의하게 되면 오탈자로 인한 엉뚱한 범주가 추가되는 것을 방지하는 것과 더불어 
+정렬하게 되면 사람에게 좀더 의미있게 다가온다.
+
+``` {r create-level-in-factor, warning=FALSE}
+month_levels <- c(
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+y1 <- factor(x1, levels = month_levels)
+y1
+sort(y1)
+```
+
+`x2` 문자열 벡터에 `Jam` 범주가 들어가 있는데 이를 `levels`를 통해 범주를 설정하게 되면 
+오류를 방지할 수 있다. 특히, `parse_factor` 명령어를 사용하면 어디가 잘못되었는지 확인이 쉽다.
+
+``` {r detect-level-error, warning=FALSE}
+x2 <- c("Dec", "Apr", "Jam", "Mar")
+y2 <- factor(x2, levels = month_levels)
+y2
+y2 <- parse_factor(x2, levels = month_levels)
+```
+
+`levels`를 생략하게 되면 기본디폴트 설정으로 알파벳순으로 범주를 생성하여 수준을 정해버린다.
+
+``` {r default-levels-in-factor, warning=FALSE}
+factor(x1)
+```
+
