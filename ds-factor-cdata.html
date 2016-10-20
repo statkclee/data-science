@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: xwMOOC 기계학습</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">xwMOOC 기계학습</h1>
+          <h2 class="subtitle">요인(Factor) - 범주형 자료형</h2>
+<section class="getready panel panel-warning">
+<div class="panel-heading">
+<h3 id="학습-목표"><span class="glyphicon glyphicon-check"></span>학습 목표</h3>
+</div>
+<div class="panel-body">
+<ul>
+<li>범주형 데이터를 처리하는 요인(factor) 자료형을 이해한다.</li>
+<li><code>tidyverse</code> 생태계에서 범주형 요인을 담당하는 <code>forcats</code> 팩키지를 살펴본다.</li>
+</ul>
+</div>
+</section>
+<h3 id="forcats-팩키지-forcats-pkg">1. <code>forcats</code> 팩키지 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p><code>install.packages(&quot;tidyverse&quot;)</code>, <code>install.packages(&quot;forcats&quot;)</code> 명령어를 통해서 <code>library(tidyverse)</code>, <code>library(forcats)</code>를 통해서 명시적으로 팩키지를 불러와서 적재한다. 이유는 현시점 기준 아직 <code>tidyverse</code>의 핵심 일원은 아니다.</p>
+<h3 id="요인factor-기초-r4ds-factor">1. 요인(factor) 기초 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p>요인형 자료형을 문자형 대신 사용하게 되면 두가지 장점이 있는데, 가장 큰 장점은 아마도 오탈자로 생기는 새로운 유형 생성을 억제시킬 수 있다. 즉, 월은 12개월 밖에 존재하지 않는다. 따라서, 오탈자로 인해 범주가 추가로 생성되는 것을 사전에 방지할 수 있다. 그리고, 요인형을 자료형을 갖추게 되면 정렬을 쉽게 할 수도 있다.</p>
+<p>일반 문자형 벡터을 정렬하게 되면 알파벳순으로 정렬하는데 무의미하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Dec&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Mar&quot;</span>)
+<span class="kw">sort</span>(x1)</code></pre></div>
+<pre class="output"><code>[1] &quot;Apr&quot; &quot;Dec&quot; &quot;Jan&quot; &quot;Mar&quot;
+</code></pre>
+<p><code>levels</code> 인자로 수준을 정의하게 되면 오탈자로 인한 엉뚱한 범주가 추가되는 것을 방지하는 것과 더불어 정렬하게 되면 사람에게 좀더 의미있게 다가온다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">month_levels &lt;-<span class="st"> </span><span class="kw">c</span>(
+  <span class="st">&quot;Jan&quot;</span>, <span class="st">&quot;Feb&quot;</span>, <span class="st">&quot;Mar&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;May&quot;</span>, <span class="st">&quot;Jun&quot;</span>, 
+  <span class="st">&quot;Jul&quot;</span>, <span class="st">&quot;Aug&quot;</span>, <span class="st">&quot;Sep&quot;</span>, <span class="st">&quot;Oct&quot;</span>, <span class="st">&quot;Nov&quot;</span>, <span class="st">&quot;Dec&quot;</span>)
+
+y1 &lt;-<span class="st"> </span><span class="kw">factor</span>(x1, <span class="dt">levels =</span> month_levels)
+y1</code></pre></div>
+<pre class="output"><code>[1] Dec Apr Jan Mar
+Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sort</span>(y1)</code></pre></div>
+<pre class="output"><code>[1] Jan Mar Apr Dec
+Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+</code></pre>
+<p><code>x2</code> 문자열 벡터에 <code>Jam</code> 범주가 들어가 있는데 이를 <code>levels</code>를 통해 범주를 설정하게 되면 오류를 방지할 수 있다. 특히, <code>parse_factor</code> 명령어를 사용하면 어디가 잘못되었는지 확인이 쉽다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Dec&quot;</span>, <span class="st">&quot;Apr&quot;</span>, <span class="st">&quot;Jam&quot;</span>, <span class="st">&quot;Mar&quot;</span>)
+y2 &lt;-<span class="st"> </span><span class="kw">factor</span>(x2, <span class="dt">levels =</span> month_levels)
+y2</code></pre></div>
+<pre class="output"><code>[1] Dec  Apr  &lt;NA&gt; Mar 
+Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y2 &lt;-<span class="st"> </span><span class="kw">parse_factor</span>(x2, <span class="dt">levels =</span> month_levels)</code></pre></div>
+<p><code>levels</code>를 생략하게 되면 기본디폴트 설정으로 알파벳순으로 범주를 생성하여 수준을 정해버린다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">factor</span>(x1)</code></pre></div>
+<pre class="output"><code>[1] Dec Apr Jan Mar
+Levels: Apr Dec Jan Mar
+</code></pre>
+<p>수준(levels) 순서를 맞추려면 <code>unique()</code> 혹은 <code>fct_inorder()</code> 함수를 사용한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f1 &lt;-<span class="st"> </span><span class="kw">factor</span>(x1, <span class="dt">levels =</span> <span class="kw">unique</span>(x1))
+f1</code></pre></div>
+<pre class="output"><code>[1] Dec Apr Jan Mar
+Levels: Dec Apr Jan Mar
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f2 &lt;-<span class="st"> </span>x1 %&gt;%<span class="st"> </span><span class="kw">factor</span>() %&gt;%<span class="st"> </span><span class="kw">fct_inorder</span>()
+f2</code></pre></div>
+<pre class="output"><code>[1] Dec Apr Jan Mar
+Levels: Dec Apr Jan Mar
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levels</span>(f2)</code></pre></div>
+<pre class="output"><code>[1] &quot;Dec&quot; &quot;Apr&quot; &quot;Jan&quot; &quot;Mar&quot;
+</code></pre>
+<h3 id="gssgeneral-social-survey-사례">1. GSS(General Social Survey) 사례</h3>
+<p>미국 시카고 대학 독립적인 연구기관 NORC에서 장기적으로 수행하는 설문조사 <a href="http://gss.norc.org/">GSS(General Social Survey)</a> 데이터를 실습자료로 활용한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat</code></pre></div>
+<pre class="output"><code># A tibble: 21,483 × 9
+    year       marital   age   race        rincome            partyid
+   &lt;int&gt;        &lt;fctr&gt; &lt;int&gt; &lt;fctr&gt;         &lt;fctr&gt;             &lt;fctr&gt;
+1   2000 Never married    26  White  $8000 to 9999       Ind,near rep
+2   2000      Divorced    48  White  $8000 to 9999 Not str republican
+3   2000       Widowed    67  White Not applicable        Independent
+4   2000 Never married    39  White Not applicable       Ind,near rep
+5   2000      Divorced    25  White Not applicable   Not str democrat
+6   2000       Married    25  White $20000 - 24999    Strong democrat
+7   2000 Never married    36  White $25000 or more Not str republican
+8   2000      Divorced    44  White  $7000 to 7999       Ind,near dem
+9   2000       Married    44  White $25000 or more   Not str democrat
+10  2000       Married    47  White $25000 or more  Strong republican
+# ... with 21,473 more rows, and 3 more variables: relig &lt;fctr&gt;,
+#   denom &lt;fctr&gt;, tvhours &lt;int&gt;
+</code></pre>
+<p><code>forcats</code> 팩키지에 포함되어 있는 데이터로 원하는 경우 <code>? gss-cat</code> 명령어를 통해 데이터에 대한 자세한 내용을 확인할 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%
+<span class="st">  </span><span class="kw">count</span>(race)</code></pre></div>
+<pre class="output"><code># A tibble: 3 × 2
+    race     n
+  &lt;fctr&gt; &lt;int&gt;
+1  Other  1959
+2  Black  3129
+3  White 16395
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(gss_cat, <span class="kw">aes</span>(race)) +
+<span class="st">  </span><span class="kw">geom_bar</span>()</code></pre></div>
+<p><img src="fig/factor-gss-race-1.png" title="plot of chunk factor-gss-race" alt="plot of chunk factor-gss-race" style="display: block; margin: auto;" /></p>
+<p><code>ggplot2</code>에서 기본디폴트 설정으로 어떤 값도 없는 수준은 자동으로 <code>drop</code> 시킨다. 만약 변수에 포함된 모든 수준을 보려면 <code>drop=FALSE</code>를 넣어 명시적으로 작성한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(gss_cat, <span class="kw">aes</span>(race)) +
+<span class="st">  </span><span class="kw">geom_bar</span>() +
+<span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">drop =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="fig/factor-gss-race-drop-levels-1.png" title="plot of chunk factor-gss-race-drop-levels" alt="plot of chunk factor-gss-race-drop-levels" style="display: block; margin: auto;" /></p>
+<h3 id="요인과-관련된-가장-많이-사용되는-기능-두가지">1. 요인과 관련된 가장 많이 사용되는 기능 두가지</h3>
+<p>요인과 관련되어 가장 많이 사용하는 기능은 다음과 같다.</p>
+<ul>
+<li>수준 순서를 바꿔 조정함</li>
+<li>수준내부 값을 뭉개거나 변경시키는 변화</li>
+</ul>
+<h4 id="수준-순서를-변경">1. 수준 순서를 변경</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">relig &lt;-<span class="st"> </span>gss_cat %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(relig) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="dt">age =</span> <span class="kw">mean</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+    <span class="dt">tvhours =</span> <span class="kw">mean</span>(tvhours, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+    <span class="dt">n =</span> <span class="kw">n</span>()
+  )
+
+<span class="kw">ggplot</span>(relig, <span class="kw">aes</span>(tvhours, relig)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/factor-gss-change-levels-1.png" title="plot of chunk factor-gss-change-levels" alt="plot of chunk factor-gss-change-levels" style="display: block; margin: auto;" /></p>
+<p>수준을 조정하지 않는 경우 전반적인 패턴을 살펴보기 어렵다. 하지만, 수준 순서를 재조장하게 되면 가독성을 훨씬 높일 수 있다. <code>fct_reorder()</code> 함수를 사용하는데 인자가 세개 필요하다.</p>
+<ul>
+<li><code>f</code>, 수준을 변경하려는 요인명</li>
+<li><code>x</code>, 수준을 변경하는데 사용되는 숫자 벡터에</li>
+<li><code>fun</code>, <code>f</code> 값 각각에 대해 다수 값이 있는 경우 이를 요약할 함수, 기본디폴트 함수는 중위수를 산출하는 함수 <code>median</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(relig, <span class="kw">aes</span>(tvhours, <span class="kw">fct_reorder</span>(relig, tvhours))) +
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/factor-gss-change-level-1.png" title="plot of chunk factor-gss-change-level" alt="plot of chunk factor-gss-change-level" style="display: block; margin: auto;" /></p>
+<p><code>aes()</code> 함수에서 <code>mutate()</code>로 요인 수준을 뽑아내서 수준을 재조정한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">relig %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">relig =</span> <span class="kw">fct_reorder</span>(relig, tvhours)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(tvhours, relig)) +
+<span class="st">    </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/factor-gss-reorder-levels-1.png" title="plot of chunk factor-gss-reorder-levels" alt="plot of chunk factor-gss-reorder-levels" style="display: block; margin: auto;" /></p>
+<p>막대그래프의 경우 <code>fct_infreq()</code> 함수를 사용해서 오름 빈도수로 정렬이 가능하다: <code>fct_rev()</code>와 조합해서 사용해도 좋다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">marital =</span> marital %&gt;%<span class="st"> </span><span class="kw">fct_infreq</span>() %&gt;%<span class="st"> </span><span class="kw">fct_rev</span>()) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(marital)) +
+<span class="st">    </span><span class="kw">geom_bar</span>()</code></pre></div>
+<p><img src="fig/factor-gss-barplot-1.png" title="plot of chunk factor-gss-barplot" alt="plot of chunk factor-gss-barplot" style="display: block; margin: auto;" /></p>
+<h4 id="요인변수-내부-수준을-변경">1. 요인변수 내부 수준을 변경</h4>
+<p>요인변수 내부 수준을 바꾸거나 뭉개서 합치는 기능이 자주 사용되고 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%<span class="st"> </span><span class="kw">count</span>(partyid)</code></pre></div>
+<pre class="output"><code># A tibble: 10 × 2
+              partyid     n
+               &lt;fctr&gt; &lt;int&gt;
+1           No answer   154
+2          Don&#39;t know     1
+3         Other party   393
+4   Strong republican  2314
+5  Not str republican  3032
+6        Ind,near rep  1791
+7         Independent  4119
+8        Ind,near dem  2499
+9    Not str democrat  3690
+10    Strong democrat  3490
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">partyid =</span> <span class="kw">fct_recode</span>(partyid,
+    <span class="st">&quot;Republican, strong&quot;</span>    =<span class="st"> &quot;Strong republican&quot;</span>,
+    <span class="st">&quot;Republican, weak&quot;</span>      =<span class="st"> &quot;Not str republican&quot;</span>,
+    <span class="st">&quot;Independent, near rep&quot;</span> =<span class="st"> &quot;Ind,near rep&quot;</span>,
+    <span class="st">&quot;Independent, near dem&quot;</span> =<span class="st"> &quot;Ind,near dem&quot;</span>,
+    <span class="st">&quot;Democrat, weak&quot;</span>        =<span class="st"> &quot;Not str democrat&quot;</span>,
+    <span class="st">&quot;Democrat, strong&quot;</span>      =<span class="st"> &quot;Strong democrat&quot;</span>
+  )) %&gt;%
+<span class="st">  </span><span class="kw">count</span>(partyid)</code></pre></div>
+<pre class="output"><code># A tibble: 10 × 2
+                 partyid     n
+                  &lt;fctr&gt; &lt;int&gt;
+1              No answer   154
+2             Don&#39;t know     1
+3            Other party   393
+4     Republican, strong  2314
+5       Republican, weak  3032
+6  Independent, near rep  1791
+7            Independent  4119
+8  Independent, near dem  2499
+9         Democrat, weak  3690
+10      Democrat, strong  3490
+</code></pre>
+<p><code>fct_recode()</code> 함수는 명시적으로 언급되지 않는 수준을 그대로 두고, 존재하지 않는 수준을 우연히 언급할 경우 경고 메시지를 띄운다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">partyid =</span> <span class="kw">fct_recode</span>(partyid,
+    <span class="st">&quot;Republican, strong&quot;</span>    =<span class="st"> &quot;Strong republican&quot;</span>,
+    <span class="st">&quot;Republican, weak&quot;</span>      =<span class="st"> &quot;Not str republican&quot;</span>,
+    <span class="st">&quot;Independent, near rep&quot;</span> =<span class="st"> &quot;Ind,near rep&quot;</span>,
+    <span class="st">&quot;Independent, near dem&quot;</span> =<span class="st"> &quot;Ind,near dem&quot;</span>,
+    <span class="st">&quot;Democrat, weak&quot;</span>        =<span class="st"> &quot;Not str democrat&quot;</span>,
+    <span class="st">&quot;Democrat, strong&quot;</span>      =<span class="st"> &quot;Strong democrat&quot;</span>,
+    <span class="st">&quot;Other&quot;</span>                 =<span class="st"> &quot;No answer&quot;</span>,
+    <span class="st">&quot;Other&quot;</span>                 =<span class="st"> &quot;Don&#39;t know&quot;</span>,
+    <span class="st">&quot;Other&quot;</span>                 =<span class="st"> &quot;Other party&quot;</span>
+  )) %&gt;%
+<span class="st">  </span><span class="kw">count</span>(partyid)</code></pre></div>
+<pre class="output"><code># A tibble: 8 × 2
+                partyid     n
+                 &lt;fctr&gt; &lt;int&gt;
+1                 Other   548
+2    Republican, strong  2314
+3      Republican, weak  3032
+4 Independent, near rep  1791
+5           Independent  4119
+6 Independent, near dem  2499
+7        Democrat, weak  3690
+8      Democrat, strong  3490
+</code></pre>
+<p><code>fct_collapse()</code> 함수는 <code>fct_recode()</code>함수의 변종으로 유용하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">partyid =</span> <span class="kw">fct_collapse</span>(partyid,
+    <span class="dt">other =</span> <span class="kw">c</span>(<span class="st">&quot;No answer&quot;</span>, <span class="st">&quot;Don&#39;t know&quot;</span>, <span class="st">&quot;Other party&quot;</span>),
+    <span class="dt">rep =</span> <span class="kw">c</span>(<span class="st">&quot;Strong republican&quot;</span>, <span class="st">&quot;Not str republican&quot;</span>),
+    <span class="dt">ind =</span> <span class="kw">c</span>(<span class="st">&quot;Ind,near rep&quot;</span>, <span class="st">&quot;Independent&quot;</span>, <span class="st">&quot;Ind,near dem&quot;</span>),
+    <span class="dt">dem =</span> <span class="kw">c</span>(<span class="st">&quot;Not str democrat&quot;</span>, <span class="st">&quot;Strong democrat&quot;</span>)
+  )) %&gt;%
+<span class="st">  </span><span class="kw">count</span>(partyid)</code></pre></div>
+<pre class="output"><code># A tibble: 4 × 2
+  partyid     n
+   &lt;fctr&gt; &lt;int&gt;
+1   other   548
+2     rep  5346
+3     ind  8409
+4     dem  7180
+</code></pre>
+<p>복잡한 데이터셋을 다룰 경우 처리할 변수가 상당히 많은 경우가 있다. 이런 경우 <code>fct_lump()</code> 함수가 유용하다. 범주내 수준에 작은 값이 할당된 경우 이를 합쳐 의미있는 수준에 대한 값이 되도록 만드는 기능을 수행한다. <code>n=10</code>으로 인자값을 넣어주면 해당 변수에 수준이 10개로 지정된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gss_cat %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">relig =</span> <span class="kw">fct_lump</span>(relig, <span class="dt">n =</span> <span class="dv">10</span>)) %&gt;%
+<span class="st">  </span><span class="kw">count</span>(relig, <span class="dt">sort =</span> <span class="ot">TRUE</span>) %&gt;%
+<span class="st">  </span><span class="kw">print</span>(<span class="dt">n =</span> <span class="ot">Inf</span>)</code></pre></div>
+<pre class="output"><code># A tibble: 10 × 2
+                     relig     n
+                    &lt;fctr&gt; &lt;int&gt;
+1               Protestant 10846
+2                 Catholic  5124
+3                     None  3523
+4                Christian   689
+5                    Other   458
+6                   Jewish   388
+7                 Buddhism   147
+8  Inter-nondenominational   109
+9             Moslem/islam   104
+10      Orthodox-christian    95
+</code></pre>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://cran.r-project.org/web/packages/forcats/index.html">forcats: Tools for Working with Categorical Variables (Factors)</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://r4ds.had.co.nz/factors.html">R for Data Science, 15 Factors</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
