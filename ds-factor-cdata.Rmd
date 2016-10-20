@@ -19,9 +19,8 @@ library(forcats)
 
 > ### 학습 목표 {.getready}
 >
-> * 신용평점모형 기반 대출 전략을 수립한다.
-> * 승인율에 따른 채무 불이행 부실율을 평가한다.
-
+> * 범주형 데이터를 처리하는 요인(factor) 자료형을 이해한다.
+> * `tidyverse` 생태계에서 범주형 요인을 담당하는 `forcats` 팩키지를 살펴본다.
 
 ### 1. `forcats` 팩키지 [^forcats-pkg]
 
@@ -32,7 +31,7 @@ library(forcats)
 이유는 현시점 기준 아직 `tidyverse`의 핵심 일원은 아니다. 
 
 
-### 2. 요인 기초 [^r4ds-factor]
+### 1. 요인(factor) 기초 [^r4ds-factor]
 
 [^r4ds-factor]: [R for Data Science, 15 Factors](http://r4ds.had.co.nz/factors.html)
 
@@ -74,5 +73,157 @@ y2 <- parse_factor(x2, levels = month_levels)
 
 ``` {r default-levels-in-factor, warning=FALSE}
 factor(x1)
+```
+
+수준(levels) 순서를 맞추려면 `unique()` 혹은 `fct_inorder()` 함수를 사용한다.
+
+``` {r levels-in-order, warning=FALSE}
+f1 <- factor(x1, levels = unique(x1))
+f1
+
+f2 <- x1 %>% factor() %>% fct_inorder()
+f2
+
+levels(f2)
+```
+
+### 1. GSS(General Social Survey) 사례
+
+미국 시카고 대학 독립적인 연구기관 NORC에서 장기적으로 수행하는 설문조사 [GSS(General Social Survey)](http://gss.norc.org/) 데이터를 
+실습자료로 활용한다. 
+
+``` {r factor-gss-data, warning=FALSE}
+gss_cat
+```
+
+`forcats` 팩키지에 포함되어 있는 데이터로 원하는 경우 `? gss-cat` 명령어를 통해 데이터에 대한 자세한 내용을 확인할 수 있다.
+
+``` {r factor-gss-race, warning=FALSE}
+gss_cat %>%
+  count(race)
+
+ggplot(gss_cat, aes(race)) +
+  geom_bar()
+```  
+
+`ggplot2`에서 기본디폴트 설정으로 어떤 값도 없는 수준은 자동으로 `drop` 시킨다. 만약 변수에 포함된 모든 수준을 보려면 `drop=FALSE`를 넣어 
+명시적으로 작성한다.
+
+``` {r factor-gss-race-drop-levels, warning=FALSE}
+ggplot(gss_cat, aes(race)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
+```
+
+### 1. 요인과 관련된 가장 많이 사용되는 기능 두가지
+
+요인과 관련되어 가장 많이 사용하는 기능은 다음과 같다.
+
+- 수준 순서를 바꿔 조정함
+- 수준내부 값을 뭉개거나 변경시키는 변화
+
+#### 1. 수준 순서를 변경
+
+``` {r factor-gss-change-levels, warning=FALSE}
+relig <- gss_cat %>%
+  group_by(relig) %>%
+  summarise(
+    age = mean(age, na.rm = TRUE),
+    tvhours = mean(tvhours, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(relig, aes(tvhours, relig)) + geom_point()
+```
+
+수준을 조정하지 않는 경우 전반적인 패턴을 살펴보기 어렵다. 하지만, 수준 순서를 재조장하게 되면 가독성을 훨씬 높일 수 있다.
+`fct_reorder()` 함수를 사용하는데 인자가 세개 필요하다.
+
+- `f`, 수준을 변경하려는 요인명
+- `x`, 수준을 변경하는데 사용되는 숫자 벡터에
+- `fun`, `f` 값 각각에 대해 다수 값이 있는 경우 이를 요약할 함수, 기본디폴트 함수는 중위수를 산출하는 함수 `median`.
+
+``` {r factor-gss-change-levels, warning=FALSE}
+ggplot(relig, aes(tvhours, fct_reorder(relig, tvhours))) +
+  geom_point()
+```  
+
+`aes()` 함수에서 `mutate()`로 요인 수준을 뽑아내서 수준을 재조정한다.
+
+``` {r factor-gss-reorder-levels, warning=FALSE}
+relig %>%
+  mutate(relig = fct_reorder(relig, tvhours)) %>%
+  ggplot(aes(tvhours, relig)) +
+    geom_point()
+```
+
+막대그래프의 경우 `fct_infreq()` 함수를 사용해서 오름 빈도수로 정렬이 가능하다: `fct_rev()`와 조합해서 사용해도 좋다.
+
+``` {r factor-gss-barplot, warning=FALSE}
+gss_cat %>%
+  mutate(marital = marital %>% fct_infreq() %>% fct_rev()) %>%
+  ggplot(aes(marital)) +
+    geom_bar()
+```
+
+#### 1. 요인변수 내부 수준을 변경
+
+요인변수 내부 수준을 바꾸거나 뭉개서 합치는 기능이 자주 사용되고 있다.
+
+``` {r factor-gss-recode, warning=FALSE}
+gss_cat %>% count(partyid)
+
+gss_cat %>%
+  mutate(partyid = fct_recode(partyid,
+    "Republican, strong"    = "Strong republican",
+    "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep",
+    "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat",
+    "Democrat, strong"      = "Strong democrat"
+  )) %>%
+  count(partyid)
+```
+
+`fct_recode()` 함수는 명시적으로 언급되지 않는 수준을 그대로 두고, 존재하지 않는 수준을 우연히 언급할 경우 경고 메시지를 띄운다.
+
+``` {r factor-gss-recode2, warning=FALSE}
+gss_cat %>%
+  mutate(partyid = fct_recode(partyid,
+    "Republican, strong"    = "Strong republican",
+    "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep",
+    "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat",
+    "Democrat, strong"      = "Strong democrat",
+    "Other"                 = "No answer",
+    "Other"                 = "Don't know",
+    "Other"                 = "Other party"
+  )) %>%
+  count(partyid)
+```
+
+`fct_collapse()` 함수는 `fct_recode()`함수의 변종으로 유용하다.
+
+``` {r factor-gss-collapse, warning=FALSE}
+gss_cat %>%
+  mutate(partyid = fct_collapse(partyid,
+    other = c("No answer", "Don't know", "Other party"),
+    rep = c("Strong republican", "Not str republican"),
+    ind = c("Ind,near rep", "Independent", "Ind,near dem"),
+    dem = c("Not str democrat", "Strong democrat")
+  )) %>%
+  count(partyid)
+```
+
+복잡한 데이터셋을 다룰 경우 처리할 변수가 상당히 많은 경우가 있다. 이런 경우 `fct_lump()` 함수가 유용하다.
+범주내 수준에 작은 값이 할당된 경우 이를 합쳐 의미있는 수준에 대한 값이 되도록 만드는 기능을 수행한다.
+`n=10`으로 인자값을 넣어주면 해당 변수에 수준이 10개로 지정된다.
+
+``` {r factor-gss-lump, warning=FALSE}
+gss_cat %>%
+  mutate(relig = fct_lump(relig, n = 10)) %>%
+  count(relig, sort = TRUE) %>%
+  print(n = Inf)
 ```
 
