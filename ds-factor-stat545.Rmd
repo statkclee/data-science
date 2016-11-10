@@ -43,3 +43,173 @@ library(dplyr)
 - [stringsAsFactors: An unauthorized biography](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/), Roger Peng
 - [stringsAsFactors =<sigh>](http://notstatschat.tumblr.com/post/124987394001/stringsasfactors-sigh), Thomas Lumley
 
+
+### `forcats` 팩키지 불러오기
+
+`tidyverse`의 핵심 팩키지가 아니라서 `install.packages("tidyverse")` 명령어로 설치하고 `library(forcats)` 명령어로 적재시켜야 한다.
+`fct_` 로 핵심함수명이 시작된다. 
+
+``` {r import-forcats}
+library(tidyverse)
+library(forcats)
+library(gapminder)
+```
+
+### 요인(factor) 살펴보기 
+
+먼저 요인형 변수에 담긴 정보를 확인하는데 `levels`, `nlevels` 함수를 통해 수준정보를 확인한다. 
+
+``` {r inspect-factors}
+gapminder
+str(gapminder)
+str(gapminder$continent)
+levels(gapminder$continent)
+nlevels(gapminder$continent)
+class(gapminder$continent)
+summary(gapminder$continent)
+```
+
+`dplyr` 팩키지 `count()` 함수를 사용해서 유사한 결과를 도출할 수도 있고, `forcats` 팩키지
+`fct_count()` 함수를 사용해서도 동일한 결과를 얻을 수 있다.
+
+
+``` {r inspect-factors-dplyr}
+gapminder %>% 
+  count(continent)
+```
+
+``` {r inspect-factors-forcats}
+fct_count(gapminder$continent)
+```
+
+### 사용되지 않는 수준(level) 제거
+
+특정 요인수준에 대응되는 관측점 혹은 행을 제거하게 되면, 문제가 발생된다.
+즉, 요인형 변수에 수준이 여전히 남아있게 되어, 요인형 변수에 대한 그래프를 도식화하게 되면
+그래프에 자동으로 변수에 정의된 수준이 그대로 저장되어 있어 범례에 수준만 가득찬 그래프도 흔히 목도하게 된다.
+
+``` {r drop-levels-five-country}
+h_countries <- c("Egypt", "Haiti", "Romania", "Thailand", "Venezuela")
+h_gap <- gapminder %>%
+  filter(country %in% h_countries)
+nlevels(h_gap$country)
+```
+
+`h_gap` 데이터프레임에 5개국만 포함되어 있지만, `gapminder` 원 데이터프레임에서 상속받은 전체 142개 수준이 끌려온다.
+
+이런 경우 사용되지 않는 수준을 제거해야 되는데 사용되는 함수는 `droplevels()`다. `forcats` 팩키지에 대응되는 함수는 
+`fct_drop()` 이다.
+
+``` {r drop-levels-droplevels}
+h_gap_dropped <- h_gap %>% 
+  droplevels()
+nlevels(h_gap_dropped$country)
+```
+
+``` {r drop-levels-fct_drop}
+h_gap$country %>%
+  fct_drop() %>%
+  levels()
+```
+
+### 수준(level) 순서 변경
+
+기본디폴트 설정으로 요인수준은 알파벳순으로 정렬된다.
+수준(level)을 정렬하는 기준이 다음과 같이 제시된다.
+
+- 빈도수: 가장 흔한 첫번째 수준, 두번째 흔한 수준, ...
+- 다른 변수: 다른 변수의 요약통계량을 활용해서 요인수준을 정렬한다. 예를 들어, 기대수명(life expectancy) 기준으로 `gapminder` 국가를 정렬.
+
+먼저, 빈도수를 기준으로 오름차순, 내림차순으로 대륙(`continent`)을 정렬한다. 막대그래프(`barplot`)를 사용해서 표와 그래프를 생성한다.
+
+``` {r order-levels-alphabet}
+gapminder$continent %>%
+  levels()
+```
+
+``` {r order-levels-frequency}
+gapminder$continent %>% 
+  fct_infreq() %>%
+  levels() %>% head()
+```
+
+``` {r order-levels-rev-frequency}
+gapminder$continent %>% 
+  fct_infreq() %>%
+  fct_rev() %>% 
+  levels() %>% head()
+```
+
+또다른 변수를 활용해서 `country`를 앞뒤로 정렬해보자.
+보통 정렬에 사용되는 변수는 정량적으로 그룹별 요약통계량을 계산해서 요인수준을 정렬한다.
+요인이 집단으로 묶는 변수가 되고, 기본디폴트 요약 함수는 `median()`이지만 필요에 따라 정렬에 활용한다.
+
+기대수명에 따라 국가를 정렬한다.
+
+``` {r order-levels-another-variable}
+fct_reorder(gapminder$country, gapminder$lifeExp) %>% 
+  levels() %>% head()
+```
+
+최소 기대수명에 따라 국가를 정렬한다.
+
+``` {r order-levels-another-variable-min}
+fct_reorder(gapminder$country, gapminder$lifeExp, min) %>% 
+  levels() %>% head()
+```
+
+역순으로 기대수명에 따라 국가를 정렬한다.
+
+``` {r order-levels-another-variable-rev}
+fct_reorder(gapminder$country, gapminder$lifeExp, .desc = TRUE) %>% 
+  levels() %>% head()
+```
+
+요인수준을 정렬해야 하는 이유는 그래프를 훨씬 가독성 좋게 만든다.
+요인변수를 `x` 혹은 `y` 축에 매핑시킬 경우, 거의 항상 또다른 매핑되는 변수를 기준으로 재정렬시켜야 한다.
+
+``` {r order-levels-reason, fig.show = 'hold', out.width = '49%'}
+gap_asia_2007 <- gapminder %>% filter(year == 2007, continent == "Asia")
+ggplot(gap_asia_2007, aes(x = lifeExp, y = country)) + geom_point()
+ggplot(gap_asia_2007, aes(x = lifeExp, y = fct_reorder(country, lifeExp))) +
+  geom_point()
+```  
+
+`fct_reorder2()` 함수를 사용해서 요인변수 수준과 선그래프 색상을 맞출 수 있다. 또한 데이터와 범례도 맞출 수 있다.
+
+``` {r order-levels-reason2, fig.show = 'hold', out.width = '49%'}
+h_countries <- c("Egypt", "Haiti", "Romania", "Thailand", "Venezuela")
+h_gap <- gapminder %>%
+  filter(country %in% h_countries) %>% 
+  droplevels()
+ggplot(h_gap, aes(x = year, y = lifeExp, color = country)) +
+  geom_line()
+ggplot(h_gap, aes(x = year, y = lifeExp,
+                  color = fct_reorder2(country, year, lifeExp))) +
+  geom_line() +
+  labs(color = "country")
+```
+
+### 특정 수준순위를 조정
+
+종종 특정 수준의 순위를 조정하고자 하는 경우가 있다. `fct_relevel()` 함수를 사용한다.
+
+
+``` {r order-adhoc}
+h_gap$country %>% levels()
+h_gap$country %>% fct_relevel("Romania", "Haiti") %>% levels()
+```
+
+### 수준을 다시 정의
+
+범주 수준을 재정의하는 경우도 흔히 있다. 이런 경우 `fct_recode()` 함수를 사용한다.
+
+``` {r order-recode}
+i_gap <- gapminder %>% 
+  filter(country %in% c("United States", "Sweden", "Australia")) %>% 
+  droplevels()
+i_gap$country %>% levels()
+
+i_gap$country %>%
+  fct_recode("USA" = "United States", "Oz" = "Australia") %>% levels()
+```
