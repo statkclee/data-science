@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">요인자료형 달인 - STAT545</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>forcats</code> 팩키지를 활용하여 요인자료형 달인이 된다.</li>
+</ul>
+</div>
+</section>
+<h3 id="요인-자료형-stat545-factors">요인 자료형 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p><strong>요인(factor)</strong> 자료형은 범주형 데이터를 R에서 저장하는 자료형이다. 범주가 취할 수 있는 값을 <strong>수준(level)</strong> 이라고 부른다. <code>gapminder</code> 데이터셋에서 <code>continent</code> 대륙 변수가 취할 수 있는 값은 “Africa”, “Americas” 등이고 눈으로 사람이 확인하는 값이다. 일반적으로 수준은 사람이 읽을 수 있는 문자열로 표현되고, “male/female”, “control/treated”를 예로 들 수 있다. <em>절대로 잊지 말아야 되는 사실은</em> R에서는 정수 1,2,3… 으로 저장된다는 점이다.</p>
+<p>요인형의 야누스적인 특성으로 말미암아 여러가지 불미스런 사건을 많이 일으키기도 하지만 <strong>필요악</strong>으로, 단점보다 훨씬 장점이 더 많다. 특히 모형개발이나 그래프를 생성할 때, 요인은 항상 따라다니고 잘 다뤄야 하는 필수적인 자료형이 요인형이다.</p>
+<p>가장 최악의 요인형은 탐지되지 않는 요인이다. 문자형이라고 생각했던 변수가 실제로 컴퓨터 R은 요인형(정수 숫자형)으로 이해하고 있다는 점이다. 그럼 <strong>탐지되지 않는 요인(stealth factor)</strong>은 어디서 나온 것일까? Base R은 문자형 변수를 요인형으로 자동 변환하는데 데이터를 불러 읽어 들일 때 <code>read.table()</code> 함수와 친구들이 그런 특성을 기본디폴트 설정으로 갖는다. 이런 동작을 멈추게 하려면 <code>stringsAsFactors = FALSE</code> 인자를 명시적으로 넣어야 한다. <strong><code>tidyverse</code></strong> 팩키지를 사용하면 그런 걱정은 사라진다. readr::read_csv(), readr::read_tsv() 함수를 사용해서 데이터를 불러 읽어오든지, 데이터 테이블 생성할 때 <code>data.frame()</code> 대신 <code>tibble::tibble()</code>을 사용한다.</p>
+<p><strong>요인형과 문자형에 대한 역사적 고찰과 의미</strong></p>
+<ul>
+<li><a href="http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a>, Roger Peng</li>
+<li><a href="http://notstatschat.tumblr.com/post/124987394001/stringsasfactors-sigh">stringsAsFactors =<sigh></a>, Thomas Lumley</li>
+</ul>
+<h3 id="forcats-팩키지-불러오기"><code>forcats</code> 팩키지 불러오기</h3>
+<p><code>tidyverse</code>의 핵심 팩키지가 아니라서 <code>install.packages(&quot;tidyverse&quot;)</code> 명령어로 설치하고 <code>library(forcats)</code> 명령어로 적재시켜야 한다. <code>fct_</code> 로 핵심함수명이 시작된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre class="output"><code>Warning: package &#39;tidyverse&#39; was built under R version 3.2.5
+</code></pre>
+<pre class="output"><code>Warning: package &#39;tibble&#39; was built under R version 3.2.5
+</code></pre>
+<pre class="output"><code>Warning: package &#39;tidyr&#39; was built under R version 3.2.5
+</code></pre>
+<pre class="output"><code>Warning: package &#39;readr&#39; was built under R version 3.2.5
+</code></pre>
+<pre class="output"><code>Warning: package &#39;purrr&#39; was built under R version 3.2.5
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(forcats))</code></pre></div>
+<pre class="output"><code>Warning: package &#39;forcats&#39; was built under R version 3.2.5
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(gapminder))</code></pre></div>
+<h3 id="요인factor-살펴보기">요인(factor) 살펴보기</h3>
+<p>먼저 요인형 변수에 담긴 정보를 확인하는데 <code>levels</code>, <code>nlevels</code> 함수를 통해 수준정보를 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gapminder</code></pre></div>
+<pre class="output"><code># A tibble: 1,704 × 6
+       country continent  year lifeExp      pop gdpPercap
+        &lt;fctr&gt;    &lt;fctr&gt; &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+1  Afghanistan      Asia  1952  28.801  8425333  779.4453
+2  Afghanistan      Asia  1957  30.332  9240934  820.8530
+3  Afghanistan      Asia  1962  31.997 10267083  853.1007
+4  Afghanistan      Asia  1967  34.020 11537966  836.1971
+5  Afghanistan      Asia  1972  36.088 13079460  739.9811
+6  Afghanistan      Asia  1977  38.438 14880372  786.1134
+7  Afghanistan      Asia  1982  39.854 12881816  978.0114
+8  Afghanistan      Asia  1987  40.822 13867957  852.3959
+9  Afghanistan      Asia  1992  41.674 16317921  649.3414
+10 Afghanistan      Asia  1997  41.763 22227415  635.3414
+# ... with 1,694 more rows
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(gapminder)</code></pre></div>
+<pre class="output"><code>Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:   1704 obs. of  6 variables:
+ $ country  : Factor w/ 142 levels &quot;Afghanistan&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ continent: Factor w/ 5 levels &quot;Africa&quot;,&quot;Americas&quot;,..: 3 3 3 3 3 3 3 3 3 3 ...
+ $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+ $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+ $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+ $ gdpPercap: num  779 821 853 836 740 ...
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(gapminder$continent)</code></pre></div>
+<pre class="output"><code> Factor w/ 5 levels &quot;Africa&quot;,&quot;Americas&quot;,..: 3 3 3 3 3 3 3 3 3 3 ...
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">levels</span>(gapminder$continent)</code></pre></div>
+<pre class="output"><code>[1] &quot;Africa&quot;   &quot;Americas&quot; &quot;Asia&quot;     &quot;Europe&quot;   &quot;Oceania&quot; 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nlevels</span>(gapminder$continent)</code></pre></div>
+<pre class="output"><code>[1] 5
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(gapminder$continent)</code></pre></div>
+<pre class="output"><code>[1] &quot;factor&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(gapminder$continent)</code></pre></div>
+<pre class="output"><code>  Africa Americas     Asia   Europe  Oceania 
+     624      300      396      360       24 
+</code></pre>
+<p><code>dplyr</code> 팩키지 <code>count()</code> 함수를 사용해서 유사한 결과를 도출할 수도 있고, <code>forcats</code> 팩키지 <code>fct_count()</code> 함수를 사용해서도 동일한 결과를 얻을 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gapminder %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(continent)</code></pre></div>
+<pre class="output"><code># A tibble: 5 × 2
+  continent     n
+     &lt;fctr&gt; &lt;int&gt;
+1    Africa   624
+2  Americas   300
+3      Asia   396
+4    Europe   360
+5   Oceania    24
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fct_count</span>(gapminder$continent)</code></pre></div>
+<pre class="output"><code># A tibble: 5 × 2
+         f     n
+    &lt;fctr&gt; &lt;int&gt;
+1   Africa   624
+2 Americas   300
+3     Asia   396
+4   Europe   360
+5  Oceania    24
+</code></pre>
+<h3 id="사용되지-않는-수준level-제거">사용되지 않는 수준(level) 제거</h3>
+<p>특정 요인수준에 대응되는 관측점 혹은 행을 제거하게 되면, 문제가 발생된다. 즉, 요인형 변수에 수준이 여전히 남아있게 되어, 요인형 변수에 대한 그래프를 도식화하게 되면 그래프에 자동으로 변수에 정의된 수준이 그대로 저장되어 있어 범례에 수준만 가득찬 그래프도 흔히 목도하게 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_countries &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Egypt&quot;</span>, <span class="st">&quot;Haiti&quot;</span>, <span class="st">&quot;Romania&quot;</span>, <span class="st">&quot;Thailand&quot;</span>, <span class="st">&quot;Venezuela&quot;</span>)
+h_gap &lt;-<span class="st"> </span>gapminder %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(country %in%<span class="st"> </span>h_countries)
+<span class="kw">nlevels</span>(h_gap$country)</code></pre></div>
+<pre class="output"><code>[1] 142
+</code></pre>
+<p><code>h_gap</code> 데이터프레임에 5개국만 포함되어 있지만, <code>gapminder</code> 원 데이터프레임에서 상속받은 전체 142개 수준이 끌려온다.</p>
+<p>이런 경우 사용되지 않는 수준을 제거해야 되는데 사용되는 함수는 <code>droplevels()</code>다. <code>forcats</code> 팩키지에 대응되는 함수는 <code>fct_drop()</code> 이다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_gap_dropped &lt;-<span class="st"> </span>h_gap %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">droplevels</span>()
+<span class="kw">nlevels</span>(h_gap_dropped$country)</code></pre></div>
+<pre class="output"><code>[1] 5
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_gap$country %&gt;%
+<span class="st">  </span><span class="kw">fct_drop</span>() %&gt;%
+<span class="st">  </span><span class="kw">levels</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Egypt&quot;     &quot;Haiti&quot;     &quot;Romania&quot;   &quot;Thailand&quot;  &quot;Venezuela&quot;
+</code></pre>
+<h3 id="수준level-순서-변경">수준(level) 순서 변경</h3>
+<p>기본디폴트 설정으로 요인수준은 알파벳순으로 정렬된다. 수준(level)을 정렬하는 기준이 다음과 같이 제시된다.</p>
+<ul>
+<li>빈도수: 가장 흔한 첫번째 수준, 두번째 흔한 수준, …</li>
+<li>다른 변수: 다른 변수의 요약통계량을 활용해서 요인수준을 정렬한다. 예를 들어, 기대수명(life expectancy) 기준으로 <code>gapminder</code> 국가를 정렬.</li>
+</ul>
+<p>먼저, 빈도수를 기준으로 오름차순, 내림차순으로 대륙(<code>continent</code>)을 정렬한다. 막대그래프(<code>barplot</code>)를 사용해서 표와 그래프를 생성한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gapminder$continent %&gt;%
+<span class="st">  </span><span class="kw">levels</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Africa&quot;   &quot;Americas&quot; &quot;Asia&quot;     &quot;Europe&quot;   &quot;Oceania&quot; 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gapminder$continent %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">fct_infreq</span>() %&gt;%
+<span class="st">  </span><span class="kw">levels</span>() %&gt;%<span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Africa&quot;   &quot;Asia&quot;     &quot;Europe&quot;   &quot;Americas&quot; &quot;Oceania&quot; 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gapminder$continent %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">fct_infreq</span>() %&gt;%
+<span class="st">  </span><span class="kw">fct_rev</span>() %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">levels</span>() %&gt;%<span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Oceania&quot;  &quot;Americas&quot; &quot;Europe&quot;   &quot;Asia&quot;     &quot;Africa&quot;  
+</code></pre>
+<p>또다른 변수를 활용해서 <code>country</code>를 앞뒤로 정렬해보자. 보통 정렬에 사용되는 변수는 정량적으로 그룹별 요약통계량을 계산해서 요인수준을 정렬한다. 요인이 집단으로 묶는 변수가 되고, 기본디폴트 요약 함수는 <code>median()</code>이지만 필요에 따라 정렬에 활용한다.</p>
+<p>기대수명에 따라 국가를 정렬한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fct_reorder</span>(gapminder$country, gapminder$lifeExp) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">levels</span>() %&gt;%<span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Sierra Leone&quot;  &quot;Guinea-Bissau&quot; &quot;Afghanistan&quot;   &quot;Angola&quot;       
+[5] &quot;Somalia&quot;       &quot;Guinea&quot;       
+</code></pre>
+<p>최소 기대수명에 따라 국가를 정렬한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fct_reorder</span>(gapminder$country, gapminder$lifeExp, min) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">levels</span>() %&gt;%<span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Rwanda&quot;       &quot;Afghanistan&quot;  &quot;Gambia&quot;       &quot;Angola&quot;      
+[5] &quot;Sierra Leone&quot; &quot;Cambodia&quot;    
+</code></pre>
+<p>역순으로 기대수명에 따라 국가를 정렬한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fct_reorder</span>(gapminder$country, gapminder$lifeExp, <span class="dt">.desc =</span> <span class="ot">TRUE</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">levels</span>() %&gt;%<span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Iceland&quot;     &quot;Japan&quot;       &quot;Sweden&quot;      &quot;Switzerland&quot; &quot;Netherlands&quot;
+[6] &quot;Norway&quot;     
+</code></pre>
+<p>요인수준을 정렬해야 하는 이유는 그래프를 훨씬 가독성 좋게 만든다. 요인변수를 <code>x</code> 혹은 <code>y</code> 축에 매핑시킬 경우, 거의 항상 또다른 매핑되는 변수를 기준으로 재정렬시켜야 한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gap_asia_2007 &lt;-<span class="st"> </span>gapminder %&gt;%<span class="st"> </span><span class="kw">filter</span>(year ==<span class="st"> </span><span class="dv">2007</span>, continent ==<span class="st"> &quot;Asia&quot;</span>)
+<span class="kw">ggplot</span>(gap_asia_2007, <span class="kw">aes</span>(<span class="dt">x =</span> lifeExp, <span class="dt">y =</span> country)) +<span class="st"> </span><span class="kw">geom_point</span>()
+<span class="kw">ggplot</span>(gap_asia_2007, <span class="kw">aes</span>(<span class="dt">x =</span> lifeExp, <span class="dt">y =</span> <span class="kw">fct_reorder</span>(country, lifeExp))) +
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/order-levels-reason-1.png" title="plot of chunk order-levels-reason" alt="plot of chunk order-levels-reason" width="49%" style="display: block; margin: auto;" /><img src="fig/order-levels-reason-2.png" title="plot of chunk order-levels-reason" alt="plot of chunk order-levels-reason" width="49%" style="display: block; margin: auto;" /></p>
+<p><code>fct_reorder2()</code> 함수를 사용해서 요인변수 수준과 선그래프 색상을 맞출 수 있다. 또한 데이터와 범례도 맞출 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_countries &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Egypt&quot;</span>, <span class="st">&quot;Haiti&quot;</span>, <span class="st">&quot;Romania&quot;</span>, <span class="st">&quot;Thailand&quot;</span>, <span class="st">&quot;Venezuela&quot;</span>)
+h_gap &lt;-<span class="st"> </span>gapminder %&gt;%
+<span class="st">  </span><span class="kw">filter</span>(country %in%<span class="st"> </span>h_countries) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">droplevels</span>()
+<span class="kw">ggplot</span>(h_gap, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> lifeExp, <span class="dt">color =</span> country)) +
+<span class="st">  </span><span class="kw">geom_line</span>()
+<span class="kw">ggplot</span>(h_gap, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> lifeExp,
+                  <span class="dt">color =</span> <span class="kw">fct_reorder2</span>(country, year, lifeExp))) +
+<span class="st">  </span><span class="kw">geom_line</span>() +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">&quot;country&quot;</span>)</code></pre></div>
+<p><img src="fig/order-levels-reason2-1.png" title="plot of chunk order-levels-reason2" alt="plot of chunk order-levels-reason2" width="49%" style="display: block; margin: auto;" /><img src="fig/order-levels-reason2-2.png" title="plot of chunk order-levels-reason2" alt="plot of chunk order-levels-reason2" width="49%" style="display: block; margin: auto;" /></p>
+<h3 id="특정-수준순위를-조정">특정 수준순위를 조정</h3>
+<p>종종 특정 수준의 순위를 조정하고자 하는 경우가 있다. <code>fct_relevel()</code> 함수를 사용한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_gap$country %&gt;%<span class="st"> </span><span class="kw">levels</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Egypt&quot;     &quot;Haiti&quot;     &quot;Romania&quot;   &quot;Thailand&quot;  &quot;Venezuela&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_gap$country %&gt;%<span class="st"> </span><span class="kw">fct_relevel</span>(<span class="st">&quot;Romania&quot;</span>, <span class="st">&quot;Haiti&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">levels</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Romania&quot;   &quot;Haiti&quot;     &quot;Egypt&quot;     &quot;Thailand&quot;  &quot;Venezuela&quot;
+</code></pre>
+<h3 id="수준을-다시-정의">수준을 다시 정의</h3>
+<p>범주 수준을 재정의하는 경우도 흔히 있다. 이런 경우 <code>fct_recode()</code> 함수를 사용한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i_gap &lt;-<span class="st"> </span>gapminder %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(country %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;United States&quot;</span>, <span class="st">&quot;Sweden&quot;</span>, <span class="st">&quot;Australia&quot;</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">droplevels</span>()
+i_gap$country %&gt;%<span class="st"> </span><span class="kw">levels</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Australia&quot;     &quot;Sweden&quot;        &quot;United States&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i_gap$country %&gt;%
+<span class="st">  </span><span class="kw">fct_recode</span>(<span class="st">&quot;USA&quot;</span> =<span class="st"> &quot;United States&quot;</span>, <span class="st">&quot;Oz&quot;</span> =<span class="st"> &quot;Australia&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">levels</span>()</code></pre></div>
+<pre class="output"><code>[1] &quot;Oz&quot;     &quot;Sweden&quot; &quot;USA&quot;   
+</code></pre>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://stat545.com/block029_factors.html">Be the boss of your factors</a><a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
