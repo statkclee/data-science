@@ -1,0 +1,45 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 요인자료형 달인 - STAT545
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+library(dplyr)
+```
+> ## 학습 목표 {.objectives}
+>
+> * 
+
+### 요인 자료형
+
+**요인(factor)** 자료형은 범주형 데이터를 R에서 저장하는 자료형이다.
+범주가 취할 수 있는 값을 **수준(level)** 이라고 부른다.
+`gapminder` 데이터셋에서 `continent` 대륙 변수가 취할 수 있는 값은 
+ “Africa”, “Americas” 등이고 눈으로 사람이 확인하는 값이다.
+ 일반적으로 수준은 사람이 읽을 수 있는 문자열로 표현되고, “male/female”, “control/treated”를 예로 들 수 있다.
+ *절대로 잊지 말아야 되는 사실은* R에서는 정수 1,2,3... 으로 저장된다는 점이다.
+
+ 요인형의 야누스적인 특성으로 말미암아 여러가지 불미스런 사건을 많이 일으키기도 하지만 **필요악**으로,
+ 단점보다 훨씬 장점이 더 많다. 특히 모형개발이나 그래프를 생성할 때, 요인은 항상 따라다니고 잘 다뤄야 하는 필수적인 자료형이
+ 요인형이다.
+
+가장 최악의 요인형은 탐지되지 않는 요인이다. 문자형이라고 생각했던 변수가 실제로 컴퓨터 R은 요인형(정수 숫자형)으로 이해하고 있다는 점이다.
+그럼 **탐지되지 않는 요인(stealth factor)**은 어디서 나온 것일까? Base R은 문자형 변수를 요인형으로 자동 변환하는데 데이터를 불러 읽어 들일 때 
+`read.table()` 함수와 친구들이 그런 특성을 기본디폴트 설정으로 갖는다. 이런 동작을 멈추게 하려면 `stringsAsFactors = FALSE` 인자를 명시적으로 넣어야 한다. 
+**`tidyverse`** 팩키지를 사용하면 그런 걱정은 사라진다. readr::read_csv(), readr::read_tsv() 함수를 사용해서 데이터를 불러 읽어오든지,
+데이터 테이블 생성할 때 `data.frame()` 대신 `tibble::tibble()`을 사용한다.
+
+**요인형과 문자형에 대한 역사적 고찰과 의미**
+
+- [stringsAsFactors: An unauthorized biography](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/), Roger Peng
+- [stringsAsFactors =<sigh>](http://notstatschat.tumblr.com/post/124987394001/stringsasfactors-sigh), Thomas Lumley
+

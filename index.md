@@ -18,6 +18,7 @@ title: 데이터 과학
     - **자료구조**
         - [시간데이터](data-handling-timendate.html)
         - [요인(Factor) - 범주형 자료형](ds-factor-cdata.html)
+            - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
         - [데이터테이블](data-handling-datatable.html)
         - [정렬(Sort)](data-handling-sorting-ex.html) 
         - [SQL](data-handling-sql.html)    
