@@ -17,9 +17,11 @@ library(dplyr)
 ```
 > ## 학습 목표 {.objectives}
 >
-> * 
+> * `forcats` 팩키지를 활용하여 요인자료형 달인이 된다.
 
-### 요인 자료형
+### 요인 자료형 [^stat545-factors]
+
+[^stat545-factors]: [Be the boss of your factors](http://stat545.com/block029_factors.html)
 
 **요인(factor)** 자료형은 범주형 데이터를 R에서 저장하는 자료형이다.
 범주가 취할 수 있는 값을 **수준(level)** 이라고 부른다.
@@ -50,9 +52,9 @@ library(dplyr)
 `fct_` 로 핵심함수명이 시작된다. 
 
 ``` {r import-forcats}
-library(tidyverse)
-library(forcats)
-library(gapminder)
+suppressMessages(library(tidyverse))
+suppressMessages(library(forcats))
+suppressMessages(library(gapminder))
 ```
 
 ### 요인(factor) 살펴보기 
