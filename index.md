@@ -28,6 +28,7 @@ title: 데이터 과학
     	- [들어가며](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/01-intro.html)
     	- [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
     	- [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
+    - [결측데이터](ds-missing.html)
     - [`dplyr` 데이터베이스](ds-dplyr-sql.html)        
     - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    

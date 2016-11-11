@@ -1,0 +1,214 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 결측데이터
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+```
+> ## 학습 목표 {.objectives}
+>
+> * 결측데이터를 이해하고 결측데이터 툴체인을 구축한다.
+> * 결측데이터 처리 전략을 이해한다.
+> * 결측데이터를 전략에 맞춰 처리한다.
+
+## 1. 결측데이터 
+
+결측값(missing value)은 존재하지 않는 값(null)으로 컴퓨터에서 표현된다.
+
+
+## 2. 결측값 식별 [^missing-value-treatment]
+
+[^missing-value-treatment]: [R-bloggers: Missing Value Treatment](https://www.r-bloggers.com/missing-value-treatment/)
+
+`mlbench` 보스톤 주택가격 데이터셋을 기본으로 결측값 관련 학습 내용에 대한 실습을 진행한다.
+
+``` {r boston-housing-na, warnings=FALSE}
+## 실습데이터
+# install.packages("mlbench")
+suppressWarnings(suppressMessages(library(mlbench)))
+data("BostonHousing")
+# 원데이터를 나중에 복구하기 위해 잠시 `original` 데이터프레임으로 저장
+original <- BostonHousing
+# "rad"
+BostonHousing[sample(1:nrow(BostonHousing), 40), "ptratio"] <- NA
+BostonHousing[sample(1:nrow(BostonHousing), 40), "rad"] <- NA
+```
+
+연속형 변수 "ptratio"에 40개 `NA` 결측값을 주입했고,  
+범주형 변수 "rad"에 40개 `NA` 결측값을 주입했다.
+
+### 2.1. `mice` 팩키지
+
+`mice` 팩키지를 사용해서 `md.pattern` 함수를 사용해서 "ptratio" 변수에 40개 주입한 `NA` 결측값을 확인해본다.
+
+``` {r boston-housing-na, warnings=FALSE}
+suppressWarnings(suppressMessages(library(mice))
+md.pattern(BostonHousing)
+```
+
+## 3. 결측값 처리 전략
+
+결측값 처리 전략은 다음과 같은 4가지 전략이 존재한다.
+
+1. 관측점 제거
+    - 데이터가 상당히 많은 경우, 동시에 모집단을 대표하는데 무리가 없는 경우 `na.action=na.omit` 설정을 적용한다. 
+    - `lm(medv ~ ptratio + rad, data=BostonHousing, na.action=na.omit)`
+2. 변수 제거
+    - 특정 변수에 상당한 값이 결측값인 경우, 다른 변수가 결측값을 많이 갖는 변수에 상응하는 정보량을 갖는 경우 제거한다.
+3. 평균/중위수/최빈값으로 대체(impute)
+    - 결측값을 변수가 연속형 숫자형인 경우 평균/중위수로 대체하고, 범주형 요인형인 경우 최빈값으로 대체한다.
+
+``` {r boston-housing-impute, warnings=FALSE}
+suppressWarnings(suppressMessages(library(Hmisc))
+impute(BostonHousing$ptratio, mean)  # 평균으로 대체
+impute(BostonHousing$ptratio, median)  # 중위수로 대체
+impute(BostonHousing$ptratio, 20)  # 특정 값으로 대체
+# 혹은 팩키지를 사용하지 않고 직접 코드를 작성해서 작업
+BostonHousing$ptratio[is.na(BostonHousing$ptratio)] <- mean(BostonHousing$ptratio, na.rm = T) 
+```
+
+4. 예측값으로 대체한다.
+    - `DMwR` 팩키지 `knnImputation()` 함수를 사용해서 k-nn (k-인접 군집분석)을 사용한다. 
+    `k-nn` 대체법은 인접한 최대 k 관측점 유클리드 거리를 계산하여 가장 근접된 값으로 대체한다.
+
+``` {r boston-housing-impute-knn, warnings=FALSE}
+library(DMwR)
+knnOutput <- knnImputation(BostonHousing[, !names(BostonHousing) %in% "medv"]) 
+
+# 효과 분석
+actuals <- original$ptratio[is.na(BostonHousing$ptratio)]
+predicteds <- knnOutput[is.na(BostonHousing$ptratio), "ptratio"]
+regr.eval(actuals, predicteds)
+```
+
+    - `knn` 대체 기법은 범주형 자료의 경우 적용에 한계가 있다. 이런 경우 `rpart`, `mice` 팩키지를 활용한다.
+    - 먼저, `rpart`를 사용하는 경우 연속형 변수, 범주형 변수 모두 의사결정나무 모형을 순차적으로 적합시킨다.
+
+``` {r boston-housing-impute-rpart, warnings=FALSE}
+library(rpart)
+class_mod <- rpart(rad ~ . - medv, data=BostonHousing[!is.na(BostonHousing$rad), ], method="class", na.action=na.omit)  # rad 변수가 범주형
+anova_mod <- rpart(ptratio ~ . - medv, data=BostonHousing[!is.na(BostonHousing$ptratio), ], method="anova", na.action=na.omit)  # ptratio 변수는 숫자형
+rad_pred <- predict(class_mod, BostonHousing[is.na(BostonHousing$rad), ])
+ptratio_pred <- predict(anova_mod, BostonHousing[is.na(BostonHousing$ptratio), ])    
+```
+
+    - `mice`를 사용하는 경우: `mice()` 함수를 사용해서 먼저 모형을 생성시키고 나서, `complete()` 함수를 사용해서 결측값을 채워넣는 2단계 과정을 거침.
+
+``` {r boston-housing-impute-mice, warnings=FALSE}
+library(mice)
+miceMod <- mice(BostonHousing[, !names(BostonHousing) %in% "medv"], method="rf")  # 확률숲(random forest) 모형으로 결측모형 생성.
+miceOutput <- complete(miceMod)  # 생성된 데이터를 채워 넣음.
+anyNA(miceOutput)    
+```
+
+### 3.1. 결측값 처리 방법에 따른 성능 평가 -- 연속형 변수 `ptratio`
+
+다양한 결측값 처리 방법에 따른 성능 차이를 비교하는 것이 왜 고급 결측값 처리 방법을 활용해야 하는 근거도 된다.
+
+먼저, 연속형 변수의 경우 다양한 결측값 처리 방법에 따른 성능의 차이를 비교해보자.
+"ptratio" 변수는 연속형 변수로 506개 변수중 50개 즉 10%를 결측값, `NA`로 치환한다.
+
+평균과 중위수를 결측값 10%를 채워넣을 경우 중위수를 채워넣은 것이 `mape`를 봤을 때 대동소이하다. [^mape]
+
+[^mape]: Mean absolute percentage error, 평균절대 백분율 오차. $\mbox{M} = \frac{100}{n}\sum_{t=1}^n  \left|\frac{A_t-F_t}{A_t}\right|$
+
+``` {r boston-housing-impute-perf-mean, warnings=FALSE}
+original <- BostonHousing
+BostonHousing[sample(1:nrow(BostonHousing), 50), "ptratio"] <- NA
+
+actuals_ptratio <- original$ptratio[is.na(BostonHousing$ptratio)]
+ptratios_mean_pred <- rep(mean(BostonHousing$ptratio, na.rm=T), length(actuals_ptratio))
+ptratios_median_pred <- rep(median(BostonHousing$ptratio, na.rm=T), length(actuals_ptratio))
+regr.eval(actuals_ptratio, ptratios_mean_pred)
+regr.eval(actuals_ptratio, ptratios_median_pred)
+```
+
+두번째 `knn` 기법을 활용한 경우 `mape`가 0.097에서 0.058로 줄어든 것이 확인된다.
+
+``` {r boston-housing-impute-perf-knn, warnings=FALSE}
+ptratios_knn_pred <- knnOutput[is.na(BostonHousing$ptratio), "ptratio"]
+regr.eval(actuals_ptratio, ptratios_knn_pred)
+```
+
+세번째 `rpart` 기법을 활용한 경우 `mape`가 0.058에서 0.041로 줄어든 것이 확인된다.
+
+``` {r boston-housing-impute-perf-rpart, warnings=FALSE}
+ptratios_anova_mod <- rpart(ptratio ~ . - medv, 
+    data=BostonHousing[!is.na(BostonHousing$ptratio), ], method="anova", na.action=na.omit)
+ptratio_anova_pred <- predict(ptratios_anova_mod, BostonHousing[is.na(BostonHousing$ptratio), ])
+regr.eval(actuals, ptratio_anova_pred)
+```
+
+네번째는 `rf` 확률숲 모형을 적용하는데 결측값 처리 전용 `mice` 팩키지를 활용한다.
+`mape` 값이 0.41 에서 0.02로 줄어든 것이 확인된다.
+
+``` {r boston-housing-impute-perf-rf, warnings=FALSE}
+library(mice)
+mice_mod <- mice(BostonHousing[, !names(BostonHousing) %in% "medv"], method="rf") # 1단계 모형 생성
+mice_output <- complete(mice_mod)  # 2단계 결측값 채워넣기
+
+ptratio_rf_pred <- mice_output[is.na(BostonHousing$ptratio), "ptratio"]
+regr.eval(actuals, ptratio_rf_pred)
+```
+
+
+### 3.2. 결측값 처리 방법에 따른 성능 평가 -- 범주형 변수 `rad`
+
+범주형 변수의 경우, 다양한 결측값 처리 방법에 따른 성능의 차이를 비교해보자.
+"rad" 변수는 연속형 변수로 506개 변수중 50개 즉 10%를 결측값, `NA`로 치환한다.
+
+먼저, `names(sort(-table(BostonHousing$rad)))[1]` 명령어를 통해 최빈값을 파악한다.
+그리고 이를 결측값에 꽂아 넣는다. 0.7 오분류율이 나온다.
+
+``` {r boston-housing-impute-perf-mode, warnings=FALSE}
+data(BostonHousing)
+original <- BostonHousing
+BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
+
+actuals_rad <- original$rad[is.na(BostonHousing$rad)]
+rad_mode_pred <- rep(names(sort(-table(BostonHousing$rad)))[1], length(actuals_rad))
+
+mean(actuals_rad != rad_mode_pred) 
+```
+
+두번째로 `rpart` 의사결정나무 모형을 활용하여 결측값을 채워넣는다. 0.7에서 0.17로 오분류가 떨어진 것이 확인된다.
+
+``` {r boston-housing-impute-perf-rpart2, warnings=FALSE}
+data(BostonHousing)
+original <- BostonHousing
+BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
+
+library(rpart)
+class_mod <- rpart(rad ~ . - medv, data=BostonHousing[!is.na(BostonHousing$rad), ], method="class", na.action=na.omit)
+rad_pred <- predict(class_mod, BostonHousing[is.na(BostonHousing$rad), ])
+
+actuals_rad <- original$rad[is.na(BostonHousing$rad)]
+rad_rpart_pred <- as.numeric(colnames(rad_pred)[apply(rad_pred, 1, which.max)])
+
+mean(actuals_rad != rad_rpart_pred)
+```
+
+마지막으로 `mice` 확률숲 `rf` 모형을 사용해서 결측값을 채워넣는다. 0.17에서 0.16으로 낮아진 것이 확인된다.
+
+``` {r boston-housing-impute-perf-mice2, warnings=FALSE}
+data(BostonHousing)
+original <- BostonHousing
+BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
+
+library(mice)
+mice_mod <- mice(BostonHousing[, !names(BostonHousing) %in% "medv"], method="rf") # 1단계 모형 생성
+mice_output <- complete(mice_mod)  # 2단계 결측값 채워넣기
+
+actuals_rad <- original$rad[is.na(BostonHousing$rad)]
+rad_rf_pred <- mice_output[is.na(BostonHousing$rad), "rad"]
+mean(actuals_rad != rad_rf_pred)
+```
