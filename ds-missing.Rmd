@@ -22,7 +22,9 @@ source("tools/chunk-options.R")
 > * 결측데이터 처리 전략을 이해한다.
 > * 결측데이터 전략에 따른 성능향상을 확인한다.
 
-## 1. 미국대선 여론조사 [^presidential-election]
+## 1. 미국대선 여론조사 [^presidential-election] [^why-trump]
+
+[^why-trump]: [미국 대선 - 트럼프 대이변은 어떻게 일어났는가](http://ilyo.co.kr/?ac=article_view&entry_id=213504)
 
 [^presidential-election]: [<추왕훈의 데자뷔> 선거 여론조사의 종언, 2016-11-11](http://www.yonhapnews.co.kr/bulletin/2016/11/10/0200000000AKR20161110146900022.HTML?input=1179m)
 
