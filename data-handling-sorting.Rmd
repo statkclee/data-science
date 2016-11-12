@@ -10,12 +10,19 @@ output:
 mainfont: NanumGothic
 ---
 
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+```
+
 > ## 학습 목표 {.objectives}
 >
-> *  R 데이터 정렬 연습문제를 풀어본다. [^sort-ex] [^sort-sol]
+> *  R 데이터 정렬 연습문제를 풀어본다. 
 
 
-### 정렬 문제 정의 및 개념 이해
+### 정렬 문제 정의 및 개념 이해 [^sort-ex] [^sort-sol]
+
+[^sort-ex]: [Get-your-stuff-in-order exercises](http://www.r-bloggers.com/get-your-stuff-in-order-exercises/)
+[^sort-sol]: [Get-your-stuff-in-order: solutions](http://r-exercises.com/2016/03/01/get-your-stuff-in-order-solutions/)
 
 [http://www.r-bloggers.com/](http://www.r-bloggers.com/)에 올라온 블로그 내용을 번역한 것이다.
 처음 [http://r-exercises.com](http://r-exercises.com) 사이트에 게시된 것으로 
@@ -154,8 +161,8 @@ unique(CO2$Plant)
 
 ```{r}
 CO2 <- CO2[order(as.character(CO2$Plant)), ]
-CO2 <- CO2[order(as.character(CO2$Plant), CO2$uptake), ]
-CO2 <- CO2[order(-xtfrm(as.character(CO2$Plant), CO2$uptake)), ]
+CO2 <- CO2[order(CO2$uptake, as.character(CO2$Plant)), ]
+CO2 <- CO2[order(CO2$uptake, -xtfrm(as.character(CO2$Plant))), ]
 ```
 
 ### 6.번 정렬 문제
@@ -174,9 +181,7 @@ df <- as.data.frame(matrix(sample(1:5, 2000, T), ncol=40))
 ```{r}
 df <- df[do.call(order, df), ]
 df <- df[do.call(order, -df), ]
-df <- df[do.call(order, rev(df)), ] 
+df <- df[do.call(order, rev(df)), ]  
 ```
 
 
-[^sort-ex]: [Get-your-stuff-in-order exercises](http://www.r-bloggers.com/get-your-stuff-in-order-exercises/)
-[^sort-sol]: [Get-your-stuff-in-order: solutions](http://r-exercises.com/2016/03/01/get-your-stuff-in-order-solutions/)

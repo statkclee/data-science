@@ -71,6 +71,7 @@ source("tools/chunk-options.R")
 ## 실습데이터
 # install.packages("mlbench")
 suppressWarnings(suppressMessages(library(mlbench)))
+suppressWarnings(suppressMessages(library(dplyr)))
 data("BostonHousing")
 # 원데이터를 나중에 복구하기 위해 잠시 `original` 데이터프레임으로 저장
 original <- BostonHousing
@@ -90,8 +91,8 @@ BostonHousing[sample(1:nrow(BostonHousing), 40), "rad"] <- NA
 
 ``` {r boston-housing-check-5-pcnt, warnings=FALSE}
 check_missing_value <- function(x){sum(is.na(x))/length(x)*100}
-apply(data, 2, check_missing_value)
-apply(data, 1, check_missing_value)
+apply(BostonHousing, 2, check_missing_value)
+apply(BostonHousing, 1, check_missing_value) %>% head(20)
 ```
 
 ### 2.2. `mice`, `VIM` 팩키지
@@ -103,17 +104,18 @@ suppressWarnings(suppressMessages(library(mice)))
 md.pattern(BostonHousing)
 ````
 
-혹은 `VIM` 팩키지를 활용하여 결측값을 시각화하는 것도 좋다.
+혹은 `VIM` 팩키지를 활용하여 결측값을 시각화하는 것도 좋다. 결측값은 빨강색(`red`)로 설정하여 
+각변수별로 결측값에 대한 현황을 파악하기 쉽게 도식화했다.
 
 ``` {r boston-housing-vim, warnings=FALSE}
-library(VIM)
-aggr_plot <- aggr(BostonHousing, col=c('ptratio','rad'), numbers=TRUE, 
-	sortVars=TRUE, labels=names(data), cex.axis=.7, gap=3, ylab=c("Histogram of missing data", "Pattern"))
+suppressWarnings(suppressMessages(library(VIM)))
+aggr_plot <- aggr(BostonHousing, col=c('gray','red'), numbers=TRUE, 
+	sortVars=TRUE, labels=names(BostonHousing), cex.axis=.7, gap=3, ylab=c("Histogram of missing data", "Pattern"))
 
-marginplot(BostonHousing[, c('ptratio','med'))
+marginplot(BostonHousing[, c('ptratio','medv')])
 ```
 
-`marginplot(BostonHousing[, c('ptratio','med'))` 그래프를 통해 변수 2개만 가능하지만, 결측값이 포함된 경우와 결측값이 없는 경우를 비교해 볼 수도 있다.
+`marginplot(BostonHousing[, c('ptratio','medv')])` 그래프를 통해 변수 2개만 가능하지만, 결측값이 포함된 경우와 결측값이 없는 경우를 비교해 볼 수도 있다.
 
 ## 3. 결측값 처리 전략 
 

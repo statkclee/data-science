@@ -20,7 +20,7 @@ title: 데이터 과학
         - [요인(Factor) - 범주형 자료형](ds-factor-cdata.html)
             - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
         - [데이터테이블](data-handling-datatable.html)
-        - [정렬(Sort)](data-handling-sorting-ex.html)         
+        - [정렬(Sort)](data-handling-sorting.html)         
 	- [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
     	- [위기의 스프레드쉬트](ds-why-not-excel.html)
     	- [탈옥(jailbreakr) -- 엑셀에서 탈출... 자유](ds-xls.html)    
