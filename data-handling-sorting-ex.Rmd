@@ -174,7 +174,7 @@ df <- as.data.frame(matrix(sample(1:5, 2000, T), ncol=40))
 ```{r}
 df <- df[do.call(order, df), ]
 df <- df[do.call(order, -df), ]
-df <- df[do.call(order, rev(df)), ]
+df <- df[do.call(order, rev(df)), ] 
 ```
 
 
