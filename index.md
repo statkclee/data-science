@@ -9,7 +9,7 @@ title: 데이터 과학
 > "The future is here, it's just not evenly distributed yet."  
 >                                                           - William Gibson
 
-### R, RStudio, `tidyverse`, 스파크와 함께하는 데이터 과학 
+### R, RStudio, `tidyverse`, 스파크, AWS 와 함께하는 데이터 과학 
 
 1. **[R 언어](ds-r-lang.html)**
     - [R 환경설정과 업데이트](ds-r-environment.html) 
@@ -51,6 +51,7 @@ title: 데이터 과학
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
     - [윈도우 10 - 우분투 배쉬](ds-windows-bash.html)
+    - [AWS RStudio 서버](ds-aws-rstudio-server.html)
 1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 가져오기](data-handling-import.html)    
