@@ -16,10 +16,7 @@ mainfont: NanumGothic
 > * AWS 데이터과학 서버를 생성한다.
 > * AWS RStudio 서버를 준비하여 데이터 분석을 클라우드 환경에서 병렬처리한다.
 
-``` {r, include=FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(error = TRUE)
-```
+
 
 ## 1. AWS 클라우드 데이터 과학 서버 [^aws-rstudio-part-1] [^aws-rstudio-part-2]
 
@@ -155,14 +152,16 @@ AWS가 사용자가 주문한 모든 주문사항을 확인하고 이상이 없�
 
 **Public DNS** 주소를 바탕으로, 앞서 다운로드받은 `.pem` 비밀키를 사용하여 가상컴퓨터에 로그인한다.
 
-``` {r, eval=FALSE}
+
+~~~{.r}
 ssh -i ~/aws.pem ubuntu@ec2-52-36-52-70.us-west-2.compute.amazonaws.com
-```
+~~~
 
 만약 다음과 같은 오류가 생기면 다른 사람이 비밀키에 접근해서 조작을 할 수 있기 때문에 `chmod 400 ~/aws.pem` 명령어로 보안설정을 바꿔 놓고 상기 명령어로 다시 접속한다.
 `ubuntu`가 사용자 명이 되고, AWS 가상컴퓨터에는 비밀키(`.pem`)를 갖고 로그인한다.
 
-``` {r, eval=FALSE}
+
+~~~{.r}
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -171,16 +170,17 @@ It is required that your private key files are NOT accessible by others.
 This private key will be ignored.
 Load key "aws.pem": bad permissions
 Permission denied (publickey).
-```
+~~~
 
 ### 3.2. RStudio 로그인
 
 앞서 설치된 AWS AMI에는 [RStudio](https://www.rstudio.com/products/rstudio/)가 내장되어 있다. 또한 RStudio 서버 사용자로 `rstudio`가 
 생성되어 있어서 비밀번호만 변경하면 된다. 혹은 RStudio 서버 IDE가 열리면 `RStudioAMI::passwd()` 명령어로 비밀번호를 변경한다.
 
-``` {r, eval=FALSE}
+
+~~~{.r}
 sudo passwd rstudio
-```
+~~~
 
 **Public DNS** 주소를 웹브라우져에 입력하고 엔터를 치면 로그인 인증화면이 나오는데 기본설정으로 사용자명: `rstudio`, 비밀번호: `rstudio`가 
 설정되어 있고, **Public DNS** 주소를 통해 접속이 되지 않는 경우 포트번호를 `:8787`을 붙여 RStudio 서버에 접속한다.
