@@ -3,9 +3,11 @@ layout: page
 title: 데이터 과학
 subtitle: SQL
 ---
+
 > ## 학습 목표 {.objectives}
 >
-> * SQL 개념을 이해한다.
+> * 중요한 SQL 개념을 이해한다.
+> * 데이터 카펜트리 SQL 교육을 실습한다.
 
 *SQL*에 대한 이해가 데이터 조작(Data Manipulation)의 이해를 돕는다.
 
@@ -100,7 +102,6 @@ Saving to: ‘gen-survey-database.sql’
 ~~~ {.input}
 root@hangul:~/swc/sql$ sqlite3 survey.db &lt; gen-survey-database.sql
 ~~~
-
 
 #### 1.3. SQLite DB 연결 및 설치 테스트
 

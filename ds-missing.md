@@ -12,20 +12,58 @@ mainfont: NanumGothic
 
 
 
+
 > ## 학습 목표 {.objectives}
 >
+> * 결측데이터, 무응답의 연관성을 파악한다.
 > * 결측데이터를 이해하고 결측데이터 툴체인을 구축한다.
 > * 결측데이터 처리 전략을 이해한다.
-> * 결측데이터를 전략에 맞춰 처리한다.
+> * 결측데이터 전략에 따른 성능향상을 확인한다.
 
-## 1. 결측데이터 
+## 1. 미국대선 여론조사 [^presidential-election] [^why-trump]
 
-결측값(missing value)은 존재하지 않는 값(null)으로 컴퓨터에서 표현된다.
+[^why-trump]: [미국 대선 - 트럼프 대이변은 어떻게 일어났는가](http://ilyo.co.kr/?ac=article_view&entry_id=213504)
 
+[^presidential-election]: [<추왕훈의 데자뷔> 선거 여론조사의 종언, 2016-11-11](http://www.yonhapnews.co.kr/bulletin/2016/11/10/0200000000AKR20161110146900022.HTML?input=1179m)
 
-## 2. 결측값 식별 [^missing-value-treatment]
+제45대 미국 대통령을 선출하는 선거에서 많은 언론에서 예측한 바와 다르게 공화당 도널드 트럼프 후보가 민주당 힐러리 클린턴 후보를 누르고 당선되었다.
+이를 두고 트럼프 후보 당선을 정확히 예측한 인공지능(AI) 사례를 들며 기존 예측기법에 대한 문제점 제기 및 새로운 시대의 도래를 언급하고 있다. 이에 앞서
+지금과 동일한 상황이 미국에서 여러번 있어와서 새삼스러운 것은 아니다.
+
+- 1916년 대선: 우편 설문조사를 바탕으로 민주당 우드로 윌슨 후보 당선 예측한
+    - 리터리리 다이제스트는 1936년 대통령 예측에서 실패
+    - 1천만명 유권자를 대상으로 설문조사를 실시했으나 표본의 대표성에 문제가 있음
+    - 주소 확보가 용이한 구독자, 자동차 등록부, 전화번호부 등 공화당 성향 유권자에 집중
+- 1936년 대선: 조기 갤럽의 '미국공공여론연구소'에서 5만명 표본으로 프랭클린 루스벨트 당선 예측
+    - 인구학적 분포에 대응되는 표본 추출 기법 차용
+    - 1948년 선거일보다 3주 앞서 당선 후보 예측한 것이 화근이 되어, 'Dewey defeats truman'이라는 '역사적 오보'를 남김.
+- 패널 조사: 장기간의 추적분석과 정치 성향이 표본 추출에 내재된 보다 정교한 여론조사 기법이 등장
+    - 2016년 미국 대선에서 `non-ignorable nonresponse` 문제를 해결하지 못해 예측에 실패함.
+    - 인공지능 인도 벤처기업 제니크.ai(Genic.ai) 인공지능 모그IA(MogIA)는 빅데이터 분석을 통해 10월부터 트럼프 승리 예측
+
+> ### 결측값 구분 {.callout}
+>
+> - **MCAR(Missing Completely At Random)**: 모든 정보가 데이터에 담겨있어 결측값이 문제가 되지 않는 경우.
+> - **MNAR(: )missing not at random)**: 결측값이 무작위가 아니라서 주도면밀한 추가 조사가 필요한 경우. 
+> 데이터 생성과정을 이해하고 각 단계별로 왜 데이터에 누락이 발생했는지 따진다. 예를 들어, 미국 대선에서 왜 일부 유권자가 
+> 설문조사에 응답을 거부했는지 파악하고, 설문 항목에 문제가 없는지, 설문 문항에 불명확한 점이 있는지 다각도로 조사한다.
+
+## 2. 결측데이터 
+
+컴퓨터 과학에서 일반적으로 결측값(missing value)은 존재하지 않는 값(null)으로 컴퓨터에서 표현된다. 하지만 
+데이터 과학에서는 결측값이 무응답 혹은 단순히 자리만 차지하는 `NA`, $\frac {0}{0}$을 표현하는 `NaN` (Not a Number), 
+무한을 표현하는 `inf`가 있다. 결측데이터를 처리하기 전에 결측데이터를 처리하는 프로세스는 다음과 같다.
+
+1. 결측값을 식별한다. 원본데이터에서 다양한 형태로 결측정보가 표현되어 있으니 우선 현황 파악이 먼저다.
+1. 파악된 현황정보를 바탕으로 결측값을 컴퓨터가 처리가능한 형태로 부호화한다.
+1. 마지막으로 파악된 결측정보와 적절히 인코딩되어 컴퓨터에 저장된 결측값을 자료형에 맞춰 알고리즘을 적용하여 결측값을 처리한다.
+
+<img src="fig/ds-missing-value-strategy.png" alt="결측값 대체 프로세스" width="97%" />
+
+## 2. 결측값 식별과 현황파악 [^missing-value-treatment] [^identify-missing-value]
 
 [^missing-value-treatment]: [R-bloggers: Missing Value Treatment](https://www.r-bloggers.com/missing-value-treatment/)
+[^identify-missing-value]: [Imputing Missing Data with R; MICE package](http://datascienceplus.com/imputing-missing-data-with-r-mice-package/)
 
 `mlbench` 보스톤 주택가격 데이터셋을 기본으로 결측값 관련 학습 내용에 대한 실습을 진행한다.
 
@@ -34,10 +72,11 @@ mainfont: NanumGothic
 ## 실습데이터
 # install.packages("mlbench")
 suppressWarnings(suppressMessages(library(mlbench)))
+suppressWarnings(suppressMessages(library(dplyr)))
 data("BostonHousing")
 # 원데이터를 나중에 복구하기 위해 잠시 `original` 데이터프레임으로 저장
 original <- BostonHousing
-# "rad"
+# "ptratio 연속형, "rad"범주형 
 BostonHousing[sample(1:nrow(BostonHousing), 40), "ptratio"] <- NA
 BostonHousing[sample(1:nrow(BostonHousing), 40), "rad"] <- NA
 ~~~
@@ -45,7 +84,47 @@ BostonHousing[sample(1:nrow(BostonHousing), 40), "rad"] <- NA
 연속형 변수 "ptratio"에 40개 `NA` 결측값을 주입했고,  
 범주형 변수 "rad"에 40개 `NA` 결측값을 주입했다.
 
-### 2.1. `mice` 팩키지
+### 2.1. 결측값 현황 파악
+
+`apply` 계열 함수를 사용해서 변수별, 관측점별 결측값이 얼마나 포함되어 있는지 파악한다.
+`check_missing_value()` 함수를 활용하여 변수별, 관측점별 결측값 백분율을 계산한다.
+만약 5%이상 관측점 혹은 변수에 결측값이 포함되어 있으면 변수를 버리거나 혹은 관측점을 제거하는 전략을 택할 수도 있다.
+
+
+~~~{.r}
+check_missing_value <- function(x){sum(is.na(x))/length(x)*100}
+apply(BostonHousing, 2, check_missing_value)
+~~~
+
+
+
+~~~{.output}
+    crim       zn    indus     chas      nox       rm      age      dis 
+0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 
+     rad      tax  ptratio        b    lstat     medv 
+7.905138 0.000000 7.905138 0.000000 0.000000 0.000000 
+
+~~~
+
+
+
+~~~{.r}
+apply(BostonHousing, 1, check_missing_value) %>% head(20)
+~~~
+
+
+
+~~~{.output}
+       1        2        3        4        5        6        7        8 
+0.000000 0.000000 7.142857 0.000000 0.000000 0.000000 0.000000 0.000000 
+       9       10       11       12       13       14       15       16 
+0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 7.142857 0.000000 
+      17       18       19       20 
+0.000000 0.000000 0.000000 0.000000 
+
+~~~
+
+### 2.2. `mice`, `VIM` 팩키지
 
 `mice` 팩키지를 사용해서 `md.pattern` 함수를 사용해서 "ptratio" 변수에 40개 주입한 `NA` 결측값을 확인해본다.
 
@@ -59,13 +138,56 @@ md.pattern(BostonHousing)
 
 ~~~{.output}
     crim zn indus chas nox rm age dis tax b lstat medv rad ptratio   
-428    1  1     1    1   1  1   1   1   1 1     1    1   1       1  0
- 38    1  1     1    1   1  1   1   1   1 1     1    1   0       1  1
- 38    1  1     1    1   1  1   1   1   1 1     1    1   1       0  1
-  2    1  1     1    1   1  1   1   1   1 1     1    1   0       0  2
+430    1  1     1    1   1  1   1   1   1 1     1    1   1       1  0
+ 36    1  1     1    1   1  1   1   1   1 1     1    1   0       1  1
+ 36    1  1     1    1   1  1   1   1   1 1     1    1   1       0  1
+  4    1  1     1    1   1  1   1   1   1 1     1    1   0       0  2
        0  0     0    0   0  0   0   0   0 0     0    0  40      40 80
 
 ~~~
+
+혹은 `VIM` 팩키지를 활용하여 결측값을 시각화하는 것도 좋다. 결측값은 빨강색(`red`)로 설정하여 
+각변수별로 결측값에 대한 현황을 파악하기 쉽게 도식화했다.
+
+
+~~~{.r}
+suppressWarnings(suppressMessages(library(VIM)))
+aggr_plot <- aggr(BostonHousing, col=c('gray','red'), numbers=TRUE, 
+	sortVars=TRUE, labels=names(BostonHousing), cex.axis=.7, gap=3, ylab=c("Histogram of missing data", "Pattern"))
+~~~
+
+<img src="fig/boston-housing-vim-1.png" title="plot of chunk boston-housing-vim" alt="plot of chunk boston-housing-vim" style="display: block; margin: auto;" />
+
+~~~{.output}
+
+ Variables sorted by number of missings: 
+ Variable      Count
+      rad 0.07905138
+  ptratio 0.07905138
+     crim 0.00000000
+       zn 0.00000000
+    indus 0.00000000
+     chas 0.00000000
+      nox 0.00000000
+       rm 0.00000000
+      age 0.00000000
+      dis 0.00000000
+      tax 0.00000000
+        b 0.00000000
+    lstat 0.00000000
+     medv 0.00000000
+
+~~~
+
+
+
+~~~{.r}
+marginplot(BostonHousing[, c('ptratio','medv')])
+~~~
+
+<img src="fig/boston-housing-vim-2.png" title="plot of chunk boston-housing-vim" alt="plot of chunk boston-housing-vim" style="display: block; margin: auto;" />
+
+`marginplot(BostonHousing[, c('ptratio','medv')])` 그래프를 통해 변수 2개만 가능하지만, 결측값이 포함된 경우와 결측값이 없는 경우를 비교해 볼 수도 있다.
 
 ## 3. 결측값 처리 전략 
 
@@ -90,8 +212,8 @@ impute(BostonHousing$ptratio, mean) %>% head # 평균으로 대체
 
 
 ~~~{.output}
-   1    2    3    4    5    6 
-15.3 17.8 17.8 18.7 18.7 18.7 
+        1         2         3         4         5         6 
+ 15.30000  17.80000 18.45858*  18.70000  18.70000  18.70000 
 
 ~~~
 
@@ -104,8 +226,8 @@ impute(BostonHousing$ptratio, median) %>% head  # 중위수로 대체
 
 
 ~~~{.output}
-   1    2    3    4    5    6 
-15.3 17.8 17.8 18.7 18.7 18.7 
+    1     2     3     4     5     6 
+ 15.3  17.8 19.1*  18.7  18.7  18.7 
 
 ~~~
 
@@ -118,8 +240,8 @@ impute(BostonHousing$ptratio, 20) %>% head  # 특정 값으로 대체
 
 
 ~~~{.output}
-   1    2    3    4    5    6 
-15.3 17.8 17.8 18.7 18.7 18.7 
+    1     2     3     4     5     6 
+ 15.3  17.8 20.0*  18.7  18.7  18.7 
 
 ~~~
 
@@ -152,7 +274,7 @@ regr.eval(actuals, predicteds)
 
 ~~~{.output}
        mae        mse       rmse       mape 
-0.86189595 2.04082955 1.42857606 0.04780245 
+1.04979050 2.11100951 1.45293135 0.06215525 
 
 ~~~
 
@@ -229,7 +351,9 @@ anyNA(miceOutput)
 
 ~~~
 
-### 3.1. 결측값 처리 방법에 따른 성능 평가 -- 연속형 변수 `ptratio`
+## 4. 결측값 처리 방법에 따른 성능 평가
+
+### 4.1. 결측값 처리 방법에 따른 성능 평가 -- 연속형 변수 `ptratio`
 
 다양한 결측값 처리 방법에 따른 성능 차이를 비교하는 것이 왜 고급 결측값 처리 방법을 활용해야 하는 근거도 된다.
 
@@ -255,8 +379,8 @@ regr.eval(actuals_ptratio, ptratios_mean_pred)
 
 
 ~~~{.output}
-      mae       mse      rmse      mape 
-1.7825702 4.6337757 2.1526207 0.1029678 
+     mae      mse     rmse     mape 
+1.915649 5.109398 2.260398 0.111088 
 
 ~~~
 
@@ -270,7 +394,7 @@ regr.eval(actuals_ptratio, ptratios_median_pred)
 
 ~~~{.output}
       mae       mse      rmse      mape 
-1.7160000 4.8949000 2.2124421 0.1026914 
+1.9100000 5.4977000 2.3447175 0.1143326 
 
 ~~~
 
@@ -285,8 +409,8 @@ regr.eval(actuals_ptratio, ptratios_knn_pred)
 
 
 ~~~{.output}
-       mae        mse       rmse       mape 
-0.21461591 0.81228177 0.90126676 0.01201681 
+        mae         mse        rmse        mape 
+0.093756478 0.184563591 0.429608649 0.005335098 
 
 ~~~
 
@@ -323,7 +447,7 @@ Warning in (trues - preds)/trues: 두 객체의 길이가 서로 배수관계에
 
 ~~~{.output}
       mae       mse      rmse      mape 
-2.4433452 8.8143549 2.9688979 0.1379646 
+2.3794612 7.9673227 2.8226446 0.1417835 
 
 ~~~
 
@@ -401,12 +525,11 @@ Warning in (trues - preds)/trues: 두 객체의 길이가 서로 배수관계에
 
 ~~~{.output}
       mae       mse      rmse      mape 
-2.3125000 8.6517500 2.9413857 0.1316519 
+2.2475000 7.5277500 2.7436745 0.1358437 
 
 ~~~
 
-
-### 3.2. 결측값 처리 방법에 따른 성능 평가 -- 범주형 변수 `rad`
+### 4.2. 결측값 처리 방법에 따른 성능 평가 -- 범주형 변수 `rad`
 
 범주형 변수의 경우, 다양한 결측값 처리 방법에 따른 성능의 차이를 비교해보자.
 "rad" 변수는 연속형 변수로 506개 변수중 50개 즉 10%를 결측값, `NA`로 치환한다.
@@ -429,7 +552,7 @@ mean(actuals_rad != rad_mode_pred)
 
 
 ~~~{.output}
-[1] 0.74
+[1] 0.72
 
 ~~~
 
@@ -454,7 +577,7 @@ mean(actuals_rad != rad_rpart_pred)
 
 
 ~~~{.output}
-[1] 0.24
+[1] 0.22
 
 ~~~
 
@@ -516,6 +639,6 @@ mean(actuals_rad != rad_rf_pred)
 
 
 ~~~{.output}
-[1] 0.12
+[1] 0.28
 
 ~~~

@@ -45,38 +45,120 @@
 </div>
 <div class="panel-body">
 <ul>
+<li>결측데이터, 무응답의 연관성을 파악한다.</li>
 <li>결측데이터를 이해하고 결측데이터 툴체인을 구축한다.</li>
 <li>결측데이터 처리 전략을 이해한다.</li>
-<li>결측데이터를 전략에 맞춰 처리한다.</li>
+<li>결측데이터 전략에 따른 성능향상을 확인한다.</li>
 </ul>
 </div>
 </section>
-<h2 id="결측데이터">1. 결측데이터</h2>
-<p>결측값(missing value)은 존재하지 않는 값(null)으로 컴퓨터에서 표현된다.</p>
-<h2 id="결측값-식별-missing-value-treatment">2. 결측값 식별 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
+<h2 id="미국대선-여론조사-presidential-election-why-trump">1. 미국대선 여론조사 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
+<p>제45대 미국 대통령을 선출하는 선거에서 많은 언론에서 예측한 바와 다르게 공화당 도널드 트럼프 후보가 민주당 힐러리 클린턴 후보를 누르고 당선되었다. 이를 두고 트럼프 후보 당선을 정확히 예측한 인공지능(AI) 사례를 들며 기존 예측기법에 대한 문제점 제기 및 새로운 시대의 도래를 언급하고 있다. 이에 앞서 지금과 동일한 상황이 미국에서 여러번 있어와서 새삼스러운 것은 아니다.</p>
+<ul>
+<li>1916년 대선: 우편 설문조사를 바탕으로 민주당 우드로 윌슨 후보 당선 예측한
+<ul>
+<li>리터리리 다이제스트는 1936년 대통령 예측에서 실패</li>
+<li>1천만명 유권자를 대상으로 설문조사를 실시했으나 표본의 대표성에 문제가 있음</li>
+<li>주소 확보가 용이한 구독자, 자동차 등록부, 전화번호부 등 공화당 성향 유권자에 집중</li>
+</ul></li>
+<li>1936년 대선: 조기 갤럽의 ’미국공공여론연구소’에서 5만명 표본으로 프랭클린 루스벨트 당선 예측
+<ul>
+<li>인구학적 분포에 대응되는 표본 추출 기법 차용</li>
+<li>1948년 선거일보다 3주 앞서 당선 후보 예측한 것이 화근이 되어, ’Dewey defeats truman’이라는 ’역사적 오보’를 남김.</li>
+</ul></li>
+<li>패널 조사: 장기간의 추적분석과 정치 성향이 표본 추출에 내재된 보다 정교한 여론조사 기법이 등장
+<ul>
+<li>2016년 미국 대선에서 <code>non-ignorable nonresponse</code> 문제를 해결하지 못해 예측에 실패함.</li>
+<li>인공지능 인도 벤처기업 제니크.ai(Genic.ai) 인공지능 모그IA(MogIA)는 빅데이터 분석을 통해 10월부터 트럼프 승리 예측</li>
+</ul></li>
+</ul>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="결측값-구분"><span class="glyphicon glyphicon-pushpin"></span>결측값 구분</h3>
+</div>
+<div class="panel-body">
+<ul>
+<li><strong>MCAR(Missing Completely At Random)</strong>: 모든 정보가 데이터에 담겨있어 결측값이 문제가 되지 않는 경우.</li>
+<li><strong>MNAR(: )missing not at random)</strong>: 결측값이 무작위가 아니라서 주도면밀한 추가 조사가 필요한 경우. 데이터 생성과정을 이해하고 각 단계별로 왜 데이터에 누락이 발생했는지 따진다. 예를 들어, 미국 대선에서 왜 일부 유권자가 설문조사에 응답을 거부했는지 파악하고, 설문 항목에 문제가 없는지, 설문 문항에 불명확한 점이 있는지 다각도로 조사한다.</li>
+</ul>
+</div>
+</aside>
+<h2 id="결측데이터">2. 결측데이터</h2>
+<p>컴퓨터 과학에서 일반적으로 결측값(missing value)은 존재하지 않는 값(null)으로 컴퓨터에서 표현된다. 하지만 데이터 과학에서는 결측값이 무응답 혹은 단순히 자리만 차지하는 <code>NA</code>, <span class="math inline">\(\frac {0}{0}\)</span>을 표현하는 <code>NaN</code> (Not a Number), 무한을 표현하는 <code>inf</code>가 있다. 결측데이터를 처리하기 전에 결측데이터를 처리하는 프로세스는 다음과 같다.</p>
+<ol style="list-style-type: decimal">
+<li>결측값을 식별한다. 원본데이터에서 다양한 형태로 결측정보가 표현되어 있으니 우선 현황 파악이 먼저다.</li>
+<li>파악된 현황정보를 바탕으로 결측값을 컴퓨터가 처리가능한 형태로 부호화한다.</li>
+<li>마지막으로 파악된 결측정보와 적절히 인코딩되어 컴퓨터에 저장된 결측값을 자료형에 맞춰 알고리즘을 적용하여 결측값을 처리한다.</li>
+</ol>
+<p><img src="fig/ds-missing-value-strategy.png" alt="결측값 대체 프로세스" width="97%" /></p>
+<h2 id="결측값-식별과-현황파악-missing-value-treatment-identify-missing-value">2. 결측값 식별과 현황파악 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h2>
 <p><code>mlbench</code> 보스톤 주택가격 데이터셋을 기본으로 결측값 관련 학습 내용에 대한 실습을 진행한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## 실습데이터
 <span class="co"># install.packages(&quot;mlbench&quot;)</span>
 <span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(mlbench)))
+<span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(dplyr)))
 <span class="kw">data</span>(<span class="st">&quot;BostonHousing&quot;</span>)
 <span class="co"># 원데이터를 나중에 복구하기 위해 잠시 `original` 데이터프레임으로 저장</span>
 original &lt;-<span class="st"> </span>BostonHousing
-<span class="co"># &quot;rad&quot;</span>
+<span class="co"># &quot;ptratio 연속형, &quot;rad&quot;범주형 </span>
 BostonHousing[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(BostonHousing), <span class="dv">40</span>), <span class="st">&quot;ptratio&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NA</span>
 BostonHousing[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(BostonHousing), <span class="dv">40</span>), <span class="st">&quot;rad&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></code></pre></div>
 <p>연속형 변수 “ptratio”에 40개 <code>NA</code> 결측값을 주입했고,<br />
 범주형 변수 “rad”에 40개 <code>NA</code> 결측값을 주입했다.</p>
-<h3 id="mice-팩키지">2.1. <code>mice</code> 팩키지</h3>
+<h3 id="결측값-현황-파악">2.1. 결측값 현황 파악</h3>
+<p><code>apply</code> 계열 함수를 사용해서 변수별, 관측점별 결측값이 얼마나 포함되어 있는지 파악한다. <code>check_missing_value()</code> 함수를 활용하여 변수별, 관측점별 결측값 백분율을 계산한다. 만약 5%이상 관측점 혹은 변수에 결측값이 포함되어 있으면 변수를 버리거나 혹은 관측점을 제거하는 전략을 택할 수도 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">check_missing_value &lt;-<span class="st"> </span>function(x){<span class="kw">sum</span>(<span class="kw">is.na</span>(x))/<span class="kw">length</span>(x)*<span class="dv">100</span>}
+<span class="kw">apply</span>(BostonHousing, <span class="dv">2</span>, check_missing_value)</code></pre></div>
+<pre class="output"><code>    crim       zn    indus     chas      nox       rm      age      dis 
+0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 
+     rad      tax  ptratio        b    lstat     medv 
+7.905138 0.000000 7.905138 0.000000 0.000000 0.000000 
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(BostonHousing, <span class="dv">1</span>, check_missing_value) %&gt;%<span class="st"> </span><span class="kw">head</span>(<span class="dv">20</span>)</code></pre></div>
+<pre class="output"><code>       1        2        3        4        5        6        7        8 
+0.000000 0.000000 7.142857 0.000000 0.000000 0.000000 0.000000 0.000000 
+       9       10       11       12       13       14       15       16 
+0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 7.142857 0.000000 
+      17       18       19       20 
+0.000000 0.000000 0.000000 0.000000 
+</code></pre>
+<h3 id="mice-vim-팩키지">2.2. <code>mice</code>, <code>VIM</code> 팩키지</h3>
 <p><code>mice</code> 팩키지를 사용해서 <code>md.pattern</code> 함수를 사용해서 “ptratio” 변수에 40개 주입한 <code>NA</code> 결측값을 확인해본다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(mice)))
 <span class="kw">md.pattern</span>(BostonHousing)</code></pre></div>
 <pre class="output"><code>    crim zn indus chas nox rm age dis tax b lstat medv rad ptratio   
-428    1  1     1    1   1  1   1   1   1 1     1    1   1       1  0
- 38    1  1     1    1   1  1   1   1   1 1     1    1   0       1  1
- 38    1  1     1    1   1  1   1   1   1 1     1    1   1       0  1
-  2    1  1     1    1   1  1   1   1   1 1     1    1   0       0  2
+430    1  1     1    1   1  1   1   1   1 1     1    1   1       1  0
+ 36    1  1     1    1   1  1   1   1   1 1     1    1   0       1  1
+ 36    1  1     1    1   1  1   1   1   1 1     1    1   1       0  1
+  4    1  1     1    1   1  1   1   1   1 1     1    1   0       0  2
        0  0     0    0   0  0   0   0   0 0     0    0  40      40 80
 </code></pre>
+<p>혹은 <code>VIM</code> 팩키지를 활용하여 결측값을 시각화하는 것도 좋다. 결측값은 빨강색(<code>red</code>)로 설정하여 각변수별로 결측값에 대한 현황을 파악하기 쉽게 도식화했다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(VIM)))
+aggr_plot &lt;-<span class="st"> </span><span class="kw">aggr</span>(BostonHousing, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&#39;gray&#39;</span>,<span class="st">&#39;red&#39;</span>), <span class="dt">numbers=</span><span class="ot">TRUE</span>, 
+    <span class="dt">sortVars=</span><span class="ot">TRUE</span>, <span class="dt">labels=</span><span class="kw">names</span>(BostonHousing), <span class="dt">cex.axis=</span>.<span class="dv">7</span>, <span class="dt">gap=</span><span class="dv">3</span>, <span class="dt">ylab=</span><span class="kw">c</span>(<span class="st">&quot;Histogram of missing data&quot;</span>, <span class="st">&quot;Pattern&quot;</span>))</code></pre></div>
+<p><img src="fig/boston-housing-vim-1.png" title="plot of chunk boston-housing-vim" alt="plot of chunk boston-housing-vim" style="display: block; margin: auto;" /></p>
+<pre class="output"><code>
+ Variables sorted by number of missings: 
+ Variable      Count
+      rad 0.07905138
+  ptratio 0.07905138
+     crim 0.00000000
+       zn 0.00000000
+    indus 0.00000000
+     chas 0.00000000
+      nox 0.00000000
+       rm 0.00000000
+      age 0.00000000
+      dis 0.00000000
+      tax 0.00000000
+        b 0.00000000
+    lstat 0.00000000
+     medv 0.00000000
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">marginplot</span>(BostonHousing[, <span class="kw">c</span>(<span class="st">&#39;ptratio&#39;</span>,<span class="st">&#39;medv&#39;</span>)])</code></pre></div>
+<p><img src="fig/boston-housing-vim-2.png" title="plot of chunk boston-housing-vim" alt="plot of chunk boston-housing-vim" style="display: block; margin: auto;" /></p>
+<p><code>marginplot(BostonHousing[, c('ptratio','medv')])</code> 그래프를 통해 변수 2개만 가능하지만, 결측값이 포함된 경우와 결측값이 없는 경우를 비교해 볼 수도 있다.</p>
 <h2 id="결측값-처리-전략">3. 결측값 처리 전략</h2>
 <p>결측값 처리 전략은 다음과 같은 4가지 전략이 존재한다.</p>
 <ol style="list-style-type: decimal">
@@ -98,16 +180,16 @@ BostonHousing[<span class="kw">sample</span>(<span class="dv">1</span>:<span cla
 <span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(DMwR)))
 <span class="kw">suppressWarnings</span>(<span class="kw">suppressMessages</span>(<span class="kw">library</span>(dplyr)))
 <span class="kw">impute</span>(BostonHousing$ptratio, mean) %&gt;%<span class="st"> </span>head <span class="co"># 평균으로 대체</span></code></pre></div>
-<pre class="output"><code>   1    2    3    4    5    6 
-15.3 17.8 17.8 18.7 18.7 18.7 
+<pre class="output"><code>        1         2         3         4         5         6 
+ 15.30000  17.80000 18.45858*  18.70000  18.70000  18.70000 
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">impute</span>(BostonHousing$ptratio, median) %&gt;%<span class="st"> </span>head  <span class="co"># 중위수로 대체</span></code></pre></div>
-<pre class="output"><code>   1    2    3    4    5    6 
-15.3 17.8 17.8 18.7 18.7 18.7 
+<pre class="output"><code>    1     2     3     4     5     6 
+ 15.3  17.8 19.1*  18.7  18.7  18.7 
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">impute</span>(BostonHousing$ptratio, <span class="dv">20</span>) %&gt;%<span class="st"> </span>head  <span class="co"># 특정 값으로 대체</span></code></pre></div>
-<pre class="output"><code>   1    2    3    4    5    6 
-15.3 17.8 17.8 18.7 18.7 18.7 
+<pre class="output"><code>    1     2     3     4     5     6 
+ 15.3  17.8 20.0*  18.7  18.7  18.7 
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 혹은 팩키지를 사용하지 않고 직접 코드를 작성해서 작업</span>
 BostonHousing$ptratio[<span class="kw">is.na</span>(BostonHousing$ptratio)] &lt;-<span class="st"> </span><span class="kw">mean</span>(BostonHousing$ptratio, <span class="dt">na.rm =</span> T) </code></pre></div>
@@ -128,7 +210,7 @@ actuals &lt;-<span class="st"> </span>original$ptratio[<span class="kw">is.na</s
 predicteds &lt;-<span class="st"> </span>knnOutput[<span class="kw">is.na</span>(BostonHousing$ptratio), <span class="st">&quot;ptratio&quot;</span>]
 <span class="kw">regr.eval</span>(actuals, predicteds)</code></pre></div>
 <pre class="output"><code>       mae        mse       rmse       mape 
-0.86189595 2.04082955 1.42857606 0.04780245 
+1.04979050 2.11100951 1.45293135 0.06215525 
 </code></pre>
 <ul>
 <li><code>knn</code> 대체 기법은 범주형 자료의 경우 적용에 한계가 있다. 이런 경우 <code>rpart</code>, <code>mice</code> 팩키지를 활용한다.</li>
@@ -182,10 +264,11 @@ miceMod &lt;-<span class="st"> </span><span class="kw">mice</span>(BostonHousing
 <span class="kw">anyNA</span>(miceOutput)    </code></pre></div>
 <pre class="output"><code>[1] FALSE
 </code></pre>
-<h3 id="결측값-처리-방법에-따른-성능-평가-연속형-변수-ptratio">3.1. 결측값 처리 방법에 따른 성능 평가 – 연속형 변수 <code>ptratio</code></h3>
+<h2 id="결측값-처리-방법에-따른-성능-평가">4. 결측값 처리 방법에 따른 성능 평가</h2>
+<h3 id="결측값-처리-방법에-따른-성능-평가-연속형-변수-ptratio">4.1. 결측값 처리 방법에 따른 성능 평가 – 연속형 변수 <code>ptratio</code></h3>
 <p>다양한 결측값 처리 방법에 따른 성능 차이를 비교하는 것이 왜 고급 결측값 처리 방법을 활용해야 하는 근거도 된다.</p>
 <p>먼저, 연속형 변수의 경우 다양한 결측값 처리 방법에 따른 성능의 차이를 비교해보자. “ptratio” 변수는 연속형 변수로 506개 변수중 50개 즉 10%를 결측값, <code>NA</code>로 치환한다.</p>
-<p>평균과 중위수를 결측값 10%를 채워넣을 경우 중위수를 채워넣은 것이 <code>mape</code>를 봤을 때 대동소이하다. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>평균과 중위수를 결측값 10%를 채워넣을 경우 중위수를 채워넣은 것이 <code>mape</code>를 봤을 때 대동소이하다. <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(BostonHousing)
 original &lt;-<span class="st"> </span>BostonHousing
 BostonHousing[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(BostonHousing), <span class="dv">50</span>), <span class="st">&quot;ptratio&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NA</span>
@@ -194,18 +277,18 @@ actuals_ptratio &lt;-<span class="st"> </span>original$ptratio[<span class="kw">
 ptratios_mean_pred &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">mean</span>(BostonHousing$ptratio, <span class="dt">na.rm=</span>T), <span class="kw">length</span>(actuals_ptratio))
 ptratios_median_pred &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">median</span>(BostonHousing$ptratio, <span class="dt">na.rm=</span>T), <span class="kw">length</span>(actuals_ptratio))
 <span class="kw">regr.eval</span>(actuals_ptratio, ptratios_mean_pred)</code></pre></div>
-<pre class="output"><code>      mae       mse      rmse      mape 
-1.7825702 4.6337757 2.1526207 0.1029678 
+<pre class="output"><code>     mae      mse     rmse     mape 
+1.915649 5.109398 2.260398 0.111088 
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regr.eval</span>(actuals_ptratio, ptratios_median_pred)</code></pre></div>
 <pre class="output"><code>      mae       mse      rmse      mape 
-1.7160000 4.8949000 2.2124421 0.1026914 
+1.9100000 5.4977000 2.3447175 0.1143326 
 </code></pre>
 <p>두번째 <code>knn</code> 기법을 활용한 경우 <code>mape</code>가 줄어든 것이 확인된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ptratios_knn_pred &lt;-<span class="st"> </span>knnOutput[<span class="kw">is.na</span>(BostonHousing$ptratio), <span class="st">&quot;ptratio&quot;</span>]
 <span class="kw">regr.eval</span>(actuals_ptratio, ptratios_knn_pred)</code></pre></div>
-<pre class="output"><code>       mae        mse       rmse       mape 
-0.21461591 0.81228177 0.90126676 0.01201681 
+<pre class="output"><code>        mae         mse        rmse        mape 
+0.093756478 0.184563591 0.429608649 0.005335098 
 </code></pre>
 <p>세번째 <code>rpart</code> 기법을 활용한 경우 <code>mape</code>가 줄어든 것이 확인된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ptratios_anova_mod &lt;-<span class="st"> </span><span class="kw">rpart</span>(ptratio ~<span class="st"> </span>. -<span class="st"> </span>medv, 
@@ -222,7 +305,7 @@ Warning in trues - preds: 두 객체의 길이가 서로 배수관계에 있지 
 습니다
 </code></pre>
 <pre class="output"><code>      mae       mse      rmse      mape 
-2.4433452 8.8143549 2.9688979 0.1379646 
+2.3794612 7.9673227 2.8226446 0.1417835 
 </code></pre>
 <p>네번째는 <code>rf</code> 확률숲 모형을 적용하는데 결측값 처리 전용 <code>mice</code> 팩키지를 활용한다. <code>mape</code> 값이 하향된 것이 관측된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mice)
@@ -269,9 +352,9 @@ Warning in trues - preds: 두 객체의 길이가 서로 배수관계에 있지 
 습니다
 </code></pre>
 <pre class="output"><code>      mae       mse      rmse      mape 
-2.3125000 8.6517500 2.9413857 0.1316519 
+2.2475000 7.5277500 2.7436745 0.1358437 
 </code></pre>
-<h3 id="결측값-처리-방법에-따른-성능-평가-범주형-변수-rad">3.2. 결측값 처리 방법에 따른 성능 평가 – 범주형 변수 <code>rad</code></h3>
+<h3 id="결측값-처리-방법에-따른-성능-평가-범주형-변수-rad">4.2. 결측값 처리 방법에 따른 성능 평가 – 범주형 변수 <code>rad</code></h3>
 <p>범주형 변수의 경우, 다양한 결측값 처리 방법에 따른 성능의 차이를 비교해보자. “rad” 변수는 연속형 변수로 506개 변수중 50개 즉 10%를 결측값, <code>NA</code>로 치환한다.</p>
 <p>먼저, <code>names(sort(-table(BostonHousing$rad)))[1]</code> 명령어를 통해 최빈값을 파악한다. 그리고 이를 결측값에 꽂아 넣는다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(BostonHousing)
@@ -282,7 +365,7 @@ actuals_rad &lt;-<span class="st"> </span>original$rad[<span class="kw">is.na</s
 rad_mode_pred &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">names</span>(<span class="kw">sort</span>(-<span class="kw">table</span>(BostonHousing$rad)))[<span class="dv">1</span>], <span class="kw">length</span>(actuals_rad))
 
 <span class="kw">mean</span>(actuals_rad !=<span class="st"> </span>rad_mode_pred) </code></pre></div>
-<pre class="output"><code>[1] 0.74
+<pre class="output"><code>[1] 0.72
 </code></pre>
 <p>두번째로 <code>rpart</code> 의사결정나무 모형을 활용하여 결측값을 채워넣는다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(BostonHousing)
@@ -297,7 +380,7 @@ actuals_rad &lt;-<span class="st"> </span>original$rad[<span class="kw">is.na</s
 rad_rpart_pred &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">colnames</span>(rad_pred)[<span class="kw">apply</span>(rad_pred, <span class="dv">1</span>, which.max)])
 
 <span class="kw">mean</span>(actuals_rad !=<span class="st"> </span>rad_rpart_pred)</code></pre></div>
-<pre class="output"><code>[1] 0.24
+<pre class="output"><code>[1] 0.22
 </code></pre>
 <p>마지막으로 <code>mice</code> 확률숲 <code>rf</code> 모형을 사용해서 결측값을 채워넣는다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(BostonHousing)
@@ -339,13 +422,16 @@ mice_mod &lt;-<span class="st"> </span><span class="kw">mice</span>(BostonHousin
 actuals_rad &lt;-<span class="st"> </span>original$rad[<span class="kw">is.na</span>(BostonHousing$rad)]
 rad_rf_pred &lt;-<span class="st"> </span>mice_output[<span class="kw">is.na</span>(BostonHousing$rad), <span class="st">&quot;rad&quot;</span>]
 <span class="kw">mean</span>(actuals_rad !=<span class="st"> </span>rad_rf_pred)</code></pre></div>
-<pre class="output"><code>[1] 0.12
+<pre class="output"><code>[1] 0.28
 </code></pre>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://www.r-bloggers.com/missing-value-treatment/">R-bloggers: Missing Value Treatment</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Mean absolute percentage error, 평균절대 백분율 오차. <span class="math inline">\(\mbox{M} = \frac{100}{n}\sum_{t=1}^n \left|\frac{A_t-F_t}{A_t}\right|\)</span><a href="#fnref2">↩</a></p></li>
+<li id="fn1"><p><a href="http://www.yonhapnews.co.kr/bulletin/2016/11/10/0200000000AKR20161110146900022.HTML?input=1179m"><추왕훈의 데자뷔> 선거 여론조사의 종언, 2016-11-11</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://ilyo.co.kr/?ac=article_view&amp;entry_id=213504">미국 대선 - 트럼프 대이변은 어떻게 일어났는가</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://www.r-bloggers.com/missing-value-treatment/">R-bloggers: Missing Value Treatment</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://datascienceplus.com/imputing-missing-data-with-r-mice-package/">Imputing Missing Data with R; MICE package</a><a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>Mean absolute percentage error, 평균절대 백분율 오차. <span class="math inline">\(\mbox{M} = \frac{100}{n}\sum_{t=1}^n \left|\frac{A_t-F_t}{A_t}\right|\)</span><a href="#fnref5">↩</a></p></li>
 </ol>
 </div>
         </div>
