@@ -1,19 +1,6 @@
----
-layout: page
-title: 데이터 과학
-subtitle: 보고서 작성 자동화(30분)
-output:
-  html_document: 
-    keep_md: yes
-    toc: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
+
 
 > ## 학습 목표 {.objectives}
 >
@@ -58,16 +45,7 @@ source("tools/chunk-options.R")
 문서화 자동화를 위한 툴체인을 구축한다. 데이터 불러와서, 전처리하고, 회귀모형 구축하고,
 시각화하고 나서, 출력문서로 내보내는데 필요한 팩키지를 설치한다.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# 1. 환경설정---------------------
-library(readr)
-library(tidyr)
-library(dplyr)
-library(leaps)
-library(ggplot2)
-library(GGally)
-library(stargazer)
-```
+
 
 ### 2.2. 데이터 불러오기
 
@@ -76,11 +54,37 @@ R을 설치하게 되면 자동차 연비예측을 위한 회귀분석 및 시�
 `read_csv` 함수를 사용하게 되면 자동으로 로컬 파일이든, 인터넷에 위치한 파일이든 `.csv` 파일이면 알아서 
 불러와서 코딩이 훨씬 간결해진다.
 
-```{r, warning=FALSE, message=FALSE}
+
+~~~{.r}
 # 2. 데이터 불러오기---------------------
 data(mtcars)
 
 spec_csv("https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv")
+~~~
+
+
+
+~~~{.output}
+cols(
+  model = col_character(),
+  mpg = col_double(),
+  cyl = col_integer(),
+  disp = col_double(),
+  hp = col_integer(),
+  drat = col_double(),
+  wt = col_double(),
+  qsec = col_double(),
+  vs = col_integer(),
+  am = col_integer(),
+  gear = col_integer(),
+  carb = col_integer()
+)
+
+~~~
+
+
+
+~~~{.r}
 df <- read_csv("https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv", 
                col_names = TRUE, 
                cols(
@@ -97,7 +101,27 @@ df <- read_csv("https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74
                  gear = col_integer(),
                  carb = col_integer()))
 glimpse(df)
-```
+~~~
+
+
+
+~~~{.output}
+Observations: 32
+Variables: 12
+$ model <chr> "Mazda RX4", "Mazda RX4 Wag", "Datsun 710", "Hornet 4 Dr...
+$ mpg   <dbl> 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19...
+$ cyl   <int> 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4,...
+$ disp  <dbl> 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, ...
+$ hp    <int> 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180,...
+$ drat  <dbl> 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3....
+$ wt    <dbl> 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, ...
+$ qsec  <dbl> 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, ...
+$ vs    <int> 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,...
+$ am    <int> 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,...
+$ gear  <int> 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4,...
+$ carb  <int> 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2,...
+
+~~~
 
 
 ### 2.3. 탐색적 자료분석
@@ -106,7 +130,8 @@ glimpse(df)
 
 `library(GGally)` 팩키지에 내장된 `ggpairs` 함수를 통해 `mtcars` 데이터셋에 포함된 변수 관계를 짝지어 시각화한다.
 
-```{r, results='asis', warning=FALSE, message=FALSE}
+
+~~~{.r}
 line_fn <- function(data, mapping, ...){
   p <- ggplot(data = data, mapping = mapping) + 
     geom_point() + 
@@ -117,13 +142,31 @@ line_fn <- function(data, mapping, ...){
 
 df_g  <-  ggpairs(df, columns = 2:12, lower = list(continuous = line_fn), warning=FALSE, message=FALSE)
 df_g
-```
+~~~
+
+<img src="fig/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
 기술통계량도 [`stargazer`](https://cran.r-project.org/web/packages/stargazer/) 팩키지를 활용하면 기술통계량도 출판품질로 변환이 가능하다.
 
-```{r, results='asis', warning=FALSE, message=FALSE}
+
+~~~{.r}
 stargazer(mtcars, type="html", notes.align = "l")
-```
+~~~
+
+
+<table style="text-align:center"><tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Statistic</td><td>N</td><td>Mean</td><td>St. Dev.</td><td>Min</td><td>Max</td></tr>
+<tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">mpg</td><td>32</td><td>20.091</td><td>6.027</td><td>10.400</td><td>33.900</td></tr>
+<tr><td style="text-align:left">cyl</td><td>32</td><td>6.188</td><td>1.786</td><td>4</td><td>8</td></tr>
+<tr><td style="text-align:left">disp</td><td>32</td><td>230.722</td><td>123.939</td><td>71.100</td><td>472.000</td></tr>
+<tr><td style="text-align:left">hp</td><td>32</td><td>146.688</td><td>68.563</td><td>52</td><td>335</td></tr>
+<tr><td style="text-align:left">drat</td><td>32</td><td>3.597</td><td>0.535</td><td>2.760</td><td>4.930</td></tr>
+<tr><td style="text-align:left">wt</td><td>32</td><td>3.217</td><td>0.978</td><td>1.513</td><td>5.424</td></tr>
+<tr><td style="text-align:left">qsec</td><td>32</td><td>17.849</td><td>1.787</td><td>14.500</td><td>22.900</td></tr>
+<tr><td style="text-align:left">vs</td><td>32</td><td>0.438</td><td>0.504</td><td>0</td><td>1</td></tr>
+<tr><td style="text-align:left">am</td><td>32</td><td>0.406</td><td>0.499</td><td>0</td><td>1</td></tr>
+<tr><td style="text-align:left">gear</td><td>32</td><td>3.688</td><td>0.738</td><td>3</td><td>5</td></tr>
+<tr><td style="text-align:left">carb</td><td>32</td><td>2.812</td><td>1.615</td><td>1</td><td>8</td></tr>
+<tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr></table>
 
 ### 2.3. 최적모형 회귀모형 선정 [^best-subset-reg]
 
@@ -140,8 +183,8 @@ stargazer(mtcars, type="html", notes.align = "l")
 변수를 하나씩 집어 넣어 순차적으로 최적 모형을 찾아나간다. 후방변수 제거법(backward elimination)은 꽉찬 모형, `df_full`에서 변수를 순차적으로 하나씩
 제거하면 최적 모형을 찾아내는 것이고, 양방향 `direction=both`인 경우 상황에 따라 변수를 추가 제거하는 과정을 반복하면서 최적 모형을 찾아낸다.
 
-```{r,  warning=FALSE, message=FALSE}
 
+~~~{.r}
 # 4. 회귀분석---------------------
 # 단계별 회귀분석: 전진선택법, 양방향 선택/제거법
 df_null <- lm(mpg ~1, data=df[,-1])
@@ -149,7 +192,76 @@ df_full <- lm(mpg ~., data=df[,-1])
 
 df_forward <- step(df_null, scope=list(lower=df_null, upper=df_full), direction="forward", trace=FALSE)
 df_backward <- step(df_null, scope=list(lower=df_null, upper=df_full), direction="both")
-```
+~~~
+
+
+
+~~~{.output}
+Start:  AIC=115.94
+mpg ~ 1
+
+       Df Sum of Sq     RSS     AIC
++ wt    1    847.73  278.32  73.217
++ cyl   1    817.71  308.33  76.494
++ disp  1    808.89  317.16  77.397
++ hp    1    678.37  447.67  88.427
++ drat  1    522.48  603.57  97.988
++ vs    1    496.53  629.52  99.335
++ am    1    405.15  720.90 103.672
++ carb  1    341.78  784.27 106.369
++ gear  1    259.75  866.30 109.552
++ qsec  1    197.39  928.66 111.776
+<none>              1126.05 115.943
+
+Step:  AIC=73.22
+mpg ~ wt
+
+       Df Sum of Sq     RSS     AIC
++ cyl   1     87.15  191.17  63.198
++ hp    1     83.27  195.05  63.840
++ qsec  1     82.86  195.46  63.908
++ vs    1     54.23  224.09  68.283
++ carb  1     44.60  233.72  69.628
++ disp  1     31.64  246.68  71.356
+<none>               278.32  73.217
++ drat  1      9.08  269.24  74.156
++ gear  1      1.14  277.19  75.086
++ am    1      0.00  278.32  75.217
+- wt    1    847.73 1126.05 115.943
+
+Step:  AIC=63.2
+mpg ~ wt + cyl
+
+       Df Sum of Sq    RSS    AIC
++ hp    1    14.551 176.62 62.665
++ carb  1    13.772 177.40 62.805
+<none>              191.17 63.198
++ qsec  1    10.567 180.60 63.378
++ gear  1     3.028 188.14 64.687
++ disp  1     2.680 188.49 64.746
++ vs    1     0.706 190.47 65.080
++ am    1     0.125 191.05 65.177
++ drat  1     0.001 191.17 65.198
+- cyl   1    87.150 278.32 73.217
+- wt    1   117.162 308.33 76.494
+
+Step:  AIC=62.66
+mpg ~ wt + cyl + hp
+
+       Df Sum of Sq    RSS    AIC
+<none>              176.62 62.665
+- hp    1    14.551 191.17 63.198
++ am    1     6.623 170.00 63.442
++ disp  1     6.176 170.44 63.526
+- cyl   1    18.427 195.05 63.840
++ carb  1     2.519 174.10 64.205
++ drat  1     2.245 174.38 64.255
++ qsec  1     1.401 175.22 64.410
++ gear  1     0.856 175.76 64.509
++ vs    1     0.060 176.56 64.654
+- wt    1   115.354 291.98 76.750
+
+~~~
 
 최상부분집합선택법(Best Subset) 회귀모형 구축방법은 `leaps` 팩키지 `regsubsets` 함수를 사용하면 최대 10개까지 변수를 
 조합하여 최상부분집합을 선택한다. 전진변수 선택 혹은 후방변수 제거법과 달리 회귀모형의 복잡성에 대해 패널티를 가하는 방법으로 
@@ -158,7 +270,8 @@ AIC/BIC 등이 사용되는데 AIC가 다소 변수를 과대선택하는 경향
 이를 위해서 `regsubsets` 함수로 최상부분집합 적합을 시킨 결과에서 BIC 값을 뽑아내고 그중 `min_bic`에 최소값을 저장시킨다.
 그리고 변수가 몇개일 때 최소가 되는지 
 
-```{r, eval=FALSE}
+
+~~~{.r}
 # 최상부분집합선택법
 # noquote(paste0(names(mtcars), "+"))
 subset_mod <- regsubsets(mpg ~ ., data = mtcars, nvmax=NULL, 
@@ -182,7 +295,7 @@ form <- paste("mpg ~", form)
 mtcars_best <- lm(as.formula(form), data=df)
 
 summary(mtcars_best)
-```
+~~~
 
 ### 2.4. 회귀식 표현 [^convert-lm-objects]
 
@@ -190,7 +303,8 @@ summary(mtcars_best)
 
 최적의 회귀식을 구축했으면 이제 남은 단계는 이를 문서화하는 것이다.
 
-```{r, results='asis', warning=FALSE, message=FALSE}
+
+~~~{.r}
 # 5. 회귀식 표현---------------------
 latex_lm <- function(object, file="", math.env=c("$","$"),
                      estimates="none", abbreviate = TRUE, abbrev.length=8, digits=3) {
@@ -234,10 +348,46 @@ latex_lm <- function(object, file="", math.env=c("$","$"),
 mtcars_best <- lm(mpg~wt+qsec+am, data=df[,-1])
 
 latex_lm(mtcars_best)
+~~~
 
+$mpg = \beta_{Int} + \beta_{wt}wt + \beta_{qsec}qsec + \beta_{am}am + \epsilon_i$ 
+
+
+~~~{.r}
 # 최종회귀모형 상세
 stargazer(mtcars_best, df_forward, df_backward, type="html", notes.align = "l")
-```
+~~~
+
+
+<table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="3">mpg</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
+<tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">wt</td><td>-3.917<sup>***</sup></td><td>-3.167<sup>***</sup></td><td>-3.167<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.711)</td><td>(0.741)</td><td>(0.741)</td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">qsec</td><td>1.226<sup>***</sup></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.289)</td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">am</td><td>2.936<sup>**</sup></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(1.411)</td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">cyl</td><td></td><td>-0.942<sup>*</sup></td><td>-0.942<sup>*</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.551)</td><td>(0.551)</td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">hp</td><td></td><td>-0.018</td><td>-0.018</td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.012)</td><td>(0.012)</td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">Constant</td><td>9.618</td><td>38.752<sup>***</sup></td><td>38.752<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(6.960)</td><td>(1.787)</td><td>(1.787)</td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>32</td><td>32</td><td>32</td></tr>
+<tr><td style="text-align:left">R<sup>2</sup></td><td>0.850</td><td>0.843</td><td>0.843</td></tr>
+<tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.834</td><td>0.826</td><td>0.826</td></tr>
+<tr><td style="text-align:left">Residual Std. Error (df = 28)</td><td>2.459</td><td>2.512</td><td>2.512</td></tr>
+<tr><td style="text-align:left">F Statistic (df = 3; 28)</td><td>52.750<sup>***</sup></td><td>50.171<sup>***</sup></td><td>50.171<sup>***</sup></td></tr>
+<tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:left"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>
 
 이를 위해 다음과 같이 데이터에서 최상부분집합선택법에서 바로 최적 회귀모형을 생성시키도록 `latex_lm` 함수를 작성하고 이를 문서와 함께 
 자동화한다. 그리고 나서 `stargazer` 함수를 통해 최적 모형에 대한 회귀식 문서를 완성시키고 모형에 대한 간략한 설명을 붙여 회귀분석 보고서를 마무리한다.
