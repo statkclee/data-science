@@ -84,6 +84,7 @@ title: 데이터 과학
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
+1. [보고서 작성 자동화(30분)](ds-report-automation.html)
 1. [R로 전자우편 자동 전송](ds-gmail.html)        
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
