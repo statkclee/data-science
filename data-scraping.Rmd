@@ -13,6 +13,12 @@ mainfont: NanumGothic
 ``` {r, include=FALSE}
 source("tools/chunk-options.R")
 knitr::opts_chunk$set(error = TRUE)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(jsonlite)
+library(httr)
+library(rvest)
 ```
 
 > ## 학습 목표 {.objectives}
@@ -70,7 +76,7 @@ http://www.hostname.com:80/path/to/resource?a=1&b=2#id
 그다음에 헤더에 `키:값` 내용이 쭉 나열되고 나서, 공백이 메시지 본문과 구별하기 위해 끼워들게 되는 구조를 갖는다.
 
 | 요청 혹은 응답    | GET /resources/webinars/ HTTP/1.1      |
-|------------------------------------------------------------|
+|-------------------|----------------------------------------|
 | | Host: www.rstudio.com                                    |
 | | User-Agent: libcurl/7.43.0 r-curl/2.1 httr/1.2.1         |
 | | Accept-Encoding: gzip, deflate                           |
@@ -114,7 +120,7 @@ GET /resources/webinars/ HTTP/1.1
 > ```
 
 ``` {r}
-library(jsonlite) 
+# library(jsonlite) 
 toJSON(list(a = 1, b = 2, c = 3))
 fromJSON('{"a":[1],"b":[2],"c":[3]}') 
 ```
@@ -134,7 +140,7 @@ r
 웹API를 통해 데이터를 요청하게 되면 다음과 같은 응답을 얻게 된다.
 
 |  응답    | HTTP/1.1 200 OK                        |
-|------------------------------------------------------------|
+|----------|-------------------------------------------------|
 | | Server: nginx                                            |
 | | Date: Wed, 09 Nov 2016 14:14:47 GMT                      |
 | | Content-Type: application/json                           |
@@ -209,7 +215,9 @@ content(r, "parse", type = "application/json")
 ``` {r message=FALSE, warning=FALSE, comment=FALSE}
 # library(rvest)
 # library(dplyr)
-Sys.setlocale("LC_ALL", "English")
+# library(httr)
+# library(rvest) 
+# Sys.setlocale("LC_ALL", "English")
 
 url <- "https://ko.wikipedia.org/wiki/대한민국_제20대_국회의원_선거" 
 
@@ -264,5 +272,6 @@ ggplot(data = poll_long, aes(y = 지지율, x = date, col = 정당, group=정당
   geom_point(alpha = 0.5) +
   geom_smooth(span = 0.5, se=FALSE) +
   labs(title="제20대 총선") +
+  theme_grey(base_family='NanumGothic') + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
