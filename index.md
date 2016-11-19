@@ -80,6 +80,15 @@ title: 데이터 과학
     	- [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
     	- [.shp 지도 일부 추출](geo-info-shapefile.html)
     	- [IP 주소 지리정보 시각화](geo-info-ip-address.html)
+    - 웹 데이터 
+        - [웹 스크래핑(Web Scraping)](data-scraping.html)
+        - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
+            - [데이터 입수](http://statkclee.github.io/web-data-python/01-getdata.html)
+            - [CSV 데이터 처리](http://statkclee.github.io/web-data-python/02-csv.html)
+            - [오류(Error) 처리와 일반화](http://statkclee.github.io/web-data-python/03-generalize.html)
+            - [시각화](http://statkclee.github.io/web-data-python/04-visualize.html)
+            - [데이터 게시](http://statkclee.github.io/web-data-python/05-makedata.html)
+            - [데이터를 찾을 수 있게 만들기](http://statkclee.github.io/web-data-python/06-findable.html)
 1. [Shiny 웹앱](shiny-overview.html)
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
@@ -88,7 +97,6 @@ title: 데이터 과학
 1. [R로 전자우편 자동 전송](ds-gmail.html)        
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
-    - [웹스크래핑(Web Scraping)](data-scraping.html)
 1. [야구 MLB](ds-baseball-mlb.html)    
 
 
