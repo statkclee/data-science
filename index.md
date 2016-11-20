@@ -33,6 +33,7 @@ title: 데이터 과학
     - [`dplyr` 데이터베이스](ds-dplyr-sql.html)        
     - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
+    - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)
 1. [함수형 프로그래밍 -- `purrr`](ds-fp.html)
     - [R 함수 작성](ds-fp-write-fn.html)
@@ -80,7 +81,7 @@ title: 데이터 과학
     	- [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
     	- [.shp 지도 일부 추출](geo-info-shapefile.html)
     	- [IP 주소 지리정보 시각화](geo-info-ip-address.html)
-    - 웹 데이터 
+    - **웹 데이터**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
         - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
             - [데이터 입수](http://statkclee.github.io/web-data-python/01-getdata.html)
@@ -98,6 +99,7 @@ title: 데이터 과학
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
 1. [야구 MLB](ds-baseball-mlb.html)    
+
 
 
 > ## 참고 자료 {.prereq}
