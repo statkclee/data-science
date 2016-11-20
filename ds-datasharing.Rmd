@@ -1,0 +1,245 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 통계학 전공자와 데이터 공유 방법
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+```
+> ## 학습 목표 {.objectives}
+>
+> * 통계학 전공자와 데이터 공유 방법을 살펴본다.
+
+## 1. 통계학 전공자와 데이터 공유 방법 [^how-to-share-data]
+
+[^how-to-share-data]: [How to share data with a statistician](https://github.com/jtleek/datasharing)
+
+통계학자 또는 데이터 과학자와 데이터를 공유해야하는 모든 사람들을 위한 안내서입니다. 
+저자가 염두에 두고 있는 대상 잠재 고객은 다음과 같습니다.
+
+- 데이터를 분석해야 하는데 통계 분석가 또는 데이터 과학자를 필요로하는 공동 작업자.
+- 컨설팅 서비스를 원하는 다양한 분야의 학생 또는 박사후 과정 연구원.
+- 데이터셋을 교정/정제/랭글링하는 작업을 갖는 주니어 통계학과 학생.
+
+본 지침서의 목표는 데이터 수집에서 데이터 분석으로의 전환과정에서 지연의 원인과 
+저지르기 쉬운 함정을 회피하는데 있어 데이터를 공유하는 가장 좋은 방법에 대한 지침을 제공하는 것입니다.
+[Leek group] (http://biostat.jhsph.edu/~jleek/)은 다수
+공동 작업자와 작업을 수행하였고, Leek 그룹에 도착했을 때 데이터의 상태가 
+가장 큰 변동성 원인이라는 것을 파악했다.
+다른 통계 학자들과의 대화를 통해서 거의 보편적으로 사실이라는 것을 파악되었따.
+
+저자가 갖는 주관적 생각은 통계학자는 데이터를 입수한 상태에 관계없이, 
+데이터를 처리할 수 ​​있어야 한다는 것이다. 
+원 데이터를 살펴보고, 데이터 처리 파이프라인 단계를 이해하고, 
+숨겨진 변동 원인을 데이터 분석에 녹여낼 수 있어야 합니다.
+다른 한편으로, 다수 데이터 자료형에 대해 데이터 처리 단계는 잘 문서화 되어 있고, 
+표준화도 잘 되어 있다. 
+따라서 통계전공자를 호출하기 전에, 원시 데이터에서 직접 분석 가능한 형태로 
+데이터를 변환하는 작업을 수월하게 진행할 수 있다.
+그렇게 되면, 통계 전문가의 데이터 처리 시간을 단축하기 때문에,
+전체적인 데이터 처리 시간을 크게 단축 할 수 있습니다.
+왜냐하면, 먼저 모든 데이터 전처리 단계를 통계학자가 다시 수행할 필요가 없기 때문이다.
+
+## 통계 전문가에게 전달해야 할 사항
+
+
+가장 효율적이고 시기적절한 데이터 분석을 용이하게 수행하도록, 
+통계전문가에게 전달해야하는 정보는 다음과 같습니다.
+
+1. 원데이터(Raw data)
+1. [깔끔한 Tidy 데이터셋](http://vita.had.co.nz/papers/tidy-data.pdf)
+1. 깔끔한 데이터셋에 기재된 각 변수와 그 값을 설명하는 코드일람표(코드북, codebook).
+1. 1에서 2,3까지 수행했던 명시적이고 꼼꼼한 기술서
+
+전달할 데이터 패키지의 각 부분을 살펴보자.
+
+
+### 1.1. 원데이터
+
+손에 넣을 수 있는 가장 원시 형식의 데이터를 전달항목에 포함시키는 것이 중요합니다. 
+이렇게 하면 데이터 출처(data provenance)는 작업흐름 전체적으로 유지관리가 가능하다. 
+다음에 원데이터 형식에 대한 사례가 나와 있다:
+
+- 컴퓨터가 뱉어낸 기묘한 [이진(binary) 파일](http://en.wikipedia.org/wiki/Binary_file).
+- 계약을 맺은 회사가 통계전문가에게 보낸 워크시트 10개가 포함된 제대로 형태가 잡히지 않은 엑셀 파일.
+- [Twitter API](https://twitter.com/twitterapi)를 통해 스크랩하여 얻은 복잡한 [JSON](http://en.wikipedia.org/wiki/JSON) 데이터.
+- 현미경을 통해 채집하여 수작업으로 입력한 숫자로 가득찬 데이터.
+
+다음과 같은 경우 원데이터가 올바른 형태라고 판단할 수 있다:
+
+1. 데이터에 소프트웨어를 돌린 흔적적이 없다.
+1. 데이터 값을 전혀 변경하지 않았다.
+1. 데이터셋에서 어떤 데이터도 제거하지 않았다.
+1. 어떤 방식으로든 데이터를 요약정리하지 않았다.
+
+원데이터를 수정한 경우, 더 이상 원시 데이터 형태는 아니다. 
+변경된 데이터를 원시 데이터로 간주하고 나서, 보고서 작업을 수행하게 되면 
+분석 프로세스의 속도를 늦추게 되는 매우 흔한 방법이 된다.
+왜냐하면, 분석가는 시간을 들여서 왜 원시 데이터가 기묘한지도 파악해야 하는 
+법의학 연구(forensic study)도 수행해야 되기 때문이다. 
+(또한, 새로운 데이터가 도착하면 어떻게 될지 상상해 보십시오.)
+
+### 1.2. 깔끔한 데이터셋
+
+깔끔한 데이터의 일반적인 원칙은 [Hadley Wickham](http://had.co.nz/)의 
+[Tidy Data](http://vita.had.co.nz/papers/tidy-data.pdf) 논문과 
+[Tidy Data 동영상](http://vimeo.com/33727555)에 잘 정리되어 있다.
+
+논문과 비디오에 [R](http://www.r-project.org/)을 사용한, 깔끔한 데이터를 잘 설명하고 있지만, 
+동일한 원칙을 더 일반적으로 적용하는 것도 가능하다:
+
+1. 측정하는 각 변수는 하나의 열에 있어야 한다.
+1. 해당 변수의 관측점은 서로 다른 행에 있어야 한다.
+1. 변수의 "유형"마다 테이블 하나에 있어야 한다.
+1. 여러 테이블이 있는 경우, 테이블을 조인(join) 또는 병합할 수 있는 열이 포함되어야 한다.
+
+
+
+이러한 규칙은 쉽고 빠르지 만 데이터를 훨씬 쉽게 설정할 수있는 여러 가지 기능이 있습니다.
+다루다. 첫 번째는 전체 행 이름을 포함하는 각 데이터 테이블 / 스프레드 시트의 맨 위에 행을 포함하는 것입니다.
+따라서 환자 진단을 위해 나이를 측정한다면, 대신에 AgeAtDiagnosis라는 이름으로 그 칼럼을 쓸 것입니다.
+다른 사람이 이해하기 어려울 수있는 'ADx'또는 다른 약어와 같은 것입니다.
+
+이것이 유전체학에서 어떻게 작동하는지 예가 있습니다. 20 명의 사람들을 위해 유전자 발현 측정을
+[RNA 시퀀싱] (http://en.wikipedia.org/wiki/RNA-Seq). 또한 인구 통계 및 임상 정보를 수집했습니다.
+나이, 치료 및 진단을 포함한 환자에 대해 임상 / 인구 통계가 포함 된 표 / 스프레드 시트가 하나 있습니다.
+정보. 4 개의 열 (환자 ID, 나이, 치료, 진단)과 21 개의 행 (변수 이름이있는 행, 그리고 하나의 행
+모든 환자에 대해). 또한 요약 된 게놈 데이터를위한 스프레드 시트가 하나 있습니다. 일반적으로이 유형의 데이터
+엑손 당 카운트 수의 레벨로 요약됩니다. 100,000 개의 엑손이 있다고 가정하면,
+표 / 스프레드 시트에 21 개의 행 (유전자 이름의 행과 각 환자의 행)과 100,001 개의 열 (환자의 경우 한 행
+각 데이터 유형마다 하나의 행).
+
+Excel의 공동 작업자와 데이터를 공유하는 경우 깔끔한 데이터는 테이블 당 하나의 Excel 파일에 있어야합니다. 그들
+여러 워크 시트가 없어야하며 매크로에 데이터를 적용해서는 안되며 열 / 셀을 강조 표시하지 않아야합니다.
+또는 [CSV] (http://en.wikipedia.org/wiki/Comma-separated_values) 또는 [TAB 구분] (http://en.wikipedia.org/wiki/Tab-separated_values) 텍스트에서 데이터를 공유하십시오. 파일. 그러나 Excel에 CSV 파일을 읽으면 날짜와 시간 변수를 재현 할 수없는 방식으로 처리 할 수 ​​있습니다.
+
+While these are the hard and fast rules, there are a number of other things that will make your data set much easier
+to handle. First is to include a row at the top of each data table/spreadsheet that contains full row names. 
+So if you measured age at diagnosis for patients, you would head that column with the name `AgeAtDiagnosis` instead
+of something like `ADx` or another abbreviation that may be hard for another person to understand. 
+
+
+Here is an example of how this would work from genomics. Suppose that for 20 people you have collected gene expression measurements with 
+[RNA-sequencing](http://en.wikipedia.org/wiki/RNA-Seq). You have also collected demographic and clinical information
+about the patients including their age, treatment, and diagnosis. You would have one table/spreadsheet that contains the clinical/demographic
+information. It would have four columns (patient id, age, treatment, diagnosis) and 21 rows (a row with variable names, then one row
+for every patient). You would also have one spreadsheet for the summarized genomic data. Usually this type of data
+is summarized at the level of the number of counts per exon. Suppose you have 100,000 exons, then you would have a
+table/spreadsheet that had 21 rows (a row for gene names, and one row for each patient) and 100,001 columns (one row for patient
+ids and one row for each data type). 
+
+If you are sharing your data with the collaborator in Excel, the tidy data should be in one Excel file per table. They
+should not have multiple worksheets, no macros should be applied to the data, and no columns/cells should be highlighted. 
+Alternatively share the data in a [CSV](http://en.wikipedia.org/wiki/Comma-separated_values) or [TAB-delimited](http://en.wikipedia.org/wiki/Tab-separated_values) text file. (Beware however that reading CSV files into Excel can sometimes lead to non-reproducible handling of date and time variables.)
+
+
+### The code book
+
+For almost any data set, the measurements you calculate will need to be described in more detail than you can or should sneak
+into the spreadsheet. The code book contains this information. At minimum it should contain:
+
+1. Information about the variables (including units!) in the data set not contained in the tidy data 
+1. Information about the summary choices you made
+1. Information about the experimental study design you used
+
+In our genomics example, the analyst would want to know what the unit of measurement for each
+clinical/demographic variable is (age in years, treatment by name/dose, level of diagnosis and how heterogeneous). They 
+would also want to know how you picked the exons you used for summarizing the genomic data (UCSC/Ensembl, etc.). They
+would also want to know any other information about how you did the data collection/study design. For example,
+are these the first 20 patients that walked into the clinic? Are they 20 highly selected patients by some characteristic
+like age? Are they randomized to treatments? 
+
+A common format for this document is a Word file. There should be a section called "Study design" that has a thorough
+description of how you collected the data. There is a section called "Code book" that describes each variable and its
+units. 
+
+### How to code variables
+
+When you put variables into a spreadsheet there are several main categories you will run into depending on their [data type](http://en.wikipedia.org/wiki/Statistical_data_type):
+
+1. Continuous
+1. Ordinal
+1. Categorical
+1. Missing 
+1. Censored
+
+Continuous variables are anything measured on a quantitative scale that could be any fractional number. An example
+would be something like weight measured in kg. [Ordinal data](http://en.wikipedia.org/wiki/Ordinal_data) are data that have a fixed, small (< 100) number of levels but are ordered. 
+This could be for example survey responses where the choices are: poor, fair, good. [Categorical data](http://en.wikipedia.org/wiki/Categorical_variable) are data where there
+are multiple categories, but they aren't ordered. One example would be sex: male or female. This coding is attractive because it is self-documenting.  [Missing data](http://en.wikipedia.org/wiki/Missing_data) are data
+that are unobserved and you don't know the mechanism. You should code missing values as `NA`. [Censored data](http://en.wikipedia.org/wiki/Censoring_\(statistics\)) are data
+where you know the missingness mechanism on some level. Common examples are a measurement being below a detection limit
+or a patient being lost to follow-up. They should also be coded as `NA` when you don't have the data. But you should
+also add a new column to your tidy data called, "VariableNameCensored" which should have values of `TRUE` if censored 
+and `FALSE` if not. In the code book you should explain why those values are missing. It is absolutely critical to report
+to the analyst if there is a reason you know about that some of the data are missing. You should also not [impute](http://en.wikipedia.org/wiki/Imputation_\(statistics\))/make up/
+throw away missing observations.
+
+In general, try to avoid coding categorical or ordinal variables as numbers. When you enter the value for sex in the tidy
+data, it should be "male" or "female". The ordinal values in the data set should be "poor", "fair", and "good" not 1, 2 ,3.
+This will avoid potential mixups about which direction effects go and will help identify coding errors. 
+
+Always encode every piece of information about your observations using text. For example, if you are storing data in Excel and use a form of colored text or cell background formatting to indicate information about an observation ("red variable entries were observed in experiment 1.") then this information will not be exported (and will be lost!) when the data is exported as raw text.  Every piece of data should be encoded as actual text that can be exported.  
+
+### The instruction list/script
+
+You may have heard this before, but [reproducibility is a big deal in computational science](http://www.sciencemag.org/content/334/6060/1226).
+That means, when you submit your paper, the reviewers and the rest of the world should be able to exactly replicate
+the analyses from raw data all the way to final results. If you are trying to be efficient, you will likely perform
+some summarization/data analysis steps before the data can be considered tidy. 
+
+The ideal thing for you to do when performing summarization is to create a computer script (in `R`, `Python`, or something else) 
+that takes the raw data as input and produces the tidy data you are sharing as output. You can try running your script
+a couple of times and see if the code produces the same output. 
+
+In many cases, the person who collected the data has incentive to make it tidy for a statistician to speed the process
+of collaboration. They may not know how to code in a scripting language. In that case, what you should provide the statistician
+is something called [pseudocode](http://en.wikipedia.org/wiki/Pseudocode). It should look something like:
+
+1. Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a=1, b=2, c=3
+1. Step 2 - run the software separately for each sample
+1. Step 3 - take column three of outputfile.out for each sample and that is the corresponding row in the output data set
+
+You should also include information about which system (Mac/Windows/Linux) you used the software on and whether you 
+tried it more than once to confirm it gave the same results. Ideally, you will run this by a fellow student/labmate
+to confirm that they can obtain the same output file you did. 
+
+
+
+
+What you should expect from the analyst
+====================
+
+When you turn over a properly tidied data set it dramatically decreases the workload on the statistician. So hopefully
+they will get back to you much sooner. But most careful statisticians will check your recipe, ask questions about
+steps you performed, and try to confirm that they can obtain the same tidy data that you did with, at minimum, spot
+checks.
+
+You should then expect from the statistician:
+
+1. An analysis script that performs each of the analyses (not just instructions)
+1. The exact computer code they used to run the analysis
+1. All output files/figures they generated. 
+
+This is the information you will use in the supplement to establish reproducibility and precision of your results. Each
+of the steps in the analysis should be clearly explained and you should ask questions when you don't understand
+what the analyst did. It is the responsibility of both the statistician and the scientist to understand the statistical
+analysis. You may not be able to perform the exact analyses without the statistician's code, but you should be able
+to explain why the statistician performed each step to a labmate/your principal investigator. 
+
+
+## 기여하신 분
+
+* [Jeff Leek](http://biostat.jhsph.edu/~jleek/) - 초안 작성
+* [L. Collado-Torres](http://bit.ly/LColladoTorres) - 오탈자 감수 및 링크 추가
+* [Nick Reich](http://people.umass.edu/nick/) - 텍스트로 데이터를 저장하는 방식에 대해 조언
+* [Nick Horton](https://www.amherst.edu/people/facstaff/nhorton) - 부드러운 문맥이 되도록 제안.
+
