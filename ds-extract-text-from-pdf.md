@@ -11,10 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-library(dplyr)
-```
+
 > ## 학습 목표 {.objectives}
 >
 > * 광학문자인식(OCR) 기술을 통한 텍스트 추출 과정을 이해한다.
@@ -89,7 +86,8 @@ OCR 엔진은 `.ppm` (픽스맵 파일형식, pixmap format)만 지원하기 때
 `tabulizer` 팩키지를 설치하게 되면, `examples/data.pdf` 파일에 유명한 `mtcars`, `iris` 데이터를 PDF 파일에 표로 출력되어 있다.
 이를 `extract_tables()` 함수를 사용해서 원래 데이터를 복원한다.
 
-```{r}
+
+~~~{.r}
 #1. 환경설정-------------------------------
 
 #library(devtools)
@@ -100,20 +98,46 @@ library(tabulizer)
 
 # 경로 확인
 .libPaths()
+~~~
 
+
+
+~~~{.output}
+[1] "/Library/Frameworks/R.framework/Versions/3.2/Resources/library"
+
+~~~
+
+
+
+~~~{.r}
 # "C:/Users/KwangChun/Documents/R/win-library/3.3" 사용자 라이브러리 경로 위치
 f <- system.file(path="examples", file="data.pdf", package = "tabulizer")
-```
+~~~
 
 ### 2.1. `iris` 데이터 복원
 
 `examples/data.pdf` 파일 2페이지에 `iris` 데이터가 표형식으로 찍혀있다. 
 이를 `extract_tables(f, pages = 2, method = "data.frame")` 명령어로 추출한다.
 
-```{r}
+
+~~~{.r}
 out1 <- extract_tables(f)
 str(out1)
+~~~
 
+
+
+~~~{.output}
+List of 3
+ $ : chr [1:32, 1:10] "mpg" "21.0" "21.0" "22.8" ...
+ $ : chr [1:7, 1:3] "Sepal.Width" "3.5" "3.0" "3.2" ...
+ $ : chr [1:15, 1] "supp" "VC" "VC" "VC" ...
+
+~~~
+
+
+
+~~~{.r}
 iris_ocr <- extract_tables(f, pages = 2, method = "data.frame")
 
 #3. 데이터프레임 변환--------------------------
@@ -121,7 +145,20 @@ iris_ocr <- extract_tables(f, pages = 2, method = "data.frame")
 iris_df <- iris_ocr[[1]]
 # library(dplyr)
 glimpse(iris_df)
-```
+~~~
+
+
+
+~~~{.output}
+Observations: 6
+Variables: 5
+$ Sepal.Length <dbl> 5.1, 4.9, 4.7, 4.6, 5.0, 5.4
+$ Sepal.Width  <dbl> 3.5, 3.0, 3.2, 3.1, 3.6, 3.9
+$ Petal.Length <dbl> 1.4, 1.4, 1.3, 1.5, 1.4, 1.7
+$ Petal.Width  <dbl> 0.2, 0.2, 0.2, 0.2, 0.2, 0.4
+$ Species      <chr> "setosa", "setosa", "setosa", "setosa", "setosa",...
+
+~~~
 
 
 
