@@ -11,9 +11,7 @@ mainfont: NanumGothic
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
+
 > ## 학습 목표 {.objectives}
 >
 > * 통계전문가와 데이터 공유 방법을 살펴본다.
