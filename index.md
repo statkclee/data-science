@@ -14,7 +14,7 @@ title: 데이터 과학
 1. **[R 언어](ds-r-lang.html)**
     - [R 환경설정과 업데이트](ds-r-environment.html) 
     - [R 프로그래밍 모범사례 - R 함수와 자료구조](ds-writing-fn.html)
-    - [통계학 전공자와 데이터 공유 방법](ds-datasharing.html) [영어원문](https://github.com/jtleek/datasharing) [구글 번역본](ds-datasharing-translation.html) 
+    - [통계학 전공자와 데이터 공유 방법](ds-datasharing.html) : [영어원문](https://github.com/jtleek/datasharing), [구글 번역본](ds-datasharing-translation.html) 
 1. [측도와 R 자료구조](ds-data-structure.html)
     - **자료구조**
         - [시간데이터](data-handling-timendate.html)
@@ -29,8 +29,7 @@ title: 데이터 과학
     	- [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
     	- [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
     - [결측데이터](ds-missing.html)
-    - [SQL](data-handling-sql.html)    
-         - [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
+    - [SQL](data-handling-sql.html) : [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
     - [`dplyr` 데이터베이스](ds-dplyr-sql.html)        
     - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
@@ -59,6 +58,7 @@ title: 데이터 과학
     - [데이터 가져오기](data-handling-import.html)    
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
     - [데이터 작업(dplyr)](data-handling-dplyr.html)
+    - [두 테이블 동사(dplyr join)](ds-dplyr-join.html)
     - [데이터 내보내기](data-handling-export.html)
     - [데이터 다수 다루기 - 파케이](ds-manip-multiple-data.html)
 1. [R 팩키지](ds-r-pkgs.html)    
@@ -90,7 +90,7 @@ title: 데이터 과학
             - [시각화](http://statkclee.github.io/web-data-python/04-visualize.html)
             - [데이터 게시](http://statkclee.github.io/web-data-python/05-makedata.html)
             - [데이터를 찾을 수 있게 만들기](http://statkclee.github.io/web-data-python/06-findable.html)
-    - **R 눈을 갖다**
+    - **R 눈을 달다**
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
 1. [Shiny 웹앱](shiny-overview.html)
     - [Shiny 웹앱 개발](shiny-app.html)    
