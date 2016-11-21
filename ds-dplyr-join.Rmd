@@ -103,20 +103,20 @@ ijsp_kable <- knitr::kable(ijsp)
 ```
 
 <table border = 1>
-	<tr>
-		<td valign="top">
-		  superheroes
-		  `r superheroes_kable`
-		</td>
-		<td valign="top">
-		  publishers
-		  `r publishers_kable`
-		</td>
-		<td valign="top">
-		  inner_join(x = superheroes, y = publishers)
-		  `r ijsp_kable`
-		</td>
-	</tr>
+<tr>
+	<td valign="top">
+		superheroes
+		`r superheroes_kable`
+</td>
+	<td valign="top">
+	  publishers
+	  `r publishers_kable`
+</td>
+	<td valign="top">
+		inner_join(x = superheroes, y = publishers)
+	  `r ijsp_kable`
+</td>
+</tr>
 </table>
 
 ### 2.2. `semi_join()`
