@@ -14,6 +14,7 @@ title: 데이터 과학
 1. **[R 언어](ds-r-lang.html)**
     - [R 환경설정과 업데이트](ds-r-environment.html) 
     - [R 프로그래밍 모범사례 - R 함수와 자료구조](ds-writing-fn.html)
+    - [통계학 전공자와 데이터 공유 방법](ds-datasharing.html) [영어원문](https://github.com/jtleek/datasharing) [구글 번역본](ds-datasharing-translation.html) 
 1. [측도와 R 자료구조](ds-data-structure.html)
     - **자료구조**
         - [시간데이터](data-handling-timendate.html)
@@ -96,7 +97,6 @@ title: 데이터 과학
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
 1. [보고서 작성 자동화(30분)](ds-report-automation.html)
-1. [통계학 전공자와 데이터 공유 방법](ds-datasharing.html)
 1. [R로 전자우편 자동 전송](ds-gmail.html)        
 1. [데이터 제품](data-product.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
