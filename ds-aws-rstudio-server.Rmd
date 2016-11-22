@@ -261,7 +261,7 @@ RStudio 서버가 설치된 EC2 인스턴스를 S3 버킷과 동기화하는데 
 #### 4.3.1. `s3fs-fuse` AWS S3 버킷 접속 인증 설정
 
 `aws cli`를 설치했으면, `aws configure` 명령어를 통해 환경설정을 한다.
-`IAM &rarr; Users &rarr; Security Credentials &rarr; Create access key`를 통해 `Access key ID`, 
+IAM &rarr; Users &rarr; Security Credentials &rarr; Create access key 를 통해 `Access key ID`, 
 `AWS Secret Access Key`를 입력하고 지역(region)을 설정한다: 서울(ap-northeast-2), 도쿄(ap-northeast-1) 등.
 출력형식은 원하는 것으로 설정한다. 
 

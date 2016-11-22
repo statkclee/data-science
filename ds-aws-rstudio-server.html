@@ -130,11 +130,63 @@ Permission <span class="kw">denied</span> (publickey).</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sudo passwd rstudio</code></pre></div>
 <p><strong>Public DNS</strong> 주소를 웹브라우져에 입력하고 엔터를 치면 로그인 인증화면이 나오는데 기본설정으로 사용자명: <code>rstudio</code>, 비밀번호: <code>rstudio</code>가 설정되어 있고, <strong>Public DNS</strong> 주소를 통해 접속이 되지 않는 경우 포트번호를 <code>:8787</code>을 붙여 RStudio 서버에 접속한다.</p>
 <p><img src="fig/aws-sign-in.png" alt="AWS RStudio 로그인" width="57%" /></p>
+<h2 id="s3-버킷-ec2-인스턴스-연결">4. S3 버킷 EC2 인스턴스 연결</h2>
+<p>데이터가 저장된 S3 버킷과 EC2 인스턴스를 연결하는데 몇가지 설정 작업이 선행되어야 한다.</p>
+<h3 id="aws-cli-설치">4.1. AWS CLI 설치</h3>
+<p>아마존 리눅스를 사용해서 EC2 인스턴스를 생성하게 되는 경우 기본으로 <code>aws cli</code>가 설치되어 있지만, 우분투가 설치된 RStudio AMI 이미지의 경우 <code>python-pip</code> 팩키지를 통해 <code>aws cli</code>를 설치한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>sudo apt-get update
+$<span class="st"> </span>sudo apt-get install -y python-pip
+$<span class="st"> </span>sudo pip install awscli</code></pre></div>
+<h3 id="s3fs-fuse-설치-s3fs-fuse">4.2. <code>s3fs-fuse</code> 설치 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+<p>S3 버킷과 리눅스 EC2 인스턴스를 동기화하는데 <code>s3fs-fuse</code>를 사용한다. 설치과정은 연관된 소프트웨어를 먼저 설치하고 나서, <code>GitHub</code>에서 <code>s3fs-fuse</code>를 복제하여 가져온 다음 <code>make install</code> 명령어를 통해 설치하는 단계를 거친다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sudo apt-get install build-essential git libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool 
+sudo apt-get install pkg-config libssl-dev 
+git clone https:<span class="er">//</span>github.com/s3fs-fuse/s3fs-fuse
+cd s3fs-fuse/
+./autogen.sh
+./configure --prefix=<span class="er">/</span>usr --with-openssl
+make
+sudo make install</code></pre></div>
+<h3 id="rstudio-서버-설치된-ec2-인스턴스-동기화-rstudio-ec2-s3fs">4.3. RStudio 서버 설치된 EC2 인스턴스 동기화 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h3>
+<p>RStudio 서버가 설치된 EC2 인스턴스를 S3 버킷과 동기화하는데 환경설정을 하고 나서 동기화 명령어를 실행한다.</p>
+<h4 id="s3fs-fuse-aws-s3-버킷-접속-인증-설정">4.3.1. <code>s3fs-fuse</code> AWS S3 버킷 접속 인증 설정</h4>
+<p><code>aws cli</code>를 설치했으면, <code>aws configure</code> 명령어를 통해 환경설정을 한다. IAM → Users → Security Credentials → Create access key 를 통해 <code>Access key ID</code>, <code>AWS Secret Access Key</code>를 입력하고 지역(region)을 설정한다: 서울(ap-northeast-2), 도쿄(ap-northeast-1) 등. 출력형식은 원하는 것으로 설정한다.</p>
+<ul>
+<li>AWS Access Key ID [None]: 접속키</li>
+<li>AWS Secret Access Key [None]: 비밀키</li>
+<li>Default region name [None]: ap-northeast-2</li>
+<li>Default output format [None]: JSON</li>
+</ul>
+<p>환경변수 설정을 통해 AWS S3 버킷 접속 인증을 하는 방법은 다음과 같다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>aws configure
+AWS Access Key ID [None]:<span class="st"> </span>AXXXXXXXXXXXX
+AWS Secret Access Key [None]:<span class="st"> </span>oW7XXXXXXXXXXXXXXXXXXXXXXXXXXX
+Default region name [None]:<span class="st"> </span>ap-northeast<span class="dv">-2</span>
+Default output format [None]:<span class="st"> </span></code></pre></div>
+<p>설정된 내용이 <code>~/.aws/credentials</code> 파일에 저장된 내용과 동일한지 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">~<span class="er">/</span>.aws/credentials
+aws_access_key_id =<span class="st"> </span>AXXXXXXXXXXXX
+aws_secret_access_key =<span class="st"> </span>oW7XXXXXXXXXXXXXXXXXXXXXXXXXXX</code></pre></div>
+<h4 id="s3fs-fuse-접속-인증-설정">4.3.2. <code>s3fs-fuse</code> 접속 인증 설정</h4>
+<p>사용자 <code>/home/rstudio/</code> 디렉토리에 <code>.passwd-s3fs</code> 파일에 접속키와 비밀키를 저장하는 방법은 다음과 같다. 여기서 <code>~/works</code> 디렉토리에 S3 버킷과 동기화된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">echo -e <span class="st">&quot;AXXXXXXXXXXXX:oW7XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span> &gt;<span class="st"> </span><span class="er">~/</span>.passwd-s3fs
+chmod <span class="dv">600</span> ~<span class="er">/</span>.passwd-s3fs
+mkdir ~<span class="er">/</span>works</code></pre></div>
+<h3 id="rstudio-사용자-설정">4.4. <code>rstudio</code> 사용자 설정</h3>
+<p>AWS S3 버킷에서 사용자명도 함께 검사를 하기 때문에 <code>uid=</code>, <code>gid=</code>를 확인한다. <code>rstudio</code> 사용자 <code>uid=</code>, <code>gid=</code>는 <strong>1001</strong> 이라 이를 설정에 반영한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>id rstudio
+uid=<span class="dv">1001</span>(rstudio) gid=<span class="dv">1001</span>(rstudio) gruops=<span class="dv">1001</span>(rstudio)</code></pre></div>
+<p>AWS S3 버킷으로 생성한 <code>s3-bucket-name</code>의 모든 하위 디렉토리와 앞서 생성시킨 EC2 인스턴스 <code>works</code> 디텍토리를 <code>s3fs</code> 명령어를 통해 동기화시키고, <code>-o rw, allow_other</code> 인자값을 넘겨 읽기쓰기와 더불어 rstudio 사용자에게도 권한을 부여한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>pwd
+/home/rstudio/
+<span class="er">$</span><span class="st"> </span>s3fs s3-bucket-name works -o rw, allow_other, uid=<span class="dv">1001</span>, gid=<span class="dv">1001</span></code></pre></div>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="http://strimas.com/r/rstudio-cloud-1/">RStudio in the Cloud I - Amazon Web Services</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="http://strimas.com/r/rstudio-cloud-2/">RStudio in the Cloud II - Syncing Code &amp; Data with AWS</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://github.com/s3fs-fuse/s3fs-fuse">FUSE-based file system backed by Amazon S3</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://dev.classmethod.jp/cloud/aws/s3fs-ec2-mount-s3/">s3fsを使ってEC2からS3をマウントしたときにうまくいかなくて調べた事まとめ</a><a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
         </div>
