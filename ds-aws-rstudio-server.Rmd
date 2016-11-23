@@ -321,3 +321,17 @@ $ s3fs s3-bucket-name works -o rw, allow_other, uid=1001, gid=1001
 ```
 
 <img src="fig/ds-aws-s3fs-sync.png" alt="AWS S3 버킷 동기화" width="67%" />
+
+### 4.5. 기타
+
+S3 버킷과 연결된 디렉토리를 해제할 경우 `sudo fusermount -u` 명령어를 사용한다.
+
+``` {r, eval=FALSE}
+ sudo fusermount -u /works
+```
+
+운영체제 부팅시 S3버킷을 자동으로 연결시킬 경우 `/etc/fstab`에 환경을 설정한다.
+
+``` {r, eval=FALSE}
+s3fs#s3-bucket-name /works fuse auto,rw,allow_other,uid=1001,gid=1001 0 0
+```
