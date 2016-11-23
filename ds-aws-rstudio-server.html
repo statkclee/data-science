@@ -47,6 +47,7 @@
 <ul>
 <li>AWS 클라우드 플랫폼 위에 데이터과학 환경을 이해한다.</li>
 <li>AWS 데이터과학 컴퓨팅을 위한 서버를 생성한다.</li>
+<li>AWS EC2 인스턴스에 S3 버킷 저장소를 동기화한다.</li>
 <li>AMI 이미지를 활용 신속하게 검증된 RStudio 서버를 준비하여 데이터 분석을 클라우드 환경에서 실행한다.</li>
 </ul>
 </div>
@@ -174,12 +175,13 @@ chmod <span class="dv">600</span> ~<span class="er">/</span>.passwd-s3fs
 mkdir ~<span class="er">/</span>works</code></pre></div>
 <h3 id="rstudio-사용자-설정">4.4. <code>rstudio</code> 사용자 설정</h3>
 <p>AWS S3 버킷에서 사용자명도 함께 검사를 하기 때문에 <code>uid=</code>, <code>gid=</code>를 확인한다. <code>rstudio</code> 사용자 <code>uid=</code>, <code>gid=</code>는 <strong>1001</strong> 이라 이를 설정에 반영한다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>id rstudio
-uid=<span class="dv">1001</span>(rstudio) gid=<span class="dv">1001</span>(rstudio) gruops=<span class="dv">1001</span>(rstudio)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rstudio@ip<span class="dv">-172</span>-XX-XXX-XXX:<span class="er">~$</span><span class="st"> </span>id rstudio
+uid=<span class="dv">1001</span>(rstudio) gid=<span class="dv">1001</span>(rstudio) groups=<span class="dv">1001</span>(rstudio)</code></pre></div>
 <p>AWS S3 버킷으로 생성한 <code>s3-bucket-name</code>의 모든 하위 디렉토리와 앞서 생성시킨 EC2 인스턴스 <code>works</code> 디텍토리를 <code>s3fs</code> 명령어를 통해 동기화시키고, <code>-o rw, allow_other</code> 인자값을 넘겨 읽기쓰기와 더불어 rstudio 사용자에게도 권한을 부여한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">$<span class="st"> </span>pwd
 /home/rstudio/
 <span class="er">$</span><span class="st"> </span>s3fs s3-bucket-name works -o rw, allow_other, uid=<span class="dv">1001</span>, gid=<span class="dv">1001</span></code></pre></div>
+<p><img src="fig/ds-aws-s3fs-sync.png" alt="AWS S3 버킷 동기화" width="67%" /></p>
 <div class="footnotes">
 <hr />
 <ol>
