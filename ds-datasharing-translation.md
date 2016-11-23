@@ -24,7 +24,7 @@ mainfont: NanumGothic
 전체 문장이 `README.md` 파일이 [구글 번역기](https://translate.google.com/)에 한방에 들어가지 않아 여러번 나눠 번역한 결과를
 웹에서 적절히 표현되도록 일부 편집하였으나, 번역의 핵심인 내용은 전혀 손을 대지 않고 번역 원본 그대로 실었습니다.
 
-[^j-news]: [J가 해봤습니다 - 내가 이러려고 영어 배웠나, AI가 번역 다 해주네](http://news.joins.com/article/20890227)
+[^j-news]: [J가 해봤습니다 - 내가 이러려고 영어 배웠나, AI가 번역 다 해주네(http://news.joins.com/article/20890227)
 
 - [영어원문](https://github.com/jtleek/datasharing) 
 - [구글 번역본](ds-datasharing-translation.html) 
@@ -55,7 +55,7 @@ mainfont: NanumGothic
 가장 효율적이고시기 적절한 분석을 용이하게하기 위해 이것은 통계학 자에게 전달해야하는 정보입니다.
 
 1. 원시 데이터.
-1. [정돈 된 데이터 세트] (http://vita.had.co.nz/papers/tidy-data.pdf)
+1. [정돈 된 데이터 세트](http://vita.had.co.nz/papers/tidy-data.pdf)
 1. 깔끔한 데이터 세트의 각 변수와 그 값을 설명하는 코드 북.
 1. 1에서 2,3까지 갔던 명쾌하고 정확한 레시피
 
@@ -85,8 +85,10 @@ mainfont: NanumGothic
 
 ### 2.2. 깔끔한 데이터 세트
 
-깔끔한 데이터의 일반적인 원칙은 [이 논문](http://vita.had.co.nz/papers/tidy-data)의 [Hadley Wickham](http://had.co.nz/)에 의해 정리되어 있습니다. pdf)
-및 [이 비디오](http://vimeo.com/33727555). 종이와 비디오 모두 [R](http://www.r-project.org/)를 사용하여 깔끔한 데이터를 설명하지만, 원칙
+깔끔한 데이터의 일반적인 원칙은 [Hadley Wickham](http://had.co.nz/)이 
+정리한 [논문(tidy data)](http://vita.had.co.nz/papers/tidy-data.pdf)과 
+[비디오](http://vimeo.com/33727555)에서 자세한 내용을 참조할 수 있습니다. 
+종이와 비디오 모두 [R](http://www.r-project.org/)를 사용하여 깔끔한 데이터를 설명하지만, 원칙
 더 일반적으로 적용 할 수 있습니다 :
 
 1. 측정하는 각 변수는 하나의 열에 있어야합니다

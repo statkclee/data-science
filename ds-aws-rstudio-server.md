@@ -15,6 +15,7 @@ mainfont: NanumGothic
 >
 > * AWS 클라우드 플랫폼 위에 데이터과학 환경을 이해한다.
 > * AWS 데이터과학 컴퓨팅을 위한 서버를 생성한다.
+> * AWS EC2 인스턴스에 S3 버킷 저장소를 동기화한다.
 > * AMI 이미지를 활용 신속하게 검증된 RStudio 서버를 준비하여 데이터 분석을 클라우드 환경에서 실행한다.
 
 
@@ -311,8 +312,8 @@ AWS S3 버킷에서 사용자명도 함께 검사를 하기 때문에 `uid=`, `g
 
 
 ~~~{.r}
-$ id rstudio
-uid=1001(rstudio) gid=1001(rstudio) gruops=1001(rstudio)
+rstudio@ip-172-XX-XXX-XXX:~$ id rstudio
+uid=1001(rstudio) gid=1001(rstudio) groups=1001(rstudio)
 ~~~
 
 AWS S3 버킷으로 생성한 `s3-bucket-name`의 모든 하위 디렉토리와 앞서 생성시킨 
@@ -326,3 +327,4 @@ $ pwd
 $ s3fs s3-bucket-name works -o rw, allow_other, uid=1001, gid=1001
 ~~~
 
+<img src="fig/ds-aws-s3fs-sync.png" alt="AWS S3 버킷 동기화" width="67%" />
