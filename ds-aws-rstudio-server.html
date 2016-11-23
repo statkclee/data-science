@@ -182,6 +182,11 @@ uid=<span class="dv">1001</span>(rstudio) gid=<span class="dv">1001</span>(rstud
 /home/rstudio/
 <span class="er">$</span><span class="st"> </span>s3fs s3-bucket-name works -o rw, allow_other, uid=<span class="dv">1001</span>, gid=<span class="dv">1001</span></code></pre></div>
 <p><img src="fig/ds-aws-s3fs-sync.png" alt="AWS S3 버킷 동기화" width="67%" /></p>
+<h3 id="기타">4.5. 기타</h3>
+<p>S3 버킷과 연결된 디렉토리를 해제할 경우 <code>sudo fusermount -u</code> 명령어를 사용한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> sudo fusermount -u /works</code></pre></div>
+<p>운영체제 부팅시 S3버킷을 자동으로 연결시킬 경우 <code>/etc/fstab</code>에 환경을 설정한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s3fs<span class="co">#s3-bucket-name /works fuse auto,rw,allow_other,uid=1001,gid=1001 0 0</span></code></pre></div>
 <div class="footnotes">
 <hr />
 <ol>

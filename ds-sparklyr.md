@@ -1,17 +1,28 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: `sparklyr` = 스파크 + `dplyr` 설치
+subtitle: (AWS) `sparklyr` = 스파크 + `dplyr` 설치
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
+
+
+
 > ## 학습 목표 {.objectives}
 >
-> *  윈도우, 리눅스, 맥 환경에서 `sparklyr` 팩키지를 설치한다.
-> *  RStudio 프리뷰 버젼을 설치하여 스파크를 편하게 활용한다.
-
+> * 로컬 컴퓨터 윈도우, 리눅스, 맥 환경에서 `sparklyr` 팩키지를 설치한다.
+> * 로컬 머신의 경우 RStudio 프리뷰 버젼을 설치에 적극활용한다.
+> * AWS 클라우드 EC2 인스턴스에 스파크를 설치한다.
 
 <img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="37%" />
 
-### 1. `sparklyr` 설치 (윈도우) [^sparklyr-windows]
+## 1. 로컬 컴퓨터 스파크 설치
+
+### 1.1. `sparklyr` 설치 (윈도우) [^sparklyr-windows]
 
 [^sparklyr-windows]: [Running Apache Spark with sparklyr and R in Windows](http://yokekeong.com/running-apache-spark-with-sparklyr-and-r-in-windows/)
 
@@ -28,7 +39,8 @@ subtitle: `sparklyr` = 스파크 + `dplyr` 설치
     * 작업하기 편한 장소로 압축 푼 스파크-하둡 디렉토리를 이동시킨다. 예를 들어, `C:/spark-1.6.2-bin-hadoop2.6`
 1. RStudio에서 `sparklyr` 팩키지를 설치한다.
 
-~~~ {.r}
+
+~~~{.r}
 # 1. sparklyr 설치
 devtools::install_github("rstudio/sparklyr")
 library(sparklyr)
@@ -49,15 +61,78 @@ iris_tbl <- copy_to(sc, iris)
 # - "Petal.Width"  => "Petal_Width"  (#4)
 src_tbls(sc)
 # [1] "iris"
-~~~    
+~~~
 
-### 2. `sparklyr` 설치 유닉스 계열 [^sparklyr]
+### 1.2. `sparklyr` 설치 유닉스 계열 [^sparklyr] [^install-jdk-on-mac-osx]
 
 [^sparklyr]: [sparklyr — R interface for Apache Spark](http://spark.rstudio.com/)
 
 유닉스 계열(맥, 리눅스)에서 `sparklyr` 설치는 더욱 쉽다. [sparklyr - R interface for Apache Spark](http://spark.rstudio.com/) 안내지침에 따라 명령어를 타이핑하거나 복사하여 붙여 넣으면 된다.
 
-~~~ {.r}
+[^install-jdk-on-mac-osx]: [MAC OS X 에 JDK 설치하는 방법](http://ishappy.tistory.com/entry/MAC-OS-X-에-JDK-설치하는-방법)
+
+> ### 맥 사전 준비 {.callout}
+> 
+> 맥 환경에서 `sparklyr`을 설치하려면 자바를 설치해야 하고, `sparklyr`을 실행할 때 발생하는 자바 오류도 잡아줘야 된다.
+
+1. 자바 JDK 설치는 `.dmg` 파일을 제공해 주기 때문에 [오라클 자바 다운로드](http://www.oracle.com/technetwork/java/javase/downloads/index.html?ssSourceSiteId=otnjp) 사이트에서 
+라이선스 동의를 하고 가장 최신 [jdk-8u111-macosx-x64.dmg](http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-macosx-x64.dmg) 파일을 다운로드 받아 설치한다.
+1. 터미널을 열고 `java -version` 명령어로 버젼을 확인힌다.
+1. `cd /Library/Java/JavaVirtualMachines/` 명령어를 통해 JDK가 설치된 디렉토리를 확인한다.
+1. `cd jdk1.8.0_111.jdk/Contents/Home/` 명령어로 자바 홈(JAVA_HOME)까지 들어가서 경로를 확인한다.
+	- JAVA_HOME 경로를 확인하고 나면 환경변수로 설정을 할 수 있다.
+	- `pwd` 명령어로 `/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home` 경로명을 확인한다.
+1. `nano ~/.bash_profile` 명령어를 통해 나노 편집기에 `JAVA_HOME`, `JAVA_CPPFLAGS` 환경설정을 하단에 붙여 넣는다.
+    - `export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home"`
+    - `export JAVA_CPPFLAGS="/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/include"`
+1. `source ~/.bash_profile` 명령어를 통해 변경사항을 바로 적용시킨다.
+
+
+~~~{.r}
+$ java -version
+java version "1.8.0_111"
+Java(TM) SE Runtime Environment (build 1.8.0_111-b14)
+Java HotSpot(TM) 64-Bit Server VM (build 25.111-b14, mixed mode)
+$ cd /Library/Java/JavaVirtualMachines/
+JavaVirtualMachines $ ls
+jdk1.8.0_111.jdk
+JavaVirtualMachines $ cd jdk1.8.0_111.jdk/Contents/Home/
+Home $ pwd
+/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home
+Home $ nano ~/.bash_profile
+Home $ source ~/.bash_profile
+~~~
+
+R로 통계분석을 할 때 `JAVA_HOME`을 설정했지만, 오류가 생기는 경우가 있다. [^konlp-error] 이런 경우 
+`/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents` 디렉토리 `Info.plist` 파일의 내용을 다음과 같이 변경한다.
+자세한 사항은 [Java SE 8 on Mac OS X](https://oliverdowling.com.au/2014/03/28/java-se-8-on-mac-os-x/)을 참조한다.
+
+[^konlp-error]: [KoNLP에서 아래와 같은 에러가 나올 경우 대처 방법](http://freesearch.pe.kr/archives/3081)
+
+
+~~~{.r}
+Home $ pwd
+/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents
+Contents $ nano Info.plist
+
+# 변경전 
+<key>JVMCapabilities</key>
+<array>
+    <string>CommandLine</string>
+</array>
+-------------------------------
+# 변경후 
+<key>JVMCapabilities</key>
+<array>
+    <string>CommandLine</string>
+    <string>JNI</string>
+    <string>BundledApp</string>
+</array>
+~~~
+
+
+
+~~~{.r}
 # 1. sparklyr 팩키지 설치
 install.packages("devtools")
 devtools::install_github("rstudio/sparklyr")
@@ -83,8 +158,90 @@ src_tbls(sc)
 # [1] "batting" "flights" "iris"  
 ~~~
 
-### 3. `sparklyr` RStudio 활용
+### 1.3. `sparklyr` RStudio 활용
 
 `sparklyr` RStudio 에서 편한게 사용할 수 있도록 다양한 기능을 제공하고 있다. 이를 위해서 [RStudio v0.99.1273 Preview](https://www.rstudio.com/products/rstudio/download/preview/) 버젼을 다운로드해서 설치한다. **Spark** 탭이 별도로 생성되고 이를 통해 스파크에 대한 전반적인 상황을 확인할 수 있다.
 
 <img src="fig/ds-sparklyr-rstudio.png" alt="RStudio Spark 인터페이스" width="77%" />
+
+
+## 2. AWS 클라우드 스파크 설치 
+
+### 2.1. 우분투 자바 설치 [^aws-ubuntu-java]
+
+[^aws-ubuntu-java]: [How To Install Java with Apt-Get on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04)
+
+준비한 AWS EC2 인스턴스 `ssh`를 통해 `ubuntu` 계정으로 로그인한후 자바를 설치한다. 
+`JDK`는 `JRE`를 포함하고 있어서 `sudo apt-get install default-jdk` 를 통해 함께 설치하는 것을 권장한다.
+그런 경우는 없겠지만, 여러버젼의 자바가 설치된 경우 `sudo update-alternatives --config java` 명령어를 통해 다양한 자바 버젼을 관리한다.
+
+
+~~~{.r}
+$ sudo apt-get update
+$ # sudo apt-get install default-jre 
+$ sudo apt-get install default-jdk # JDK는 JRE를 포함 
+~~~
+
+다음으로 `JAVA_HOME`을 설정하는데 `sudo update-alternatives --config java` 명령어로 나온 자바홈 경로를 복사해서 `sudo nano /etc/environment` 에 붙여넣는다.
+`JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"` 마지막으로 `source /etc/environment` 명령어로 변경사항을 적용시킨다.
+
+
+~~~{.r}
+$ sudo update-alternatives --config java
+There is only one alternative in link group java (providing /usr/bin/java): /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+Nothing to configure.
+$ sudo nano /etc/environment
+$ source /etc/environment
+$ echo $JAVA_HOME
+/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+~~~
+
+### 2.2. 스파크 설치
+
+[Download Apache Spark™](https://spark.apache.org/downloads.html) 사이트를 방문하여 아파치 스파크를 다운로드 한다. 물론 스파크내부에 하둡도 같이 포함되어 있는 것을 다운로드 받으면 편리하다.
+`tar xvf` 명령어로 압축을 풀고 나서 스파크가 설치된 환경변수 디렉토리를 기억해 둔다. 
+
+
+~~~{.r}
+$ wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.2-bin-hadoop2.7.tgz
+$ tar xvf spark-2.0.2-bin-hadoop2.7.tgz
+$ cd spark-2.0.2-bin-hadoop2.7
+$ pwd
+/home/rstudio/spark-2.0.2-bin-hadoop2.7
+~~~
+
+### 2.3. RStudio 스파크 적용
+
+`SPARK_HOME =` 디렉토리 설정을 맞춰주면 스파크를 `sparklyr` 명령어를 통해 활용이 가능하다.
+[EC2 인스턴스 사양](https://aws.amazon.com/ko/ec2/pricing/on-demand/)에 맞춰 스파크 클러스터 환경을 `spark_config()`에 맞춰 설정한다. 
+그리고 나서 데이터프레임을 스파크 클러스터에 던질 때 사용하는 `copy_to()` 명령어를 사용하여 스파크 분산 환경에서 데이터를 처리한다.
+
+
+~~~{.r}
+# 1. EC2 Startup code ===============================================
+
+list.of.packages <- c("sparklyr")
+library(sparklyr)
+
+Sys.setenv(SPARK_HOME = '/home/rstudio/spark-2.0.2-bin-hadoop2.7')
+
+# Hardware Spec: https://aws.amazon.com/ko/ec2/pricing/on-demand/
+config <- spark_config()
+config$spark.executor.cores <- 16
+config$spark.executor.memory <- "8G"
+config$spark.driver.memory <- "64G"
+sc <- spark_connect(master = "local", config = config, version = '2.0.2')
+
+# 4. 예제 R 데이터프레임을 스파크에 복사
+library(dplyr)
+iris_tbl <- copy_to(sc, iris)
+# install.packages("nycflights13")
+# install.packages("Lahman")
+flights_tbl <- copy_to(sc, nycflights13::flights, "flights")
+batting_tbl <- copy_to(sc, Lahman::Batting, "batting")
+
+# 5. 데이터 테이블 확인
+src_tbls(sc)
+df <- collect(iris)
+~~~
+
