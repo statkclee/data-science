@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">시간 데이터 기초</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>시간데이터에 대한 기초 지식을 살펴본다.</li>
+<li>시간 데이터를 관장하는 주요 R 팩키지를 살펴본다.</li>
+</ul>
+</div>
+</section>
+<h2 id="날짜와-시간-coursera-dates-and-time">1. 날짜와 시간 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
+<p>날짜정보와 시간정보는 R에서 다른 클래스를 통해 구현된다. 날짜(Date)는 <code>1970-01-01</code>을 기준으로 R 내부적으로 정수형으로 저장되고, 시간(Time)도 R 내부적으로 <code>1970-01-01</code>을 기준으로 초단위로 저장된다.</p>
+<ul>
+<li>날짜(Date): <code>Date</code> 클래스</li>
+<li>시간(time): <code>POSIXct</code>, <code>POSIXlt</code> 클래스
+<ul>
+<li><code>POSIXct</code> 클래스는 매우 큰 정수로 시간정보를 데이터프레임으로 저장할 때 유용하다.</li>
+<li><code>POSIXlt</code> 클래스는 리스트 자료형으로 요일, 년, 월, 일 등의 정보를 리스트 내부 원소로 저장되어 유용하다.</li>
+</ul></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;1970-01-01&quot;</span>)
+x</code></pre></div>
+<pre class="output"><code>[1] &quot;1970-01-01&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unclass</span>(x)</code></pre></div>
+<pre class="output"><code>[1] 0
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unclass</span>(<span class="kw">as.Date</span>(<span class="st">&quot;1970-01-03&quot;</span>))</code></pre></div>
+<pre class="output"><code>[1] 2
+</code></pre>
+<h3 id="날짜-자료형-확인">1.1. 날짜 자료형 확인</h3>
+<p><code>Sys.time()</code> 함수를 통해 현재 시스템 시간정보를 받아내면 <code>POSIXct</code> 클래스임이 확인되고, <code>unclass()</code> 정보를 통해 내부적으로 정수값으로 저장된 것이 확인된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
+x</code></pre></div>
+<pre class="output"><code>[1] &quot;2016-11-27 23:49:30 KST&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unclass</span>(x)</code></pre></div>
+<pre class="output"><code>[1] 1480258171
+</code></pre>
+<p>문자열을 받아 <code>as.POSIXlt()</code>, <code>as.POSIXct()</code> 함수를 사용해서 시간자료형으로 변환시킨다. <code>POSIXlt</code> 자료형으로 변환시킨 경우 리스트로 저장되어 있어 시, 분, 초, 요일등 하위 원소값으로 뽑아낼 수 있다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
+x</code></pre></div>
+<pre class="output"><code>[1] &quot;2016-11-27 23:49:30 KST&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">as.POSIXlt</span>(x)
+<span class="kw">names</span>(<span class="kw">unclass</span>(p))</code></pre></div>
+<pre class="output"><code> [1] &quot;sec&quot;    &quot;min&quot;    &quot;hour&quot;   &quot;mday&quot;   &quot;mon&quot;    &quot;year&quot;   &quot;wday&quot;  
+ [8] &quot;yday&quot;   &quot;isdst&quot;  &quot;zone&quot;   &quot;gmtoff&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p$wday</code></pre></div>
+<pre class="output"><code>[1] 0
+</code></pre>
+<h3 id="날짜-시간-자료형-변환">1.2. 날짜, 시간 자료형 변환</h3>
+<p>결국 문자열을 받아 날짜, 시간 자료형으로 변환시키는데 <code>strptime()</code> 함수를 사용한다. 문자열을 입력으로 받아 문자열의 날짜, 시간 형식을 매칭하여 넘기게 되면 날짜, 시간 자료형으로 변환된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datestring &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;2006-01-08 10:07:52&quot;</span>, <span class="st">&quot;2006-08-07 19:33:02&quot;</span>)
+x &lt;-<span class="st"> </span><span class="kw">strptime</span>(datestring, <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;EST5EDT&quot;</span>)
+x</code></pre></div>
+<pre class="output"><code>[1] &quot;2006-01-08 10:07:52 EST&quot; &quot;2006-08-07 19:33:02 EDT&quot;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(x)</code></pre></div>
+<pre class="output"><code>[1] &quot;POSIXlt&quot; &quot;POSIXt&quot; 
+</code></pre>
+<h3 id="날짜-시간-데이터-기본-연산">1.3. 날짜, 시간 데이터 기본 연산</h3>
+<p>문자열 데이터를 날짜 시간 자료형으로 변환시키게 되면 컴퓨터 내부적으로 윤년, 윤초, 일광절약시간, 표준시간대를 자동으로 계산해 준다. “2012-03-01”, “2012-02-28” 두 날짜사이는 보통 하루 차이가 나지만 윤년이 있는 경우 이틀이 된다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2012-03-01&quot;</span>)
+y &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2012-02-28&quot;</span>)
+x-y</code></pre></div>
+<pre class="output"><code>Time difference of 2 days
+</code></pre>
+<p>시간이 5시간 차이가 나지만, 표준시간대가 다른 경우 한 시간 차이만 난다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2012-10-25 01:00:00&quot;</span>)
+y &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2012-10-25 06:00:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;GMT&quot;</span>)
+y -<span class="st"> </span>x</code></pre></div>
+<pre class="output"><code>Time difference of 14 hours
+</code></pre>
+<h2 id="날짜-시간-r-팩키지-r-date-time-packages">2. 날짜 시간 R 팩키지 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
+<p>날짜와 시간을 다루기 위한 팩키지가 다수 개발되었다. 기존 <code>Data</code> 클래스에 시계열 데이터를 다루기도 하고, <code>Time</code> 클래스에서 데이터를 다루기 한다. 종류도 많고 접근방법도 다양하다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><code>Data</code> 클래스</th>
+<th align="left"><code>Time</code> 클래스</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">timeSeries</td>
+<td align="left">chron</td>
+</tr>
+<tr class="even">
+<td align="left">its</td>
+<td align="left">POSIXct</td>
+</tr>
+<tr class="odd">
+<td align="left">irts</td>
+<td align="left">POSIXlt</td>
+</tr>
+<tr class="even">
+<td align="left">matrix</td>
+<td align="left">yearmon</td>
+</tr>
+<tr class="odd">
+<td align="left">tframe</td>
+<td align="left">Date</td>
+</tr>
+<tr class="even">
+<td align="left">mts</td>
+<td align="left">character</td>
+</tr>
+<tr class="odd">
+<td align="left">zoo</td>
+<td align="left">numeric</td>
+</tr>
+<tr class="even">
+<td align="left">irts</td>
+<td align="left">yearqtr</td>
+</tr>
+<tr class="odd">
+<td align="left">ts</td>
+<td align="left">timeDate</td>
+</tr>
+<tr class="even">
+<td align="left">zooreg</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">vectors</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="iso-8601---날짜와-시간-데이터-교환을-위한-국제-표준-iso-8601"><span class="glyphicon glyphicon-pushpin"></span>ISO 8601 - 날짜와 시간 데이터 교환을 위한 국제 표준 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+</div>
+<div class="panel-body">
+<p><strong>ISO 8601</strong>(Data elements and interchange formats - Information interchange - Representation of dates and times) 표준은 국제 표준화 기구(ISO)에 의해 공포되었으며 1988년에 처음으로 공개었고, 표준 제정 목적은 날짜와 시간을 표현함에 있어 명백하고 잘 정의된 방법을 제공함으로써, 날짜와 시간의 숫자 표현에 대한 오해를 줄이고자 한다. 보편적 원칙은 다음과 같다.</p>
+<ul>
+<li>날짜와 시간 값은 시간 단위의 가장 큰 것부터 가장 작은 것으로 정렬된다: 년도, 월(혹은 주), 일, 시, 분, 초, 그리고 초보다 더 작은 단위.</li>
+<li>날짜와 시간은 각각 앞에 0을 붙여서(leading zeros) 유지해야 하는 고정된 자릿수(fixed number of digits)를 갖는다.</li>
+<li>표현은 두 가지 형식 중 한 가지로 이루어질 수 있다. 하나는 최소한의 구분자를 이용한 기본 형식이고 다른 하나는 가독성을 높이기 위해 추가된 구분자를 이용한 확장 형식이다.
+<ul>
+<li>예를 들어, 2009년 1월 6일은 확장 형식으로 “2009-01-06”으로 쓰일 수 있으며, 애매모호함 없이 기본 형식에서는 “20090106”으로 간단히 쓰일 수 있다.</li>
+</ul></li>
+<li>줄어든 정밀도를 위해, 날짜와 시간 표현에서 값들 중 어떤 숫자든지 제외될 수 있으나, 큰 단위가 앞에, 작은 단위가 뒤로 오는 순서는 유지해야 한다.
+<ul>
+<li>예를 들어, “2004-05”는 2004년 5월을 가르키는 유효한 ISO 8601 날짜이다. 이 형식은 결코 2004년의 지정되지 않은 달의 5일을 표현하는 것이 아니며 2004년부터 2005년 사이의 기간을 말하는 것이 아니다.</li>
+</ul></li>
+<li>특정 애플리케이션에서의 필요성으로, 표준에서는 표현 내에서의 가장 작은 단위의 시간 값에 십진수 기반의 분수를 지원하고 있다.</li>
+</ul>
+</div>
+</aside>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.coursera.org/learn/r-programming/lecture/yl7BO/dates-and-times">Coursera Lecture 41 - Dates and Times</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.rinfinance.com/RinFinance2009/presentations/xts_quantmod_workshop.pdf">Working with xts and quantmod-Leveraging R with xts and quantmod for quantitative trading</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://ko.wikipedia.org/wiki/ISO_8601">위키피디아 - ISO 8601</a><a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
