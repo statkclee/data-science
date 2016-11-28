@@ -16,8 +16,9 @@ source("tools/chunk-options.R")
 ```
 > ## 학습 목표 {.objectives}
 >
-> * 시간데이터에 대한 기초 지식을 살펴본다.
+> * 시간 데이터에 대한 기초 지식을 살펴본다.
 > * 시간 데이터를 관장하는 주요 R 팩키지를 살펴본다.
+> * 시계열 데이터 저장소에서 파악하고 데이터를 직접 다운로드 받는다.
 
 ## 1. 날짜와 시간 [^coursera-dates-and-time]
 
@@ -91,9 +92,11 @@ y <- as.POSIXct("2012-10-25 06:00:00", tz = "GMT")
 y - x
 ```
 
-## 2. 날짜 시간 R 팩키지 [^r-date-time-packages]
+## 2. 날짜 시간 R 팩키지 [^r-date-time-packages] [^CRAN-time-series]
 
 [^r-date-time-packages]: [Working with xts and quantmod-Leveraging R with xts and quantmod for quantitative trading](http://www.rinfinance.com/RinFinance2009/presentations/xts_quantmod_workshop.pdf)
+
+[^CRAN-time-series]: [CRAN Task View - Time Series Analysis](https://cran.r-project.org/web/views/TimeSeries.html)
 
 날짜와 시간을 다루기 위한 팩키지가 다수 개발되었다. 기존 `Data` 클래스에 시계열 데이터를 다루기도 하고, `Time` 클래스에서 데이터를 다루기 한다.
 종류도 많고 접근방법도 다양하다.
@@ -111,6 +114,15 @@ y - x
 | ts            | timeDate      |
 | zooreg        |               |
 | vectors       |               |
+
+시계열 데이터관련 팩키와 도구는 다음과 같다.
+
+|   팩키지      |     도구      |
+|---------------|---------------|
+| tseries       | irts          |
+| Rmetrics      | timeSeries    |
+| zoo           | its           |
+
 
 > ### ISO 8601 - 날짜와 시간 데이터 교환을 위한 국제 표준 [^iso-8601] {.callout}
 > 
@@ -130,5 +142,18 @@ y - x
 [^iso-8601]: [위키피디아 - ISO 8601](https://ko.wikipedia.org/wiki/ISO_8601)
 
 
+## 3. 시계열 데이터 [^time-series-data-library] [^tsdl-data-market]
 
+[^time-series-data-library]: [Time Series Data Library](http://robjhyndman.com/TSDL/)
 
+[^tsdl-data-market]: [DataMarket - Time Series Data Library](https://datamarket.com/data/list/?q=provider:tsdl)
+
+시계열에 관련된 다양한 데이터는 R 팩키지를 통해 얻을 수 있고, 많은 경우 시계열관련 책에 데이터가 포함되어 있고, 
+저자가 팩키지로 만들어 배포하는 형태가 많다.
+
+- [Ecdat - Data Sets for Econometrics](https://cran.r-project.org/web/packages/Ecdat/index.html)
+- [Makridakis, Wheelwright and Hyndman (1998) Forecasting: methods and applications](https://cran.r-project.org/web/packages/fma/index.html)
+- [Hyndman, Koehler, Ord and Snyder (2008) Forecasting with exponential smoothing](https://cran.r-project.org/web/packages/expsmooth/index.html)
+- [Hyndman and Athanasopoulos (2013) Forecasting: principles and practice](https://cran.r-project.org/web/packages/fpp/)
+- [Shumway and Stoffer (2011) Applied Statistical Time Series Analysis](https://cran.r-project.org/web/packages/astsa/index.html)
+- [Applied Econometrics with R](https://cran.r-project.org/web/packages/AER/index.html)
