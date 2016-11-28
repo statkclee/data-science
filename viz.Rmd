@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 시각화
+subtitle: 시각화(Visualization)
 output:
   html_document: 
     keep_md: yes
@@ -14,6 +14,8 @@ mainfont: NanumGothic
 source("tools/chunk-options.R")
 library(dplyr)
 library(ggplot2)
+library(gridExtra)
+
 
 # Multiple plot function
 #
@@ -68,7 +70,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 > * 시각화 얼개를 통해 시각화를 목적과 방향을 이해한다.
 
 
-### Anscombe 4종류 데이터(Anscombe's Quartet) [^anscombe] [^anscombe-jstor]
+## 1. Anscombe 4종류 데이터(Anscombe's Quartet) [^anscombe] [^anscombe-jstor]
 
 Anscombe는 1973년 동일한 통계량을 갖는 4종류 데이터셋을 만들어서 시각화의 중요성을 공개했다.
 
@@ -88,37 +90,51 @@ Anscombe는 1973년 동일한 통계량을 갖는 4종류 데이터셋을 만들
 
 
 ``` {r}
+# library(gridExtra)
+
 data(anscombe)
 anscombe <- tbl_df(anscombe)
 anscombe
 ```
 
-#### Anscombe 데이터셋 4종 기술통계량
+### 1.1. Anscombe 데이터셋 4종 기술통계량
 
 ```{r}
 # x1, x2, x3, x4 평균
-anscombe %>% select(x1,x2,x3,x4) %>% 
-summarize(x1Mean=round(mean(x1),1), y2Mean=round(mean(x2),2), y3Mean=round(mean(x3),1), y4Mean=round(mean(x4),1))
+sapply(1:4, function(x) mean(anscombe[,x]))
+# anscombe %>% select(x1,x2,x3,x4) %>% 
+#   summarize(x1Mean=round(mean(x1),1), y2Mean=round(mean(x2),2), y3Mean=round(mean(x3),1), y4Mean=round(mean(x4),1))
+
 # x1, x2, x3, x4 분산
-anscombe %>% select(x1,x2,x3,x4) %>% 
-summarize(x1Var=round(var(x1),1), x2Var=round(var(x2),1), x3Var=round(var(x3),1), x4Var=round(var(x4),1))
+sapply(1:4, function(x) var(anscombe[,x]))
+# anscombe %>% select(x1,x2,x3,x4) %>% 
+#   summarize(x1Var=round(var(x1),1), x2Var=round(var(x2),1), x3Var=round(var(x3),1), x4Var=round(var(x4),1))
+
 # y1, y2, y3, y4 평균
-anscombe %>% select(y1,y2,y3,y4) %>% 
-summarize(y1Mean=round(mean(y1),1), y2Mean=round(mean(y2),2), y3Mean=round(mean(y3),1), y4Mean=round(mean(y4),1))
+sapply(5:8, function(x) mean(anscombe[,x]))
+# anscombe %>% select(y1,y2,y3,y4) %>% 
+#   summarize(y1Mean=round(mean(y1),1), y2Mean=round(mean(y2),2), y3Mean=round(mean(y3),1), y4Mean=round(mean(y4),1))
+
 # y1, y2, y3, y4 분산
-anscombe %>% select(y1,y2,y3,y4) %>% 
-summarize(y1Var=round(var(y1),1), y2Var=round(var(y2),1), y3Var=round(var(y3),1), y4Var=round(var(y4),1))
+sapply(5:8, function(x) var(anscombe[,x]))
+# anscombe %>% select(y1,y2,y3,y4) %>% 
+#   summarize(y1Var=round(var(y1),1), y2Var=round(var(y2),1), y3Var=round(var(y3),1), y4Var=round(var(y4),1))
+
 # x1:y1 ~ x4:y4 상관계수
-anscombe %>% 
-summarise(cor1=round(cor(x1,y1),2), cor2=round(cor(x2,y2),2), cor3=round(cor(x3,y3),2),cor4=round(cor(x4,y4),2))
+# 상관계수
+sapply(1:4, function(x) cor(anscombe[, x], anscombe[, x+4]))
+# anscombe %>% 
+#   summarise(cor1=round(cor(x1,y1),2), cor2=round(cor(x2,y2),2), cor3=round(cor(x3,y3),2),cor4=round(cor(x4,y4),2))
+
 # y1:x1-x4 ~ y1:x1-x4 회귀분석
 lm_fit <- function(y1, x1, dat) {
   the_fit <- lm(y1 ~ x1, dat)
   setNames(data.frame(t(coef(the_fit))), c("intercept", "slope"))
 }
+
 gfits <- anscombe %>%
-  do(reg1 = lm_fit(y1, x1, .), reg2=lm_fit(y2, x2, .), 
-     reg3=lm_fit(y3, x3, .), reg4=lm_fit(y4, x4, .))
+  do(reg1 = lm_fit(y1, x1, .), reg2 = lm_fit(y2, x2, .), 
+     reg3 = lm_fit(y3, x3, .), reg4 = lm_fit(y4, x4, .))
 
 unlist(gfits$reg1)
 unlist(gfits$reg2)
@@ -126,8 +142,7 @@ unlist(gfits$reg3)
 unlist(gfits$reg4)
 ```
 
-
-#### Anscombe 데이터셋 4종 시각화
+### 1.2. Anscombe 데이터셋 4종 시각화
 
 ``` {r}
 p1 <- ggplot(anscombe) + geom_point(aes(x1, y1), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 1")
@@ -135,10 +150,10 @@ p2 <- ggplot(anscombe) + geom_point(aes(x2, y2), color = "darkorange", size = 3)
 p3 <- ggplot(anscombe) + geom_point(aes(x3, y3), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 3")
 p4 <- ggplot(anscombe) + geom_point(aes(x4, y4), color = "darkorange", size = 3) + theme_bw() + scale_x_continuous(breaks = seq(0, 20, 2)) + scale_y_continuous(breaks = seq(0, 12, 2)) + geom_abline(intercept = 3, slope = 0.5, color = "cornflowerblue") + expand_limits(x = 0, y = 0) + labs(title = "dataset 4")
 
-multiplot(p1, p2, p3, p4, cols=2, main="Anscombe's Quartet")
+grid.arrange(p1, p2, p3, p4, ncol=2, top = "Anscombe's Quartet")
 ```
 
-### 시각화 [^tamara] 
+## 2. 시각화 [^tamara] 
 
 컴퓨터를 기반으로 한 시각화 시스템은 시각적으로 데이터를 표현함으로 인해서 
 사람들이 작업을 더욱 효율적으로 수행할 수 있도록 돕는다.
@@ -156,7 +171,7 @@ multiplot(p1, p2, p3, p4, cols=2, main="Anscombe's Quartet")
 
 [^tamara]: [Tamara Munzner. Visualization Analysis and Design. A K Peters Visualization Series, CRC Press, 2014](http://www.cs.ubc.ca/~tmm/vadbook/)
 
-#### 시각화가 왜 필요한가?
+### 2.1. 시각화가 왜 필요한가?
 
 **인지부하(cognitive load)**를 **시각적 지각(perception)**으로 바꿔 해당 작업을 더욱 효과적으로 처리하는데 시각화를 사용한다.
 
@@ -174,7 +189,7 @@ women %>% ggplot(aes(y=weight, x=height)) + geom_point(color='blue', size=2) +
   geom_smooth(color='pink')
 ```
 
-#### 시각화 분석 얼개 구성요소
+### 2.2. 시각화 분석 얼개 구성요소
 
 시각화 분석 얼개는 4가지 부분으로 구성된다. 
 
@@ -194,7 +209,7 @@ women %>% ggplot(aes(y=weight, x=height)) + geom_point(color='blue', size=2) +
 
 <img src="fig/viz-framework.png" alt="RStudio" width="77%" />
 
-#### 시각화 분석 접근방향
+### 2.3. 시각화 분석 접근방향
 
 시각화 시스템 실행시간, 메모리 사용량 등을 측정하고, 연산 복잡성을 분석하는 알고리즘 작업은 컴퓨터 과학자의 몫이다.
 여러가지 대안 시스템 아키텍처를 정당화하고 시각적 인코딩 방법과 상호작용하는 표현양식을 설계하는 것은 시스템 설계자의 몫이다.
@@ -210,3 +225,58 @@ women %>% ggplot(aes(y=weight, x=height)) + geom_point(color='blue', size=2) +
 > - **명령형(imperative)**: "방법(how)"에 초점, Processing, OpenGL, prefuse
 > - **선언형(declarative)**: "무엇(what)"에 초점, D3, ggplot2, Protovis 
 
+
+## 3. R 시각화 시스템 [^coursera-r-plotting-system]
+
+[^coursera-r-plotting-system]: [코세라 Lecture 10 - Plotting Systems in R](https://www.coursera.org/learn/exploratory-data-analysis/lecture/MTRt4/plotting-systems-in-r)
+
+R에는 다양한 시각화 관련 시스템이 존재하지만, 가장 대표적으로 3가지 시각화 시스템을 이해하면 실무적으로 충분하다.
+
+- Base 시각화 시스템
+- `lattice` 시각화 시스템
+- `ggplot` 시각화 시스템
+
+ ### 3.1. Base 시각화 시스템
+
+R설치하면 내장된 Base 시각화 시스템은 **화가의 팔레트(Artist's Palallete)** 모형으로 빈 도화지 캔바스 위에 화가가 그림을 그리는 것과 동일한 방식으로 시각화 산출물을 만들어 나간다.
+`plot()` 혹은 유사한 시각화 함수로 시작해서 텍스트(`text`), 선(`line`), 점(`point`), 축(`axis`) 등을 표현하는데  **주석(Annotation)** 함수를 활용한다.
+
+따라서, 사람이 사고하는 방식으로 시각화 산출물을 만들어 나가 편리하지만, 시각화 산출물을 다시 그리려고 하면 처음부터 다시 해야 되기 때문에 시각화 산출물을 
+만드는 초기부터 시간을 갖고 잘 설계해 나가야 된다. 그리고, 시각화 산출물이 생성되면 다른 것으로 변환하기 어려운 단점이 있고, 그래픽 언어가 아니라 일련의 R 명령어
+묶음에 불가하다.
+
+``` {r}
+#1. Base 시각화 시스템----------------------------------------------------------------
+library(datasets)
+data(mtcars)
+with(mtcars, plot(disp, mpg))
+```
+
+### 3.2. `lattice` 시각화 시스템
+
+`lattice` 시각화 시스템은 `lattice` 팩키지를 통해 설치되고, 함수 호출(`xyplot()`, `bwplot()` 등)을 통해 시각화 산출물을 생성하게 된다.
+조건에 따라 일변량 혹은 다변량 변수를 시각화하는데 유용하다. 즉, 특정 범주형 변수 수준에 따라 두 변수간의 관계를 시각적으로 표현하는 것을 예로 들 수 있다.
+전체 시각화 산출물 결과는 여백(margin), 공간 등은 자동으로 한번에 정해져서, 화면에 다수 시각화 산출물을 배치할 때 유용하다.
+
+하지만, 함수호출 한번으로 전체 시각화 산출물을 명세하는 것이 쉽지는 않다. 특히 주석(Annotation)을 시각화 산출물에 다는 것이 그다지 직관적이는 않다.
+그리고 `lattice` 함수를 통해 시각화 산출물이 만들어지면 더이상 추가는 불가하다.
+
+
+``` {r}
+#2. Lattice 시각화 시스템----------------------------------------------------------------
+xyplot(mpg ~ disp | am, data=mtcars, layout=c(2,1))
+```
+
+### 3.3. `ggplot` 시각화 시스템
+
+`ggplot` 시각화 시스템은 `ggplot2` 팩키지를 통해 설치가 가능하다. Base 시각화 시스템과 `lattice` 시각화 시스템의 장점을 취사선택해서 개발된 것으로 보는 견해도 있다.
+그래픽 문법(Grammer of Graphic)에 기반하고 있으며, `lattice` 시각화 시스템처럼 공백, 텍스트, 제목 등을 자동으로 설정하고,
+Base 시각화 시스템에서 지원하는 다양한 그래픽 요소를 추가하는 것도 가능하다. 전반적으로 `lattice`느낌이 나지만 사용하기는 직관적이며 다양한 그래픽 요소를 
+추가하는 것도 쉽다. 물론 `ggplot`에서 자동으로 설정하는 것도 원하는 설정으로 바꾸는 것도 가능하다.
+
+``` {r}
+#3. ggplot 시각화 시스템----------------------------------------------------------------
+ggplot(data=mtcars, mapping=aes(x=disp, y=mpg)) + 
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+```
