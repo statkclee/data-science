@@ -229,7 +229,7 @@ p4 <- ggplot(anscombe) + geom_point(aes(x4, y4), color = "darkorange", size = 3)
 grid.arrange(p1, p2, p3, p4, ncol=2, top = "Anscombe's Quartet")
 ~~~
 
-<img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
+<img src="fig/anscombe-quartet-1.png" title="plot of chunk anscombe-quartet" alt="plot of chunk anscombe-quartet" style="display: block; margin: auto;" />
 
 ## 2. 시각화 [^tamara] 
 
@@ -298,7 +298,7 @@ women %>% ggplot(aes(y=weight, x=height)) + geom_point(color='blue', size=2) +
 
 ~~~
 
-<img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
 
 ### 2.2. 시각화 분석 얼개 구성요소
 
@@ -364,7 +364,7 @@ data(mtcars)
 with(mtcars, plot(disp, mpg))
 ~~~
 
-<img src="fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
 ### 3.2. `lattice` 시각화 시스템
 
@@ -383,7 +383,7 @@ with(mtcars, plot(disp, mpg))
 xyplot(mpg ~ disp | am, data=mtcars, layout=c(2,1))
 ~~~
 
-<img src="fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" />
 
 ### 3.3. `ggplot` 시각화 시스템
 
@@ -400,4 +400,4 @@ ggplot(data=mtcars, mapping=aes(x=disp, y=mpg)) +
   geom_smooth(method="lm", se=FALSE)
 ~~~
 
-<img src="fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
+<img src="fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
