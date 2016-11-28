@@ -15,7 +15,7 @@ source("tools/chunk-options.R")
 library(dplyr)
 library(ggplot2)
 library(gridExtra)
-
+library(lattice)
 
 # Multiple plot function
 #
@@ -66,8 +66,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 > ## 학습 목표  {.objectives}
 >
-> * 데이터 시각화의 중요성을 이해한다.
-> * 시각화 얼개를 통해 시각화를 목적과 방향을 이해한다.
+> * Anscombe 데이터를 통해 데이터 시각화의 중요성을 이해한다.
+> * 시각화 얼개를 통한 시각화를 목적과 방향을 탐색한다.
+> * 시각화 산출물을 만들어내는 3가지 R 시각화 시스템을 살펴본다.
 
 
 ## 1. Anscombe 4종류 데이터(Anscombe's Quartet) [^anscombe] [^anscombe-jstor]
@@ -93,7 +94,6 @@ Anscombe는 1973년 동일한 통계량을 갖는 4종류 데이터셋을 만들
 # library(gridExtra)
 
 data(anscombe)
-anscombe <- tbl_df(anscombe)
 anscombe
 ```
 
@@ -264,6 +264,7 @@ with(mtcars, plot(disp, mpg))
 
 ``` {r}
 #2. Lattice 시각화 시스템----------------------------------------------------------------
+# library(lattice)
 xyplot(mpg ~ disp | am, data=mtcars, layout=c(2,1))
 ```
 

@@ -38,19 +38,20 @@
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <h1 class="title">데이터 과학</h1>
-          <h2 class="subtitle">시각화</h2>
+          <h2 class="subtitle">시각화(Visualization)</h2>
 <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>데이터 시각화의 중요성을 이해한다.</li>
-<li>시각화 얼개를 통해 시각화를 목적과 방향을 이해한다.</li>
+<li>Anscombe 데이터를 통해 데이터 시각화의 중요성을 이해한다.</li>
+<li>시각화 얼개를 통한 시각화를 목적과 방향을 탐색한다.</li>
+<li>시각화 산출물을 만들어내는 3가지 R 시각화 시스템을 살펴본다.</li>
 </ul>
 </div>
 </section>
-<h3 id="anscombe-4종류-데이터anscombes-quartet-anscombe-anscombe-jstor">Anscombe 4종류 데이터(Anscombe’s Quartet) <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<h2 id="anscombe-4종류-데이터anscombes-quartet-anscombe-anscombe-jstor">1. Anscombe 4종류 데이터(Anscombe’s Quartet) <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
 <p>Anscombe는 1973년 동일한 통계량을 갖는 4종류 데이터셋을 만들어서 시각화의 중요성을 공개했다.</p>
 <table>
 <thead>
@@ -86,73 +87,69 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(anscombe)
-anscombe &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(anscombe)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># library(gridExtra)</span>
+
+<span class="kw">data</span>(anscombe)
 anscombe</code></pre></div>
-<pre class="output"><code># A tibble: 11 x 8
-      x1    x2    x3    x4    y1    y2    y3    y4
-   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     10    10    10     8  8.04  9.14  7.46  6.58
-2      8     8     8     8  6.95  8.14  6.77  5.76
-3     13    13    13     8  7.58  8.74 12.74  7.71
-4      9     9     9     8  8.81  8.77  7.11  8.84
-5     11    11    11     8  8.33  9.26  7.81  8.47
-6     14    14    14     8  9.96  8.10  8.84  7.04
-7      6     6     6     8  7.24  6.13  6.08  5.25
-8      4     4     4    19  4.26  3.10  5.39 12.50
-9     12    12    12     8 10.84  9.13  8.15  5.56
-10     7     7     7     8  4.82  7.26  6.42  7.91
-11     5     5     5     8  5.68  4.74  5.73  6.89
+<pre class="output"><code>   x1 x2 x3 x4    y1   y2    y3    y4
+1  10 10 10  8  8.04 9.14  7.46  6.58
+2   8  8  8  8  6.95 8.14  6.77  5.76
+3  13 13 13  8  7.58 8.74 12.74  7.71
+4   9  9  9  8  8.81 8.77  7.11  8.84
+5  11 11 11  8  8.33 9.26  7.81  8.47
+6  14 14 14  8  9.96 8.10  8.84  7.04
+7   6  6  6  8  7.24 6.13  6.08  5.25
+8   4  4  4 19  4.26 3.10  5.39 12.50
+9  12 12 12  8 10.84 9.13  8.15  5.56
+10  7  7  7  8  4.82 7.26  6.42  7.91
+11  5  5  5  8  5.68 4.74  5.73  6.89
 </code></pre>
-<h4 id="anscombe-데이터셋-4종-기술통계량">Anscombe 데이터셋 4종 기술통계량</h4>
+<h3 id="anscombe-데이터셋-4종-기술통계량">1.1. Anscombe 데이터셋 4종 기술통계량</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x1, x2, x3, x4 평균</span>
-anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(x1,x2,x3,x4) %&gt;%<span class="st"> </span>
-<span class="kw">summarize</span>(<span class="dt">x1Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x1),<span class="dv">1</span>), <span class="dt">y2Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x2),<span class="dv">2</span>), <span class="dt">y3Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x3),<span class="dv">1</span>), <span class="dt">y4Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(x4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code># A tibble: 1 x 4
-  x1Mean y2Mean y3Mean y4Mean
-   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1      9      9      9      9
+<span class="kw">sapply</span>(<span class="dv">1</span>:<span class="dv">4</span>, function(x) <span class="kw">mean</span>(anscombe[,x]))</code></pre></div>
+<pre class="output"><code>[1] 9 9 9 9
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x1, x2, x3, x4 분산</span>
-anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(x1,x2,x3,x4) %&gt;%<span class="st"> </span>
-<span class="kw">summarize</span>(<span class="dt">x1Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x1),<span class="dv">1</span>), <span class="dt">x2Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x2),<span class="dv">1</span>), <span class="dt">x3Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x3),<span class="dv">1</span>), <span class="dt">x4Var=</span><span class="kw">round</span>(<span class="kw">var</span>(x4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code># A tibble: 1 x 4
-  x1Var x2Var x3Var x4Var
-  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1    11    11    11    11
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># anscombe %&gt;% select(x1,x2,x3,x4) %&gt;% </span>
+<span class="co">#   summarize(x1Mean=round(mean(x1),1), y2Mean=round(mean(x2),2), y3Mean=round(mean(x3),1), y4Mean=round(mean(x4),1))</span>
+
+<span class="co"># x1, x2, x3, x4 분산</span>
+<span class="kw">sapply</span>(<span class="dv">1</span>:<span class="dv">4</span>, function(x) <span class="kw">var</span>(anscombe[,x]))</code></pre></div>
+<pre class="output"><code>[1] 11 11 11 11
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># y1, y2, y3, y4 평균</span>
-anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(y1,y2,y3,y4) %&gt;%<span class="st"> </span>
-<span class="kw">summarize</span>(<span class="dt">y1Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y1),<span class="dv">1</span>), <span class="dt">y2Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y2),<span class="dv">2</span>), <span class="dt">y3Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y3),<span class="dv">1</span>), <span class="dt">y4Mean=</span><span class="kw">round</span>(<span class="kw">mean</span>(y4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code># A tibble: 1 x 4
-  y1Mean y2Mean y3Mean y4Mean
-   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1    7.5    7.5    7.5    7.5
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># anscombe %&gt;% select(x1,x2,x3,x4) %&gt;% </span>
+<span class="co">#   summarize(x1Var=round(var(x1),1), x2Var=round(var(x2),1), x3Var=round(var(x3),1), x4Var=round(var(x4),1))</span>
+
+<span class="co"># y1, y2, y3, y4 평균</span>
+<span class="kw">sapply</span>(<span class="dv">5</span>:<span class="dv">8</span>, function(x) <span class="kw">mean</span>(anscombe[,x]))</code></pre></div>
+<pre class="output"><code>[1] 7.500909 7.500909 7.500000 7.500909
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># y1, y2, y3, y4 분산</span>
-anscombe %&gt;%<span class="st"> </span><span class="kw">select</span>(y1,y2,y3,y4) %&gt;%<span class="st"> </span>
-<span class="kw">summarize</span>(<span class="dt">y1Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y1),<span class="dv">1</span>), <span class="dt">y2Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y2),<span class="dv">1</span>), <span class="dt">y3Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y3),<span class="dv">1</span>), <span class="dt">y4Var=</span><span class="kw">round</span>(<span class="kw">var</span>(y4),<span class="dv">1</span>))</code></pre></div>
-<pre class="output"><code># A tibble: 1 x 4
-  y1Var y2Var y3Var y4Var
-  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1   4.1   4.1   4.1   4.1
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># anscombe %&gt;% select(y1,y2,y3,y4) %&gt;% </span>
+<span class="co">#   summarize(y1Mean=round(mean(y1),1), y2Mean=round(mean(y2),2), y3Mean=round(mean(y3),1), y4Mean=round(mean(y4),1))</span>
+
+<span class="co"># y1, y2, y3, y4 분산</span>
+<span class="kw">sapply</span>(<span class="dv">5</span>:<span class="dv">8</span>, function(x) <span class="kw">var</span>(anscombe[,x]))</code></pre></div>
+<pre class="output"><code>[1] 4.127269 4.127629 4.122620 4.123249
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x1:y1 ~ x4:y4 상관계수</span>
-anscombe %&gt;%<span class="st"> </span>
-<span class="kw">summarise</span>(<span class="dt">cor1=</span><span class="kw">round</span>(<span class="kw">cor</span>(x1,y1),<span class="dv">2</span>), <span class="dt">cor2=</span><span class="kw">round</span>(<span class="kw">cor</span>(x2,y2),<span class="dv">2</span>), <span class="dt">cor3=</span><span class="kw">round</span>(<span class="kw">cor</span>(x3,y3),<span class="dv">2</span>),<span class="dt">cor4=</span><span class="kw">round</span>(<span class="kw">cor</span>(x4,y4),<span class="dv">2</span>))</code></pre></div>
-<pre class="output"><code># A tibble: 1 x 4
-   cor1  cor2  cor3  cor4
-  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1  0.82  0.82  0.82  0.82
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># anscombe %&gt;% select(y1,y2,y3,y4) %&gt;% </span>
+<span class="co">#   summarize(y1Var=round(var(y1),1), y2Var=round(var(y2),1), y3Var=round(var(y3),1), y4Var=round(var(y4),1))</span>
+
+<span class="co"># x1:y1 ~ x4:y4 상관계수</span>
+<span class="co"># 상관계수</span>
+<span class="kw">sapply</span>(<span class="dv">1</span>:<span class="dv">4</span>, function(x) <span class="kw">cor</span>(anscombe[, x], anscombe[, x<span class="dv">+4</span>]))</code></pre></div>
+<pre class="output"><code>[1] 0.8164205 0.8162365 0.8162867 0.8165214
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># y1:x1-x4 ~ y1:x1-x4 회귀분석</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># anscombe %&gt;% </span>
+<span class="co">#   summarise(cor1=round(cor(x1,y1),2), cor2=round(cor(x2,y2),2), cor3=round(cor(x3,y3),2),cor4=round(cor(x4,y4),2))</span>
+
+<span class="co"># y1:x1-x4 ~ y1:x1-x4 회귀분석</span>
 lm_fit &lt;-<span class="st"> </span>function(y1, x1, dat) {
   the_fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y1 ~<span class="st"> </span>x1, dat)
   <span class="kw">setNames</span>(<span class="kw">data.frame</span>(<span class="kw">t</span>(<span class="kw">coef</span>(the_fit))), <span class="kw">c</span>(<span class="st">&quot;intercept&quot;</span>, <span class="st">&quot;slope&quot;</span>))
 }
+
 gfits &lt;-<span class="st"> </span>anscombe %&gt;%
-<span class="st">  </span><span class="kw">do</span>(<span class="dt">reg1 =</span> <span class="kw">lm_fit</span>(y1, x1, .), <span class="dt">reg2=</span><span class="kw">lm_fit</span>(y2, x2, .), 
-     <span class="dt">reg3=</span><span class="kw">lm_fit</span>(y3, x3, .), <span class="dt">reg4=</span><span class="kw">lm_fit</span>(y4, x4, .))
+<span class="st">  </span><span class="kw">do</span>(<span class="dt">reg1 =</span> <span class="kw">lm_fit</span>(y1, x1, .), <span class="dt">reg2 =</span> <span class="kw">lm_fit</span>(y2, x2, .), 
+     <span class="dt">reg3 =</span> <span class="kw">lm_fit</span>(y3, x3, .), <span class="dt">reg4 =</span> <span class="kw">lm_fit</span>(y4, x4, .))
 
 <span class="kw">unlist</span>(gfits$reg1)</code></pre></div>
 <pre class="output"><code>intercept     slope 
@@ -170,17 +167,15 @@ gfits &lt;-<span class="st"> </span>anscombe %&gt;%
 <pre class="output"><code>intercept     slope 
 3.0000909 0.5000909 
 </code></pre>
-<h4 id="anscombe-데이터셋-4종-시각화">Anscombe 데이터셋 4종 시각화</h4>
+<h3 id="anscombe-데이터셋-4종-시각화">1.2. Anscombe 데이터셋 4종 시각화</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(anscombe) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x1, y1), <span class="dt">color =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">3</span>, <span class="dt">slope =</span> <span class="fl">0.5</span>, <span class="dt">color =</span> <span class="st">&quot;cornflowerblue&quot;</span>) +<span class="st"> </span><span class="kw">expand_limits</span>(<span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">y =</span> <span class="dv">0</span>) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;dataset 1&quot;</span>)
 p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(anscombe) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x2, y2), <span class="dt">color =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">3</span>, <span class="dt">slope =</span> <span class="fl">0.5</span>, <span class="dt">color =</span> <span class="st">&quot;cornflowerblue&quot;</span>) +<span class="st"> </span><span class="kw">expand_limits</span>(<span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">y =</span> <span class="dv">0</span>) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;dataset 2&quot;</span>)
 p3 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(anscombe) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x3, y3), <span class="dt">color =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">3</span>, <span class="dt">slope =</span> <span class="fl">0.5</span>, <span class="dt">color =</span> <span class="st">&quot;cornflowerblue&quot;</span>) +<span class="st"> </span><span class="kw">expand_limits</span>(<span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">y =</span> <span class="dv">0</span>) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;dataset 3&quot;</span>)
 p4 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(anscombe) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(x4, y4), <span class="dt">color =</span> <span class="st">&quot;darkorange&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) +<span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">3</span>, <span class="dt">slope =</span> <span class="fl">0.5</span>, <span class="dt">color =</span> <span class="st">&quot;cornflowerblue&quot;</span>) +<span class="st"> </span><span class="kw">expand_limits</span>(<span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">y =</span> <span class="dv">0</span>) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;dataset 4&quot;</span>)
 
-<span class="kw">multiplot</span>(p1, p2, p3, p4, <span class="dt">cols=</span><span class="dv">2</span>, <span class="dt">main=</span><span class="st">&quot;Anscombe&#39;s Quartet&quot;</span>)</code></pre></div>
+<span class="kw">grid.arrange</span>(p1, p2, p3, p4, <span class="dt">ncol=</span><span class="dv">2</span>, <span class="dt">top =</span> <span class="st">&quot;Anscombe&#39;s Quartet&quot;</span>)</code></pre></div>
 <p><img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" /></p>
-<pre class="output"><code>[1] &quot;Anscombe&#39;s Quartet&quot;
-</code></pre>
-<h3 id="시각화-tamara">시각화 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+<h2 id="시각화-tamara">2. 시각화 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h2>
 <p>컴퓨터를 기반으로 한 시각화 시스템은 시각적으로 데이터를 표현함으로 인해서 사람들이 작업을 더욱 효율적으로 수행할 수 있도록 돕는다.</p>
 <p>여기서 시각화가 적합한 상황은 인공지능 및 전사화를 통해 사람을 대체하기 보다는 인간능력을 증강시키는데 유용하다. 따라서, 완전 자동화 해결책이 존재하고 신뢰성이 있는 경우 시각화가 그다지 필요하지는 않는다. 또한, 많은 분석문제에는 어떤 질문을 던져야 되는지 사전에 알고 있는 경우가 적어, 명세가 분명하지 않는 경우가 있는데, 이런 목적에 유용하다.</p>
 <aside class="callout panel panel-info">
@@ -191,7 +186,7 @@ p4 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(anscombe) +<span
 <p>“Computer-based visualization systems provide visual representations of datasets designed to help people carry out tasks more effectively” – Tamara Munzner</p>
 </div>
 </aside>
-<h4 id="시각화가-왜-필요한가">시각화가 왜 필요한가?</h4>
+<h3 id="시각화가-왜-필요한가">2.1. 시각화가 왜 필요한가?</h3>
 <p><strong>인지부하(cognitive load)</strong>를 <strong>시각적 지각(perception)</strong>으로 바꿔 해당 작업을 더욱 효과적으로 처리하는데 시각화를 사용한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(datasets)
 women</code></pre></div>
@@ -215,8 +210,10 @@ women</code></pre></div>
 <p><code>women</code> 데이터가 정렬이 되어 있어서, 신장이 커짐에 따라 체중이 증가하는 것을 알 수 있지만, 데이터만 보고 이해하려면 인지적으로 데이터 한줄을 읽고 머리속으로 생각하고, 두번째 줄을 읽고 생각하고, … 이런 과정을 반복하면서 인지적 부하가 증가하게 된다. 하지만, 시각적으로 표현하게 되면 한눈에 신장과 체중 관계를 볼 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">women %&gt;%<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y=</span>weight, <span class="dt">x=</span>height)) +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&#39;blue&#39;</span>, <span class="dt">size=</span><span class="dv">2</span>) +
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">color=</span><span class="st">&#39;pink&#39;</span>)</code></pre></div>
+<pre class="output"><code>`geom_smooth()` using method = &#39;loess&#39;
+</code></pre>
 <p><img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p>
-<h4 id="시각화-분석-얼개-구성요소">시각화 분석 얼개 구성요소</h4>
+<h3 id="시각화-분석-얼개-구성요소">2.2. 시각화 분석 얼개 구성요소</h3>
 <p>시각화 분석 얼개는 4가지 부분으로 구성된다.</p>
 <ul>
 <li>전문영역 : 최종 사용자 고객이 누군인가?</li>
@@ -243,7 +240,7 @@ women</code></pre></div>
 </ul>
 <p><a href="http://www.cs.ubc.ca/~tmm/talks/iv09/nestedmodel-4x4.pdf">Munzner, Tamara. “A nested model for visualization design and validation.” Visualization and Computer Graphics, IEEE Transactions on 15.6 (2009): 921-928.</a></p>
 <p><img src="fig/viz-framework.png" alt="RStudio" width="77%" /></p>
-<h4 id="시각화-분석-접근방향">시각화 분석 접근방향</h4>
+<h3 id="시각화-분석-접근방향">2.3. 시각화 분석 접근방향</h3>
 <p>시각화 시스템 실행시간, 메모리 사용량 등을 측정하고, 연산 복잡성을 분석하는 알고리즘 작업은 컴퓨터 과학자의 몫이다. 여러가지 대안 시스템 아키텍처를 정당화하고 시각적 인코딩 방법과 상호작용하는 표현양식을 설계하는 것은 시스템 설계자의 몫이다. 시각화 시스템 결과물을 정량적으로 분석하고, 사용자 인간에 대한 실험을 추진하는 것은 인지심리학자의 몫이다. 이를 감싸고 있는 데이터 추상화와 작업추상화가 있는데, 시스템 설계자가 앞단에서 설계하면 후행단에서 인지심리학자가 검증하고, 컴퓨터 과학자가 개발하는 구조를 갖는다.</p>
 <p>이 모든 시작은 전문영역에서 문제점을 인식하고 기존의 도구를 사용하는 목표 사용자를 관측하는 것에서 시작되는데 이는 인류학자, 민족지라는 분야와 연관된다. 따라서, 기술중심으로 밖으로 퍼져나갈 수도 있지만, 문제해결작업으로 시각화를 활용하는 것도 가능한 접근법이다.</p>
 <aside class="callout panel panel-info">
@@ -257,12 +254,42 @@ women</code></pre></div>
 </ul>
 </div>
 </aside>
+<h2 id="r-시각화-시스템-coursera-r-plotting-system">3. R 시각화 시스템 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h2>
+<p>R에는 다양한 시각화 관련 시스템이 존재하지만, 가장 대표적으로 3가지 시각화 시스템을 이해하면 실무적으로 충분하다.</p>
+<ul>
+<li>Base 시각화 시스템</li>
+<li><code>lattice</code> 시각화 시스템</li>
+<li><code>ggplot</code> 시각화 시스템</li>
+</ul>
+<p>### 3.1. Base 시각화 시스템</p>
+<p>R설치하면 내장된 Base 시각화 시스템은 <strong>화가의 팔레트(Artist’s Palallete)</strong> 모형으로 빈 도화지 캔바스 위에 화가가 그림을 그리는 것과 동일한 방식으로 시각화 산출물을 만들어 나간다. <code>plot()</code> 혹은 유사한 시각화 함수로 시작해서 텍스트(<code>text</code>), 선(<code>line</code>), 점(<code>point</code>), 축(<code>axis</code>) 등을 표현하는데 <strong>주석(Annotation)</strong> 함수를 활용한다.</p>
+<p>따라서, 사람이 사고하는 방식으로 시각화 산출물을 만들어 나가 편리하지만, 시각화 산출물을 다시 그리려고 하면 처음부터 다시 해야 되기 때문에 시각화 산출물을 만드는 초기부터 시간을 갖고 잘 설계해 나가야 된다. 그리고, 시각화 산출물이 생성되면 다른 것으로 변환하기 어려운 단점이 있고, 그래픽 언어가 아니라 일련의 R 명령어 묶음에 불가하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#1. Base 시각화 시스템----------------------------------------------------------------</span>
+<span class="kw">library</span>(datasets)
+<span class="kw">data</span>(mtcars)
+<span class="kw">with</span>(mtcars, <span class="kw">plot</span>(disp, mpg))</code></pre></div>
+<p><img src="fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" /></p>
+<h3 id="lattice-시각화-시스템">3.2. <code>lattice</code> 시각화 시스템</h3>
+<p><code>lattice</code> 시각화 시스템은 <code>lattice</code> 팩키지를 통해 설치되고, 함수 호출(<code>xyplot()</code>, <code>bwplot()</code> 등)을 통해 시각화 산출물을 생성하게 된다. 조건에 따라 일변량 혹은 다변량 변수를 시각화하는데 유용하다. 즉, 특정 범주형 변수 수준에 따라 두 변수간의 관계를 시각적으로 표현하는 것을 예로 들 수 있다. 전체 시각화 산출물 결과는 여백(margin), 공간 등은 자동으로 한번에 정해져서, 화면에 다수 시각화 산출물을 배치할 때 유용하다.</p>
+<p>하지만, 함수호출 한번으로 전체 시각화 산출물을 명세하는 것이 쉽지는 않다. 특히 주석(Annotation)을 시각화 산출물에 다는 것이 그다지 직관적이는 않다. 그리고 <code>lattice</code> 함수를 통해 시각화 산출물이 만들어지면 더이상 추가는 불가하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#2. Lattice 시각화 시스템----------------------------------------------------------------</span>
+<span class="co"># library(lattice)</span>
+<span class="kw">xyplot</span>(mpg ~<span class="st"> </span>disp |<span class="st"> </span>am, <span class="dt">data=</span>mtcars, <span class="dt">layout=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</code></pre></div>
+<p><img src="fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" /></p>
+<h3 id="ggplot-시각화-시스템">3.3. <code>ggplot</code> 시각화 시스템</h3>
+<p><code>ggplot</code> 시각화 시스템은 <code>ggplot2</code> 팩키지를 통해 설치가 가능하다. Base 시각화 시스템과 <code>lattice</code> 시각화 시스템의 장점을 취사선택해서 개발된 것으로 보는 견해도 있다. 그래픽 문법(Grammer of Graphic)에 기반하고 있으며, <code>lattice</code> 시각화 시스템처럼 공백, 텍스트, 제목 등을 자동으로 설정하고, Base 시각화 시스템에서 지원하는 다양한 그래픽 요소를 추가하는 것도 가능하다. 전반적으로 <code>lattice</code>느낌이 나지만 사용하기는 직관적이며 다양한 그래픽 요소를 추가하는 것도 쉽다. 물론 <code>ggplot</code>에서 자동으로 설정하는 것도 원하는 설정으로 바꾸는 것도 가능하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#3. ggplot 시각화 시스템----------------------------------------------------------------</span>
+<span class="kw">ggplot</span>(<span class="dt">data=</span>mtcars, <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x=</span>disp, <span class="dt">y=</span>mpg)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() +
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Anscombe%27s_quartet">Anscombe quartet</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>Anscombe, F. J. (1973). “Graphs in Statistical Analysis”. American Statistician 27 (1): 17–21.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p><a href="http://www.cs.ubc.ca/~tmm/vadbook/">Tamara Munzner. Visualization Analysis and Design. A K Peters Visualization Series, CRC Press, 2014</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="https://www.coursera.org/learn/exploratory-data-analysis/lecture/MTRt4/plotting-systems-in-r">코세라 Lecture 10 - Plotting Systems in R</a><a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
         </div>
