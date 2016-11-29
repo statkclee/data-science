@@ -261,7 +261,7 @@ women</code></pre></div>
 <li><code>lattice</code> 시각화 시스템</li>
 <li><code>ggplot</code> 시각화 시스템</li>
 </ul>
-<p>### 3.1. Base 시각화 시스템</p>
+<h3 id="base-시각화-시스템">3.1. Base 시각화 시스템</h3>
 <p>R설치하면 내장된 Base 시각화 시스템은 <strong>화가의 팔레트(Artist’s Palallete)</strong> 모형으로 빈 도화지 캔바스 위에 화가가 그림을 그리는 것과 동일한 방식으로 시각화 산출물을 만들어 나간다. <code>plot()</code> 혹은 유사한 시각화 함수로 시작해서 텍스트(<code>text</code>), 선(<code>line</code>), 점(<code>point</code>), 축(<code>axis</code>) 등을 표현하는데 <strong>주석(Annotation)</strong> 함수를 활용한다.</p>
 <p>따라서, 사람이 사고하는 방식으로 시각화 산출물을 만들어 나가 편리하지만, 시각화 산출물을 다시 그리려고 하면 처음부터 다시 해야 되기 때문에 시각화 산출물을 만드는 초기부터 시간을 갖고 잘 설계해 나가야 된다. 그리고, 시각화 산출물이 생성되면 다른 것으로 변환하기 어려운 단점이 있고, 그래픽 언어가 아니라 일련의 R 명령어 묶음에 불가하다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#1. Base 시각화 시스템----------------------------------------------------------------</span>
@@ -283,6 +283,23 @@ women</code></pre></div>
 <span class="st">  </span><span class="kw">geom_point</span>() +
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" /></p>
+<h3 id="grid-시각화-시스템">3.4. <code>grid</code> 시각화 시스템</h3>
+<p><code>grid</code> 시각화 시스템은 <code>lattice</code>와 <code>ggplot</code>의 기반이 되는 시각화 시스템으로 R 버전 1.8.0 부터 Base 팩키지의 일부가 되었다.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> grid_0.7-4에서 <a href="https://stat.ethz.ch/R-manual/R-devel/library/grid/doc/changes.txt">Base 팩키지 일부</a>가 되어 버젼이 Base 팩키지에 맞춰 버젼이 급상승했다.</p>
+<p><code>grid</code> 시각화 시스템을 사용해서 위와 동일하게 상기 그래프를 그리면 다음과 같다. <code>grid</code> 시스템을 숙달하기까지 시간이 걸리지만, 익숙해지면 장점이 상당하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(grid)
+x &lt;-<span class="st"> </span>mtcars$disp
+y &lt;-<span class="st"> </span>mtcars$mpg
+
+<span class="kw">pushViewport</span>(<span class="kw">plotViewport</span>())
+<span class="kw">pushViewport</span>(<span class="kw">dataViewport</span>(x, y))
+<span class="kw">grid.rect</span>()
+<span class="kw">grid.xaxis</span>()
+<span class="kw">grid.yaxis</span>()
+<span class="kw">grid.points</span>(x, y)
+<span class="kw">grid.text</span>(<span class="st">&quot;mtcars$disp&quot;</span>, <span class="dt">x =</span> <span class="kw">unit</span>(-<span class="dv">3</span>, <span class="st">&quot;lines&quot;</span>), <span class="dt">rot =</span> <span class="dv">90</span>)
+<span class="kw">grid.text</span>(<span class="st">&quot;mtcars$mpg&quot;</span>, <span class="dt">y =</span> <span class="kw">unit</span>(-<span class="dv">3</span>, <span class="st">&quot;lines&quot;</span>), <span class="dt">rot =</span> <span class="dv">0</span>)
+<span class="kw">popViewport</span>(<span class="dv">2</span>)</code></pre></div>
+<p><img src="fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
 <div class="footnotes">
 <hr />
 <ol>
@@ -290,6 +307,7 @@ women</code></pre></div>
 <li id="fn2"><p>Anscombe, F. J. (1973). “Graphs in Statistical Analysis”. American Statistician 27 (1): 17–21.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p><a href="http://www.cs.ubc.ca/~tmm/vadbook/">Tamara Munzner. Visualization Analysis and Design. A K Peters Visualization Series, CRC Press, 2014</a><a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p><a href="https://www.coursera.org/learn/exploratory-data-analysis/lecture/MTRt4/plotting-systems-in-r">코세라 Lecture 10 - Plotting Systems in R</a><a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p><a href="http://stackoverflow.com/questions/29349398/r-package-grid-disappeared">R package grid disappeared?</a><a href="#fnref5">↩</a></p></li>
 </ol>
 </div>
         </div>

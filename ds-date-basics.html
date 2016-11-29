@@ -45,8 +45,9 @@
 </div>
 <div class="panel-body">
 <ul>
-<li>시간데이터에 대한 기초 지식을 살펴본다.</li>
+<li>시간 데이터에 대한 기초 지식을 살펴본다.</li>
 <li>시간 데이터를 관장하는 주요 R 팩키지를 살펴본다.</li>
+<li>시계열 데이터 저장소에서 파악하고 데이터를 직접 다운로드 받는다.</li>
 </ul>
 </div>
 </section>
@@ -74,15 +75,15 @@ x</code></pre></div>
 <p><code>Sys.time()</code> 함수를 통해 현재 시스템 시간정보를 받아내면 <code>POSIXct</code> 클래스임이 확인되고, <code>unclass()</code> 정보를 통해 내부적으로 정수값으로 저장된 것이 확인된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
 x</code></pre></div>
-<pre class="output"><code>[1] &quot;2016-11-27 23:49:30 KST&quot;
+<pre class="output"><code>[1] &quot;2016-11-29 21:35:05 KST&quot;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unclass</span>(x)</code></pre></div>
-<pre class="output"><code>[1] 1480258171
+<pre class="output"><code>[1] 1480422906
 </code></pre>
 <p>문자열을 받아 <code>as.POSIXlt()</code>, <code>as.POSIXct()</code> 함수를 사용해서 시간자료형으로 변환시킨다. <code>POSIXlt</code> 자료형으로 변환시킨 경우 리스트로 저장되어 있어 시, 분, 초, 요일등 하위 원소값으로 뽑아낼 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
 x</code></pre></div>
-<pre class="output"><code>[1] &quot;2016-11-27 23:49:30 KST&quot;
+<pre class="output"><code>[1] &quot;2016-11-29 21:35:05 KST&quot;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">as.POSIXlt</span>(x)
 <span class="kw">names</span>(<span class="kw">unclass</span>(p))</code></pre></div>
@@ -90,7 +91,7 @@ x</code></pre></div>
  [8] &quot;yday&quot;   &quot;isdst&quot;  &quot;zone&quot;   &quot;gmtoff&quot;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p$wday</code></pre></div>
-<pre class="output"><code>[1] 0
+<pre class="output"><code>[1] 2
 </code></pre>
 <h3 id="날짜-시간-자료형-변환">1.2. 날짜, 시간 자료형 변환</h3>
 <p>결국 문자열을 받아 날짜, 시간 자료형으로 변환시키는데 <code>strptime()</code> 함수를 사용한다. 문자열을 입력으로 받아 문자열의 날짜, 시간 형식을 매칭하여 넘기게 되면 날짜, 시간 자료형으로 변환된다.</p>
@@ -115,7 +116,7 @@ y &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="
 y -<span class="st"> </span>x</code></pre></div>
 <pre class="output"><code>Time difference of 14 hours
 </code></pre>
-<h2 id="날짜-시간-r-팩키지-r-date-time-packages">2. 날짜 시간 R 팩키지 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
+<h2 id="날짜-시간-r-팩키지-r-date-time-packages-cran-time-series">2. 날짜 시간 R 팩키지 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h2>
 <p>날짜와 시간을 다루기 위한 팩키지가 다수 개발되었다. 기존 <code>Data</code> 클래스에 시계열 데이터를 다루기도 하고, <code>Time</code> 클래스에서 데이터를 다루기 한다. 종류도 많고 접근방법도 다양하다.</p>
 <table>
 <thead>
@@ -171,9 +172,32 @@ y -<span class="st"> </span>x</code></pre></div>
 </tr>
 </tbody>
 </table>
+<p>시계열 데이터관련 팩키와 도구는 다음과 같다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">팩키지</th>
+<th align="left">도구</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">tseries</td>
+<td align="left">irts</td>
+</tr>
+<tr class="even">
+<td align="left">Rmetrics</td>
+<td align="left">timeSeries</td>
+</tr>
+<tr class="odd">
+<td align="left">zoo</td>
+<td align="left">its</td>
+</tr>
+</tbody>
+</table>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
-<h3 id="iso-8601---날짜와-시간-데이터-교환을-위한-국제-표준-iso-8601"><span class="glyphicon glyphicon-pushpin"></span>ISO 8601 - 날짜와 시간 데이터 교환을 위한 국제 표준 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+<h3 id="iso-8601---날짜와-시간-데이터-교환을-위한-국제-표준-iso-8601"><span class="glyphicon glyphicon-pushpin"></span>ISO 8601 - 날짜와 시간 데이터 교환을 위한 국제 표준 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h3>
 </div>
 <div class="panel-body">
 <p><strong>ISO 8601</strong>(Data elements and interchange formats - Information interchange - Representation of dates and times) 표준은 국제 표준화 기구(ISO)에 의해 공포되었으며 1988년에 처음으로 공개었고, 표준 제정 목적은 날짜와 시간을 표현함에 있어 명백하고 잘 정의된 방법을 제공함으로써, 날짜와 시간의 숫자 표현에 대한 오해를 줄이고자 한다. 보편적 원칙은 다음과 같다.</p>
@@ -192,12 +216,25 @@ y -<span class="st"> </span>x</code></pre></div>
 </ul>
 </div>
 </aside>
+<h2 id="시계열-데이터-time-series-data-library-tsdl-data-market">3. 시계열 데이터 <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></h2>
+<p>시계열에 관련된 다양한 데이터는 R 팩키지를 통해 얻을 수 있고, 많은 경우 시계열관련 책에 데이터가 포함되어 있고, 저자가 팩키지로 만들어 배포하는 형태가 많다.</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/Ecdat/index.html">Ecdat - Data Sets for Econometrics</a></li>
+<li><a href="https://cran.r-project.org/web/packages/fma/index.html">Makridakis, Wheelwright and Hyndman (1998) Forecasting: methods and applications</a></li>
+<li><a href="https://cran.r-project.org/web/packages/expsmooth/index.html">Hyndman, Koehler, Ord and Snyder (2008) Forecasting with exponential smoothing</a></li>
+<li><a href="https://cran.r-project.org/web/packages/fpp/">Hyndman and Athanasopoulos (2013) Forecasting: principles and practice</a></li>
+<li><a href="https://cran.r-project.org/web/packages/astsa/index.html">Shumway and Stoffer (2011) Applied Statistical Time Series Analysis</a></li>
+<li><a href="https://cran.r-project.org/web/packages/AER/index.html">Applied Econometrics with R</a></li>
+</ul>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://www.coursera.org/learn/r-programming/lecture/yl7BO/dates-and-times">Coursera Lecture 41 - Dates and Times</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="http://www.rinfinance.com/RinFinance2009/presentations/xts_quantmod_workshop.pdf">Working with xts and quantmod-Leveraging R with xts and quantmod for quantitative trading</a><a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p><a href="https://ko.wikipedia.org/wiki/ISO_8601">위키피디아 - ISO 8601</a><a href="#fnref3">↩</a></p></li>
+<li id="fn3"><p><a href="https://cran.r-project.org/web/views/TimeSeries.html">CRAN Task View - Time Series Analysis</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="https://ko.wikipedia.org/wiki/ISO_8601">위키피디아 - ISO 8601</a><a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p><a href="http://robjhyndman.com/TSDL/">Time Series Data Library</a><a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p><a href="https://datamarket.com/data/list/?q=provider:tsdl">DataMarket - Time Series Data Library</a><a href="#fnref6">↩</a></p></li>
 </ol>
 </div>
         </div>
