@@ -236,7 +236,7 @@ R에는 다양한 시각화 관련 시스템이 존재하지만, 가장 대표�
 - `lattice` 시각화 시스템
 - `ggplot` 시각화 시스템
 
- ### 3.1. Base 시각화 시스템
+### 3.1. Base 시각화 시스템
 
 R설치하면 내장된 Base 시각화 시스템은 **화가의 팔레트(Artist's Palallete)** 모형으로 빈 도화지 캔바스 위에 화가가 그림을 그리는 것과 동일한 방식으로 시각화 산출물을 만들어 나간다.
 `plot()` 혹은 유사한 시각화 함수로 시작해서 텍스트(`text`), 선(`line`), 점(`point`), 축(`axis`) 등을 표현하는데  **주석(Annotation)** 함수를 활용한다.
@@ -280,4 +280,30 @@ Base 시각화 시스템에서 지원하는 다양한 그래픽 요소를 추가
 ggplot(data=mtcars, mapping=aes(x=disp, y=mpg)) + 
   geom_point() +
   geom_smooth(method="lm", se=FALSE)
+```
+
+### 3.4. `grid` 시각화 시스템
+
+`grid` 시각화 시스템은 `lattice`와 `ggplot`의 기반이 되는 시각화 시스템으로 R 버전 1.8.0 부터 Base 팩키지의 일부가 되었다.[^grid-viz-system]
+grid_0.7-4에서 [Base 팩키지 일부](https://stat.ethz.ch/R-manual/R-devel/library/grid/doc/changes.txt)가 되어 버젼이 Base 팩키지에 맞춰 버젼이 급상승했다.
+
+`grid` 시각화 시스템을 사용해서 위와 동일하게 상기 그래프를 그리면 다음과 같다. 
+`grid` 시스템을 숙달하기까지 시간이 걸리지만, 익숙해지면 장점이 상당하다.
+
+[^grid-viz-system]: [R package grid disappeared?](http://stackoverflow.com/questions/29349398/r-package-grid-disappeared)
+
+``` {r}
+library(grid)
+x <- mtcars$disp
+y <- mtcars$mpg
+
+pushViewport(plotViewport())
+pushViewport(dataViewport(x, y))
+grid.rect()
+grid.xaxis()
+grid.yaxis()
+grid.points(x, y)
+grid.text("mtcars$disp", x = unit(-3, "lines"), rot = 90)
+grid.text("mtcars$mpg", y = unit(-3, "lines"), rot = 0)
+popViewport(2)
 ```
