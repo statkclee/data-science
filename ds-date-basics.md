@@ -30,6 +30,16 @@ mainfont: NanumGothic
     - `POSIXct` 클래스는 매우 큰 정수로 시간정보를 데이터프레임으로 저장할 때 유용하다.
     - `POSIXlt` 클래스는 리스트 자료형으로 요일, 년, 월, 일 등의 정보를 리스트 내부 원소로 저장되어 유용하다.
 
+<img src="fig/ds-datetime-abstraction.png" alt="날짜 시간 추상화" width="77%" />
+
+**[ISO 8601](https://ko.wikipedia.org/wiki/ISO_8601)** 국제 표준을 근간으로 날짜 및 시간을 문자열로 표현하면 이를 
+R에서 인식할 수 있도록 저수준 시간/날짜 객체 변환 함수를 통해 시간/날짜 객체로 변환을 한다.
+날짜와 시간 객체로 변환을 하고 나면 고수준 날짜/시간 팩키지를 통해 다양한 날짜/시간 관련 분석작업을 손쉽게 수행한다.
+
+먼저 ISO 8601 기준에 맞춰 문자열("1970-01-01")을 `as.Date` 함수를 통해 날짜 객체로 변환한다.
+내부적으로 보면 정수 `0` 으로 저장된다. 기준일 다음 "1970-01-03"일을 보면 숫자 2가 된다.
+
+
 
 ~~~{.r}
 x <- as.Date("1970-01-01")
@@ -83,7 +93,7 @@ x
 
 
 ~~~{.output}
-[1] "2016-11-29 21:35:05 KST"
+[1] "2016-12-06 19:12:15 KST"
 
 ~~~
 
@@ -96,7 +106,7 @@ unclass(x)
 
 
 ~~~{.output}
-[1] 1480422906
+[1] 1481019135
 
 ~~~
 
@@ -112,7 +122,7 @@ x
 
 
 ~~~{.output}
-[1] "2016-11-29 21:35:05 KST"
+[1] "2016-12-06 19:12:15 KST"
 
 ~~~
 
@@ -217,30 +227,10 @@ Time difference of 14 hours
 
 [^CRAN-time-series]: [CRAN Task View - Time Series Analysis](https://cran.r-project.org/web/views/TimeSeries.html)
 
-날짜와 시간을 다루기 위한 팩키지가 다수 개발되었다. 기존 `Data` 클래스에 시계열 데이터를 다루기도 하고, `Time` 클래스에서 데이터를 다루기 한다.
-종류도 많고 접근방법도 다양하다.
-
-| `Data` 클래스 | `Time` 클래스 |
-|---------------|---------------|
-| timeSeries    | chron         |
-| its           | POSIXct       |
-| irts          | POSIXlt       |
-| matrix        | yearmon       |
-| tframe        | Date          |
-| mts           | character     |
-| zoo           | numeric       |
-| irts          | yearqtr       |
-| ts            | timeDate      |
-| zooreg        |               |
-| vectors       |               |
-
-시계열 데이터관련 팩키와 도구는 다음과 같다.
-
-|   팩키지      |     도구      |
-|---------------|---------------|
-| tseries       | irts          |
-| Rmetrics      | timeSeries    |
-| zoo           | its           |
+날짜와 시간을 다루기 위한 팩키지가 다수 개발되었다. 
+`Data` 클래스와 `Time` 클래스를 통해 날짜 뿐만 아니라 시간에 대한 데이터도 처리가 가능하다.
+기본적으로 문자열 데이터를 저수준 날짜 및 시간 함수(`as.Date`, `as.POSIXct`, `as.POSIXlt`, `strptime`)를 통해 날짜 및 시간 데이터로 변환시킨 후에 
+고수준 날짜 및 시간 팩키지(`zoo`, `xts`, `lubridate`)로 작업을 진행하는 작업흐름을 갖는다. 
 
 
 > ### ISO 8601 - 날짜와 시간 데이터 교환을 위한 국제 표준 [^iso-8601] {.callout}
@@ -261,7 +251,87 @@ Time difference of 14 hours
 [^iso-8601]: [위키피디아 - ISO 8601](https://ko.wikipedia.org/wiki/ISO_8601)
 
 
-## 3. 시계열 데이터 [^time-series-data-library] [^tsdl-data-market]
+## 3. 시간데이터 다루기
+
+시간정보가 포함된 문자열 데이터 "2016-11-04 10:30:00" 정보를 받아 
+`format="%Y-%m-%d %H:%M:%OS"` 문자열 시간 형식을 `strptime()` 함수에 넘기면 문자열 데이터가 시간 데이터로 변환된다.
+
+동영상 데이터를 처리할 경우 프레임 단위(초당 30프레임)로 동영상에 대한 데이터 정보가 저장된 경우, 
+이를 시간자료형으로 바꾸는 경우 `seq` 함수를 프레임 단위 `by=`인자로 넘기고, `length.out =`으로 
+데이터프레임 길이도 함께 넘긴다. 이를 키값으로 잡고 `as.xts` 함수에 넘기면 xts 객체로 변환된다.
+이제 `nseconds`, `nminutes` 함수를 통해 동영상이 몇초인지, 몇분인지 쉽게 확인 가능하게 된다.
+
+
+~~~{.r}
+suppressPackageStartupMessages(library(xts))
+
+strptime("2016-11-04 10:30:00", format="%Y-%m-%d %H:%M:%OS")
+~~~
+
+
+
+~~~{.output}
+[1] "2016-11-04 10:30:00 KST"
+
+~~~
+
+
+
+~~~{.r}
+dat <- read_csv("https://raw.githubusercontent.com/statkclee/identify_age_with_oxford_api/master/03_data/park_emo_01.csv")
+~~~
+
+
+
+~~~{.output}
+Parsed with column specification:
+cols(
+  x = col_double(),
+  y = col_double(),
+  width = col_double(),
+  height = col_double(),
+  scores.neutral = col_double(),
+  scores.happiness = col_double(),
+  scores.surprise = col_double(),
+  scores.sadness = col_double(),
+  scores.anger = col_double(),
+  scores.disgust = col_double(),
+  scores.fear = col_double(),
+  scores.contempt = col_double()
+)
+
+~~~
+
+
+
+~~~{.r}
+dat$times <- strptime("2016-11-04 10:30:00", format="%Y-%m-%d %H:%M:%OS", tz="Asia/Seoul") + seq(1, by = 1/30, length.out = dim(dat)[1])
+
+dat_xts <- as.xts(dat, order.by = dat$times)
+nseconds(dat_xts)
+~~~
+
+
+
+~~~{.output}
+[1] 103
+
+~~~
+
+
+
+~~~{.r}
+nminutes(dat_xts)
+~~~
+
+
+
+~~~{.output}
+[1] 2
+
+~~~
+
+## 4. 시계열 데이터 [^time-series-data-library] [^tsdl-data-market]
 
 [^time-series-data-library]: [Time Series Data Library](http://robjhyndman.com/TSDL/)
 

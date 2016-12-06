@@ -13,6 +13,8 @@ mainfont: NanumGothic
 
 ```{r, include=FALSE}
 source("tools/chunk-options.R")
+library(tidyverse)
+library(readr)
 ```
 > ## 학습 목표 {.objectives}
 >
