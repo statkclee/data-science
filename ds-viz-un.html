@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h1 class="title">데이터 과학</h1>
+          <h2 class="subtitle">UN 투표 데이터를 통해 본 한국과 주변 강대국</h2>
+<section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li><code>broom</code> 팩키지를 활용한 모형 개발 방법론을 살펴본다.</li>
+<li>국제연합(United Nation) 투표 데이터를 통해 동아시아 역학관계를 이해한다.</li>
+<li><code>ggplot</code> 등 시각화 방법을 살펴본다.</li>
+</ul>
+</div>
+</section>
+<h2 id="un-투표-데이터">1. UN 투표 데이터</h2>
+<p>국제연합 총회 투표 데이터로 6개 사안별로 국가별 투표성향을 분석함으로써 국가별 유사성을 확인할 수 있고, 연도별 분석을 통해 국제 역학관계에 대한 통찰력(Insight)를 얻을 수 있다.</p>
+<ul>
+<li><strong>6개 분야</strong>
+<ul>
+<li>팔레스타인 갈등 : me “Palestinian conflict”,</li>
+<li>핵무기와 핵물질 : nu “Nuclear weapons and nuclear material”,</li>
+<li>군비통제 및 군비해제 : di “Arms control and disarmament”,</li>
+<li>인권 : hr “Human rights”,</li>
+<li>식민주의 : co “Colonialism”,</li>
+<li>경제발전 : ec “Economic development”</li>
+</ul></li>
+<li><strong>국가: 한국과 주변 강대국</strong>
+<ul>
+<li>대한민국: “South Korea”</li>
+<li>미국: “United States of America”</li>
+<li>일본: “Japan”</li>
+<li>중국: “China”</li>
+<li>러시아: “Russia”</li>
+</ul></li>
+<li>분석에 사용된 데이터
+<ul>
+<li><a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379">United Nations General Assembly Voting Data</a></li>
+</ul></li>
+</ul>
+<h3 id="데이터-가져오기">1.1. 데이터 가져오기</h3>
+<p><code>RawVotingdata.tab</code> 데이터 크기가 커서 한국과 주변 4 강대국만을 뽑아 데이터 크기를 크게 줄였다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. 데이터 -----------------------------------------</span>
+<span class="co"># https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379</span>
+## 국가 코드표 : COW country codes.csv
+cow_ct &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/COW country codes.csv&quot;</span>)</code></pre></div>
+<pre class="output"><code>Parsed with column specification:
+cols(
+  StateAbb = col_character(),
+  CCode = col_integer(),
+  StateNme = col_character()
+)
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 한국, 미국, 일본, 중국, 러시아</span>
+korea_5 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;United States of America&quot;</span>, <span class="st">&quot;South Korea&quot;</span>, <span class="st">&quot;Japan&quot;</span>, <span class="st">&quot;China&quot;</span>, <span class="st">&quot;Russia&quot;</span>)
+
+## UN 토의주제 : descriptionsnew.xls
+description &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;data/descriptionsnew.xls&quot;</span>, <span class="dt">sheet=</span><span class="st">&quot;descriptions&quot;</span>)
+
+## Vote : RawVotingdata.tab --&gt; votes_five_nations.csv
+votes &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/votes_five_nations.csv&quot;</span>)</code></pre></div>
+<pre class="output"><code>Parsed with column specification:
+cols(
+  ccode = col_integer(),
+  session = col_double(),
+  rcid = col_double(),
+  vote = col_double(),
+  year = col_double(),
+  StateAbb = col_character(),
+  StateNme = col_character()
+)
+</code></pre>
+<h3 id="데이터-정제">1.2. 데이터 정제</h3>
+<p><code>session</code> 변수가 년도를 나타내는 구분자가 되나 컴퓨터가 이해하는 것이고 사람이 이해하는 연도로 바꾸기 위해 <code>year</code> 변수를 하나 추가한다. <code>session</code> 변수에 1945를 더하면 된다. <code>description</code> 데이터프레임과 병합(조인)하여 6개 분야별 투표율 추이를 확인한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 2. 데이터 정제-----------------------------------------</span>
+
+votes &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">year =</span> session +<span class="st"> </span><span class="dv">1945</span>)
+votes &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span><span class="kw">left_join</span>(cow_ct, <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;ccode&quot;</span> =<span class="st"> &quot;CCode&quot;</span>, <span class="st">&quot;StateNme&quot;</span>=<span class="st">&quot;StateNme&quot;</span> ))
+
+k_df &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(description, <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;session&quot;</span>, <span class="st">&quot;rcid&quot;</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(StateNme %in%<span class="st"> </span>korea_5) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">country=</span>StateNme) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">country =</span> <span class="kw">recode</span>(country,
+                        <span class="st">`</span><span class="dt">United States of America</span><span class="st">`</span> =<span class="st"> &quot;미국&quot;</span>,
+                        <span class="st">`</span><span class="dt">South Korea</span><span class="st">`</span> =<span class="st"> &quot;한국&quot;</span>,
+                        <span class="dt">Japan =</span> <span class="st">&quot;일본&quot;</span>,
+                        <span class="dt">China =</span> <span class="st">&quot;중국&quot;</span>,
+                        <span class="dt">Russia =</span> <span class="st">&quot;러시아&quot;</span>))</code></pre></div>
+<h2 id="년-이후-투표-유사도-경향성">2. 1998년 이후 투표 유사도 경향성</h2>
+<p>한국과 주변 4개 강대국의 투표 찬성율을 한 화면에 찍어보고, <code>facet</code> 기능을 활용하여 각 국가별 연도별 추이를 살펴본다.</p>
+<p><img src="fig/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" /><img src="fig/unnamed-chunk-2-2.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" /></p>
+<p>국제연합 투표 유사도를 살펴보면 미국과 중국은 대척점에 서 있고, 중국에 러시사아가 일본보다 다소 더 가까이 위치하며 한국은 상대적으로 많이 미국에 가까운 것이 나타난다.</p>
+<h2 id="개-분야별-투표-유사도">3. 6개 분야별 투표 유사도</h2>
+<p><code>gather</code> 함수를 활용하여 <code>facet</code> 기능을 활용할 수 있도록 변경시키고 나서, 각 분야별 국각별 투표 유사도를 살펴본다.</p>
+<ul>
+<li>인권: 2005년 이후 중국과 러시아가 미국과 대척점에 서 있고 한국과 일본이 그 중간 국가간 유사도를 보임</li>
+<li>핵무기와 핵물질, 군비통제 및 군비해제: 표면적으로는 미일 연합을 강조하고 있지만, 국제연합 투표 유사도에 있어서는 <strong>일본이 한국보다 훨씬 더 중국과 투표 유사도가 높음.</strong> 특히, 2000년 초반보다 2000년대 후반 이후 핵무기와 핵물질의 경우 투표 유사도에 대한 차이가 더 벌어짐.</li>
+</ul>
+<p><img src="fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

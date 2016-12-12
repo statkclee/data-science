@@ -10,14 +10,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r  include = FALSE}
-source("tools/chunk-options.R")
-library(purrr)
-library(tidyverse)
-library(ggplot2)
-library(readxl)
-theme_set(theme_gray(base_family='NanumGothic'))
-````
+
 
 
 > ## 학습 목표 {.objectives}
@@ -53,11 +46,29 @@ theme_set(theme_gray(base_family='NanumGothic'))
 
 `RawVotingdata.tab` 데이터 크기가 커서 한국과 주변 4 강대국만을 뽑아 데이터 크기를 크게 줄였다.
 
-``` {r un-data, warning=FALSE}
+
+~~~{.r}
 # 1. 데이터 -----------------------------------------
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379
 ## 국가 코드표 : COW country codes.csv
 cow_ct <- read_csv("data/COW country codes.csv")
+~~~
+
+
+
+~~~{.output}
+Parsed with column specification:
+cols(
+  StateAbb = col_character(),
+  CCode = col_integer(),
+  StateNme = col_character()
+)
+
+~~~
+
+
+
+~~~{.r}
 # 한국, 미국, 일본, 중국, 러시아
 korea_5 <- c("United States of America", "South Korea", "Japan", "China", "Russia")
 
@@ -66,7 +77,23 @@ description <- read_excel("data/descriptionsnew.xls", sheet="descriptions")
 
 ## Vote : RawVotingdata.tab --> votes_five_nations.csv
 votes <- read_csv("data/votes_five_nations.csv")
-```
+~~~
+
+
+
+~~~{.output}
+Parsed with column specification:
+cols(
+  ccode = col_integer(),
+  session = col_double(),
+  rcid = col_double(),
+  vote = col_double(),
+  year = col_double(),
+  StateAbb = col_character(),
+  StateNme = col_character()
+)
+
+~~~
 
 ### 1.2. 데이터 정제
 
@@ -74,7 +101,8 @@ votes <- read_csv("data/votes_five_nations.csv")
 변수를 하나 추가한다. `session` 변수에 1945를 더하면 된다.
 `description` 데이터프레임과 병합(조인)하여 6개 분야별 투표율 추이를 확인한다.
 
-``` {r un-clean-data, warning=FALSE}
+
+~~~{.r}
 # 2. 데이터 정제-----------------------------------------
 
 votes <- votes %>% mutate(year = session + 1945)
@@ -90,7 +118,7 @@ k_df <- votes %>%
                         Japan = "일본",
                         China = "중국",
                         Russia = "러시아"))
-```
+~~~
 
 
 ## 2. 1998년 이후 투표 유사도 경향성
@@ -98,26 +126,7 @@ k_df <- votes %>%
 한국과 주변 4개 강대국의 투표 찬성율을 한 화면에 찍어보고, `facet` 기능을 활용하여 
 각 국가별 연도별 추이를 살펴본다.
 
-``` {r warning = FALSE, echo=FALSE}
-# 3. 시각화: 전체 흐름-----------------------------------------
-
-# 년도별 찬성율
-ko_by_country_year <- k_df %>% group_by(country, year) %>% 
-  summarise(total = n(),
-            pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
-  dplyr::filter(year>=1998)
-
-ggplot(ko_by_country_year, aes(year, pcnt_yes, color=country)) +
-  geom_line() +
-  ylab("투표 찬성율") +
-  xlab("")
-
-ggplot(ko_by_country_year, aes(year, pcnt_yes, color=country)) +
-  geom_line() +
-  facet_wrap(~country) +
-  ylab("투표 찬성율") +
-  xlab("")
-```
+<img src="fig/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" /><img src="fig/unnamed-chunk-2-2.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
 
 국제연합 투표 유사도를 살펴보면 미국과 중국은 대척점에 서 있고, 
 중국에 러시사아가 일본보다 다소 더 가까이 위치하며 한국은 상대적으로 많이 미국에 가까운 것이 나타난다.
@@ -133,29 +142,5 @@ ggplot(ko_by_country_year, aes(year, pcnt_yes, color=country)) +
 **일본이 한국보다 훨씬 더 중국과 투표 유사도가 높음.** 
 특히, 2000년 초반보다 2000년대 후반 이후 핵무기와 핵물질의 경우 투표 유사도에 대한 차이가 더 벌어짐.
 
-``` {r warning = FALSE, echo=FALSE}
-k_topic_df <- k_df %>% dplyr::select(rcid, session, year, country, vote, me, nu, di, hr, co, ec)
-
-k_topic_long_df <- k_topic_df %>% gather(topic, has_topic, me:ec) %>% 
-  dplyr::filter(has_topic ==1) %>% 
-  mutate(topic = recode(topic,
-                        me = "팔레스타인 갈등",
-                        nu = "핵무기와 핵물질",
-                        di = "군비통제 및 군비해제",
-                        hr = "인권",
-                        co = "식민주의",
-                        ec = "경제개발"))
-
-ko_by_country_topic <- k_topic_long_df %>% group_by(year, country, topic) %>% 
-  summarise(total = n(),
-            pcnt_abs = mean(vote==1, na.rm=TRUE)) %>% 
-  dplyr::filter(year>=1998) 
-
-ggplot(ko_by_country_topic, aes(year, pcnt_abs, color=country)) +
-  geom_line() +
-  facet_wrap(~topic) +
-  ylab("투표 찬성율") +
-  xlab("") + 
-  theme(legend.position="bottom")
-```
+<img src="fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
