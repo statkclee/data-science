@@ -16,6 +16,7 @@ library(purrr)
 library(tidyverse)
 library(ggplot2)
 library(readxl)
+library(broom)
 theme_set(theme_gray(base_family='NanumGothic'))
 ````
 
@@ -58,6 +59,8 @@ theme_set(theme_gray(base_family='NanumGothic'))
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379
 ## 국가 코드표 : COW country codes.csv
 cow_ct <- read_csv("data/COW country codes.csv")
+cow_ct <- cow_ct %>% dplyr::select(country_code=StateAbb, code=CCode, country=StateNme)
+
 # 한국, 미국, 일본, 중국, 러시아
 korea_5 <- c("United States of America", "South Korea", "Japan", "China", "Russia")
 
@@ -66,6 +69,7 @@ description <- read_excel("data/descriptionsnew.xls", sheet="descriptions")
 
 ## Vote : RawVotingdata.tab --> votes_five_nations.csv
 votes <- read_csv("data/votes_five_nations.csv")
+votes <- votes %>% dplyr::select(ccode, session, rcid, vote, year, country_code=StateAbb,country=StateNme)
 ```
 
 ### 1.2. 데이터 정제
@@ -78,12 +82,11 @@ votes <- read_csv("data/votes_five_nations.csv")
 # 2. 데이터 정제-----------------------------------------
 
 votes <- votes %>% mutate(year = session + 1945)
-votes <- votes %>% left_join(cow_ct, by=c("ccode" = "CCode", "StateNme"="StateNme" ))
+votes <- votes %>% left_join(cow_ct, by=c("ccode", "country"))
 
 k_df <- votes %>% 
   inner_join(description, by=c("session", "rcid")) %>% 
-  dplyr::filter(StateNme %in% korea_5) %>% 
-  rename(country=StateNme) %>% 
+  dplyr::filter(country %in% korea_5) %>% 
   mutate(country = recode(country,
                         `United States of America` = "미국",
                         `South Korea` = "한국",
@@ -173,24 +176,25 @@ k_df <- votes %>%
   dplyr::filter(country %in% "South Korea")
 
 df_long <- k_df %>% gather(topic, has_topic, me:ec) %>% 
-  dplyr::filter(has_topic == 1, year >= 1999)
+  dplyr::filter(has_topic == 1, year >= 1999) %>%
+  mutate(topic = recode(topic,
+                        me = "팔레스타인 갈등",
+                        nu = "핵무기와 핵물질",
+                        di = "군비통제 및 군비해제",
+                        hr = "인권",
+                        co = "식민주의",
+                        ec = "경제개발"))
 
 ## 2.1. 전처리-----------------------------------------
 
 # 년도별 찬성율
-by_year_country_topic <- df_long %>% group_by(year, country, topic) %>% 
+by_year_topic <- df_long %>% group_by(year, topic) %>% 
   summarise(total = n(),
             pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
   ungroup()
 ```
 
-### 4.2. 한국 UN 총회 찬성율 분야별 추이
-
-한국 UN 총회 찬성율은 지속적으로 낮아지는 것으로 나타나고 있으며 분야별로 찬성율이 올라가는 것이 있는 반면에
-찬성율이 하락하는 분야도 눈에 띈다.
-
-
-``` {r un-broom-korea, warning = FALSE, echo=FALSE}
+``` {r un-broom-korea-viz01, warning = FALSE, echo=FALSE}
 # 3. 시각화-----------------------------------------
 ## 3.1. 국가별 찬성율
 by_year <- df_long %>% group_by(year) %>% 
@@ -200,30 +204,41 @@ by_year <- df_long %>% group_by(year) %>%
 
 ggplot(by_year, aes(year, pcnt_yes)) +
   geom_line() +
-  stat_smooth(method = "lm", se=FALSE)
+  stat_smooth(method = "lm", se=FALSE)   +
+  ylab("투표 찬성율") +
+  xlab("")
+```
 
+### 4.2. 한국 UN 총회 찬성율 분야별 추이
 
-ggplot(by_year_country_topic, aes(year, pcnt_yes, color=country)) +
+한국 UN 총회 찬성율은 지속적으로 낮아지는 것으로 나타나고 있으며 분야별로 찬성율이 올라가는 것이 있는 반면에
+찬성율이 하락하는 분야도 눈에 띈다.
+
+``` {r un-broom-korea-viz02, warning = FALSE, echo=FALSE}
+ggplot(by_year_topic, aes(year, pcnt_yes)) +
   geom_line() +
   stat_smooth(method = "lm", se=FALSE) +
-  facet_wrap(~ topic)
+  facet_wrap(~ topic)  +
+  ylab("투표 찬성율") +
+  xlab("") + 
+  theme(legend.position="bottom")
 ```
 
 ### 4.3. 한국 UN 총회 찬성율 회귀분석
 
 년도별 회귀분석결과 co, di 분야는 찬성율이 높아지고 나머지 분야는 찬성율이 낮아지고 있다.
 
-- co("식민주의"): 
-- di("군비통제 및 군비해제"): 
-- ec("경제개발"): 
-- hr("인권"): 
-- me("팔레스타인 갈등"): 
-- nu("핵무기와 핵물질"): 
+- co("식민주의"): 회귀계수 양수, 찬성율 증가
+- di("군비통제 및 군비해제"): 회귀계수 양수, 찬성율 증가
+- ec("경제개발"): 회귀계수 음수, 찬성율 감소
+- hr("인권"): 회귀계수 음수, 찬성율 감소
+- me("팔레스타인 갈등"): 회귀계수 음수, 찬성율 감소
+- nu("핵무기와 핵물질"): 회귀계수 음수, 찬성율 감소
 
 
 ``` {r un-broom-korea-lm, warning = FALSE, echo=FALSE}
 # 3. 회귀 모형-----------------------------------------
-## 3.1. 국가별 찬성율
+## 3.1. 주제별 찬성율
 country_coefficients <- by_year_topic %>%
   tidyr::nest(-topic) %>%
   mutate(model = map(data, ~ lm(pcnt_yes ~ year, data = .)),
@@ -251,7 +266,20 @@ k_df <- votes %>%
   dplyr::filter(country %in% korea_5)
 
 df_long <- k_df %>% gather(topic, has_topic, me:ec) %>% 
-  dplyr::filter(has_topic == 1, year >= 1999)
+  dplyr::filter(has_topic == 1, year >= 1999) %>%
+  mutate(topic = recode(topic,
+                        me = "팔레스타인 갈등",
+                        nu = "핵무기와 핵물질",
+                        di = "군비통제 및 군비해제",
+                        hr = "인권",
+                        co = "식민주의",
+                        ec = "경제개발")) %>%
+  mutate(country = recode(country,
+                        `United States of America` = "미국",
+                        `South Korea` = "한국",
+                        Japan = "일본",
+                        China = "중국",
+                        Russia = "러시아"))
 
 ## 2.1. 전처리-----------------------------------------
 
@@ -267,7 +295,10 @@ by_year_country_topic <- df_long %>% group_by(year, country, topic) %>%
 ggplot(by_year_country_topic, aes(year, pcnt_yes, color=country)) +
   geom_line() +
   stat_smooth(method = "lm", se=FALSE) +
-  facet_wrap(~ topic)
+  facet_wrap(~ topic)  +
+  ylab("투표 찬성율") +
+  xlab("") + 
+  theme(legend.position="bottom")
 ```
 
 ### 5.2. 6개 분야별 회귀분석
