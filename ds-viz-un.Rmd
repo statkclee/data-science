@@ -53,7 +53,7 @@ theme_set(theme_gray(base_family='NanumGothic'))
 
 `RawVotingdata.tab` 데이터 크기가 커서 한국과 주변 4 강대국만을 뽑아 데이터 크기를 크게 줄였다.
 
-``` {r un-data, warning=FALSE}
+``` {r un-data, message=FALSE, warning=FALSE}
 # 1. 데이터 -----------------------------------------
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379
 ## 국가 코드표 : COW country codes.csv
@@ -74,7 +74,7 @@ votes <- read_csv("data/votes_five_nations.csv")
 변수를 하나 추가한다. `session` 변수에 1945를 더하면 된다.
 `description` 데이터프레임과 병합(조인)하여 6개 분야별 투표율 추이를 확인한다.
 
-``` {r un-clean-data, warning=FALSE}
+``` {r un-clean-data, message=FALSE, warning=FALSE}
 # 2. 데이터 정제-----------------------------------------
 
 votes <- votes %>% mutate(year = session + 1945)
@@ -159,3 +159,137 @@ ggplot(ko_by_country_topic, aes(year, pcnt_abs, color=country)) +
   theme(legend.position="bottom")
 ```
 
+## 4. 한국과 주변 4개국: 한국 
+
+### 4.1. 한국 UN 총회 찬성율 추이
+
+UN 총회 찬성율 데이터중에서 한국만 뽑아낸다. 전체적인 찬성율 추이와 더불어 
+각 분야별 찬성율 추이도 함께 살펴본다.
+
+``` {r un-broom-korea-setup, warning = FALSE, echo=FALSE}
+k_df <- votes %>% 
+  inner_join(description, by=c("session", "rcid")) %>% 
+  dplyr::filter(!is.na(vote)) %>% 
+  dplyr::filter(country %in% "South Korea")
+
+df_long <- k_df %>% gather(topic, has_topic, me:ec) %>% 
+  dplyr::filter(has_topic == 1, year >= 1999)
+
+## 2.1. 전처리-----------------------------------------
+
+# 년도별 찬성율
+by_year_country_topic <- df_long %>% group_by(year, country, topic) %>% 
+  summarise(total = n(),
+            pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
+  ungroup()
+```
+
+### 4.2. 한국 UN 총회 찬성율 분야별 추이
+
+한국 UN 총회 찬성율은 지속적으로 낮아지는 것으로 나타나고 있으며 분야별로 찬성율이 올라가는 것이 있는 반면에
+찬성율이 하락하는 분야도 눈에 띈다.
+
+
+``` {r un-broom-korea, warning = FALSE, echo=FALSE}
+# 3. 시각화-----------------------------------------
+## 3.1. 국가별 찬성율
+by_year <- df_long %>% group_by(year) %>% 
+  summarise(total = n(),
+            pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
+  ungroup()
+
+ggplot(by_year, aes(year, pcnt_yes)) +
+  geom_line() +
+  stat_smooth(method = "lm", se=FALSE)
+
+
+ggplot(by_year_country_topic, aes(year, pcnt_yes, color=country)) +
+  geom_line() +
+  stat_smooth(method = "lm", se=FALSE) +
+  facet_wrap(~ topic)
+```
+
+### 4.3. 한국 UN 총회 찬성율 회귀분석
+
+년도별 회귀분석결과 co, di 분야는 찬성율이 높아지고 나머지 분야는 찬성율이 낮아지고 있다.
+
+- co("식민주의"): 
+- di("군비통제 및 군비해제"): 
+- ec("경제개발"): 
+- hr("인권"): 
+- me("팔레스타인 갈등"): 
+- nu("핵무기와 핵물질"): 
+
+
+``` {r un-broom-korea-lm, warning = FALSE, echo=FALSE}
+# 3. 회귀 모형-----------------------------------------
+## 3.1. 국가별 찬성율
+country_coefficients <- by_year_topic %>%
+  tidyr::nest(-topic) %>%
+  mutate(model = map(data, ~ lm(pcnt_yes ~ year, data = .)),
+         tidied = map(model, tidy)) %>%
+  unnest(tidied)
+
+country_coefficients %>% 
+  dplyr::filter(term=="year")
+```
+
+
+## 5. 한국과 주변 4개국: 주변 4개국
+
+### 5.1. 6개 분야별 시각화
+
+한국과 주변 강대국 4개국을 뽑아 연도별, 주제별 데이터프레임을 준비한다.
+년도별 찬성율을 `facet` 기능을 활용하여 시각화한다.
+
+``` {r un-broom-big-four, warning = FALSE, echo=FALSE}
+korea_5 <- c("United States of America", "South Korea", "Japan", "China", "Russia")
+
+k_df <- votes %>% 
+  inner_join(description, by=c("session", "rcid")) %>% 
+  dplyr::filter(!is.na(vote)) %>% 
+  dplyr::filter(country %in% korea_5)
+
+df_long <- k_df %>% gather(topic, has_topic, me:ec) %>% 
+  dplyr::filter(has_topic == 1, year >= 1999)
+
+## 2.1. 전처리-----------------------------------------
+
+# 년도별 찬성율
+by_year_country_topic <- df_long %>% group_by(year, country, topic) %>% 
+  summarise(total = n(),
+            pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
+  ungroup()
+
+# 3. 시각화-----------------------------------------
+## 3.1. 국가별 찬성율
+
+ggplot(by_year_country_topic, aes(year, pcnt_yes, color=country)) +
+  geom_line() +
+  stat_smooth(method = "lm", se=FALSE) +
+  facet_wrap(~ topic)
+```
+
+### 5.2. 6개 분야별 회귀분석
+
+각분야별 회귀분석을 돌리고 나서 유의적인 국가와 분야를 추출한다.
+5개국 6개 분야 총 30개 연도별 회귀계수 중 유의적인 것은 한국의 `me`("팔레스타인 갈등")만 나온다.
+즉, 한국만 해당기간 약 20년동안 팔레스타인 갈등(Palestinian Conflict) 분야에서
+중국과 유사성에서 벗어나 미국과 유사도를 높여 나간 것이라는 해석도 가능하다.
+
+``` {r un-broom-big-four-lm, warning = FALSE, echo=FALSE}
+# 3. 회귀 모형-----------------------------------------
+## 3.1. 국가별 찬성율
+country_coefficients <- by_year_country_topic %>%
+  tidyr::nest(-country, -topic) %>%
+  mutate(model = map(data, ~ lm(pcnt_yes ~ year, data = .)),
+         tidied = map(model, tidy)) %>%
+  unnest(tidied)
+
+country_coefficients %>% 
+  dplyr::filter(term=="year") %>% print(n=30)
+
+country_coefficients %>% 
+  dplyr::filter(term=="year") %>% 
+  dplyr::filter(p.adjust(p.value) < .05)
+```
