@@ -16,7 +16,7 @@ mainfont: NanumGothic
 >
 > * 깔끔한 3종세트 `tidyr`, `dplyr`, `broom`를 살펴본다.
 
-### 1. `broom` 팩키지를 사용해야 되는 이유 [^cran-broom]
+## 1. `broom` 팩키지를 사용해야 되는 이유 [^cran-broom]
 
 [^cran-broom]: [broom: Convert Statistical Analysis Objects into Tidy Data Frames](https://cran.r-project.org/web/packages/broom/index.html)
 
@@ -72,10 +72,10 @@ lmfit <- lm(mpg ~ wt, mtcars)
 | Multiple R-squared:  0.7528, Adjusted R-squared:  0.7446        |                                           |              |
 | F-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10          |                                           |              |
 
-<img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="77%" />
+<img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="97%" />
 
 
-### 2. `broom` 팩키지 3 종세트
+## 2. `broom` 팩키지 3 종세트
 
 후속작업을 이어나갈 수 있도록 모형 출력결과를 처리하는 `broom` 3종 세트가 준비되어 있다.
 
@@ -146,22 +146,16 @@ glance(lmfit)
 
 ~~~
 
-### 3. `broom` 팩키지 지원현황
+## 3. `broom` 팩키지 지원현황
 
 `broom` 팩키지가 각 수준별로 활용가능한 현황은 다음과 같다.
 `tidy`, `augment`, `glance` 3종 세트에 대해 각 모형별로 지원현황을 확인하고 `broom` 팩키지와 엮어 사용한다.
 
 
-~~~{.output}
-Warning: package 'dplyr' was built under R version 3.2.5
-
-~~~
-
-
-
 |Class                    |`tidy` |`glance` |`augment` |
 |:------------------------|:------|:--------|:---------|
 |aareg                    |x      |x        |          |
+|acf                      |x      |         |          |
 |anova                    |x      |         |          |
 |aov                      |x      |         |          |
 |aovlist                  |x      |         |          |
@@ -172,6 +166,7 @@ Warning: package 'dplyr' was built under R version 3.2.5
 |boot                     |x      |         |          |
 |btergm                   |x      |         |          |
 |cch                      |x      |x        |          |
+|character                |x      |         |          |
 |cld                      |x      |         |          |
 |coeftest                 |x      |         |          |
 |confint.glht             |x      |         |          |
@@ -180,6 +175,9 @@ Warning: package 'dplyr' was built under R version 3.2.5
 |data.frame               |x      |x        |x         |
 |default                  |x      |x        |x         |
 |density                  |x      |         |          |
+|dgCMatrix                |x      |         |          |
+|dgTMatrix                |x      |         |          |
+|dist                     |x      |         |          |
 |ergm                     |x      |x        |          |
 |felm                     |x      |x        |x         |
 |fitdistr                 |x      |x        |          |
@@ -189,28 +187,36 @@ Warning: package 'dplyr' was built under R version 3.2.5
 |geeglm                   |x      |         |          |
 |glht                     |x      |         |          |
 |glmnet                   |x      |x        |          |
+|gmm                      |x      |x        |          |
 |htest                    |x      |x        |          |
 |kappa                    |x      |         |          |
+|kde                      |x      |         |          |
 |kmeans                   |x      |x        |x         |
 |Line                     |x      |         |          |
 |Lines                    |x      |         |          |
 |list                     |x      |x        |          |
 |lm                       |x      |x        |x         |
 |lme                      |x      |x        |x         |
+|lmodel2                  |x      |x        |          |
+|logical                  |x      |         |          |
 |manova                   |x      |         |          |
 |map                      |x      |         |          |
 |matrix                   |x      |x        |          |
+|Mclust                   |x      |x        |x         |
 |merMod                   |x      |x        |x         |
 |mle2                     |x      |         |          |
 |multinom                 |x      |x        |          |
 |nlrq                     |x      |x        |x         |
 |nls                      |x      |x        |x         |
 |NULL                     |x      |x        |x         |
+|numeric                  |x      |         |          |
 |pairwise.htest           |x      |         |          |
 |plm                      |x      |x        |x         |
+|poLCA                    |x      |x        |x         |
 |Polygon                  |x      |         |          |
 |Polygons                 |x      |         |          |
 |power.htest              |x      |         |          |
+|prcomp                   |x      |         |x         |
 |pyears                   |x      |x        |          |
 |rcorr                    |x      |         |          |
 |ridgelm                  |x      |x        |          |
@@ -219,12 +225,15 @@ Warning: package 'dplyr' was built under R version 3.2.5
 |rowwise_df               |x      |x        |x         |
 |rq                       |x      |x        |x         |
 |rqs                      |x      |x        |x         |
+|sparseMatrix             |x      |         |          |
 |SpatialLinesDataFrame    |x      |         |          |
 |SpatialPolygons          |x      |         |          |
 |SpatialPolygonsDataFrame |x      |         |          |
 |spec                     |x      |         |          |
 |stanfit                  |x      |         |          |
+|stanreg                  |x      |x        |          |
 |summary.glht             |x      |         |          |
+|summary.lm               |x      |x        |          |
 |summaryDefault           |x      |x        |          |
 |survexp                  |x      |x        |          |
 |survfit                  |x      |x        |          |
@@ -235,7 +244,7 @@ Warning: package 'dplyr' was built under R version 3.2.5
 |TukeyHSD                 |x      |         |          |
 |zoo                      |x      |         |          |
 
-### 4. 다수 모형 [^many-models]
+## 4. 다수 모형 [^many-models]
 
 [^many-models]: [R for Data Science - 25 Many models](http://r4ds.had.co.nz/many-models.html)
 
@@ -252,7 +261,7 @@ Warning: package 'dplyr' was built under R version 3.2.5
 이런 다양한 경우 데이터에 적합시킨 수많은 모형 결과를 저장하여 이를 분석할 필요가 있다. 이런 경우 편리한 방식을 제공하는 
 팩키지가 `broom`이다.
 
-#### 4.1. `dplyr`과 `broom` 결합 [^combine-groom-dplyr]
+### 4.1. `dplyr`과 `broom` 결합 [^combine-groom-dplyr]
 
 [^combine-groom-dplyr]: [broom and dplyr](https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html)
 
@@ -354,7 +363,7 @@ Orange %>% group_by(Tree) %>%
 
 
 ~~~{.output}
-Source: local data frame [5 x 7]
+Source: local data frame [5 x 9]
 Groups: Tree [5]
 
    Tree  estimate statistic      p.value parameter  conf.low conf.high
@@ -364,6 +373,7 @@ Groups: Tree [5]
 3     5 0.9877376  14.14686 3.177093e-05         5 0.9160865 0.9982635
 4     2 0.9873624  13.93129 3.425041e-05         5 0.9136142 0.9982101
 5     4 0.9844610  12.53575 5.733090e-05         5 0.8946782 0.9977964
+# ... with 2 more variables: method <fctr>, alternative <fctr>
 
 ~~~
 
@@ -517,7 +527,7 @@ Groups: am [2]
 
 ~~~
 
-#### 4.2. `broom` 부츠트랩 [^groom-bootstrap]
+### 4.2. `broom` 부츠트랩 [^groom-bootstrap]
 
 [^groom-bootstrap]: [Tidy bootstrapping with dplyr+broom](https://cran.r-project.org/web/packages/broom/vignettes/bootstrapping.html)
 
@@ -531,30 +541,35 @@ $$연비 = k \times \frac{1}{차체무게} + \beta$$
 ~~~{.r}
 # 산점도
 ggplot(mtcars, aes(wt, mpg)) + 
-  geom_point() + 
-  
+  geom_point()
+~~~
+
+<img src="fig/broom-mtcars-nonlinear-1.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" />
+
+~~~{.r}
 # 연비 = 1/차체무게, 비선형 모형 추정
   
 nlsfit <- nls(mpg ~ k / wt + b, mtcars, start=list(k=1, b=0))
-~~~
-
-
-
-~~~{.output}
-Error in ggplot(mtcars, aes(wt, mpg)) + geom_point() + nlsfit <- nls(mpg ~ : 함수 "+<-"를 찾을 수 없습니다
-
-~~~
-
-
-
-~~~{.r}
 summary(nlsfit)
 ~~~
 
 
 
 ~~~{.output}
-Error in summary(nlsfit): 객체 'nlsfit'를 찾을 수 없습니다
+
+Formula: mpg ~ k/wt + b
+
+Parameters:
+  Estimate Std. Error t value Pr(>|t|)    
+k   45.829      4.249  10.786 7.64e-12 ***
+b    4.386      1.536   2.855  0.00774 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.774 on 30 degrees of freedom
+
+Number of iterations to convergence: 1 
+Achieved convergence tolerance: 2.877e-08
 
 ~~~
 
@@ -568,14 +583,7 @@ ggplot(mtcars, aes(wt, mpg)) +
   geom_line(aes(y=predict(nlsfit)))
 ~~~
 
-
-
-~~~{.output}
-Error in predict(nlsfit): 객체 'nlsfit'를 찾을 수 없습니다
-
-~~~
-
-<img src="fig/broom-mtcars-nonlinear-1.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" />
+<img src="fig/broom-mtcars-nonlinear-2.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" />
 
 부츠트랩 표본을 100개 뽑아서 사실 더 많이 만들어 모형을 적합해도 된다.
 `tidy`함수를 통해 초기값 `k=1`, `b=0`으로 두고 비선형 회귀모형을 적합시켜 비선형 회귀계수에 대한 
@@ -599,10 +607,10 @@ bootnls %>% group_by(term) %>% summarize(median = median(estimate),
 
 ~~~{.output}
 # A tibble: 2 × 4
-   term    median        low      high
-  <chr>     <dbl>      <dbl>     <dbl>
-1     b  4.351746  0.5599099  7.679257
-2     k 45.595418 37.3312127 59.060347
+   term    median       low      high
+  <chr>     <dbl>     <dbl>     <dbl>
+1     b  4.077803  1.130968  6.435653
+2     k 46.106434 40.314750 55.050933
 
 ~~~
 
@@ -619,7 +627,7 @@ ggplot(bootnls_aug, aes(wt, mpg)) + geom_point() +
 
 <img src="fig/broom-mtcars-bootstrap-1.png" title="plot of chunk broom-mtcars-bootstrap" alt="plot of chunk broom-mtcars-bootstrap" style="display: block; margin: auto;" />
 
-#### 4.3. `broom` k-평균 군집분석 [^groom-kmeans]
+### 4.3. `broom` k-평균 군집분석 [^groom-kmeans]
 
 [^groom-kmeans]: [Tidying k-means clustering](https://cran.r-project.org/web/packages/broom/vignettes/kmeans.html)
 
@@ -646,23 +654,23 @@ kclust
 
 
 ~~~{.output}
-K-means clustering with 3 clusters of sizes 50, 61, 39
+K-means clustering with 3 clusters of sizes 61, 39, 50
 
 Cluster means:
         PC1        PC2
-1 -2.642415 -0.1908850
-2  0.665676  0.3316042
-3  2.346527 -0.2739386
+1  0.665676  0.3316042
+2  2.346527 -0.2739386
+3 -2.642415 -0.1908850
 
 Clustering vector:
-  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 3 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
-[106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
-[141] 3 3 2 3 3 3 2 3 3 2
+  [1] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+ [36] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [71] 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 2 2 2
+[106] 2 1 2 2 2 2 2 2 1 1 2 2 2 2 1 2 1 2 1 2 2 1 1 2 2 2 2 2 1 2 2 2 2 1 2
+[141] 2 2 1 2 2 2 1 2 2 1
 
 Within cluster sum of squares by cluster:
-[1] 13.06924 31.87959 18.87111
+[1] 31.87959 18.87111 13.06924
  (between_SS / total_SS =  90.4 %)
 
 Available components:
@@ -683,9 +691,9 @@ tidy(kclust)
 
 ~~~{.output}
          x1         x2 size withinss cluster
-1 -2.642415 -0.1908850   50 13.06924       1
-2  0.665676  0.3316042   61 31.87959       2
-3  2.346527 -0.2739386   39 18.87111       3
+1  0.665676  0.3316042   61 31.87959       1
+2  2.346527 -0.2739386   39 18.87111       2
+3 -2.642415 -0.1908850   50 13.06924       3
 
 ~~~
 
@@ -724,4 +732,195 @@ ggplot(clusterings, aes(k, tot.withinss)) + geom_line()
 ~~~
 
 <img src="fig/broom-iris-kmeans-3.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" />
+
+## 5. UN 총회 투표 데이터
+
+UN 총회 투표 데이터를 가지고 `broom` 팩키지 모형데이터를 처리하는 과정을 살펴본다.
+
+1. `tidy` 팩키지를 활용하여 깔끔한 데이터(tidy data)를 생성한다.
+1. `nest()` 함수를 사용해서 데이터프레임 리스트(a list of dataframe)을 생성한다.
+    - 특정 변수를 기준으로 데이터프레임을 각 행별로 내장한 형태
+1. `map()` 함수를 사용해서 각종 R 통계 모형(`lm` 등)을 적용시킨다.
+    - 모형을 적합시켜 나온 모형 결과물을 `tidy()` 함수에 적용시켜 깔끔한 형태로 변형시킨다.
+1. `unnest()` 함수를 사용하여 작업하기 쉬운 데이터프레임 형태로 원복시킨다.
+1. $R^2$ 혹은 $p-$값 기준등 수많은 모형 중에서 유의미한 것만 뽑아낸다.
+
+<img src="fig/ds-broom-nest-unnest.png" alt="모형 데이터 작업흐름" width="100%" />
+
+
+~~~{.r}
+# 0. 환경설정----------------------------------------
+library(purrr)
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+library(broom)
+
+# 1. 데이터 -----------------------------------------
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379
+## 국가 코드표 : COW country codes.csv
+cow_ct <- read_csv("data/COW country codes.csv")
+cow_ct <- cow_ct %>% dplyr::select(country_code=StateAbb, ccode=CCode, country=StateNme)
+
+# 한국, 미국, 일본, 중국, 러시아
+korea_5 <- c("United States of America", "South Korea", "Japan", "China", "Russia")
+
+## UN 토의주제 : descriptionsnew.xls
+description <- read_excel("data/descriptionsnew.xls", sheet="descriptions")
+
+## Vote : RawVotingdata.tab --> votes_five_nations.csv
+votes <- read_csv("data/votes_five_nations.csv")
+votes <- votes %>% dplyr::select(ccode, session, rcid, vote, year, country_code=StateAbb,country=StateNme)
+
+
+# 2. 데이터 정제-----------------------------------------
+votes <- votes %>% mutate(year = session + 1945)
+votes <- votes %>% left_join(cow_ct, by=c("ccode", "country"))
+
+df <- votes %>% 
+  inner_join(description, by=c("session", "rcid")) %>% 
+  dplyr::filter(!is.na(vote)) %>% 
+  dplyr::filter(country %in% korea_5)
+# dplyr::filter(country %in% "South Korea")
+
+df_long <- df %>% gather(topic, has_topic, me:ec) %>% 
+  dplyr::filter(has_topic == 1, year >= 1999)
+
+df_long <- df_long %>% 
+  dplyr::mutate(topic = dplyr::recode(topic,
+                                      me = "팔레스타인 갈등",
+                                      nu = "핵무기와 핵물질",
+                                      di = "군비통제 및 군비해제",
+                                      hr = "인권",
+                                      co = "식민주의",
+                                      ec = "경제개발")) %>% 
+  dplyr::mutate(country = dplyr::recode(country,
+                                      `United States of America` = "미국",
+                                      `South Korea` = "한국",
+                                      Japan = "일본",
+                                      China = "중국",
+                                      Russia = "러시아"))
+
+## 2.1. 전처리-----------------------------------------
+
+# 년도별 찬성율
+by_year_country <- df_long %>% group_by(year, country) %>% 
+  summarise(total = n(),
+            pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
+  ungroup()
+
+# 년도별 주제별 찬성율
+by_year_country_topic <- df_long %>% group_by(year, country, topic) %>% 
+  summarise(total = n(),
+            pcnt_yes = mean(vote==1, na.rm=TRUE)) %>% 
+  ungroup()
+~~~
+
+각 단계별 모형 작업처리 결과는 다음과 같다.
+
+
+~~~{.r}
+# 3. 회귀 모형-----------------------------------------
+## 3.1. 국가별 찬성율
+
+by_year_country %>% tidyr::nest(-country)
+~~~
+
+
+
+~~~{.output}
+# A tibble: 5 × 2
+  country               data
+    <chr>             <list>
+1  러시아 <tibble [15 × 3]>
+2    미국 <tibble [15 × 3]>
+3    일본 <tibble [15 × 3]>
+4    중국 <tibble [15 × 3]>
+5    한국 <tibble [15 × 3]>
+
+~~~
+
+
+
+~~~{.r}
+by_year_country %>% tidyr::nest(-country) %>%
+  mutate(model = map(data, ~ lm(pcnt_yes ~ year, data = .)),
+         tidied = map(model, tidy)) 
+~~~
+
+
+
+~~~{.output}
+# A tibble: 5 × 4
+  country               data    model                tidied
+    <chr>             <list>   <list>                <list>
+1  러시아 <tibble [15 × 3]> <S3: lm> <data.frame [2 × 5]>
+2    미국 <tibble [15 × 3]> <S3: lm> <data.frame [2 × 5]>
+3    일본 <tibble [15 × 3]> <S3: lm> <data.frame [2 × 5]>
+4    중국 <tibble [15 × 3]> <S3: lm> <data.frame [2 × 5]>
+5    한국 <tibble [15 × 3]> <S3: lm> <data.frame [2 × 5]>
+
+~~~
+
+
+
+~~~{.r}
+by_year_country %>% tidyr::nest(-country) %>%
+  mutate(model = map(data, ~ lm(pcnt_yes ~ year, data = .)),
+         tidied = map(model, tidy))   %>%
+  unnest(tidied)
+~~~
+
+
+
+~~~{.output}
+# A tibble: 10 × 6
+   country        term      estimate   std.error  statistic     p.value
+     <chr>       <chr>         <dbl>       <dbl>      <dbl>       <dbl>
+1   러시아 (Intercept)  1.4992489519 3.981397272  0.3765635 0.712572554
+2   러시아        year -0.0004049105 0.001984740 -0.2040119 0.841503267
+3     미국 (Intercept) -1.6422977000 4.421255742 -0.3714550 0.716282357
+4     미국        year  0.0008800179 0.002204011  0.3992802 0.696168719
+5     일본 (Intercept)  4.7981308493 4.176381737  1.1488727 0.271308448
+6     일본        year -0.0020618091 0.002081940 -0.9903306 0.340088160
+7     중국 (Intercept)  2.7308013125 3.644093490  0.7493774 0.466974448
+8     중국        year -0.0009334447 0.001816593 -0.5138437 0.615983344
+9     한국 (Intercept) 13.6063801346 3.822361003  3.5596795 0.003491099
+10    한국        year -0.0064735329 0.001905460 -3.3973602 0.004766437
+
+~~~
+
+
+
+~~~{.r}
+country_coefficients <- by_year_country %>%
+  tidyr::nest(-country) %>%
+  mutate(model = map(data, ~ lm(pcnt_yes ~ year, data = .)),
+         tidied = map(model, tidy)) %>%
+  unnest(tidied)
+~~~
+
+`p.adjust` 다중비교(Multiple Comparison)를 적용하여 $p-$값 남용에 대한 문제를 회피한다. [^look-elsewhere-effect] [^multiple-comparison]
+
+[^look-elsewhere-effect]: [Look-elsewhere effect](https://en.wikipedia.org/wiki/Look-elsewhere_effect)
+[^multiple-comparison]: [Multiple comparisons problem](https://en.wikipedia.org/wiki/Multiple_comparisons_problem)
+
+
+
+~~~{.r}
+country_coefficients %>% 
+  dplyr::filter(term=="year") %>% 
+  dplyr::filter(p.adjust(p.value) < .05)
+~~~
+
+
+
+~~~{.output}
+# A tibble: 1 × 6
+  country  term     estimate  std.error statistic     p.value
+    <chr> <chr>        <dbl>      <dbl>     <dbl>       <dbl>
+1    한국  year -0.006473533 0.00190546  -3.39736 0.004766437
+
+~~~
+
 

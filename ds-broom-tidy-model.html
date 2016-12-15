@@ -49,7 +49,7 @@
 </ul>
 </div>
 </section>
-<h3 id="broom-팩키지를-사용해야-되는-이유-cran-broom">1. <code>broom</code> 팩키지를 사용해야 되는 이유 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<h2 id="broom-팩키지를-사용해야-되는-이유-cran-broom">1. <code>broom</code> 팩키지를 사용해야 되는 이유 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
 <p><code>broom</code> 팩키지를 꼭 사용해야되는 이유는 R의 성공에서 찾을 수 있다. R이 성공하지 않았다면 이런 고민도, 데이터 과학이 이렇게 관심을 갖게 되지 않았다면 어쩌면 <code>broom</code> 팩키지를 생겨나지 않았을 수도 있다.</p>
 <table style="width:94%;">
 <colgroup>
@@ -197,8 +197,8 @@
 </tr>
 </tbody>
 </table>
-<p><img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="77%" /></p>
-<h3 id="broom-팩키지-3-종세트">2. <code>broom</code> 팩키지 3 종세트</h3>
+<p><img src="fig/ds-broom-overview.png" alt="broom 팩키지 개요" width="97%" /></p>
+<h2 id="broom-팩키지-3-종세트">2. <code>broom</code> 팩키지 3 종세트</h2>
 <p>후속작업을 이어나갈 수 있도록 모형 출력결과를 처리하는 <code>broom</code> 3종 세트가 준비되어 있다.</p>
 <ul>
 <li><code>glance</code> : 모형을 한줄로 간략하게 요약한다. 한줄 요약 모형에는 <span class="math inline">\(R^2\)</span>, 수정 <span class="math inline">\(R^2\)</span>, p-값, AIC, BIC, 편차(deviance)등이 포함된다.</li>
@@ -236,10 +236,8 @@
        AIC      BIC deviance df.residual
 1 166.0294 170.4266 278.3219          30
 </code></pre>
-<h3 id="broom-팩키지-지원현황">3. <code>broom</code> 팩키지 지원현황</h3>
+<h2 id="broom-팩키지-지원현황">3. <code>broom</code> 팩키지 지원현황</h2>
 <p><code>broom</code> 팩키지가 각 수준별로 활용가능한 현황은 다음과 같다. <code>tidy</code>, <code>augment</code>, <code>glance</code> 3종 세트에 대해 각 모형별로 지원현황을 확인하고 <code>broom</code> 팩키지와 엮어 사용한다.</p>
-<pre class="output"><code>Warning: package &#39;dplyr&#39; was built under R version 3.2.5
-</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -257,63 +255,75 @@
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">acf</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left">anova</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">aov</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">aovlist</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Arima</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">biglm</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">binDesign</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">binWidth</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">boot</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">btergm</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">cch</td>
 <td align="left">x</td>
 <td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">character</td>
+<td align="left">x</td>
+<td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
@@ -365,55 +375,79 @@
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">dgCMatrix</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">dgTMatrix</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">dist</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left">ergm</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">felm</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">fitdistr</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">ftable</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gam</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gamlss</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">geeglm</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">glht</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">glmnet</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">gmm</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
@@ -431,58 +465,82 @@
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">kde</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="left">kmeans</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Line</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Lines</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">list</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">lm</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">lme</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
 </tr>
+<tr class="even">
+<td align="left">lmodel2</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
 <tr class="odd">
-<td align="left">manova</td>
+<td align="left">logical</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr class="even">
-<td align="left">map</td>
+<td align="left">manova</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">map</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="left">matrix</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Mclust</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
 </tr>
 <tr class="even">
 <td align="left">merMod</td>
@@ -521,13 +579,25 @@
 <td align="left">x</td>
 </tr>
 <tr class="even">
-<td align="left">pairwise.htest</td>
+<td align="left">numeric</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">pairwise.htest</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
 <td align="left">plm</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left">x</td>
+</tr>
+<tr class="odd">
+<td align="left">poLCA</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
@@ -551,52 +621,64 @@
 <td align="left"></td>
 </tr>
 <tr class="odd">
+<td align="left">prcomp</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left">x</td>
+</tr>
+<tr class="even">
 <td align="left">pyears</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rcorr</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">ridgelm</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rjags</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">roc</td>
 <td align="left">x</td>
 <td align="left"></td>
 <td align="left"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rowwise_df</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">rq</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">rqs</td>
 <td align="left">x</td>
 <td align="left">x</td>
 <td align="left">x</td>
+</tr>
+<tr class="even">
+<td align="left">sparseMatrix</td>
+<td align="left">x</td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr class="odd">
 <td align="left">SpatialLinesDataFrame</td>
@@ -629,9 +711,21 @@
 <td align="left"></td>
 </tr>
 <tr class="even">
+<td align="left">stanreg</td>
+<td align="left">x</td>
+<td align="left">x</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
 <td align="left">summary.glht</td>
 <td align="left">x</td>
 <td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">summary.lm</td>
+<td align="left">x</td>
+<td align="left">x</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
@@ -690,7 +784,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="다수-모형-many-models">4. 다수 모형 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<h2 id="다수-모형-many-models">4. 다수 모형 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
 <p>다수 모형이 가능한 컴퓨팅 파워가 커감에 따라 수학적으로 엄격하게 접근하거나 비용을 많이 들여 실험을 수행하기 보다는 컴퓨터를 활용한 접근법이 경제적으로도 효과적이며 정확성에서도 높은 품질을 보여주기 때문이다. 하지만, 모형을 하나만 갖을 때보다 다수 모형이 출현하는 경우가 빈번하게 목도된다.</p>
 <ul>
 <li>모수를 달리함</li>
@@ -700,7 +794,7 @@
 <li>앙상블 투표 모형</li>
 </ul>
 <p>이런 다양한 경우 데이터에 적합시킨 수많은 모형 결과를 저장하여 이를 분석할 필요가 있다. 이런 경우 편리한 방식을 제공하는 팩키지가 <code>broom</code>이다.</p>
-<h4 id="dplyr과-broom-결합-combine-groom-dplyr">4.1. <code>dplyr</code>과 <code>broom</code> 결합 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h4>
+<h3 id="dplyr과-broom-결합-combine-groom-dplyr">4.1. <code>dplyr</code>과 <code>broom</code> 결합 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
 <p><code>broom</code>은 일관된 형식으로 단일 분석결과를 요약하는데 매우 유용하다. 특히, <code>dplyr</code> 팩키지 <code>group_by()</code>, <code>do()</code> 함수와 궁합이 잘 맞는다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##===========================================================================
 ## 01. broom &amp; dplyr
@@ -756,7 +850,7 @@ sample estimates:
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Orange %&gt;%<span class="st"> </span><span class="kw">group_by</span>(Tree) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">do</span>(<span class="kw">tidy</span>(<span class="kw">cor.test</span>(.$age, .$circumference)))</code></pre></div>
-<pre class="output"><code>Source: local data frame [5 x 7]
+<pre class="output"><code>Source: local data frame [5 x 9]
 Groups: Tree [5]
 
    Tree  estimate statistic      p.value parameter  conf.low conf.high
@@ -766,6 +860,7 @@ Groups: Tree [5]
 3     5 0.9877376  14.14686 3.177093e-05         5 0.9160865 0.9982635
 4     2 0.9873624  13.93129 3.425041e-05         5 0.9136142 0.9982101
 5     4 0.9844610  12.53575 5.733090e-05         5 0.8946782 0.9977964
+# ... with 2 more variables: method &lt;fctr&gt;, alternative &lt;fctr&gt;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#---------------------------------------------------------------------------</span>
 <span class="co"># 1.4. 나무집단별 회귀분석</span>
@@ -861,29 +956,38 @@ Groups: am [2]
 # ... with 5 more variables: logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;,
 #   deviance &lt;dbl&gt;, df.residual &lt;int&gt;
 </code></pre>
-<h4 id="broom-부츠트랩-groom-bootstrap">4.2. <code>broom</code> 부츠트랩 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h4>
+<h3 id="broom-부츠트랩-groom-bootstrap">4.2. <code>broom</code> 부츠트랩 <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></h3>
 <p><code>mtcars</code> 데이터셋에서 연비와 차체무게와의 비선형 관계를 회귀식으로 적합해본다. 이러한 비선형 모형을 상정하는 이유는 산점도 결과 차체무게와 연비사이 역의 관계가 파악되기 때문이다. 직관적으로도 고급대형차가 차체무게가 많이 나가고 연비가 떨어지는 것은 널리 알려진 사실이다.</p>
 <p><span class="math display">\[연비 = k \times \frac{1}{차체무게} + \beta\]</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 산점도</span>
 <span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg)) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_point</span>() +<span class="st"> </span>
-<span class="st">  </span>
-<span class="co"># 연비 = 1/차체무게, 비선형 모형 추정</span>
-<span class="st">  </span>
-nlsfit &lt;-<span class="st"> </span><span class="kw">nls</span>(mpg ~<span class="st"> </span>k /<span class="st"> </span>wt +<span class="st"> </span>b, mtcars, <span class="dt">start=</span><span class="kw">list</span>(<span class="dt">k=</span><span class="dv">1</span>, <span class="dt">b=</span><span class="dv">0</span>))</code></pre></div>
-<pre class="output"><code>Error in ggplot(mtcars, aes(wt, mpg)) + geom_point() + nlsfit &lt;- nls(mpg ~ : 함수 &quot;+&lt;-&quot;를 찾을 수 없습니다
-</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(nlsfit)</code></pre></div>
-<pre class="output"><code>Error in summary(nlsfit): 객체 &#39;nlsfit&#39;를 찾을 수 없습니다
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="fig/broom-mtcars-nonlinear-1.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 연비 = 1/차체무게, 비선형 모형 추정</span>
+  
+nlsfit &lt;-<span class="st"> </span><span class="kw">nls</span>(mpg ~<span class="st"> </span>k /<span class="st"> </span>wt +<span class="st"> </span>b, mtcars, <span class="dt">start=</span><span class="kw">list</span>(<span class="dt">k=</span><span class="dv">1</span>, <span class="dt">b=</span><span class="dv">0</span>))
+<span class="kw">summary</span>(nlsfit)</code></pre></div>
+<pre class="output"><code>
+Formula: mpg ~ k/wt + b
+
+Parameters:
+  Estimate Std. Error t value Pr(&gt;|t|)    
+k   45.829      4.249  10.786 7.64e-12 ***
+b    4.386      1.536   2.855  0.00774 ** 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2.774 on 30 degrees of freedom
+
+Number of iterations to convergence: 1 
+Achieved convergence tolerance: 2.877e-08
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 데이터와 비선형모형 시각화</span>
 
 <span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg)) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>() +<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">predict</span>(nlsfit)))</code></pre></div>
-<pre class="output"><code>Error in predict(nlsfit): 객체 &#39;nlsfit&#39;를 찾을 수 없습니다
-</code></pre>
-<p><img src="fig/broom-mtcars-nonlinear-1.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" /></p>
+<p><img src="fig/broom-mtcars-nonlinear-2.png" title="plot of chunk broom-mtcars-nonlinear" alt="plot of chunk broom-mtcars-nonlinear" style="display: block; margin: auto;" /></p>
 <p>부츠트랩 표본을 100개 뽑아서 사실 더 많이 만들어 모형을 적합해도 된다. <code>tidy</code>함수를 통해 초기값 <code>k=1</code>, <code>b=0</code>으로 두고 비선형 회귀모형을 적합시켜 비선형 회귀계수에 대한 중위수와 95% 신뢰구간값을 추정한다.</p>
 <p>또한, <code>augment</code> 함수로 100개 모형에 대한 관측점별 적합값을 산출하여 이를 시각화한다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bootnls &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span><span class="kw">bootstrap</span>(<span class="dv">100</span>) %&gt;%
@@ -895,10 +999,10 @@ bootnls %&gt;%<span class="st"> </span><span class="kw">group_by</span>(term) %&
                                          <span class="dt">low =</span> <span class="kw">quantile</span>(estimate, alpha /<span class="st"> </span><span class="dv">2</span>),
                                          <span class="dt">high =</span> <span class="kw">quantile</span>(estimate, <span class="dv">1</span> -<span class="st"> </span>alpha /<span class="st"> </span><span class="dv">2</span>))</code></pre></div>
 <pre class="output"><code># A tibble: 2 × 4
-   term    median        low      high
-  &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-1     b  4.351746  0.5599099  7.679257
-2     k 45.595418 37.3312127 59.060347
+   term    median       low      high
+  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1     b  4.077803  1.130968  6.435653
+2     k 46.106434 40.314750 55.050933
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 비선형 회귀모형 부츠트랩 시각화 </span>
 bootnls_aug &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span><span class="kw">bootstrap</span>(<span class="dv">100</span>) %&gt;%
@@ -907,7 +1011,7 @@ bootnls_aug &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span>
 <span class="kw">ggplot</span>(bootnls_aug, <span class="kw">aes</span>(wt, mpg)) +<span class="st"> </span><span class="kw">geom_point</span>() +
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span>.fitted, <span class="dt">group=</span>replicate), <span class="dt">alpha=</span>.<span class="dv">2</span>)</code></pre></div>
 <p><img src="fig/broom-mtcars-bootstrap-1.png" title="plot of chunk broom-mtcars-bootstrap" alt="plot of chunk broom-mtcars-bootstrap" style="display: block; margin: auto;" /></p>
-<h4 id="broom-k-평균-군집분석-groom-kmeans">4.3. <code>broom</code> k-평균 군집분석 <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></h4>
+<h3 id="broom-k-평균-군집분석-groom-kmeans">4.3. <code>broom</code> k-평균 군집분석 <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></h3>
 <p>k-평균 군집분석에 <code>broom</code>을 사용하여 최적 군집 k 갯수를 계산해 낼 수 있다. 이를 시연하기 위해 몇가지 사전작업을 수행한다. 2차원 평면에 시각화를 위해 주성분분석(<code>prcomp</code>)으로 주요인을 2개를 뽑아내고 이를 바탕으로 k-평균 알고리즘을 군집갯수를 1에서부터 9까지 변화시켜 최적 군집 k 3을 계산해 낸다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(iris)
 <span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Sepal.Length, Sepal.Width, <span class="dt">color =</span> Species)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
@@ -916,23 +1020,23 @@ bootnls_aug &lt;-<span class="st"> </span>mtcars %&gt;%<span class="st"> </span>
 
 kclust &lt;-<span class="st"> </span><span class="kw">kmeans</span>(iris_df, <span class="dt">centers =</span> <span class="dv">3</span>)
 kclust </code></pre></div>
-<pre class="output"><code>K-means clustering with 3 clusters of sizes 50, 61, 39
+<pre class="output"><code>K-means clustering with 3 clusters of sizes 61, 39, 50
 
 Cluster means:
         PC1        PC2
-1 -2.642415 -0.1908850
-2  0.665676  0.3316042
-3  2.346527 -0.2739386
+1  0.665676  0.3316042
+2  2.346527 -0.2739386
+3 -2.642415 -0.1908850
 
 Clustering vector:
-  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- [36] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 3 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- [71] 2 2 2 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 3 3 3
-[106] 3 2 3 3 3 3 3 3 2 2 3 3 3 3 2 3 2 3 2 3 3 2 2 3 3 3 3 3 2 3 3 3 3 2 3
-[141] 3 3 2 3 3 3 2 3 3 2
+  [1] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+ [36] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ [71] 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 2 2 2
+[106] 2 1 2 2 2 2 2 2 1 1 2 2 2 2 1 2 1 2 1 2 2 1 1 2 2 2 2 2 1 2 2 2 2 1 2
+[141] 2 2 1 2 2 2 1 2 2 1
 
 Within cluster sum of squares by cluster:
-[1] 13.06924 31.87959 18.87111
+[1] 31.87959 18.87111 13.06924
  (between_SS / total_SS =  90.4 %)
 
 Available components:
@@ -943,9 +1047,9 @@ Available components:
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tidy</span>(kclust)</code></pre></div>
 <pre class="output"><code>         x1         x2 size withinss cluster
-1 -2.642415 -0.1908850   50 13.06924       1
-2  0.665676  0.3316042   61 31.87959       2
-3  2.346527 -0.2739386   39 18.87111       3
+1  0.665676  0.3316042   61 31.87959       1
+2  2.346527 -0.2739386   39 18.87111       2
+3 -2.642415 -0.1908850   50 13.06924       3
 </code></pre>
 <p>군집 갯수를 1에서부터 9까지 순차적으로 변화시키면서 k-평균 군집분석을 수행한 값을 <code>kclusts</code> 객체에 저장한다. 이를 바탕으로 모형결과는 <code>tidy</code>, 관측점 결과는 <code>augment</code>, 모형 결과는 <code>glance</code>로 뽑아낸다. 이를 군집수를 바꿔가면서 <code>ggplot</code>, <code>facet_wrap</code>과 조합하여 시각화한다.</p>
 <p>물론 팔꿈치가 꺾이는 3개 지점이 최적 군집이 되는 것도 확인된다.</p>
@@ -966,6 +1070,145 @@ p2</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최적 군집갯수</span>
 <span class="kw">ggplot</span>(clusterings, <span class="kw">aes</span>(k, tot.withinss)) +<span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
 <p><img src="fig/broom-iris-kmeans-3.png" title="plot of chunk broom-iris-kmeans" alt="plot of chunk broom-iris-kmeans" style="display: block; margin: auto;" /></p>
+<h2 id="un-총회-투표-데이터">5. UN 총회 투표 데이터</h2>
+<p>UN 총회 투표 데이터를 가지고 <code>broom</code> 팩키지 모형데이터를 처리하는 과정을 살펴본다.</p>
+<ol style="list-style-type: decimal">
+<li><code>tidy</code> 팩키지를 활용하여 깔끔한 데이터(tidy data)를 생성한다.</li>
+<li><code>nest()</code> 함수를 사용해서 데이터프레임 리스트(a list of dataframe)을 생성한다.
+<ul>
+<li>특정 변수를 기준으로 데이터프레임을 각 행별로 내장한 형태</li>
+</ul></li>
+<li><code>map()</code> 함수를 사용해서 각종 R 통계 모형(<code>lm</code> 등)을 적용시킨다.
+<ul>
+<li>모형을 적합시켜 나온 모형 결과물을 <code>tidy()</code> 함수에 적용시켜 깔끔한 형태로 변형시킨다.</li>
+</ul></li>
+<li><code>unnest()</code> 함수를 사용하여 작업하기 쉬운 데이터프레임 형태로 원복시킨다.</li>
+<li><span class="math inline">\(R^2\)</span> 혹은 <span class="math inline">\(p-\)</span>값 기준등 수많은 모형 중에서 유의미한 것만 뽑아낸다.</li>
+</ol>
+<p><img src="fig/ds-broom-nest-unnest.png" alt="모형 데이터 작업흐름" width="100%" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 0. 환경설정----------------------------------------</span>
+<span class="kw">library</span>(purrr)
+<span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(readxl)
+<span class="kw">library</span>(broom)
+
+<span class="co"># 1. 데이터 -----------------------------------------</span>
+<span class="co"># https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/12379</span>
+## 국가 코드표 : COW country codes.csv
+cow_ct &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/COW country codes.csv&quot;</span>)
+cow_ct &lt;-<span class="st"> </span>cow_ct %&gt;%<span class="st"> </span>dplyr::<span class="kw">select</span>(<span class="dt">country_code=</span>StateAbb, <span class="dt">ccode=</span>CCode, <span class="dt">country=</span>StateNme)
+
+<span class="co"># 한국, 미국, 일본, 중국, 러시아</span>
+korea_5 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;United States of America&quot;</span>, <span class="st">&quot;South Korea&quot;</span>, <span class="st">&quot;Japan&quot;</span>, <span class="st">&quot;China&quot;</span>, <span class="st">&quot;Russia&quot;</span>)
+
+## UN 토의주제 : descriptionsnew.xls
+description &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;data/descriptionsnew.xls&quot;</span>, <span class="dt">sheet=</span><span class="st">&quot;descriptions&quot;</span>)
+
+## Vote : RawVotingdata.tab --&gt; votes_five_nations.csv
+votes &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/votes_five_nations.csv&quot;</span>)
+votes &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span>dplyr::<span class="kw">select</span>(ccode, session, rcid, vote, year, <span class="dt">country_code=</span>StateAbb,<span class="dt">country=</span>StateNme)
+
+
+<span class="co"># 2. 데이터 정제-----------------------------------------</span>
+votes &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">year =</span> session +<span class="st"> </span><span class="dv">1945</span>)
+votes &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span><span class="kw">left_join</span>(cow_ct, <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;ccode&quot;</span>, <span class="st">&quot;country&quot;</span>))
+
+df &lt;-<span class="st"> </span>votes %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">inner_join</span>(description, <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;session&quot;</span>, <span class="st">&quot;rcid&quot;</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(!<span class="kw">is.na</span>(vote)) %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(country %in%<span class="st"> </span>korea_5)
+<span class="co"># dplyr::filter(country %in% &quot;South Korea&quot;)</span>
+
+df_long &lt;-<span class="st"> </span>df %&gt;%<span class="st"> </span><span class="kw">gather</span>(topic, has_topic, me:ec) %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(has_topic ==<span class="st"> </span><span class="dv">1</span>, year &gt;=<span class="st"> </span><span class="dv">1999</span>)
+
+df_long &lt;-<span class="st"> </span>df_long %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">mutate</span>(<span class="dt">topic =</span> dplyr::<span class="kw">recode</span>(topic,
+                                      <span class="dt">me =</span> <span class="st">&quot;팔레스타인 갈등&quot;</span>,
+                                      <span class="dt">nu =</span> <span class="st">&quot;핵무기와 핵물질&quot;</span>,
+                                      <span class="dt">di =</span> <span class="st">&quot;군비통제 및 군비해제&quot;</span>,
+                                      <span class="dt">hr =</span> <span class="st">&quot;인권&quot;</span>,
+                                      <span class="dt">co =</span> <span class="st">&quot;식민주의&quot;</span>,
+                                      <span class="dt">ec =</span> <span class="st">&quot;경제개발&quot;</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">mutate</span>(<span class="dt">country =</span> dplyr::<span class="kw">recode</span>(country,
+                                      <span class="st">`</span><span class="dt">United States of America</span><span class="st">`</span> =<span class="st"> &quot;미국&quot;</span>,
+                                      <span class="st">`</span><span class="dt">South Korea</span><span class="st">`</span> =<span class="st"> &quot;한국&quot;</span>,
+                                      <span class="dt">Japan =</span> <span class="st">&quot;일본&quot;</span>,
+                                      <span class="dt">China =</span> <span class="st">&quot;중국&quot;</span>,
+                                      <span class="dt">Russia =</span> <span class="st">&quot;러시아&quot;</span>))
+
+## 2.1. 전처리-----------------------------------------
+
+<span class="co"># 년도별 찬성율</span>
+by_year_country &lt;-<span class="st"> </span>df_long %&gt;%<span class="st"> </span><span class="kw">group_by</span>(year, country) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">total =</span> <span class="kw">n</span>(),
+            <span class="dt">pcnt_yes =</span> <span class="kw">mean</span>(vote==<span class="dv">1</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>()
+
+<span class="co"># 년도별 주제별 찬성율</span>
+by_year_country_topic &lt;-<span class="st"> </span>df_long %&gt;%<span class="st"> </span><span class="kw">group_by</span>(year, country, topic) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">total =</span> <span class="kw">n</span>(),
+            <span class="dt">pcnt_yes =</span> <span class="kw">mean</span>(vote==<span class="dv">1</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>()</code></pre></div>
+<p>각 단계별 모형 작업처리 결과는 다음과 같다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 3. 회귀 모형-----------------------------------------</span>
+## 3.1. 국가별 찬성율
+
+by_year_country %&gt;%<span class="st"> </span>tidyr::<span class="kw">nest</span>(-country)</code></pre></div>
+<pre class="output"><code># A tibble: 5 × 2
+  country               data
+    &lt;chr&gt;             &lt;list&gt;
+1  러시아 &lt;tibble [15 × 3]&gt;
+2    미국 &lt;tibble [15 × 3]&gt;
+3    일본 &lt;tibble [15 × 3]&gt;
+4    중국 &lt;tibble [15 × 3]&gt;
+5    한국 &lt;tibble [15 × 3]&gt;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">by_year_country %&gt;%<span class="st"> </span>tidyr::<span class="kw">nest</span>(-country) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, ~<span class="st"> </span><span class="kw">lm</span>(pcnt_yes ~<span class="st"> </span>year, <span class="dt">data =</span> .)),
+         <span class="dt">tidied =</span> <span class="kw">map</span>(model, tidy)) </code></pre></div>
+<pre class="output"><code># A tibble: 5 × 4
+  country               data    model                tidied
+    &lt;chr&gt;             &lt;list&gt;   &lt;list&gt;                &lt;list&gt;
+1  러시아 &lt;tibble [15 × 3]&gt; &lt;S3: lm&gt; &lt;data.frame [2 × 5]&gt;
+2    미국 &lt;tibble [15 × 3]&gt; &lt;S3: lm&gt; &lt;data.frame [2 × 5]&gt;
+3    일본 &lt;tibble [15 × 3]&gt; &lt;S3: lm&gt; &lt;data.frame [2 × 5]&gt;
+4    중국 &lt;tibble [15 × 3]&gt; &lt;S3: lm&gt; &lt;data.frame [2 × 5]&gt;
+5    한국 &lt;tibble [15 × 3]&gt; &lt;S3: lm&gt; &lt;data.frame [2 × 5]&gt;
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">by_year_country %&gt;%<span class="st"> </span>tidyr::<span class="kw">nest</span>(-country) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, ~<span class="st"> </span><span class="kw">lm</span>(pcnt_yes ~<span class="st"> </span>year, <span class="dt">data =</span> .)),
+         <span class="dt">tidied =</span> <span class="kw">map</span>(model, tidy))   %&gt;%
+<span class="st">  </span><span class="kw">unnest</span>(tidied)</code></pre></div>
+<pre class="output"><code># A tibble: 10 × 6
+   country        term      estimate   std.error  statistic     p.value
+     &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;
+1   러시아 (Intercept)  1.4992489519 3.981397272  0.3765635 0.712572554
+2   러시아        year -0.0004049105 0.001984740 -0.2040119 0.841503267
+3     미국 (Intercept) -1.6422977000 4.421255742 -0.3714550 0.716282357
+4     미국        year  0.0008800179 0.002204011  0.3992802 0.696168719
+5     일본 (Intercept)  4.7981308493 4.176381737  1.1488727 0.271308448
+6     일본        year -0.0020618091 0.002081940 -0.9903306 0.340088160
+7     중국 (Intercept)  2.7308013125 3.644093490  0.7493774 0.466974448
+8     중국        year -0.0009334447 0.001816593 -0.5138437 0.615983344
+9     한국 (Intercept) 13.6063801346 3.822361003  3.5596795 0.003491099
+10    한국        year -0.0064735329 0.001905460 -3.3973602 0.004766437
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">country_coefficients &lt;-<span class="st"> </span>by_year_country %&gt;%
+<span class="st">  </span>tidyr::<span class="kw">nest</span>(-country) %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, ~<span class="st"> </span><span class="kw">lm</span>(pcnt_yes ~<span class="st"> </span>year, <span class="dt">data =</span> .)),
+         <span class="dt">tidied =</span> <span class="kw">map</span>(model, tidy)) %&gt;%
+<span class="st">  </span><span class="kw">unnest</span>(tidied)</code></pre></div>
+<p><code>p.adjust</code> 다중비교(Multiple Comparison)를 적용하여 <span class="math inline">\(p-\)</span>값 남용에 대한 문제를 회피한다. <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">country_coefficients %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(term==<span class="st">&quot;year&quot;</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(<span class="kw">p.adjust</span>(p.value) &lt;<span class="st"> </span>.<span class="dv">05</span>)</code></pre></div>
+<pre class="output"><code># A tibble: 1 × 6
+  country  term     estimate  std.error statistic     p.value
+    &lt;chr&gt; &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1    한국  year -0.006473533 0.00190546  -3.39736 0.004766437
+</code></pre>
 <div class="footnotes">
 <hr />
 <ol>
@@ -974,6 +1217,8 @@ p2</code></pre></div>
 <li id="fn3"><p><a href="https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html">broom and dplyr</a><a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p><a href="https://cran.r-project.org/web/packages/broom/vignettes/bootstrapping.html">Tidy bootstrapping with dplyr+broom</a><a href="#fnref4">↩</a></p></li>
 <li id="fn5"><p><a href="https://cran.r-project.org/web/packages/broom/vignettes/kmeans.html">Tidying k-means clustering</a><a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p><a href="https://en.wikipedia.org/wiki/Look-elsewhere_effect">Look-elsewhere effect</a><a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p><a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">Multiple comparisons problem</a><a href="#fnref7">↩</a></p></li>
 </ol>
 </div>
         </div>

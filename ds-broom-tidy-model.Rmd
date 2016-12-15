@@ -254,7 +254,7 @@ $$연비 = k \times \frac{1}{차체무게} + \beta$$
 ```{r broom-mtcars-nonlinear, warning=FALSE}
 # 산점도
 ggplot(mtcars, aes(wt, mpg)) + 
-  geom_point() + 
+  geom_point()
   
 # 연비 = 1/차체무게, 비선형 모형 추정
   
@@ -350,7 +350,7 @@ UN 총회 투표 데이터를 가지고 `broom` 팩키지 모형데이터를 처
 1. `unnest()` 함수를 사용하여 작업하기 쉬운 데이터프레임 형태로 원복시킨다.
 1. $R^2$ 혹은 $p-$값 기준등 수많은 모형 중에서 유의미한 것만 뽑아낸다.
 
-<img src="fig/ds-broom-nest-unnest.png" alt="모형 데이터 작업흐름" width="77%" />
+<img src="fig/ds-broom-nest-unnest.png" alt="모형 데이터 작업흐름" width="100%" />
 
 ```{r broom-un-workflow-setup, warning=FALSE, message=FALSE}
 # 0. 환경설정----------------------------------------
