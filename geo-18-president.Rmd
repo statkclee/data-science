@@ -1,0 +1,40 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 제18대 대통령선거
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+
+```{r, include=FALSE}
+source("tools/chunk-options.R")
+```
+> ## 학습 목표 {.objectives}
+>
+> * 제18대 대통령선거 투표결과를 시각화하여 이해한다. 
+
+## 제18대 대선 데이터 
+
+
+
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+```
+
+- 제18대 대통령선거 투표구별 개표결과 [다운로드](http://www.nec.go.kr/portal/cmm/fms/FileDown.do?atchFileId=FILE_000000000061613&fileSn=1&bbsId=)
+- 제20대 국회의원선거 투표구별 개표결과 자료 [다운로드](http://www.nec.go.kr/portal/cmm/fms/FileDown.do?atchFileId=FILE_000000000146224&fileSn=1&bbsId=)
+
+
+## 행정 지도 데이터
+
+[최신 행정구역(SHP) 다운로드](http://www.gisdeveloper.co.kr/entry/최신신-행정구역도-다운로드)
+
+``` {r message=FALSE, warning=FALSE, comment=FALSE}
+
+```
+

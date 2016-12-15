@@ -82,6 +82,7 @@ title: 데이터 과학
         - [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
         - [.shp 지도 일부 추출](geo-info-shapefile.html)
         - [IP 주소 지리정보 시각화](geo-info-ip-address.html)
+        - [제18대 대통령선거](geo-18-president.html)
     - **웹 데이터**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
         - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
