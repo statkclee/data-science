@@ -73,7 +73,7 @@ FILEMAP = {
 [남한 극단정보](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea)
 위키피디아에서 확인한 극점정보를 사용하여 남한해 지도를 그려본다. 
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info-rworldmap, message=FALSE, warning=FALSE, comment=FALSE}
 #install.packages(rworldmap)
 library(rworldmap)
 library(ggmap)
@@ -98,7 +98,7 @@ plot(korea.map,
 [남한 극단정보](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea) 중 섬을 제외한 
 본토를 기준으로 지리정보를 시각화하면 다음과 같다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info-korea-map, message=FALSE, warning=FALSE, comment=FALSE}
 south.korea.mainland.limits <- geocode(c(
   "Daegang-ri, Hyeonnae-myeon, County of Goseong, Gangwon",
   "Songho-ri, Songji-myeon, Haenam, South Jeolla",
@@ -120,7 +120,7 @@ plot(korea.map,
 
 `ggmap` API를 활용하여 지도를 그린다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info-ggmap-index, message=FALSE, warning=FALSE, comment=FALSE}
 library(ggmap)
 # 위치를 지정한다.
 krLocation <- c(124.11, 33.06, 131.52, 43.00) #좌측하단경도, 좌측하단위도, 우측상단경도, 우측상단위도
@@ -133,7 +133,7 @@ ggmap(krMap)
 `googlemap`이 위도경도 지도중앙, `stamen`, `openstreetmap`, `cloudmade`는 
 위도경도 상자표기를 권장한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+``` {r geo-info-get-map-ggmap, message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FALSE) #terrain, satellite, roadmap, hybrid, toner, watercolor
 ggmap(krMap)
 ```
@@ -159,7 +159,7 @@ ggmap(krMap)
 - [http://indiemapper.com/](http://indiemapper.com/app/learnmore.php?l=choropleth)
 
 
-### 참고자료
+### 참고자료 
 
 - [Thematic Cartography and Geovisualization](http://www.amazon.com/Thematic-Cartography-Geovisualization-3rd-Edition/dp/0132298341)
 - [Web Cartography: Map Design for Interactive and Mobile Devices](https://www.crcpress.com/Web-Cartography-Map-Design-for-Interactive-and-Mobile-Devices/Muehlenhaus/9781439876220)

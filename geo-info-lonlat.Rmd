@@ -75,7 +75,7 @@ R에서 구글, 네이버, 다음등에서 제공하는 지리정보 API를 활�
 
 <img src="fig/geo-googleapi.png" alt="Google 지도 API" width="77%" />
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info, message=FALSE, warning=FALSE, comment=FALSE}
 library(ggmap)
 library(ggplot2)
 geocode(enc2utf8("속초"), source='google')
@@ -83,7 +83,7 @@ geocode(enc2utf8("속초"), source='google')
 
 주소정보를 함께 출력하고자할 경우 `output="latlona"` 선택옵션을 추가한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info-call, message=FALSE, warning=FALSE, comment=FALSE}
 #geocode(enc2utf8("속초"), source='google', output="latlona")
 geocode(enc2utf8("속초&language=ko"), source='google', output="latlona")
 ```
@@ -98,7 +98,7 @@ geocode(enc2utf8("속초&language=ko"), source='google', output="latlona")
 
 `geocodeQueryCheck(userType = "free")` 명령어를 사용하여 구글 지도 API 사용량을 확인할 수 있다.
 
-``` {r }
+``` {r geo-info-check}
 geocodeQueryCheck(userType = "free")
 ```
 
@@ -106,7 +106,7 @@ geocodeQueryCheck(userType = "free")
 `enc2utf8()` 함수로 인코딩을 검증하고 나서 `geocode` API를 호출해서 위도경도 정보를 받아오면서
 바로 데이터프레임에 붙인다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info-ggmap, message=FALSE, warning=FALSE, comment=FALSE}
 library(ggmap)
 library(ggplot2)
 library(plyr)
@@ -129,7 +129,7 @@ kangwon.loc.latlon
 
 `geocodeQueryCheck(userType = "free")` 명령어로 사용량이 3개 준 것을 확인할 수 있다.
 
-``` {r }
+``` {r geo-info-check2}
 geocodeQueryCheck(userType = "free")
 ```
 
@@ -146,7 +146,7 @@ kangwon.loc.dplyr
 경기도와 강원도 3개 주소정보를 구글 지도 API 지역에 전달하여 위도와 경도정보를 받아와서 이를 데이터프레임에 붙인다.
 받아온 정보를 `kangwon.loc.dplyr` 데이터프레임에 저장하고 이를 활용하여 구글지도에 시각화를 한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
+``` {r geo-info-qmap, message=FALSE, warning=FALSE, comment=FALSE}
 kangwonMap <- qmap(enc2utf8("속초"), zoom = 8, maptype = "toner-lite")
 
 kangwonMap + geom_point(data = kangwon.loc.dplyr, aes(lon,lat), size = 2, colour="blue")

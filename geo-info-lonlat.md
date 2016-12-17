@@ -14,8 +14,44 @@ mainfont: NanumGothic
 
 > ## 학습 목표 {.objectives}
 >
+> *  공간자료(Spatial Data)와 자료구조를 이해한다.
 > *  한국 주소명을 지리정보(위도, 경도)로 변환한다. [^geoCodingWithR]
 > * `dplyr` 팩키지 `mutate_geocode` 위도경도 함수를 파이프연산자와 결합하여 코드를 간결화한다. 
+
+
+## 1. 공간자료(Spatial Data)
+
+좌표와 좌표기준계(coordinate reference system)를 활용하여 장소가 기술되는 자료를 공간자료(Spatial Data)라고 한다.
+가장 흔히 알려진 좌표기준계는 위도와 경도를 활용하여 지구상 위치를 표식한 것이다.
+보통 $x-$축 방향을 의미하는 경도(longitude)를 먼저 넣고 나서 $y-$축 방향을 나타내는 위도(latitude) 순으로 데이터를 분석한다.
+
+
+<img src="fig/geo-spatial-data-workflow.png" alt="공간자료 작업 흐름도" width="77%" />
+
+공간자료를 R에서 작업하는 작업흐름은 크게 두가지가 있다.
+이와 같은 작업흐름이 별도로 생겨나는 이유는 R 데이터프레임이 공간자료를 저장하기 적합하지 못하다는 내재적인 이유가 가장 크다.
+
+- CSR(좌표기준계) 정보를 저장하는 방법이 데이터프레임에는 없다.
+- 공간자료를 저장하기 위해서 반복적으로 데이터프레임에 저장하는 구조라 저장공간 낭비가 심하다.
+- 공간자료를 표현하는 방법도 데이터프레임으로는 적절하지 못하다.
+
+이런 이유로 인해서 `sp`, `raster` 팩키지를 데이터프레임과 붙여 사용한다. 즉, 지리정보는 `.shp` 파일에 담기고,
+지도를 사용해서 정보로 표현하는 데이터는 데이터프레임에 담기게 된다. 따라서 데이터프레임 정보를 `.shp` 파일에 
+녹여내기 위해서는 `merge()` 같은 병합연산자를 통해 합하는 과정이 수반된다. 
+
+`.shp` 파일 중심으로 작업을 할 것인가? 데이터프레임 중심으로 작업을 할 것이냐에 따라 크게 두가지 작업흐름으로 나눠진다.
+
+### 1.1. 데이터프레임 중심
+
+지도관련 정보는 `.shp` 파일을 통해 얻고 이를 `fortify()` 함수를 사용해서 데이터프레임으로 변환한다.
+이제 지도에 표시할 정보도 데이터프레임이고, `.shp` 파일도 데이터프레임이라 `left_join` 같은 병합 연산자를 
+사용해서 통합 데이터프레임으로 생성시키고 나서 `ggplot` 그래픽 팩키지를 사용해서 마무리한다.
+
+### 1.2. `.shp` 파일 중심
+
+`.shp` 파일은 `shdf` 파일형태로 내부적으로 데이터프레임을 담고 있다. `@data` 명령어를 통해 접근할 수 있는데,
+데이터프레임과 `.shp` 파일 `@data` 데이터프레임을 `merge()` 명령어로 병합시켜 데이터프레임이 포함된 `.shp` 파일을 생성시킨다.
+그리고 나서 `tmap` 주제도를 활용하여 쉽게 시각화한다.
 
 ### 1. 지리정보 API - `geocode` 
 
@@ -62,8 +98,8 @@ geocode(enc2utf8("속초&language=ko"), source='google', output="latlona")
 
 
 ~~~{.output}
-FALSE        lon      lat                address
-FALSE 1 128.5918 38.20701 대한민국 강원도 속초시
+FALSE   lon lat
+FALSE 1  NA  NA
 
 ~~~
 `"속초"`를 `geocode` 함수 인자로 넣은 경우와 `"속초&language=ko"` 넣어 함께 넘긴 경우 한글주소로 출력되게 한다.
@@ -85,7 +121,7 @@ geocodeQueryCheck(userType = "free")
 
 
 ~~~{.output}
-2498 geocoding queries remaining.
+Error in geocodeQueryCheck(userType = "free"): 사용되지 않은 인자 (userType = "free")
 
 ~~~
 
@@ -100,7 +136,18 @@ library(ggplot2)
 library(plyr)
 
 geocodeQueryCheck(userType = "free")
+~~~
 
+
+
+~~~{.output}
+FALSE Error in geocodeQueryCheck(userType = "free"): 사용되지 않은 인자 (userType = "free")
+
+~~~
+
+
+
+~~~{.r}
 kangwon.loc <- data.frame(addr=c("강원도 속초시 영랑동", 
                                  "경기도 의왕시 포일세거리로 73",
                                  "경기도 성남시 분당구 미금동"), stringsAsFactors = FALSE)
@@ -118,10 +165,10 @@ kangwon.loc.latlon
 
 
 ~~~{.output}
-FALSE                            addr      lon     lat
-FALSE 1          강원도 속초시 영랑동  128.588 38.2239
-FALSE 2 경기도 의왕시 포일세거리로 73 126.9683 37.3447
-FALSE 3   경기도 성남시 분당구 미금동 127.1189 37.3827
+FALSE                            addr      lon      lat
+FALSE 1          강원도 속초시 영랑동  128.588  38.2239
+FALSE 2 경기도 의왕시 포일세거리로 73       NA       NA
+FALSE 3   경기도 성남시 분당구 미금동 127.1207 37.34337
 
 ~~~
 
@@ -135,7 +182,7 @@ geocodeQueryCheck(userType = "free")
 
 
 ~~~{.output}
-2492 geocoding queries remaining.
+Error in geocodeQueryCheck(userType = "free"): 사용되지 않은 인자 (userType = "free")
 
 ~~~
 
@@ -153,10 +200,10 @@ kangwon.loc.dplyr
 
 
 ~~~{.output}
-FALSE                            addr      lon     lat
-FALSE 1          강원도 속초시 영랑동 128.5880 38.2239
-FALSE 2 경기도 의왕시 포일세거리로 73 126.9683 37.3447
-FALSE 3   경기도 성남시 분당구 미금동 127.1189 37.3827
+FALSE                            addr      lon      lat
+FALSE 1          강원도 속초시 영랑동 128.5880 38.22390
+FALSE 2 경기도 의왕시 포일세거리로 73       NA       NA
+FALSE 3   경기도 성남시 분당구 미금동 127.1207 37.34337
 
 ~~~
 
@@ -170,6 +217,6 @@ kangwonMap <- qmap(enc2utf8("속초"), zoom = 8, maptype = "toner-lite")
 kangwonMap + geom_point(data = kangwon.loc.dplyr, aes(lon,lat), size = 2, colour="blue")
 ~~~
 
-<img src="fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+<img src="fig/geo-info-qmap-1.png" title="plot of chunk geo-info-qmap" alt="plot of chunk geo-info-qmap" style="display: block; margin: auto;" />
 
 [^geoCodingWithR]: [GeoCoding with R](http://lumiamitie.github.io/r/geocoding-with-r-02/)

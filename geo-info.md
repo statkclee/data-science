@@ -1,14 +1,4 @@
----
-layout: page
-title: 데이터 과학
-subtitle: 지리정보 시각화
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
 
 
 > ## 학습 목표 {.objectives}
@@ -74,9 +64,32 @@ FILEMAP = {
 ~~~{.r}
 #install.packages(rworldmap)
 library(rworldmap)
+~~~
+
+
+
+~~~{.output}
+FALSE Error: package or namespace load failed for 'rworldmap'
+
+~~~
+
+
+
+~~~{.r}
 library(ggmap)
 korea.map <- getMap(resolution = "high")
+~~~
 
+
+
+~~~{.output}
+FALSE Error in eval(expr, envir, enclos): 함수 "getMap"를 찾을 수 없습니다
+
+~~~
+
+
+
+~~~{.r}
 south.korea.limits <- geocode(c(
   "Daegang-ri, Hyeonnae-myeon, County of Goseong, Gangwon",
   "Marado, Daejeong-eup, Seogwipo, Jeju",
@@ -92,9 +105,9 @@ south.korea.limits
 ~~~{.output}
 FALSE        lon      lat
 FALSE 1 128.3445 38.60602
-FALSE 2 126.2522 33.22682
-FALSE 3 131.8597 37.24397
-FALSE 4 126.1783 37.21389
+FALSE 2 126.2671 33.12064
+FALSE 3       NA       NA
+FALSE 4 124.6560 37.95097
 
 ~~~
 
@@ -108,7 +121,12 @@ plot(korea.map,
 )
 ~~~
 
-<img src="fig/unnamed-chunk-2-1.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+FALSE Error in plot(korea.map, xlim = range(south.korea.limits$lon), ylim = range(south.korea.limits$lat), : 객체 'korea.map'를 찾을 수 없습니다
+
+~~~
 
 [남한 극단정보](https://en.wikipedia.org/wiki/Extreme_points_of_South_Korea) 중 섬을 제외한 
 본토를 기준으로 지리정보를 시각화하면 다음과 같다.
@@ -145,7 +163,12 @@ plot(korea.map,
 )
 ~~~
 
-<img src="fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
+
+
+~~~{.output}
+FALSE Error in plot(korea.map, xlim = range(south.korea.mainland.limits$lon), : 객체 'korea.map'를 찾을 수 없습니다
+
+~~~
 
 [^kor-lonlat]: [대한민국의 위도와 경도를 알고 싶어요](http://tip.daum.net/question/3092152)
 
@@ -164,7 +187,7 @@ krMap <- get_map(location=krLocation, source="stamen", maptype="toner", crop=FAL
 ggmap(krMap)
 ~~~
 
-<img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
+<img src="fig/geo-info-ggmap-index-1.png" style="display: block; margin: auto;" />
 
 `googlemap`이 위도경도 지도중앙, `stamen`, `openstreetmap`, `cloudmade`는 
 위도경도 상자표기를 권장한다.
@@ -196,7 +219,7 @@ ggmap(krMap)
 - [http://indiemapper.com/](http://indiemapper.com/app/learnmore.php?l=choropleth)
 
 
-### 참고자료
+### 참고자료 
 
 - [Thematic Cartography and Geovisualization](http://www.amazon.com/Thematic-Cartography-Geovisualization-3rd-Edition/dp/0132298341)
 - [Web Cartography: Map Design for Interactive and Mobile Devices](https://www.crcpress.com/Web-Cartography-Map-Design-for-Interactive-and-Mobile-Devices/Muehlenhaus/9781439876220)

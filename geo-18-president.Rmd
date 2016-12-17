@@ -28,6 +28,7 @@ library(gpclib)
 require(tmap)
 library(viridis)
 library(stringr)
+library(zoo)
 gpclibPermit()
 ```
 > ## 학습 목표 {.objectives}
@@ -48,7 +49,7 @@ gpclibPermit()
 
 공간정보를 활용하여 18대 대선 투표결과를 시각화하는데 많은 팩키지가 동원된다. 
 
-``` {r presid-setup, eval=false}
+``` {r presid-setup, eval=FALSE}
 # 0. 환경설정-------------------------------------------
 library(tidyverse)
 library(readxl)
@@ -61,10 +62,12 @@ library(rgdal)
 library(rgeos)
 library(maptools)
 library(gpclib)
-require(tmap)
+library(tmap)
 library(viridis)
 library(stringr)
-gpclibPermit()
+library(xts)
+library(zoo)
+#gpclibPermit()
 ```
 
 ## 데이터 가져오기
@@ -132,7 +135,6 @@ sido_vote_shp <- merge(korea_sido_shp,  by_sido, by='CTP_KOR_NM')
 ``` {r presid-tmap-ballots, message=FALSE, warning=FALSE, message=FALSE}
 # 4. 주제도 시각화(tmap)-------------------------------------------
 ## 4.1. 전체 -------------------------------
-View(sido_vote_shp@data)
 pal10 <- viridis(10, option="D")
 
 tm_shape(sido_vote_shp) + 
@@ -142,8 +144,6 @@ tm_shape(sido_vote_shp) +
     palette=pal10,
     n=10) +
   tm_borders(alpha=.7, lwd=2) +
-  # tm_text("id", size=.5, shadow=TRUE,
-  #          bg.color="white", bg.alpha=.25) +
   tm_layout(outer.margins=0, asp=0, scale=.8) 
 ```
 
@@ -154,6 +154,7 @@ tm_shape(sido_vote_shp) +
 
 ``` {r presid-tmap-ballots-facet, message=FALSE, warning=FALSE, message=FALSE}
 ## 4.2. Facet -------------------------------
+pal10 <- viridis(10, option="D")
 tmap_mode("plot")
 
 tm_shape(sido_vote_shp) + 
