@@ -78,15 +78,15 @@ x</code></pre></div>
 <p><code>Sys.time()</code> 함수를 통해 현재 시스템 시간정보를 받아내면 <code>POSIXct</code> 클래스임이 확인되고, <code>unclass()</code> 정보를 통해 내부적으로 정수값으로 저장된 것이 확인된다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
 x</code></pre></div>
-<pre class="output"><code>[1] &quot;2016-12-06 19:12:15 KST&quot;
+<pre class="output"><code>[1] &quot;2016-12-26 16:48:33 KST&quot;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unclass</span>(x)</code></pre></div>
-<pre class="output"><code>[1] 1481019135
+<pre class="output"><code>[1] 1482738513
 </code></pre>
 <p>문자열을 받아 <code>as.POSIXlt()</code>, <code>as.POSIXct()</code> 함수를 사용해서 시간자료형으로 변환시킨다. <code>POSIXlt</code> 자료형으로 변환시킨 경우 리스트로 저장되어 있어 시, 분, 초, 요일등 하위 원소값으로 뽑아낼 수 있다.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
 x</code></pre></div>
-<pre class="output"><code>[1] &quot;2016-12-06 19:12:15 KST&quot;
+<pre class="output"><code>[1] &quot;2016-12-26 16:48:33 KST&quot;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">as.POSIXlt</span>(x)
 <span class="kw">names</span>(<span class="kw">unclass</span>(p))</code></pre></div>
@@ -94,7 +94,7 @@ x</code></pre></div>
  [8] &quot;yday&quot;   &quot;isdst&quot;  &quot;zone&quot;   &quot;gmtoff&quot;
 </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p$wday</code></pre></div>
-<pre class="output"><code>[1] 2
+<pre class="output"><code>[1] 1
 </code></pre>
 <h3 id="날짜-시간-자료형-변환">1.2. 날짜, 시간 자료형 변환</h3>
 <p>결국 문자열을 받아 날짜, 시간 자료형으로 변환시키는데 <code>strptime()</code> 함수를 사용한다. 문자열을 입력으로 받아 문자열의 날짜, 시간 형식을 매칭하여 넘기게 되면 날짜, 시간 자료형으로 변환된다.</p>
@@ -176,7 +176,73 @@ dat_xts &lt;-<span class="st"> </span><span class="kw">as.xts</span>(dat, <span 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nminutes</span>(dat_xts)</code></pre></div>
 <pre class="output"><code>[1] 2
 </code></pre>
-<h2 id="시계열-데이터-time-series-data-library-tsdl-data-market">4. 시계열 데이터 <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></h2>
+<h2 id="시간데이터-파싱">4. 시간데이터 파싱</h2>
+<p>데이터가 문자열로 저장되어 있고 <code>년-월-일 오전/오후 시:분:초</code> 형태를 갖는 시간자료를 R에서 처리하는 작업흐름은 다음과 같다.</p>
+<ol style="list-style-type: decimal">
+<li>데이터가 일관된 형태를 갖는 문자열인지 확인: <code>년-월-일 오전/오후 시:분:초</code></li>
+<li>오전/오후 한글을 AM/PM으로 치환</li>
+<li><code>lubridate</code> 팩키지 <code>parse_date_time</code> 함수를 사용해서 시간 자료형으로 변환: <code>%Y-%m-%d %p %H:%M:%S</code></li>
+<li>두 시간 사이 지속시간을 계산: <code>as.period()</code> 함수를 활용하여 시:분:초 자료형을 유지</li>
+<li>지속시간을 익숙한 전체 시간, 분, 초 단위로 변환: as.numeric(processing_duration, unit=“hours”)</li>
+</ol>
+<h3 id="시간-데이터">4.1. 시간 데이터</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">date_txt &lt;-<span class="st"> </span><span class="kw">structure</span>(list
+                      (<span class="dt">last_access_time =</span> <span class="kw">c</span>(<span class="st">&quot;2016-11-02 오전 9:09:45&quot;</span>, 
+                                           <span class="st">&quot;2016-11-05 오전 12:25:31&quot;</span>, <span class="st">&quot;2016-11-04 오전 2:24:46&quot;</span>, <span class="st">&quot;2016-11-30 오전 3:17:15&quot;</span>, 
+                                           <span class="st">&quot;2016-11-10 오전 10:25:01&quot;</span>, <span class="st">&quot;2016-11-27 오전 1:40:30&quot;</span>, <span class="st">&quot;2016-11-29 오후 5:59:42&quot;</span>, 
+                                           <span class="st">&quot;2016-11-26 오전 10:48:21&quot;</span>, <span class="st">&quot;2016-11-07 오전 8:45:43&quot;</span>, <span class="st">&quot;2016-11-27 오후 2:33:26&quot;</span>),
+                        <span class="dt">register_time =</span> <span class="kw">c</span>(<span class="st">&quot;2016-11-01 오전 8:55:00&quot;</span>, <span class="st">&quot;2016-11-04 오후 3:04:48&quot;</span>, 
+                                         <span class="st">&quot;2016-11-03 오후 11:36:59&quot;</span>, <span class="st">&quot;2016-11-30 오전 1:50:17&quot;</span>, <span class="st">&quot;2016-11-10 오전 10:14:51&quot;</span>, 
+                                         <span class="st">&quot;2016-11-26 오후 1:50:32&quot;</span>, <span class="st">&quot;2016-11-29 오후 5:45:26&quot;</span>, <span class="st">&quot;2016-11-26 오전 10:37:41&quot;</span>, 
+                                         <span class="st">&quot;2016-11-06 오후 7:18:34&quot;</span>, <span class="st">&quot;2016-11-27 오후 12:08:02&quot;</span>)), 
+                      <span class="dt">.Names =</span> <span class="kw">c</span>(<span class="st">&quot;last_access_time&quot;</span>, <span class="st">&quot;register_time&quot;</span>), 
+                      <span class="dt">row.names =</span> <span class="kw">c</span>(<span class="ot">NA</span>, -10L), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;tbl_df&quot;</span>, <span class="st">&quot;tbl&quot;</span>, <span class="st">&quot;data.frame&quot;</span>))
+
+date_txt</code></pre></div>
+<pre class="output"><code># A tibble: 10 × 2
+           last_access_time            register_time
+                      &lt;chr&gt;                    &lt;chr&gt;
+1   2016-11-02 오전 9:09:45  2016-11-01 오전 8:55:00
+2  2016-11-05 오전 12:25:31  2016-11-04 오후 3:04:48
+3   2016-11-04 오전 2:24:46 2016-11-03 오후 11:36:59
+4   2016-11-30 오전 3:17:15  2016-11-30 오전 1:50:17
+5  2016-11-10 오전 10:25:01 2016-11-10 오전 10:14:51
+6   2016-11-27 오전 1:40:30  2016-11-26 오후 1:50:32
+7   2016-11-29 오후 5:59:42  2016-11-29 오후 5:45:26
+8  2016-11-26 오전 10:48:21 2016-11-26 오전 10:37:41
+9   2016-11-07 오전 8:45:43  2016-11-06 오후 7:18:34
+10  2016-11-27 오후 2:33:26 2016-11-27 오후 12:08:02
+</code></pre>
+<h3 id="파싱된-시간-데이터">4.2. 파싱된 시간 데이터</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">date_txt &lt;-<span class="st"> </span>date_txt %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">last_access_time_old =</span> last_access_time,
+         <span class="dt">register_time_old =</span> register_time) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">last_access_time =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(last_access_time, <span class="st">&quot;오전&quot;</span>), 
+                                   <span class="kw">str_replace</span>(last_access_time, <span class="st">&quot;오전&quot;</span>, <span class="st">&quot;AM&quot;</span>), 
+                                   <span class="kw">str_replace</span>(last_access_time, <span class="st">&quot;오후&quot;</span>, <span class="st">&quot;PM&quot;</span>)),
+         <span class="dt">register_time =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(register_time, <span class="st">&quot;오전&quot;</span>), 
+                                <span class="kw">str_replace</span>(register_time, <span class="st">&quot;오전&quot;</span>, <span class="st">&quot;AM&quot;</span>), 
+                                <span class="kw">str_replace</span>(register_time, <span class="st">&quot;오후&quot;</span>, <span class="st">&quot;PM&quot;</span>))) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">last_access_time =</span> <span class="kw">parse_date_time</span>(last_access_time, <span class="kw">c</span>(<span class="st">&quot;%Y-%m-%d %p %H:%M:%S&quot;</span>)),
+         <span class="dt">register_time =</span> <span class="kw">parse_date_time</span>(register_time, <span class="kw">c</span>(<span class="st">&quot;%Y-%m-%d %p %H:%M:%S&quot;</span>)),
+         <span class="dt">processing_duration =</span> <span class="kw">as.period</span>(last_access_time -<span class="st"> </span>register_time),
+         <span class="dt">processing_hours =</span> <span class="kw">as.numeric</span>(processing_duration, <span class="dt">unit=</span><span class="st">&quot;hours&quot;</span>))
+date_txt %&gt;%<span class="st"> </span>dplyr::<span class="kw">select</span>(register_time, processing_duration, processing_hours) </code></pre></div>
+<pre class="output"><code># A tibble: 10 × 3
+         register_time processing_duration processing_hours
+                &lt;dttm&gt;        &lt;S4: Period&gt;            &lt;dbl&gt;
+1  2016-11-01 08:55:00       1d 0H 14M 45S       24.2458333
+2  2016-11-04 15:04:48          9H 20M 43S        9.3452778
+3  2016-11-03 23:36:59          2H 47M 47S        2.7963889
+4  2016-11-30 01:50:17          1H 26M 58S        1.4494444
+5  2016-11-10 10:14:51             10M 10S        0.1694444
+6  2016-11-26 13:50:32         11H 49M 58S       11.8327778
+7  2016-11-29 17:45:26             14M 16S        0.2377778
+8  2016-11-26 10:37:41             10M 40S        0.1777778
+9  2016-11-06 19:18:34          13H 27M 9S       13.4525000
+10 2016-11-27 12:08:02          2H 25M 24S        2.4233333
+</code></pre>
+<h2 id="시계열-데이터-time-series-data-library-tsdl-data-market">5. 시계열 데이터 <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></h2>
 <p>시계열에 관련된 다양한 데이터는 R 팩키지를 통해 얻을 수 있고, 많은 경우 시계열관련 책에 데이터가 포함되어 있고, 저자가 팩키지로 만들어 배포하는 형태가 많다.</p>
 <ul>
 <li><a href="https://cran.r-project.org/web/packages/Ecdat/index.html">Ecdat - Data Sets for Econometrics</a></li>

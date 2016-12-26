@@ -93,7 +93,7 @@ x
 
 
 ~~~{.output}
-[1] "2016-12-06 19:12:15 KST"
+[1] "2016-12-26 16:48:33 KST"
 
 ~~~
 
@@ -106,7 +106,7 @@ unclass(x)
 
 
 ~~~{.output}
-[1] 1481019135
+[1] 1482738513
 
 ~~~
 
@@ -122,7 +122,7 @@ x
 
 
 ~~~{.output}
-[1] "2016-12-06 19:12:15 KST"
+[1] "2016-12-26 16:48:33 KST"
 
 ~~~
 
@@ -150,7 +150,7 @@ p$wday
 
 
 ~~~{.output}
-[1] 2
+[1] 1
 
 ~~~
 
@@ -331,7 +331,94 @@ nminutes(dat_xts)
 
 ~~~
 
-## 4. 시계열 데이터 [^time-series-data-library] [^tsdl-data-market]
+## 4. 시간데이터 파싱
+
+데이터가 문자열로 저장되어 있고 `년-월-일 오전/오후 시:분:초` 형태를 갖는 시간자료를 R에서 처리하는 작업흐름은 다음과 같다.
+
+1. 데이터가 일관된 형태를 갖는 문자열인지 확인: `년-월-일 오전/오후 시:분:초`
+1. 오전/오후 한글을 AM/PM으로 치환
+1. `lubridate` 팩키지 `parse_date_time` 함수를 사용해서 시간 자료형으로 변환: `%Y-%m-%d %p %H:%M:%S`
+1. 두 시간 사이 지속시간을 계산: `as.period()` 함수를 활용하여 시:분:초 자료형을 유지
+1. 지속시간을 익숙한 전체 시간, 분, 초 단위로 변환: as.numeric(processing_duration, unit="hours")
+
+### 4.1. 시간 데이터 
+
+
+~~~{.r}
+date_txt <- structure(list
+                      (last_access_time = c("2016-11-02 오전 9:09:45", 
+                                           "2016-11-05 오전 12:25:31", "2016-11-04 오전 2:24:46", "2016-11-30 오전 3:17:15", 
+                                           "2016-11-10 오전 10:25:01", "2016-11-27 오전 1:40:30", "2016-11-29 오후 5:59:42", 
+                                           "2016-11-26 오전 10:48:21", "2016-11-07 오전 8:45:43", "2016-11-27 오후 2:33:26"),
+                        register_time = c("2016-11-01 오전 8:55:00", "2016-11-04 오후 3:04:48", 
+                                         "2016-11-03 오후 11:36:59", "2016-11-30 오전 1:50:17", "2016-11-10 오전 10:14:51", 
+                                         "2016-11-26 오후 1:50:32", "2016-11-29 오후 5:45:26", "2016-11-26 오전 10:37:41", 
+                                         "2016-11-06 오후 7:18:34", "2016-11-27 오후 12:08:02")), 
+                      .Names = c("last_access_time", "register_time"), 
+                      row.names = c(NA, -10L), class = c("tbl_df", "tbl", "data.frame"))
+
+date_txt
+~~~
+
+
+
+~~~{.output}
+# A tibble: 10 × 2
+           last_access_time            register_time
+                      <chr>                    <chr>
+1   2016-11-02 오전 9:09:45  2016-11-01 오전 8:55:00
+2  2016-11-05 오전 12:25:31  2016-11-04 오후 3:04:48
+3   2016-11-04 오전 2:24:46 2016-11-03 오후 11:36:59
+4   2016-11-30 오전 3:17:15  2016-11-30 오전 1:50:17
+5  2016-11-10 오전 10:25:01 2016-11-10 오전 10:14:51
+6   2016-11-27 오전 1:40:30  2016-11-26 오후 1:50:32
+7   2016-11-29 오후 5:59:42  2016-11-29 오후 5:45:26
+8  2016-11-26 오전 10:48:21 2016-11-26 오전 10:37:41
+9   2016-11-07 오전 8:45:43  2016-11-06 오후 7:18:34
+10  2016-11-27 오후 2:33:26 2016-11-27 오후 12:08:02
+
+~~~
+
+### 4.2. 파싱된 시간 데이터
+
+
+~~~{.r}
+date_txt <- date_txt %>% 
+  mutate(last_access_time_old = last_access_time,
+         register_time_old = register_time) %>% 
+  mutate(last_access_time = ifelse(str_detect(last_access_time, "오전"), 
+                                   str_replace(last_access_time, "오전", "AM"), 
+                                   str_replace(last_access_time, "오후", "PM")),
+         register_time = ifelse(str_detect(register_time, "오전"), 
+                                str_replace(register_time, "오전", "AM"), 
+                                str_replace(register_time, "오후", "PM"))) %>% 
+  mutate(last_access_time = parse_date_time(last_access_time, c("%Y-%m-%d %p %H:%M:%S")),
+         register_time = parse_date_time(register_time, c("%Y-%m-%d %p %H:%M:%S")),
+         processing_duration = as.period(last_access_time - register_time),
+         processing_hours = as.numeric(processing_duration, unit="hours"))
+date_txt %>% dplyr::select(register_time, processing_duration, processing_hours) 
+~~~
+
+
+
+~~~{.output}
+# A tibble: 10 × 3
+         register_time processing_duration processing_hours
+                <dttm>        <S4: Period>            <dbl>
+1  2016-11-01 08:55:00       1d 0H 14M 45S       24.2458333
+2  2016-11-04 15:04:48          9H 20M 43S        9.3452778
+3  2016-11-03 23:36:59          2H 47M 47S        2.7963889
+4  2016-11-30 01:50:17          1H 26M 58S        1.4494444
+5  2016-11-10 10:14:51             10M 10S        0.1694444
+6  2016-11-26 13:50:32         11H 49M 58S       11.8327778
+7  2016-11-29 17:45:26             14M 16S        0.2377778
+8  2016-11-26 10:37:41             10M 40S        0.1777778
+9  2016-11-06 19:18:34          13H 27M 9S       13.4525000
+10 2016-11-27 12:08:02          2H 25M 24S        2.4233333
+
+~~~
+
+## 5. 시계열 데이터 [^time-series-data-library] [^tsdl-data-market]
 
 [^time-series-data-library]: [Time Series Data Library](http://robjhyndman.com/TSDL/)
 

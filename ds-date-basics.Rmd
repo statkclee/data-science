@@ -15,6 +15,8 @@ mainfont: NanumGothic
 source("tools/chunk-options.R")
 library(tidyverse)
 library(readr)
+library(stringr)
+library(lubridate)
 ```
 > ## 학습 목표 {.objectives}
 >
@@ -144,7 +146,7 @@ y - x
 데이터프레임 길이도 함께 넘긴다. 이를 키값으로 잡고 `as.xts` 함수에 넘기면 xts 객체로 변환된다.
 이제 `nseconds`, `nminutes` 함수를 통해 동영상이 몇초인지, 몇분인지 쉽게 확인 가능하게 된다.
 
-``` {r date-and-time-parsing}
+``` {r date-and-time-avi-parsing}
 suppressPackageStartupMessages(library(xts))
 
 strptime("2016-11-04 10:30:00", format="%Y-%m-%d %H:%M:%OS")
@@ -202,7 +204,7 @@ date_txt <- date_txt %>%
          register_time = parse_date_time(register_time, c("%Y-%m-%d %p %H:%M:%S")),
          processing_duration = as.period(last_access_time - register_time),
          processing_hours = as.numeric(processing_duration, unit="hours"))
-date_txt  
+date_txt %>% dplyr::select(register_time, processing_duration, processing_hours) 
 ```
 
 ## 5. 시계열 데이터 [^time-series-data-library] [^tsdl-data-market]
