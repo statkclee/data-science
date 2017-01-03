@@ -400,9 +400,6 @@ arrange(storms, wind, date)
 > 
 > **변경전** 
 > 
-> ~~~ {.output}
-> Source: local data frame [6 x 3]
-> Groups: city [3]
 > 
 > |     city |  size | amount |
 > |----------|-------|--------|
