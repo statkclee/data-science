@@ -21,92 +21,34 @@ source("tools/chunk-options.R")
 
 [^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
 
-### 1. RStudio와 Hadley 자료분석 체계
+### 1. Hadley 데이터 처리 체계와 `dplyr` [^data-pliers]
 
-**[Hadley Wickham](http://www.had.co.nz/)**은 `tidyr`을 사용하여 자료 정제하고 자료변환을 위해서 `dplyr`을 사용하고 그래픽 문법(glammar of graphics)에 따라 `ggvis`로 시각화하고 R의 다양한 모형화를 이용한 자료분석 체계도를 제안하였고, 최근에는 `broom` 팩키지를 통해 R 모형에서 반환하는 결과값을 재활용할 수 있는 툴체인도 제안하고 있다.
+[^data-pliers]: [Stupid Comics: Know your Pliers](http://www.misterkitty.org/extras/stupidcovers/stupidcomics507.html)
 
-시각화(Visualization)는 데이터에 대한 통찰력(insight)과 탄성, 놀라움을 줄 수 있지만, 확장성(Scalability)은 떨어진다. 왜냐하면, 사람이 데이터 분석 루프에 포함되기 때문에 확장 및 자동화에 한계가 있다. 반대로 모형(Model)은 자동화와 확장성에는 장점이 있지만, 주어진 모형틀안에서 이루어지기 때문에 통찰력, 놀라움, 탄성을 주지는 못하는 아쉬움이 있다. 
+**[Hadley Wickham](http://www.had.co.nz/)**은 `tidyr`을 사용하여 자료 정제하고 자료변환을 위해서 
+`dplyr`을 사용하고 그래픽 문법(glammar of graphics)에 따라 
+정적 그래프(static graph)는 `ggplot`, 동적 그래프(dynamic graph)는 `ggvis`로 시각화하고 R의 다양한 모형화를 이용한 자료분석 체계도를 제안하였고, 
+`broom` 팩키지를 통해 R 모형에서 반환하는 결과값을 재활용한다.
 
 > ### `dplyr` 목표 {.callout}
 >
 > 1. 데이터를 소프트웨어로 작업하기 적합하게 만든다.  
 > 2. 데이터를 쉽게 까볼 수 있게 한다.
 
-
-#### 1.1. `dplyr`
-
-[dplyr](http://cran.r-project.org/web/packages/dplyr/dplyr.pdf) 패키지는 데이터프레임(data.frame) 자료처리를 위한 차세대 `plyr` 패키지다. 다음 6가지 함수가 핵심 함수로 SQL 기본 기능과 유사성이 높다. 따라서, 기존 다양한 자료처리 방식을 직관적이고 빠르며 효율적인 dplyr 패키지 함수로 생산성을 높여본다.
-
- - filter (관측점 필터링) : 특정 기준을 만족하는 행을 추출한다.
- - select (변수 선택하기) : 변수명으로 특정 칼럼을 추출한다.
- - arrange (다시 정렬하기) : 행을 다시 정렬한다.
- - mutate (변수 추가하기) : 새로운 변수를 추가한다. 
- - summarise (변수를 값으로 줄이기) : 변수를 값(스칼라)으로 요약한다.
-
-~~~ {.input}
-df <- data.frame( 
-  color = c("blue", "black", "blue", "blue", "black"), 
-  value = 1:5) 
-~~~
- 
-##### 1.1.1. 관측점(obervation) 필터링해서 선택하기 (filter)
-
-| 전통적 R 코드 | `dplyr` R 코드 |
-|---------------|---------------|
-|`df[df$var01==3 & df$var02$==7]` |`filter(df, var01==3, var02==7)`|
+<img src="fig/pliers-metaphor.png" alt="dplyr 비유" width="77%" />
 
 
-~~~ {.input}
-filter(df, color == "blue")
-filter(df, value %in% c(1, 4))
-~~~
+`dplyr` 팩키지를 근간에 두고 병렬처리, 텍스트, 시계열 처리 등 다양한 목적에 맞게 확장되어 
+더 많은 데이터를 인간이 빠르게 처리하는데 큰 도움이 된다. [^tidyquant-pkg] [^multidplyr-pkg] [^tidytext-pkg]
 
-##### 1.1.2. 특정 변수 선택하기 (select)
+- [tidyquant](https://github.com/mdancho84/tidyquant)
+- [multidplyr](https://github.com/hadley/multidplyr)
+- [tidytext](https://cran.r-project.org/web/packages/tidytext/index.html)
 
-| 전통적 R 코드 | `dplyr` R 코드 |
-|---------------|---------------|
-|`df[, c("var01","var02")]` |`select(df, var01)`|
+[^tidyquant-pkg]: [Speed Up Your Code: Parallel Processing with multidplyr](http://www.mattdancho.com/code-tools/2016/12/18/multidplyr.html)
+[^multidplyr-pkg]: [tidyquant: Bringing Quantitative Financial Analysis to the tidyverse](http://www.mattdancho.com/code-tools/2017/01/01/tidyquant-introduction.html)
+[^tidytext-pkg]: [Tidy Text Mining with R](http://tidytextmining.com/)
 
-
-~~~ {.input}
-select(df, color)
-select(df, -color)
-~~~
-
-##### 1.1.3. 다시 정렬하기 (arrange)
-
-| 전통적 R 코드 | `dplyr` R 코드 |
-|---------------|---------------|
-|`df[order(df$var01, df$var02)` |`arrange(df, var01, var02)`|
-
-~~~ {.input}
-arrange(df, color)
-arrange(df, desc(color))
-~~~
-
-##### 1.1.4. 새변수 생성하기 (mutate)
-
-| 전통적 R 코드 | `dplyr` R 코드 |
-|---------------|---------------|
-|`df$new <- df$var01/df$var02` |`df <- mutate(df, new=var01/var02)`|
-
-~~~ {.input}
-mutate(df, double = 2 * value)
-mutate(df, double = 2 * value, quadruple = 2 * double)
-~~~
-
-##### 1.1.5. 변수 요약하기 (summarize)
-
-| 전통적 R 코드 | `dplyr` R 코드 |
-|---------------|---------------|
-|`aggregate(df$value, list(var01=df$var01), mean)` |`group_by(df, var01) %.% summarize(totalvalue = sum(value))`|
-
-
-~~~ {.input}
-summarise(df, total = sum(value))
-by_color <- group_by(df, color) 
-summarise(by_color, total = sum(value))
-~~~
 
 ### 2. `tidyr` 예제 데이터셋
  
@@ -217,10 +159,15 @@ unite(storms2, "date", year, month, day, sep = "-")
 
 ### 3. `dplyr` 예제 데이터셋
 
-- select() : 변수를 추출한다.
-- filter() : 관측점을 뽑아낸다.
-- mutate() : 기존 변수에서 새로운 변수를 생성한다.
-- summarise() : 분석 단위를 변경한다.
+[dplyr](http://cran.r-project.org/web/packages/dplyr/dplyr.pdf) 패키지는 데이터프레임(data.frame) 자료처리를 위한 차세대 `plyr` 패키지로 기능은 그대로 유지하고,
+`plyr`의 속도문제를 나름 상당히 개선시켰다. 
+다음 6가지 함수가 핵심 함수로 SQL 기본 기능과 유사성이 높다. 따라서, 기존 다양한 자료처리 방식을 직관적이고 빠르며 효율적인 dplyr 패키지 함수로 생산성을 높여본다.
+
+ - filter (관측점 필터링) : 특정 기준을 만족하는 행을 추출한다.
+ - select (변수 선택하기) : 변수명으로 특정 칼럼을 추출한다.
+ - arrange (다시 정렬하기) : 행을 다시 정렬한다.
+ - mutate (변수 추가하기) : 새로운 변수를 추가한다. 
+ - summarise (변수를 값으로 줄이기) : 변수를 값(스칼라)으로 요약한다.
 
 
 > #### 데이터 변환 - 변수 선택 {.challenge}
@@ -447,27 +394,34 @@ arrange(storms, wind, date)
 ```
 
 
-#### 3.1. `dplyr`::`group_by()` 함수 (분석 단위)
+> #### `dplyr`::`group_by()` 함수 (분석 단위)  {.challenge}
+> 
+> 분석단위별로 나눠서 자료분석을 할 경우 `group_by()` 함수를 조합한다.
+> 
+> **변경전** 
+> 
+> ~~~ {.output}
+> Source: local data frame [6 x 3]
+> Groups: city [3]
+> 
+> |     city |  size | amount |
+> |----------|-------|--------|
+> |    (chr) | (chr) |  (dbl) |
+> | New York | large |     23 |
+> | New York | small |     14 |
+> |   London | large |     22 |
+> |   London | small |     16 |
+> |  Beijing | large |    121 |
+> |  Beijing | small |     56 |
+> 
+>  **변경후** 
+> 
+> |      city |  mean |  sum |    n |
+> |-----------|-------|------|------|
+> |  Beijing  | 88.5  | 177  |    2 |
+> |   London  | 19.0  |  38  |    2 |
+> | New York  | 18.5  |  37  |    2 |
 
-분석단위별로 나눠서 자료분석을 할 경우 `group_by()` 함수를 조합한다.
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-pollution %>% group_by(city)
-```
-
-~~~ {.output}
-Source: local data frame [6 x 3]
-Groups: city [3]
-
-      city  size amount
-     (chr) (chr)  (dbl)
-1 New York large     23
-2 New York small     14
-3   London large     22
-4   London small     16
-5  Beijing large    121
-6  Beijing small     56
-~~~
 
 ``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 pollution %>% group_by(city) %>%
@@ -475,34 +429,6 @@ pollution %>% group_by(city) %>%
 pollution %>% ungroup()  
 ```
 
-~~~ {.output}
-Source: local data frame [3 x 4]
-
-      city  mean   sum     n
-     (chr) (dbl) (dbl) (int)
-1  Beijing  88.5   177     2
-2   London  19.0    38     2
-3 New York  18.5    37     2
-~~~
-
-
-#### 3.2. 데이터테이블 결합
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-bind_cols(y, z)
-bind_rows(y, z)
-intersect(y, z)
-union(y, z)
-setdiff(y, z)
-```
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-left_join(songs, artists, by = "name")
-left_join(songs2, artists2, by = c("first", "last"))
-inner_join(songs, artists, by = "name")
-semi_join(songs, artists, by = "name")
-anti_join(songs, artists, by = "name")
-```
 
 > ### `data.table`과 `dplyr` 비교 [^dt-dplyr-comparison]
 > 
@@ -515,8 +441,74 @@ anti_join(songs, artists, by = "name")
 
 [^dt-dplyr-comparison]: [data.table vs dplyr: can one do something well the other cannot or does poorly?](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly)
 
+### 4. `dplyr` 팩키지와 Base 비교
 
-### 4. `apply` 함수
+~~~ {.input}
+df <- data.frame( 
+  color = c("blue", "black", "blue", "blue", "black"), 
+  value = 1:5) 
+~~~
+ 
+#### 4.1. 관측점(obervation) 필터링해서 선택하기 (filter)
+
+| 전통적 R 코드 | `dplyr` R 코드 |
+|---------------|---------------|
+|`df[df$var01==3 & df$var02$==7]` |`filter(df, var01==3, var02==7)`|
+
+
+~~~ {.input}
+filter(df, color == "blue")
+filter(df, value %in% c(1, 4))
+~~~
+
+#### 4.2. 특정 변수 선택하기 (select)
+
+| 전통적 R 코드 | `dplyr` R 코드 |
+|---------------|---------------|
+|`df[, c("var01","var02")]` |`select(df, var01)`|
+
+
+~~~ {.input}
+select(df, color)
+select(df, -color)
+~~~
+
+#### 4.3. 다시 정렬하기 (arrange)
+
+| 전통적 R 코드 | `dplyr` R 코드 |
+|---------------|---------------|
+|`df[order(df$var01, df$var02)` |`arrange(df, var01, var02)`|
+
+~~~ {.input}
+arrange(df, color)
+arrange(df, desc(color))
+~~~
+
+#### 4.4. 새변수 생성하기 (mutate)
+
+| 전통적 R 코드 | `dplyr` R 코드 |
+|---------------|---------------|
+|`df$new <- df$var01/df$var02` |`df <- mutate(df, new=var01/var02)`|
+
+~~~ {.input}
+mutate(df, double = 2 * value)
+mutate(df, double = 2 * value, quadruple = 2 * double)
+~~~
+
+#### 4.5. 변수 요약하기 (summarize)
+
+| 전통적 R 코드 | `dplyr` R 코드 |
+|---------------|---------------|
+|`aggregate(df$value, list(var01=df$var01), mean)` |`group_by(df, var01) %.% summarize(totalvalue = sum(value))`|
+
+
+~~~ {.input}
+summarise(df, total = sum(value))
+by_color <- group_by(df, color) 
+summarise(by_color, total = sum(value))
+~~~
+
+### 5. `apply` 함수
 
 자료는 기본적으로 *벡터(Vector)*를 기본으로 한다. 
 하지만 벡터로 표현될 수 있는 정보량은 한정되어 있으며 이를 하나의 자료 형태로 구조화한 것을 *데이터프레임(dataframe)*으로 볼 수 있다. 
