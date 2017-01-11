@@ -34,7 +34,7 @@ title: 데이터 과학
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
         - [데이터테이블](data-handling-datatable.html)        
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)
-    - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html)
+    - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html) 
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
     - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
     - [한글처리 가능한 RStudio 개발환경](toolchain-shiny-rstudio.html)    
