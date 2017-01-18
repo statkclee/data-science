@@ -46,10 +46,44 @@
 <div class="panel-body">
 <ul>
 <li>공공 데이터 제품 개발과정을 이해한다.</li>
+<li>오픈데이터 계층구조를 살펴본다.</li>
 </ul>
 </div>
 </section>
-<h3 id="공공데이터">공공데이터</h3>
+<h2 id="오픈데이터-계층구조-data-journalism">오픈데이터 계층구조 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
+<p>월드와이드웹을 만든 팀 버너스 리(Tim Berners-Lee)는 오픈 데이터를 5단계 별로 등급화했다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">등급</th>
+<th align="left">오픈 데이터 유형</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">★</td>
+<td align="left">조회, 인쇄, 저장 가능: <code>.pdf</code>, <code>.hwp</code></td>
+</tr>
+<tr class="even">
+<td align="left">★ ★</td>
+<td align="left">구조화된 데이터, 상용도구 데이터: <code>.xlsx</code></td>
+</tr>
+<tr class="odd">
+<td align="left">★ ★ ★</td>
+<td align="left">자유 형식 오픈 데이터: <code>.csv</code></td>
+</tr>
+<tr class="even">
+<td align="left">★ ★ ★ ★</td>
+<td align="left">URI 부여된 데이터: 오픈 API</td>
+</tr>
+<tr class="odd">
+<td align="left">★ ★ ★ ★ ★</td>
+<td align="left">다른 데이터와 연결: 링크드 오픈 데이터(LOD)</td>
+</tr>
+</tbody>
+</table>
+<p>사람이 데이터를 소비하는 방식과 기계가 데이터를 소비하는 방식은 전혀 다르다. 단순히 조회, 인쇄, 저장이 가능한 형태의 데이터가 가장 가치가 낮은 형태의 오픈 데이터가 된다. 스프레드쉬트와 같이 구조화된 데이터는 그 다음 별점을 받는 데이터로 엑셀과 같은 형태로 배포되는 데이터다. 스프레드쉬트 형태로 구조화된 데이터를 읽고, 가공하는데 특별한 자유 혹은 상용 소프트웨어가 필요한데 이런 제약 사항을 없앤 것이 <code>.csv</code> 파일이다. <code>.csv</code> 파일은 로컬 컴퓨터에서 활용가능한 형태의 데이터로 이를 웹으로 올려 URI를 부여하여 누구나 접근할 수 있도록 만든 것이 오픈 API 형태 데이터다. 마지막으로 팀 버너스 리가 가장 큰 의미를 둔 것이 LOD(Linked Open Data)로 사일로 형태의 독립된 데이터가 아니라 경우에 따라서는 해외 데이터와도 연결되어 공개된 데이터다.</p>
+<h2 id="공공데이터">공공데이터</h2>
 <p>공공데이터는 국가의 모든 기관이 만들어 내는 자료와 이를 가공해서 생산된 정보를 지칭한다. 공공데이터를 적극 개방, 공유하고 정부부처 간에 공유되지 않는 자료와 정보를 공개함으로써 이를 활용하여 정부에 맞춤형 서비스를 제공하고 새로운 부가가치를 창출함을</p>
 <ul>
 <li><a href="https://www.data.go.kr/">공공데이터</a>
@@ -72,11 +106,11 @@
 </ul></li>
 </ul></li>
 </ul>
-<p>국가 및 정부부처내 통계정보를 공유하고 교환하는데 사용되는 표준은 SDMX <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>를 활용한다.</p>
+<p>국가 및 정부부처내 통계정보를 공유하고 교환하는데 사용되는 표준은 SDMX <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>를 활용한다.</p>
 <h3 id="공공데이터-전달-아키텍쳐">공공데이터 전달 아키텍쳐</h3>
-<p>정보를 전달하기 위해서 국제표준화기구(OSI)에서 제시한 OSI 모형 (Open Systems Interconnection Reference Model)<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>을 사용하고 이를 기반으로 응용 프로그램을 웹서비스와 데이터 형식에 과거 <strong>SOAP와 XML</strong> 조합을 많이 사용했다면, 최근에는 <strong>RESTful API와 JSON</strong> 조합을 주로 사용한다.</p>
+<p>정보를 전달하기 위해서 국제표준화기구(OSI)에서 제시한 OSI 모형 (Open Systems Interconnection Reference Model)<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>을 사용하고 이를 기반으로 응용 프로그램을 웹서비스와 데이터 형식에 과거 <strong>SOAP와 XML</strong> 조합을 많이 사용했다면, 최근에는 <strong>RESTful API와 JSON</strong> 조합을 주로 사용한다.</p>
 <p><img src="fig/data-product-api.png" width="70%" /></p>
-<h3 id="공공데이터-추출">공공데이터 추출</h3>
+<h2 id="공공데이터-추출">공공데이터 추출</h2>
 <p>공공데이터는 다양한 제공방식으로 제공되지만 크게 파일 형식으로 다운로드 받는 방식과 웹서비스 형식으로 전달되는 두가지 방식이 존재한다.</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
@@ -92,8 +126,9 @@
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://sdmx.org/">Statistical Data and Metadata eXchange</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><a href="https://ko.wikipedia.org/wiki/OSI_모형">OSI 모형</a><a href="#fnref2">↩</a></p></li>
+<li id="fn1"><p><a href="http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&amp;ejkGb=KOR&amp;barcode=9788992475716">함형건, “데이터 분석과 저널리즘 빅데이터 시대, 저널리스트를 위한 데이터 분석 기법”, 컴원미디어, 2015년 01월 30일 출간</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://sdmx.org/">Statistical Data and Metadata eXchange</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://ko.wikipedia.org/wiki/OSI_모형">OSI 모형</a><a href="#fnref3">↩</a></p></li>
 </ol>
 </div>
         </div>
