@@ -66,6 +66,7 @@ title: 데이터 과학
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)  
 1. **다양한 데이터**
     - [시각화(Visualization)](viz.html)
+        - [기념비적인 시각화 역작모음](viz-history.html)
         - [R 과 색상](viz-r-colors.html)
         - [ggplot2 색상 제어](viz-ggplot2-control.html)
         - [행복한 시각화 생활을 위한 비밀](viz-secret.html)
