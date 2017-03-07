@@ -5,6 +5,7 @@ subtitle: 데이터 저널리즘 - Andrew Flowers
 output:
   html_document: 
     keep_md: yes
+    toc: yes
   pdf_document:
     latex_engine: xelatex
 mainfont: NanumGothic
