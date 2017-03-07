@@ -96,6 +96,7 @@ title: 데이터 과학
     - **R 눈을 달다**
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
 1. [데이터 제품](data-product.html)
+    1. [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
     1. [Shiny 웹앱](shiny-overview.html)
         - [Shiny 웹앱 개발](shiny-app.html)    
         - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
