@@ -75,17 +75,32 @@
 </ul></li>
 <li>RStudio에서 <code>sparklyr</code> 팩키지를 설치한다.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. sparklyr 설치</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 0. 설정환경 확인</span>
+## JAVA 설정
+<span class="kw">Sys.getenv</span>(<span class="st">&quot;JAVA_HOME&quot;</span>)
+## HADOOP 설정
+<span class="kw">Sys.getenv</span>(<span class="st">&quot;HADOOP_HOME&quot;</span>)
+<span class="kw">Sys.setenv</span>(<span class="dt">HADOOP_HOME =</span> <span class="st">&quot;C:/Users/&lt;사용자명&gt;/AppData/Local/rstudio/spark/Cache/spark-2.1.0-bin-hadoop2.7&quot;</span>)
+## SPARK 설정
+<span class="kw">Sys.getenv</span>(<span class="st">&quot;SPARK_HOME&quot;</span>)
+<span class="kw">spark_home_dir</span>()
+
+## 설치된 SPARK 버젼확인 설정
+<span class="kw">spark_installed_versions</span>()
+<span class="co"># spark hadoop                       dir</span>
+<span class="co"># 1 2.1.0    2.7 spark-2.1.0-bin-hadoop2.7</span>
+
+<span class="co"># 1. sparklyr 설치</span>
 devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstudio/sparklyr&quot;</span>)
 <span class="kw">library</span>(sparklyr)
 
-<span class="co"># 2. SPARK_HOME 지정</span>
-<span class="kw">Sys.setenv</span>(<span class="dt">SPARK_HOME=</span><span class="st">&quot;C:/spark-1.6.2-bin-hadoop2.6&quot;</span>)
 
-<span class="co"># 3. 스파크 클러스터 로컬에 설치 </span>
+<span class="co"># 2. 스파크 클러스터 로컬에 설치 </span>
+<span class="co"># 가능한 설정 확인</span>
+<span class="kw">spark_available_versions</span>()
 sc &lt;-<span class="st"> </span><span class="kw">spark_connect</span>(<span class="dt">master=</span><span class="st">&quot;local&quot;</span>)
 
-<span class="co"># 4. iris 데이터셋 작업 준비 완료</span>
+<span class="co"># 3. iris 데이터셋 작업 준비 완료</span>
 <span class="kw">library</span>(dplyr)
 iris_tbl &lt;-<span class="st"> </span><span class="kw">copy_to</span>(sc, iris)
 <span class="co"># The following columns have been renamed:</span>

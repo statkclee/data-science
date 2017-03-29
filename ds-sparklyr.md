@@ -41,17 +41,32 @@ mainfont: NanumGothic
 
 
 ~~~{.r}
+# 0. 설정환경 확인
+## JAVA 설정
+Sys.getenv("JAVA_HOME")
+## HADOOP 설정
+Sys.getenv("HADOOP_HOME")
+Sys.setenv(HADOOP_HOME = "C:/Users/<사용자명>/AppData/Local/rstudio/spark/Cache/spark-2.1.0-bin-hadoop2.7")
+## SPARK 설정
+Sys.getenv("SPARK_HOME")
+spark_home_dir()
+
+## 설치된 SPARK 버젼확인 설정
+spark_installed_versions()
+# spark hadoop                       dir
+# 1 2.1.0    2.7 spark-2.1.0-bin-hadoop2.7
+
 # 1. sparklyr 설치
 devtools::install_github("rstudio/sparklyr")
 library(sparklyr)
 
-# 2. SPARK_HOME 지정
-Sys.setenv(SPARK_HOME="C:/spark-1.6.2-bin-hadoop2.6")
 
-# 3. 스파크 클러스터 로컬에 설치 
+# 2. 스파크 클러스터 로컬에 설치 
+# 가능한 설정 확인
+spark_available_versions()
 sc <- spark_connect(master="local")
 
-# 4. iris 데이터셋 작업 준비 완료
+# 3. iris 데이터셋 작업 준비 완료
 library(dplyr)
 iris_tbl <- copy_to(sc, iris)
 # The following columns have been renamed:
