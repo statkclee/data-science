@@ -1,28 +1,7 @@
----
-layout: page
-title: 데이터 과학
-subtitle: PDF 감옥에서 데이터를 탈출시키다.
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
-library(tidyverse)
-library(stringr)
-library(tabulizer)
-library(pdftools)
-library(stringr)
-library(extrafont)
-library(testthat)
-loadfonts()
 
-```
 > ## 학습 목표 {.objectives}
 >
 > * PDF 감옥에 감금된 공개 데이터를 탈옥시킨다.
@@ -65,7 +44,8 @@ loadfonts()
 
 `pdf` 파일에 담긴 표에서 데이터를 추출하여 이를 R 데이터 프레임으로 변환하여야 하는데 사용되는 다양한 팩키지를 설치한다.
 
-``` {r pdf-realmeter-setup, eval=FALSE}
+
+~~~{.r}
 # 0. 환경설정 ---------------------------------------------------------------------------------------
 library(tidyverse)
 library(stringr)
@@ -75,14 +55,15 @@ library(stringr)
 library(extrafont)
 library(testthat)
 loadfonts()
-```
+~~~
 
 ### 3.2. 테스트 지향 R 코딩 
 
 `testthat` 함수를 활용하여 결과값을 미리 지정해 둔다. 
 이를 통해 pdf 파일에서 R 데이터프레임으로 제대로 데이터가 변환되었는지 확인한다.
 
-``` {r pdf-realmeter-tdd, eval=FALSE}
+
+~~~{.r}
 # 1. 테스트 함수 ----------------------------------------------------------------------------------
 
 test_that("리얼미터 4월 2주차: 정례 정치조사 주중통계표 문2",{
@@ -90,7 +71,7 @@ test_that("리얼미터 4월 2주차: 정례 정치조사 주중통계표 문2",
   expect_equivalent(support_by_age_df %>% slice(1) %>% collect %>% .[["안철수"]], 27.3)
   expect_equivalent(support_by_age_df %>% slice(1) %>% collect %>% .[["심상정"]], 5.8)
 })
-```
+~~~
 
 ### 3.3. pdf 파일을 R 데이터프레임으로 변환
 
@@ -106,7 +87,8 @@ test_that("리얼미터 4월 2주차: 정례 정치조사 주중통계표 문2",
 
 이를 위해서 후보별, 연령별 연관된 pdf 텍스트 데이터만 추출하고 나서 이를 적절히 전처리하여 데이터프레임으로 만든다.
 
-``` {r pdf-realmeter-convert}
+
+~~~{.r}
 # 2. 리얼미터 PDF 파일에서 지지율 데이터 추출 ------------------------------------------------------------------
 rm_age_fun <- function(list_dat) {
   # person_age <- unlist(strsplit(list_dat[6], split = "\\r\\n")) # 윈도우
@@ -132,7 +114,7 @@ rm_age_fun <- function(list_dat) {
     dplyr::select(연령, 문재인=더불어, 홍준표=자유, 안철수=국민의당, 유승민=바른정당, 심상정=정의당, 기타응답)
   return(support_df)
 }
-```
+~~~
 
 ### 3.4. 데이터프레임 시작화
 
@@ -140,7 +122,8 @@ rm_age_fun <- function(list_dat) {
 후보별 연령별 지지율 동향을 파악할 수 있다.
 
 
-``` {r pdf-realmeter-visualize}
+
+~~~{.r}
 # 3. 리얼미터 PDF 파일을 데이터프레임 변환 ------------------------------------------------------------------
 
 rm_170402_pdf <- pdf_text("http://www.realmeter.net/wp-content/uploads/2017/04/realmeter_w17041321.pdf")
@@ -156,6 +139,8 @@ support_by_age_df %>% gather(후보, 지지율, -연령) %>%
     theme_minimal(base_family = "NanumGothic") +
     labs(x="") +
     theme(legend.position="none")
-```
+~~~
+
+<img src="fig/pdf-realmeter-visualize-1.png" style="display: block; margin: auto;" />
 
 
