@@ -96,6 +96,7 @@ title: 데이터 과학
             - [데이터를 찾을 수 있게 만들기](http://statkclee.github.io/web-data-python/06-findable.html)
     - **R 눈을 달다**
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
+        - [PDF 감옥에서 데이터를 탈출시키다.](ds-extract-text-from-pdf-survey.html)
 1. [데이터 제품](data-product.html)
     1. [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
     1. [Shiny 웹앱](shiny-overview.html)
