@@ -14,6 +14,7 @@ mainfont: NanumGothic
 library(rjson)
 source("tools/chunk-options.R")
 knitr::opts_chunk$set(error = TRUE)
+library(tidyverse)
 ```
 
 > ## 학습 목표 {.objectives}

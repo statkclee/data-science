@@ -5,17 +5,25 @@
 > ## 학습 목표 {.objectives}
 >
 > * IP주소를 사용하여 접속위치를 시각적으로 표현한다.
+> * IP 접속정보를 서비스 혹은 R 팩키지를 통해 위경도 정보로 변환한다.
+> * `leaflet` 팩키지를 활용하여 인터랙티브 추가 분석을 실시한다.
 
-### 1. 작업 흐름
+## 1. 작업 흐름
 
 IP주소 정보가 있으면 [GitHub freegeoip](https://github.com/fiorix/freegeoip) 혹은 
 [freegeoip](http://freegeoip.net/) 웹서비스에 제공하는 오픈 API를 활용하여 위경도 정보로 변환하고 이를 
 지리정보 시각화 팩키지를 활용하여 기능을 구현한다.
 
+R 팩키지로 [IPtoCountry: Convert IP Addresses to Country Names or Full Location with Geoplotting](https://cran.r-project.org/web/packages/IPtoCountry/index.html)도 준비되어 있어
+상황에 맞춰 활용하면 좋다. [freegeoip](http://freegeoip.net/)는 서비스 형태로 제공되고, [IPtoCountry](https://cran.r-project.org/web/packages/IPtoCountry/index.html)는 
+데이터베이스가 통째로 설치된다는 점에서 차이가 있을 뿐 IP 주소를 받아 사람이 인식할 수 있는 익숙한 형태로 제공된다는 점에서는 차이가 없다.
+
 <img src="fig/geo-ip-workflow.png" alt="IP 주소 지리정보 매핑 작업흐름" width="77%" />
 
 
-### 2. IP 주소에서 지리정보 추출 [^extract-geo-info-from-ip-address]
+## 2. API 서비스 활용방법
+
+### 2.1. IP 주소에서 지리정보 추출 [^extract-geo-info-from-ip-address]
 
 [^extract-geo-info-from-ip-address]: [Geolocate IP addresses in R](https://heuristically.wordpress.com/2013/05/20/geolocate-ip-addresses-in-r/)
 
@@ -69,7 +77,7 @@ $region_name
 [1] "Gyeonggi-do"
 
 $city
-[1] "Hwaseong-si"
+[1] "Seongnam-si"
 
 $zip_code
 [1] ""
@@ -78,17 +86,17 @@ $time_zone
 [1] "Asia/Seoul"
 
 $latitude
-[1] 37.2068
+[1] 37.4386
 
 $longitude
-[1] 126.8169
+[1] 127.1378
 
 $metro_code
 [1] 0
 
 ~~~
 
-### 3. IP 정보를 `leaflet` 팩키지로 시각화
+### 2.2. IP 정보를 `leaflet` 팩키지로 시각화
 
 IP 정보를 `leaflet` 팩키지로 시각화하는 코드는 다음과 같다.
 
@@ -114,10 +122,71 @@ m <- leaflet(data = ip_geo_df) %>% addTiles() %>%
 m 
 ~~~
 
-<!--html_preserve--><div id="htmlwidget-428" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-428">{"x":{"calls":[{"method":"addTiles","args":["http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap\u003c/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA\u003c/a>"}]},{"method":"addMarkers","args":[[1,2,3],[1,2,3],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["125.139.114.72","211.219.36.134","121.187.179.223"],{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true},null]}],"limits":{"lat":[1,3],"lng":[1,3]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-4f7e78e56e428c222c60" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4f7e78e56e428c222c60">{"x":{"calls":[{"method":"addTiles","args":["http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[1,2,3],[1,2,3],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["125.139.114.72","211.219.36.134","121.187.179.223"],{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true},null]}],"limits":{"lat":[1,3],"lng":[1,3]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ~~~{.r}
 # library(htmlwidgets)
 # saveWidget(widget=m,file="ip_addr_geo_info.html")
 ~~~
+
+## 3. IPtoCountry 팩키지 데이터베이스 활용
+
+### 3.1. `IPtoCountry` 팩키지 
+
+`IPtoCountry` 팩키지는 [http://www.ip2location.com](http://www.ip2location.com)에서 제공하는 IP-Country 데이터베이스를 가져와서 제공하고 있다.
+[IPtoCountry GitHub](https://github.com/gitronald/IPtoCountry) 사이트에 팩키지 활용에 대한 소품문(vignette)을 제공하고 있다.
+
+- IP_split()
+- IP_lookup()
+- IP_country()
+- IP_location()
+
+`IPtoCountry` 팩키지를 활용하여 지리정보를 불러오는 방식은 `IP_location()` 함수에 IP 주소를 던지고 나서 결과값을 병합한다.
+데이터프레임을 leaflet 에 던져 지리정보로 시각화한다.
+
+
+
+~~~{.r}
+# 3. Combine IP country code ------------------------------------------------
+library(IPtoCountry)
+~~~
+
+
+
+~~~{.output}
+Warning in sample.int(.Machine$integer.max - 1L, 1L): '.Random.seed' is not
+an integer vector but of type 'NULL', so ignored
+
+~~~
+
+
+
+~~~{.r}
+# devtools::install_github("gitronald/ip2locationData")
+library(ip2locationData)
+
+
+ip_country_map_df <- IP_location(ip_df$ip_addr)
+
+ip_map_df <- bind_cols(ip_df, ip_country_map_df) %>% 
+    mutate(lat = as.numeric(as.character(lat)),
+           long = as.numeric(as.character(long)))
+
+# 4. Leaflet 시각화 ----------------------------------------------------
+
+m <- leaflet(data = ip_map_df) %>% 
+    addTiles() %>% 
+    addMarkers(lng=~long, lat=~lat, 
+               popup = ~ as.character(paste0("<strong>IP & Info</strong><br><br>", 
+                                             "&middot; IP_ADDR: ", ip_addr, "<br>", 
+                                             "&middot; Country: ", country, "<br>", 
+                                             "&middot; Region: ", region, "<br>", 
+                                             "&middot; city:  ", city, "<br>",
+                                             "&middot; zip:  ", zip, "<br>")), clusterOptions = markerClusterOptions())
+m 
+~~~
+
+<!--html_preserve--><div id="htmlwidget-f8844f330a2337134d15" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f8844f330a2337134d15">{"x":{"calls":[{"method":"addTiles","args":["http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[35.41,37.3925,37.43861],[127.38583,126.92694,127.13778],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["<strong>IP & Info<\/strong><br><br>&middot; IP_ADDR: 125.139.114.72<br>&middot; Country: Korea, Republic of<br>&middot; Region: Jeonbuk<br>&middot; city:  Nangen<br>&middot; zip:  590-060<br>","<strong>IP & Info<\/strong><br><br>&middot; IP_ADDR: 211.219.36.134<br>&middot; Country: Korea, Republic of<br>&middot; Region: Gyeonggi<br>&middot; city:  Anyang<br>&middot; zip:  430-819<br>","<strong>IP & Info<\/strong><br><br>&middot; IP_ADDR: 121.187.179.223<br>&middot; Country: Korea, Republic of<br>&middot; Region: Gyeonggi<br>&middot; city:  Seongnam<br>&middot; zip:  461-805<br>"],{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true},null]}],"limits":{"lat":[35.41,37.43861],"lng":[126.92694,127.38583]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
