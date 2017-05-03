@@ -12,4 +12,4 @@ _site
 fig/Thumbs.db
 s3_website.yml
 data/portal_mammals.sqlite
-
+.Rhistory
