@@ -25,6 +25,7 @@ title: 데이터 과학
     - **자료구조**
         - [시간 데이터 기초](ds-date-basics.html)
             - [시간데이터(lubridate)](data-handling-timendate.html)
+            - [불규칙 시계열 데이터](ds-irregular-time-series.html) 
         - [요인(Factor) - 범주형 자료형](ds-factor-cdata.html)
             - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
             - [범주형 데이터와 dplyr, 그리고 시각화](ds-factor-dplyr-mosaic.html)
