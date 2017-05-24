@@ -153,11 +153,24 @@ R 팩키지를 설치할 때 가장 고민하게 되는 것은 설치하는 팩�
 본인이 작업하는데 사용되는 팩키지가 맞는지 확신이 서지 않는 것이다.
 
 R팩키지가 12,000개를 넘어서게 되고 비공식적으로 개발된 GitHub 저장소에 존재하는 팩키지까지 고려하면 고민이 깊어질 수 밖에 없다.
+이에 대한 한가지 반가운 그리고 정확한 정보가 인터넷에 공개되었다.
 
 ### 3.1. 스택오버블로우(stackoverflow)
 
 얼마전 뉴욕 R 컨퍼런스(New York R Conference)에서 스택오버블로우 데이터과학자가 R 팩키지관련 내용을 발표하여 이를 
 바탕으로 12,000개가 넘는 팩키지에 대해서 정리를 하고 어떤 팩키지를 골라 작업을 해야하는지 지침으로 삼을 수 있을 것으로 보인다.
+
+[stackoverflow](https://stackoverflow.com/)를 통해 R 사용자의 질문과 답변 그리고 방문자 정보가 그대로 남아서 
+어떤 팩키지를 누가 언제 어떻게 사용하는지에 대한 구체적인 최신 정보를 입수할 수 있다.
+
+가장 많이 사용하는 팩키지는 `ggplot2`, `dplyr`, `shiny`, `tidyr`, `stringr`, `devtools`, `lubridate` 가 있다.
+물론 `data.table`, `plyr`등도 있지만 동일한 기능이 `tidyverse`에 묶여 있기 때문에 아마 이들 팩키지는 활용도가 점차 줄어들 것이다.
+
+<img src="fig/most-commonly-used-r-packages.png" alt="가장 자주 사용되는 R 팩키지" width="77%" />
+
+R 팩키지가 독립적으로 사용되고 있지는 않고 목적에 맞게 다수 팩키지가 사용된다.
+가장 R 사용자가 많이 사용하는 것이 `dplyr` 즉 데이터를 다양하게 다루는데 필요한 질문과 답변 그리고,
+데이터 분석결과를 시각화하는데 `ggplot2`에 대한 활용이 높고 자연어처리, 지도, 시계열, 웹, 모형, 기계학습 등 다양한 영역에서 활용되고 있다.
 
 - 데이터 조작: dplyr, magrittr, purrr, tidyverse, data.table, qdapTools, splitstackshape, reshape2
 - 시각화: ggplot2, scales, gridExtra, lattice, png, RColorBrewer
@@ -173,9 +186,14 @@ R팩키지가 12,000개를 넘어서게 되고 비공식적으로 개발된 GitH
 - 성능/C++: rbenchmark, inline, std, Rcpp, microbenchmark
 - 스프레드쉬트: xlsx, XLConnect, gdata
 
+<img src="fig/r-packages-ecosystem.png" alt="R 팩키지 생태계" width="77%" />
+
 ### 3.2. 경쟁 팩키지
 
-동일한 기능을 제공하는 다양한 팩키지가 존재한다.
+R 팩키지 생태계에 나타났듯이 오픈소스 프로젝트는 동일한 기능을 제공하는 팩키지가 서로 경쟁하는 것이 큰 특징이다.
+스택오버플로우의 질의 응답을 통해서도 동일한 기능을 제공하는 다양한 팩키지가 서로 경쟁하는 것이 나타난다.
+즉, 특정 팩키지와 연관된 질문을 하면 다른 팩키지를 통해서도 가능하다는 답변이 댓글로 바로 달리는 식이다.
+이를 통해 경쟁하는 팩키지에 대한, 혹은 주도권을 잡아나가고 있는 팩키지에 대해서도 확인이 가능하다.
 
 - 데이터 다루기: **dplyr**, data.table
 - 깔끔한 데이터(tidy): **tidyr**, reshape2
@@ -188,6 +206,16 @@ R팩키지가 12,000개를 넘어서게 되고 비공식적으로 개발된 GitH
 - JSON 파일: jsonlite, rjson
 - 문자열: **stringr**, gsubfn
 - XML: xml2, XML
+
+
+## 4. 국가경쟁력과 데이터과학 R 활용
+
+David Robbinson 발표중에 국민총생산(GDP)과 데이터과학 R 활용이 관련이 있을까? 라는 어떻게 보면 조금 도발적인 분석이 있었다.
+결과는 놀랍니다. 선진국(GDP가 높은 국가)이 데이터과학 R 활용이 높은 것으로 나타나고 있다. 따라서 경제를 발전시키려면 데이터과학 R(?)을 
+사용해야 된다는 추론도 가능하다. :-)
+
+<img src="fig/gdp-vs-r.png" alt="GDP vs 데이터 과학(R)" width="77%" />
+
 
 
 
