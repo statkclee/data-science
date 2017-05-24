@@ -120,21 +120,19 @@ The downloaded binary packages are in
 vignette(x) 명령어로 특정 소품문을 읽을 수 있으며, edit(vignette(x)) 명령어로 코드를 볼 수도 있다. 
 설치되지 않은 팩키지에 대한 소품문을 보려면, 예를 들어, [http://cran.r-project.org/web/packages/dplyr](http://cran.r-project.org/web/packages/dplyr) 처럼 CRAN 페이지를 살펴본다.
 
-#### 2.2. 설치된 팩키지 검색방법 [^statmethods-packages]
+### 2.3. 설치된 팩키지 검색방법 [^statmethods-packages]
 
+`library` 명령어를 실행시키면 설치된 전체 팩키지가 검색된다.
+`search` 명령어도 팩키지를 찾는데 도움되는 키워드다.
 
 ``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
 library()
-```
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
 search()
 ```
 
 [^statmethods-packages]: [Statmethods - Packages](http://www.statmethods.net/interface/packages.html)
 
-
-### 2. 라이브러리 설정  
+### 2.4. 라이브러리 설정  
 
 `.libPaths()` 명령어로 현재 팩키지가 설치된 디렉토리를 확인할 수 있다.
 
@@ -142,13 +140,58 @@ search()
 .libPaths()
 ```
 
-`[1] "C:/Users/KwangChun/Documents/R/win-library/3.2"` 디렉토리는 
+예를 들어, `[1] "C:/Users/KwangChun/Documents/R/win-library/3.2"` 디렉토리는 
 사용자가 개별적으로 설치한 팩키지 목록이 나와 있고,
-`[2] "C:/Program Files/R/R-3.2.3/library"` 디렉토리에는 
-기본 팩키지와 유틸리티가 나타나 있다.
-
+`[2] "C:/Program Files/R/R-3.2.3/library"` 디렉토리에는 기본 팩키지와 유틸리티가 나타나 있다.
 
 `.Rprofile` 파일에 `.libPaths("C:/Users/xwMOOC/Rpackages")`를 추가해서 팩키지를 한 곳에 몰아 관리할 수도 있다. 
+
+## 3. R 팩키지
+
+R 팩키지를 설치할 때 가장 고민하게 되는 것은 설치하는 팩키지가 정말 맞나하는 고민이다.
+다른 오픈소스 프로젝트도 그렇지만 동일한 기능을 수행하는 팩키지가 너무 많기 때문에 사실 그 팩키지가
+본인이 작업하는데 사용되는 팩키지가 맞는지 확신이 서지 않는 것이다.
+
+R팩키지가 12,000개를 넘어서게 되고 비공식적으로 개발된 GitHub 저장소에 존재하는 팩키지까지 고려하면 고민이 깊어질 수 밖에 없다.
+
+### 3.1. 스택오버블로우(stackoverflow)
+
+얼마전 뉴욕 R 컨퍼런스(New York R Conference)에서 스택오버블로우 데이터과학자가 R 팩키지관련 내용을 발표하여 이를 
+바탕으로 12,000개가 넘는 팩키지에 대해서 정리를 하고 어떤 팩키지를 골라 작업을 해야하는지 지침으로 삼을 수 있을 것으로 보인다.
+
+- 데이터 조작: dplyr, magrittr, purrr, tidyverse, data.table, qdapTools, splitstackshape, reshape2
+- 시각화: ggplot2, scales, gridExtra, lattice, png, RColorBrewer
+- 지도: leaflet, ggmap, maps, rgeos, maptools, raster, sp, gdal
+- 자연어처리: tm, qdap
+- 인터랙티브 시각화: DT, ggvis, rCharts, shiny, shinydashboard, shinyjs
+- 모형: broom, nlme, lme4
+- 웹/API: XML, RCurl, rjson, httr, rvest, xml2, RJSONIO, jsonlite, RSelenium
+- 재현: rmarkdown, knitr, xtable
+- 시계열: lubridate, chron, zoo, xts
+- 기계학습: foreach, doParallel, parallel, randomForest, caret
+- 문자열: stringr, stringi, gsubfn
+- 성능/C++: rbenchmark, inline, std, Rcpp, microbenchmark
+- 스프레드쉬트: xlsx, XLConnect, gdata
+
+### 3.2. 경쟁 팩키지
+
+동일한 기능을 제공하는 다양한 팩키지가 존재한다.
+
+- 데이터 다루기: **dplyr**, data.table
+- 깔끔한 데이터(tidy): **tidyr**, reshape2
+- 문자열: **stringr**, stringi
+- 깔끔한 데이터(tidy): **tidyr**, splitstackshape
+- 다중 그래프: **grid**, cowplot
+- 웹스크래핑: **rvest**, XML
+- 엑셀: xlsx, XLConnect
+- 다중 그래프: **gridExtra**, cowplot
+- JSON 파일: jsonlite, rjson
+- 문자열: **stringr**, gsubfn
+- XML: xml2, XML
+
+
+
+
 
 
 
