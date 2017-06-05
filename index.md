@@ -64,7 +64,8 @@ title: 데이터 과학
     - [데이터 내보내기](data-handling-export.html)
     - [데이터 다수 다루기 - 파케이](ds-manip-multiple-data.html)
 1. [R 팩키지](ds-r-pkgs.html)    
-    - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)  
+    - [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)    
+    - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)      
 1. **다양한 데이터**
     - [지리정보](geo-info.html)
         - [주소와 위도경도](geo-info-lonlat.html)
@@ -97,8 +98,6 @@ title: 데이터 과학
     - [R로 전자우편 자동 전송](ds-gmail.html)        
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [야구 MLB](ds-baseball-mlb.html)    
-1. R 팩키지
-    - [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)    
 1. [정렬(Sort)](data-handling-sorting.html) 
 
 
