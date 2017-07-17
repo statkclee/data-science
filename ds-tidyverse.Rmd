@@ -200,7 +200,9 @@ R은 함수형 언어라 객체지향언어나 다른 언어 패러다임과 싸
 > it is often the quality of the glue that most directly determines the power of the system.
 > - Programs must be written for people to read, and only incidentally for machines to execute.  
 
-## 4. 프로그래밍과 데이터 과학 작업흐름 
+## 4. 프로그래밍과 데이터 과학 작업흐름 [^jenny-plotcon-2016]
+
+[^jenny-plotcon-2016]: [PLOTCON 2016: Jenny Bryan, Behind every great plot there's a great deal of wrangling](https://www.youtube.com/watch?v=4MfUCX_KpdE)
 
 데이터 과학 작업흐름은 일반적인 데이터 분석과정과 유사하다.
 다만, 다양한 데이터와 사투를 벌이는 과정에서 때로는 상당한 프로그래밍 기술도 필요하다.
@@ -213,6 +215,8 @@ R은 함수형 언어라 객체지향언어나 다른 언어 패러다임과 싸
 RESTful API로 모형을 제공하는 경우도 있어 이는 완전히 다른 소프트웨어 개발 영역으로 볼 수도 있다.
 
 <img src="fig/ds-data-science-workflow-coding.png" alt="데이터 과학과 코딩" width="77%" />
+
+<iframe width="320" height="180" src="https://www.youtube.com/embed/4MfUCX_KpdE" frameborder="0" allowfullscreen></iframe>
 
 ## 5. 가트너 데이터 과학
 
