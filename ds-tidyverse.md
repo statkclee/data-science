@@ -1,14 +1,4 @@
----
-layout: page
-title: 데이터 과학
-subtitle: tidyverse 데이터 과학 기본체계
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
----
+# 데이터 과학
 
 
 
@@ -18,7 +8,7 @@ mainfont: NanumGothic
 > * 사람과 컴퓨터를 작업 최적화를 위한 접점을 찾아본다.
 > * 데이터 과학 문제에 대한 R 진영 `tidyverse` 해결책을 이해한다.
 
-### 1. 데이터 과학 문제정의
+## 1. 데이터 과학 문제정의
 
 데이터 정제(Cleansing)는 원데이터를 시각화하거나 모형을 개발을 위해 다음 단계를 준비하는 사전 준비과정이다. 
 하지만, 데이터 정제는 과거 많이 사용된 개념으로 정형화된 데이터베이스 혹은 통계 팩키지에 데이터를 사전 준비하는 과정을 
@@ -42,7 +32,7 @@ mainfont: NanumGothic
 사람이 가장 중요한 자원이 되었고, 컴퓨터에 작업명령을 기술하는 코딩도 기계중심 프로그래밍 언어에서
 인간중심 프로그래밍 언어로 진화하고 있다.
 
-### 2. 문제해결 개념 아키텍쳐
+## 2. 문제해결 개념 아키텍쳐
 
 문제 해결의 중심에 사람이 있다. 하지만 `tidyr`을 통해 데이터테이블 형식의 
 데이터가 `dplyr`에 들어오는 것을 기본 가정으로 깔고 있다.
@@ -52,7 +42,7 @@ mainfont: NanumGothic
 
 <img src="fig/data-science-countermeasure.png" alt="R진영 해결책" width="50%" />
 
-#### 2.1. `dplyr` 동사 명령어
+### 2.1. `dplyr` 동사 명령어
 
 인지능력을 통해 데이터를 처리하는 알고리즘은 데이터 처리 동사 명령어로 볼 수 있다.
 `tidyr`을 통해 정규데이터 형태로 변형이 되었다고 가정하면,
@@ -68,7 +58,7 @@ mainfont: NanumGothic
 - summarise: 관측점을 하나로 축약한다. (평균)
 - arrange: 관측점을 오름차순, 내림차순으로 정렬한다.
 
-#### 2.2. `%>%` 파이프라인 연산자
+### 2.2. `%>%` 파이프라인 연산자
 
 `dplyr`은 파이프 연산자 [magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)을 가져와서 사용한다. 
 `%>%`은 "then"으로, 혹은 "파이프" 발음한다.
@@ -109,13 +99,14 @@ mainfont: NanumGothic
 >   filter(n > 10) 
 > ~~~
 
-#### 2.3. SQL 코드 자동생성
+### 2.3. SQL 코드 자동생성
 
 `dplyr` 팩키지에 `translate_sql` 함수를 통해 R코드를 SQL 쿼리문으로 
 바꿔 데이터베이스에 질의를 던지게 된다. 이를 통해 빅데이터 및 다양한 데이터베이스에 
 존재하는 데이터를 R에서 인지적 부담없이 작업할 수 있게 된다.
 
-~~~ {.r}
+
+~~~{.r}
 flights %>%
  filter(!is.na(dep_delay)) %>%
  group_by(date, hour) %>%
@@ -124,7 +115,8 @@ flights %>%
 }
 ~~~
 
-~~~ {.r}
+
+~~~{.r}
 SELECT "date", "hour", "delay", "n"
 FROM (
     SELECT "date", "hour",
@@ -137,8 +129,7 @@ FROM (
 WHERE "n" > 10.0
 ~~~
 
-
-### 3. `tidyverse` 선언 [^tidyverse-menifesto]
+## 3. `tidyverse` 선언 [^tidyverse-menifesto]
 
 데이터 과학 모형개발과 자료분석에서 R 팩키지 도구상자를 잘 갖추는 것도 중요한 작업이다.
 다행히도, 최근에 [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/index.html) 팩키지가 새로 나와 많은 부분 체계화되었다.
@@ -200,6 +191,33 @@ R은 함수형 언어라 객체지향언어나 다른 언어 패러다임과 싸
 > it is often the quality of the glue that most directly determines the power of the system.
 > - Programs must be written for people to read, and only incidentally for machines to execute.  
 
+## 4. 프로그래밍과 데이터 과학 작업흐름 
 
+데이터 과학 작업흐름은 일반적인 데이터 분석과정과 유사하다.
+다만, 다양한 데이터와 사투를 벌이는 과정에서 때로는 상당한 프로그래밍 기술도 필요하다.
+특히, 원데이터를 가져오는 과정과 데이터분석을 통해 나온 산출물 주로 보고서와 모형, 예측모형 점수, 분류값 등을 내보내는 
+작업에도 데이터 분석과는 다른 프로그래밍 기술이 필요하다.
 
+조금 다르게 보면 탐색적 데이터 과정과, 기술통계 작업, 추론통계 작업과 예측모형 개발 과정은 
+통계이론과 모형에 대한 이해가 좀더 필요하여 프로그래밍 코드 수준이 상대적으로 덜 필요할 수도 있다.
+하지만, 데이터를 가져와서 정제하는 과정과 최종 보고서를 만들어내는 과정에는 때로는 웹앱을 만들거나 
+RESTful API로 모형을 제공하는 경우도 있어 이는 완전히 다른 소프트웨어 개발 영역으로 볼 수도 있다.
+
+<img src="fig/ds-data-science-workflow-coding.png" alt="데이터 과학과 코딩" width="77%" />
+
+## 5. 가트너 데이터 과학
+
+더이상 데이터를 분석하는 것이 뒤늦은 깨달음을 주고 이해를 하는 단계를 넘어섰다.
+가트너가 제시한 데이터를 활용하는 4단계 즉, 기술분석, 진단분석, 예측분석, 처방분석 단계는 
+데이터를 정보로서 활용하는 단계부터 최적화하는 단계까지 확장된다.
+
+- 기술 분석(Descriptive Analytics): 무슨 일이 있었나? (What happened?)
+- 진단 분석(Diagnostic Analytics): 왜 일어났나? (Why did it happen?)
+- 예측 분석(Predictive Analytics): 무슨 일이 일어날까? (What will happen?)
+- 처방 분석(Prescriptive Analytics): 어떻게 그런 일을 일으킬까? (How can we make it happen?)
+
+이를 통해 뒤늦은 깨달음(Hindsight) 복기, 깨달음/통찰력(Insight), 예지력/선견지명(Foresight)을 얻을 수 있다.
+가치도 크지만 그에 따른 어려움도 가중된다.
+
+<img src="fig/ds-gartner.png" alt="가트너 정보에서 최적화까지" width="77%" />
 
