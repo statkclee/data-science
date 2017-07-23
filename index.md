@@ -28,7 +28,7 @@ title: 데이터 과학
             - [불규칙 시계열 데이터](ds-irregular-time-series.html) 
         - [요인(Factor) - 범주형 자료형](ds-factor-cdata.html)
             - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
-            - [범주형 데이터와 dplyr, 그리고 시각화](ds-factor-dplyr-mosaic.html)
+            - [범주형 데이터 시각화 기초](ds-factor-dplyr-mosaic.html)
     - [결측데이터](ds-missing.html)
     - [SQL](data-handling-sql.html) : [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
     - [`dplyr` 데이터베이스](ds-dplyr-sql.html)        
