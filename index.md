@@ -67,15 +67,7 @@ title: 데이터 과학
     - [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)    
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)      
 1. **다양한 데이터**
-    - [지리정보](geo-info.html)
-        - [주소와 위도경도](geo-info-lonlat.html)
-        - [Kormaps, leaflet 지리정보 시각화 기초](geo-info-kormaps.html)
-        - [우편번호 지리정보 시각화](geo-info-postcode.html)
-        - [단계구분도(choropleth) 지리정보 시각화](geo-info-choropleth.html)
-        - [생활안전 - 보호관찰소와 범죄](geo-info-crime.html)     
-        - [.shp 지도 일부 추출](geo-info-shapefile.html)
-        - [IP 주소 지리정보 시각화](geo-info-ip-address.html)
-        - [제18대 대통령선거](geo-18-president.html)
+    - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
     - **웹 데이터**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
         - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
