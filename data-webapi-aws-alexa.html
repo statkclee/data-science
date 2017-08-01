@@ -126,17 +126,17 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#kbo---">1. KBO 프로야구 웹사이트 인기도</a></li>
-<li><a href="#aws---">2. AWS 웹 정보 서비스</a></li>
-<li><a href="#kbo--">3. KBO 웹사이트 인기도</a><ul>
-<li><a href="#--">3.1. 환경설정과 데이터 준비</a></li>
-<li><a href="#-">3.2. 웹데이터 긁어오기</a></li>
-<li><a href="#--">3.3. 팀별 웹트래픽 시각화</a></li>
+<li><a href="#kbo">1. KBO 프로야구 웹사이트 인기도</a></li>
+<li><a href="#awis">2. AWS 웹 정보 서비스</a></li>
+<li><a href="#kbo-awis">3. KBO 웹사이트 인기도</a><ul>
+<li><a href="#kbo-awis-setup">3.1. 환경설정과 데이터 준비</a></li>
+<li><a href="#kbo-awis-crawl">3.2. 웹데이터 긁어오기</a></li>
+<li><a href="#kbo-awis-viz">3.3. 팀별 웹트래픽 시각화</a></li>
 </ul></li>
 </ul>
 </div>
 
-<div id="kbo---" class="section level2">
+<div id="kbo" class="section level2">
 <h2>1. KBO 프로야구 웹사이트 인기도</h2>
 <p>KBO 프로야구 각 구단별 인기도를 웹사이트 방문 정보를 통해 간접적으로 유추해보자. 이를 위해서 사전 준비가 다소 필요하다.</p>
 <ul>
@@ -146,7 +146,7 @@ $(document).ready(function () {
 </ul>
 <p><img src="data:image/png;base64,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" alt="AWS 알렉사 웹 사이트 정보" width="77%" /></p>
 </div>
-<div id="aws---" class="section level2">
+<div id="awis" class="section level2">
 <h2>2. AWS 웹 정보 서비스</h2>
 <p>AWS 웹 정보 서비스(AWIS)에 접속하기 전에 웹이터페이스를 통해 AWIS 서비스를 제공하고 있다. <span class="citation">[@Alexa]</span>(<a href="http://www.alexa.com/siteinfo" class="uri">http://www.alexa.com/siteinfo</a>) 사이트에 방문하고 나서 웹사이트를 넣게 되면 웹교통량, 통계, 분석결과를 나름 잘 정리해서 보기 쉽게 정보를 제공한다.</p>
 <p>AWIS는 현재 가장 많이 사용하고 있는 IAM 서비스에 통합되어 있지 않아 따로 <strong>Access Keys (Access Key ID and Secret Access Key)</strong>를 전달받아야 한다. 관련한 자세한 사항은 <a href="https://aws.amazon.com/ko/awis/faqs/">Q: How do I get started with AWIS?</a> 웹사이트를 참조한다.</p>
@@ -169,7 +169,7 @@ $(document).ready(function () {
 </ul>
 </blockquote>
 </div>
-<div id="kbo--" class="section level2">
+<div id="kbo-awis" class="section level2">
 <h2>3. KBO 웹사이트 인기도</h2>
 <p>KBO 웹사이트를 바탕으로 각 팀에 대한 인기도를 추정할 수 있다. 이를 위해서 KBO 웹사이트에서 각 팀정보를 바탕으로 각 팀별 웹사이트를 AWIS에 넘겨, 페이지뷰(page_views_per_million), 유저당페이지뷰(page_views_per_user), 웹사이트순위(rank), 도달수(reach_per_million) 데이터를 얻을 수 있다. 해당 정보에 대한 자세한 사항은 <a href="https://chnm.gmu.edu/digitalhistory/links/cached/chapter5/link5.25b.AlexaTrafficRankings.html">About the Alexa Traffic Rankings</a> 페이지를 참조한다.</p>
 <ul>
@@ -178,7 +178,7 @@ $(document).ready(function () {
 <li>웹사이트순위(rank): AWIS에서 자체 산정한 웹사이트 순위</li>
 <li>도달수(reach_per_million): 백만유저당 도달수</li>
 </ul>
-<div id="--" class="section level3">
+<div id="kbo-awis-setup" class="section level3">
 <h3>3.1. 환경설정과 데이터 준비</h3>
 <p><code>aws.signature</code>, <code>aws.alexa</code>를 설치한다. R에서 AWIS를 사용할 수 있도록 제작된 팩키지다. 금일 기준(2017-08-01) <a href="http://www.koreabaseball.com/teamrank/teamrank.aspx">KBO 팀순위</a> 데이터를 준비한다. 긁어온 팀순위 데이터와 자체 수집한 각 팀별 웹사이트 정보를 붙여 AWIS에 넘길 데이터를 준비한다.</p>
 <pre class="r"><code># 0. 환경설정 ---------------------------------------
@@ -217,7 +217,7 @@ team_homepage &lt;- inner_join(team_rank_tbl, team_homepage) %&gt;%
 # 8월 1일
 DT::datatable(team_homepage)</code></pre>
 </div>
-<div id="-" class="section level3">
+<div id="kbo-awis-crawl" class="section level3">
 <h3>3.2. 웹데이터 긁어오기</h3>
 <p><code>for</code> 반복문 대신 함수형 프로그래밍으로 간결한 코드로 각 팀별 웹트래픽을 AWIS에서 받아온다. 웹에서 데이터를 긁어오는 경우 대부분 자료가 리스트 형태로 가져오게 되어 시각화 혹은 모형개발을 위해 데이터 후처리 작업이 일반적이다.</p>
 <pre class="r"><code># 2. 웹페이지 데이터 -----------------------
@@ -249,13 +249,13 @@ team_traffic_df &lt;- team_traffic_df %&gt;%
 
 listviewer::jsonedit(team_hp_alexa, mode=&quot;view&quot;)</code></pre>
 </div>
-<div id="--" class="section level3">
+<div id="kbo-awis-viz" class="section level3">
 <h3>3.3. 팀별 웹트래픽 시각화</h3>
 <p>AWIS가 전세계를 대상으로 하고 KBO 프로야구 웹사이트가 상대적으로 웹트래픽이 많지 않아 순위 백만에 들지 않는 경우는 제외되고, 일부 구단(NC)에 대해서는 가비지 데이터가 들어가 있어 이를 제외하고 시각화한다.</p>
 <p>웹사이트 순위가 낮아야 좋은 것으로 이점만 유의하면 된다.</p>
 <pre class="r"><code># 3. 팀별 웹페이지 시각화 ------------
 
-ggplot(team_traffic_df, aes(x=일자, y=웹사이트순위, color=팀명)) +
+ggplot(team_traffic_df, aes(x=일자, y=웹사이트순위, color=팀명, group=팀명)) +
     geom_line() +
     geom_point(size=2) +
     scale_y_log10(labels = scales::comma) +

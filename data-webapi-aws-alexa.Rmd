@@ -176,7 +176,7 @@ AWIS가 전세계를 대상으로 하고 KBO 프로야구 웹사이트가 상대
 ``` {r aws-alexa-viz}
 # 3. 팀별 웹페이지 시각화 ------------
 
-ggplot(team_traffic_df, aes(x=일자, y=웹사이트순위, color=팀명)) +
+ggplot(team_traffic_df, aes(x=일자, y=웹사이트순위, color=팀명, group=팀명)) +
     geom_line() +
     geom_point(size=2) +
     scale_y_log10(labels = scales::comma) +

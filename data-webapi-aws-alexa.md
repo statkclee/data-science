@@ -4,7 +4,7 @@ xwMOOC
  
 
 
-## 1. KBO 프로야구 웹사이트 인기도
+## 1. KBO 프로야구 웹사이트 인기도 {#kbo}
 
 KBO 프로야구 각 구단별 인기도를 웹사이트 방문 정보를 통해 간접적으로 유추해보자.
 이를 위해서 사전 준비가 다소 필요하다.
@@ -15,7 +15,7 @@ KBO 프로야구 각 구단별 인기도를 웹사이트 방문 정보를 통해
 
 <img src="fig/aws-alexa-web-info.png" alt="AWS 알렉사 웹 사이트 정보" width="77%" />
 
-## 2. AWS 웹 정보 서비스 
+## 2. AWS 웹 정보 서비스 {#awis}
 
 AWS 웹 정보 서비스(AWIS)에 접속하기 전에 웹이터페이스를 통해 AWIS 서비스를 제공하고 있다. 
 [@Alexa](http://www.alexa.com/siteinfo) 사이트에 방문하고 나서 웹사이트를 넣게 되면 웹교통량, 통계, 분석결과를 나름 잘 정리해서 보기 쉽게 정보를 제공한다.
@@ -45,7 +45,7 @@ Sys.setenv("AWS_ACCESS_KEY_ID" = "AKXXXXXXXXXXXXXXXXXXX",
 > - 1,001 -- 1,000,000 요청건/월 : 요청건당 $0.00045(약 0.54원, 1,200원/달러 기준)
 > - 1,000,000 요청건/월 이상 : 요청건당 $0.00030(약 0.36원, 1,200원/달러 기준)
 
-## 3. KBO 웹사이트 인기도 
+## 3. KBO 웹사이트 인기도  {#kbo-awis}
 
 KBO 웹사이트를 바탕으로 각 팀에 대한 인기도를 추정할 수 있다. 이를 위해서 KBO 웹사이트에서 각 팀정보를 바탕으로 
 각 팀별 웹사이트를 AWIS에 넘겨, 페이지뷰(page_views_per_million), 유저당페이지뷰(page_views_per_user),
@@ -57,7 +57,7 @@ KBO 웹사이트를 바탕으로 각 팀에 대한 인기도를 추정할 수 �
 - 웹사이트순위(rank): AWIS에서 자체 산정한 웹사이트 순위
 - 도달수(reach_per_million): 백만유저당 도달수
 
-### 3.1. 환경설정과 데이터 준비
+### 3.1. 환경설정과 데이터 준비 {#kbo-awis-setup}
 
 `aws.signature`, `aws.alexa`를 설치한다. R에서 AWIS를 사용할 수 있도록 제작된 팩키지다.
 금일 기준(2017-08-01) [KBO 팀순위](http://www.koreabaseball.com/teamrank/teamrank.aspx) 데이터를 준비한다.
@@ -103,7 +103,7 @@ team_homepage <- inner_join(team_rank_tbl, team_homepage) %>%
 DT::datatable(team_homepage)
 ~~~
 
-### 3.2. 웹데이터 긁어오기
+### 3.2. 웹데이터 긁어오기 {#kbo-awis-crawl}
 
 `for` 반복문 대신 함수형 프로그래밍으로 간결한 코드로 각 팀별 웹트래픽을 AWIS에서 받아온다.
 웹에서 데이터를 긁어오는 경우 대부분 자료가 리스트 형태로 가져오게 되어 시각화 혹은 모형개발을 위해 
@@ -141,7 +141,7 @@ team_traffic_df <- team_traffic_df %>%
 listviewer::jsonedit(team_hp_alexa, mode="view")
 ~~~
 
-### 3.3. 팀별 웹트래픽 시각화
+### 3.3. 팀별 웹트래픽 시각화 {#kbo-awis-viz}
 
 AWIS가 전세계를 대상으로 하고 KBO 프로야구 웹사이트가 상대적으로 웹트래픽이 많지 않아 
 순위 백만에 들지 않는 경우는 제외되고, 일부 구단(NC)에 대해서는 가비지 데이터가 들어가 있어 
@@ -153,7 +153,7 @@ AWIS가 전세계를 대상으로 하고 KBO 프로야구 웹사이트가 상대
 ~~~{.r}
 # 3. 팀별 웹페이지 시각화 ------------
 
-ggplot(team_traffic_df, aes(x=일자, y=웹사이트순위, color=팀명)) +
+ggplot(team_traffic_df, aes(x=일자, y=웹사이트순위, color=팀명, group=팀명)) +
     geom_line() +
     geom_point(size=2) +
     scale_y_log10(labels = scales::comma) +
