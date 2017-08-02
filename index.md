@@ -71,6 +71,7 @@ title: 데이터 과학
     - **웹 데이터**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
         - [아마존 알렉사 웹정보(웹API) - KBO 프로야구 웹사이트](data-webapi-aws-alexa.html)
+        - [아마존 알렉사 웹정보(웹API) - 인터넷 쇼핑(쿠팡, 위메프, 티몬)](data-webapi-social-shopping.html)
         - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
             - [데이터 입수](http://statkclee.github.io/web-data-python/01-getdata.html)
             - [CSV 데이터 처리](http://statkclee.github.io/web-data-python/02-csv.html)
