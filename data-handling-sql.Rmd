@@ -1,8 +1,27 @@
-# xwMOOC 데이터 과학
-xwMOOC  
-`r Sys.Date()`  
+---
+layout: page
+title: xwMOOC 데이터 과학
+subtitle: R과 SQL - `DBI`, `dplyr` 
+date: "`r Sys.Date()`"
+author: xwMOOC
+output:
+  html_document: 
+    keep_md: yes
+    toc: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
 
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, fig.width=12)
 
+library(DBI)
+library(tidyverse)
+
+par(family = "NanumGothic")
+```
 
 
 ## 1. R에서 바라본 SQL  {#r-sql}
@@ -31,8 +50,7 @@ R 개발자가 데이터를 분석할 때 데이터분석은 `dplyr`을 사용�
  - 집합 (Aggregation)
  - 데이터 조합하기 (Combining Data)
 
-
-~~~{.r}
+``` {r sql-select, eval=FALSE}
 # 칼럼과 행 선택
 SELECT 칼럼명1, 칼럼명2....칼럼명N
 FROM   테이블명
@@ -44,7 +62,7 @@ FROM   테이블명
 WHERE  조건
 ORDER BY 칼럼명 {오름차순|내림차순};
 GROUP BY 칼럼명;
-~~~
+```
 
 ## 2. SQLite와 실습 데이터베이스 {#sqlite}
 
@@ -60,17 +78,15 @@ GROUP BY 칼럼명;
 1. 명령-라인 터미널 윈도우를 연다.
 2. 다음과 같이 명령어를 타이핑해서 디렉토리를 생성한다.
 
-
-~~~{.r}
+``` {r create-directory, eval=FALSE}
 $ mkdir ~/swc/sql
-~~~
+```
 
 3. 생성한 디렉토리로 현재 작업 디렉토리를 변경한다.
 
-
-~~~{.r}
+``` {r change-directory, eval=FALSE}
 $ cd ~/swc/sql
-~~~
+```
 
 ### 2.1. SQLite 설치 [^install-sqlite3] {#install-sqlite}
 
@@ -79,12 +95,11 @@ $ cd ~/swc/sql
 [SQLite Download Page](http://sqlite.org/download.html)에서 [sqlite-tools-win32-x86-3200000.zip](http://sqlite.org/2017/sqlite-tools-win32-x86-3200000.zip)을 다운로드 받는다.
 압축을 풀면 황당하게 몇개 `.exe` 파일이 존재하는 황당함을 느낀다. 설치가 완료되었다.
 
-
-~~~{.r}
+``` {r install-sqlite3-cmd, eval=FALSE}
 $ ls
 gen-survey-database.sql  sqlite3.exe           survey.db
 sqldiff.exe              sqlite3_analyzer.exe
-~~~
+```
 
 - sqlite3.exe: sqlite 실행파일
 - gen-survey-database.sql: `survey.db` sqlite 데이터베이스를 생성시키는데 사용되는 스크립트
@@ -109,17 +124,15 @@ HTTP, HTTPS, FTP 프로토콜을 지원하는 명령-라인 웹크롤러(web-cra
 
 **Tip:** 만약 cURL을 선호한다면, 다음 명령문에서 "wget"을 `curl -O`로 대체하세요.
 
-
-~~~{.r}
+``` {r download-survey-db, eval=FALSE}
 root@hangul:~/swc/sql$ wget https://raw.githubusercontent.com/swcarpentry/bc/master/novice/sql/gen-survey-database.sql
-~~~
+```
 
 상기 명령문으로 Wget은 HTTP 요청을 생성해서 github 저장소의 "gen-survey-database.sql" 원파일만 현재 작업 디렉토리로 가져온다.
 
 성공적으로 완료되면 터미널은 다음 출력결과를 화면에 표시한다.
 
-
-~~~{.r}
+``` {r download-output, eval=FALSE}
 --2014-09-02 18:31:43--  https://raw.githubusercontent.com/swcarpentry/bc/master/novice/sql/gen-survey-database.sql
 Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 103.245.222.133
 Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|103.245.222.133|:443... connected.
@@ -130,7 +143,7 @@ Saving to: ‘gen-survey-database.sql’
 100%[=========================================================================================================================&gt;] 3,297       --.-K/s   in 0.01s   
 
 2014-09-02 18:31:45 (264 KB/s) - ‘gen-survey-database.sql’ saved [3297/3297]
-~~~
+```
 
 이제 성공적으로 단일 SQL 파일을 가져와서, 
 `survey.db` 데이터베이스를 생성하고 
@@ -138,53 +151,48 @@ Saving to: ‘gen-survey-database.sql’
 
 명령-라인 터미널에서 SQLite3 프로그램을 호출하기 위해서, 다음 명령문을 실행한다.
 
-
-~~~{.r}
+``` {r create-survey-db, eval=FALSE}
 root@hangul:~/swc/sql$ sqlite3 survey.db < gen-survey-database.sql
-~~~
+```
 
 ### 2.3. SQLite DB 연결 및 설치 테스트 {#connect-sqlite}
 
 생성된 데이터베이스에 연결하기 위해서, 데이터베이스를 생성한 디렉토리 안에서 SQLite를 시작한다. 그래서 `~/swc/sql` 디렉토리에서 다음과 같이 타이핑한다.
 
-
-~~~{.r}
+``` {r run-survey-db, eval=FALSE}
 root@hangul:~/swc/sql$ sqlite3 survey.db
-~~~
+```
 
 `sqlite3 survey.db` 명령문이 데이터베이스를 열고 데이터베이스 명령-라인 프롬프트로 안내한다. 
 SQLite에서 데이터베이스는 플랫 파일(flat file)로 명시적으로 열 필요가 있다. 
 그리고 나서 SQLite 시작되고 `sqlite`로 명령-라인 프롬프트가 다음과 같이 변경되어 표시된다.
 
 
-
-~~~{.r}
+``` {r run-survey-db-output, eval=FALSE}
 SQLite version 3.20.0 2017-08-01 13:24:15
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
 sqlite>  
-~~~
+```
 
 다음 출력결과가 보여주듯이 `.databases` 명령문으로 소속된 데이터베이스 이름과 파일 목록을 확인한다.
 
-
-~~~{.r}
+``` {r check-database, eval=FALSE}
 sqlite> .databases
 seq  name             file                                                      
 ---  ---------------  ----------------------------------------------------------
 0    main             ~/novice/sql/survey.db
-~~~
+```
 
 
 다음과 같이 타이핑해서 필요한 "Person", "Survey", "Site" "Visited" 테이블이 존재하는 것을 확인한다.
 `.table`의 출력결과는 다음과 같다.
 
-
-~~~{.r}
+``` {r check-tables, eval=FALSE}
 sqlite> .tables
 Person   Site     Survey   Visited
-~~~
+```
 
 ## 3. `dplyr` 동사 활용한 데이터베이스 작업 {#sql-dplyr}
 
@@ -193,8 +201,7 @@ Person   Site     Survey   Visited
 가장 먼저 앞에서 생성한 sqlite3 데이터베이스에 R과 연결시킨다. 
 그리고 연결된 데이터베이스에 들어있는 테이블을 살펴본다.
 
-
-~~~{.r}
+``` {r connect-to-database}
 # 0. 환경설정 -----------------------
 
 # library(DBI)
@@ -204,64 +211,27 @@ Person   Site     Survey   Visited
 
 con <- dbConnect(RSQLite::SQLite(), "data/survey.db")
 dbListTables(con)
-~~~
-
-
-
-~~~{.output}
-[1] "Person"  "Site"    "Survey"  "Visited"
-
-~~~
+```
 
 ### 3.2. SQL을 직접 던지기 {#dplyr-sql}
 
 `dbGetQuery` 명령어를 통해 연결된 `con`을 통해 데이터베이스에 질의문(query)를 직접 던질 수 있다.
 
-
-~~~{.r}
+``` {r sql-query}
 # 2. SQL 활용 -----------------------
 dbGetQuery(con, 'SELECT * FROM Person LIMIT 5')
-~~~
-
-
-
-~~~{.output}
-     ident  personal   family
-1     dyer   William     Dyer
-2       pb     Frank  Pabodie
-3     lake  Anderson     Lake
-4      roe Valentina  Roerich
-5 danforth     Frank Danforth
-
-~~~
+```
 
 ### 3.3. dplyr 동사 활용 {#dplyr-dplyr}
 
 `tbl` 함수로 `con` 으로 연결된 데이터베이스의 특정 테이블 "Survey"를 뽑아낸다.
 
-
-~~~{.r}
+``` {r extract-table}
 # 3. dplyr 방식 -----------------------
 
 survey_df <- tbl(con, "Survey")
 head(survey_df)
-~~~
-
-
-
-~~~{.output}
-# Source:   lazy query [?? x 4]
-# Database: sqlite 3.11.1 [D:\webzen\data-science\data\survey.db]
-  taken person quant reading
-  <int>  <chr> <chr>   <dbl>
-1   619   dyer   rad    9.82
-2   619   dyer   sal    0.13
-3   622   dyer   rad    7.80
-4   622   dyer   sal    0.09
-5   734     pb   rad    8.41
-6   734   lake   sal    0.05
-
-~~~
+```
 
 ### 3.4. 데이터프레임 변환 {#dataframe}
 
@@ -269,38 +239,33 @@ head(survey_df)
 R에서 작업이 가능한 데이터프레임이 아니라 `collect` 함수를 활용해서 데이터프레임으로 변환시켜 
 후속 작업을 R에서 실행한다.
 
-
-~~~{.r}
+``` {r convert-to-dataframe}
 # 4. 데이터프레임 변환 -----------------------
 
 survey_df %>% collect() %>% 
     ggplot(aes(x= quant, y=reading)) +
     geom_boxplot()
-~~~
-
-<img src="fig/convert-to-dataframe-1.png" style="display: block; margin: auto;" />
+```
 
 ### 3.5. SQL 변환 과정 살펴보기 {#conversion}
 
 `show_query` 함수를 사용해서 `dplyr` 동사가 SQL 질의문으로 변환된 상황을 살펴볼 수도 있다.
 
-
-~~~{.r}
+``` {r show-query}
 # 5. 내부 SQL 변환과정 살펴보기 --------------
 
 show_query({
     survey_df %>% filter(quant == "sal")
 })
-~~~
+```
 
 ### 3.6. 데이터베이스 연결 끊기 {#disconnect}
 
 데이터베이스는 혼자 사용하는 것이 아니라 사용하지 않는 경우 필히 연결시켜 놓은 `con`을 반듯이 끊어 놓는다.
 
-
-~~~{.r}
+``` {r db-disconnect}
 # 7. 연결 끊기 -----------------------
 
 dbDisconnect(con)
-~~~
+```
 
