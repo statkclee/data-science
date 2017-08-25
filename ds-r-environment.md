@@ -1,4 +1,15 @@
-# 데이터 과학
+---
+layout: page
+title: 데이터 과학
+subtitle: R 업그레이드와 환경설정
+output:
+  html_document: 
+    toc: yes
+    keep_md: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
 
 
 
@@ -62,56 +73,66 @@ loaded via a namespace (and not attached):
 
 ### 2.2. R 엔진 업그레이드 (우분투 리눅스)
 
-우분투 trusty R 최신버젼 설치에 대한 자세한 원문은 [CRAN 웹사이트](http://cran.r-project.org/bin/linux/ubuntu/)를 참조한다.
+몇가지 방법을 사용해서 최신 R 버전으로 업그레이드가 가능하다.
+[R 저장소](https://cran.r-project.org/bin/linux/ubuntu/)를 `/etc/apt/sources.list` 파일에 추가해서 
+최신 R을 설치하는 것도 한 방법이다. 우분투 trusty R 최신버젼 설치에 대한 자세한 원문은 
+[CRAN 웹사이트](http://cran.r-project.org/bin/linux/ubuntu/)를 참조한다.
 
-1. `/etc/apt/sources.list` 파일 하단에 `deb http://cran.cnr.berkeley.edu/bin/linux/ubuntu/ trusty/` 내용을 추가한다.
-    - [CRAN 미러](http://cran.r-project.org/mirrors.html)에서 버클리 대학을 선정했다. 다른 곳을 지정해도 된다.
-2. 우분투 보안 APT 키를 가져온다. 
+1. `/etc/apt/sources.list` 파일 하단에 `deb http://cran.rstudio.com/bin/linux/ubuntu precise/` 내용을 추가한다.
+    - [CRAN 미러](http://cran.r-project.org/mirrors.html)에서 버클리 대학이 과거 많이 참조되었으나 `rstudio`로 선정했는데, 다른 곳을 지정해도 된다.
 
 
 ~~~{.r}
-root@docker:~# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-root@docker:~# gpg --hkp://keyserver keyserver.ubuntu.com:80 --recv-key E084DAB9
+ubuntu@ip-172-31-22-122:~$ sudo nano /etc/apt/sources.list
 ~~~
 
-3. apt-key에 집어넣는다.
+2. 최신정보로 갱신하고 바이러리 R을 설치한다. 만약 소스코드에 R 팩키지를 컴파일한다면 `r-base-dev` 도 함께 설치한다.
 
 
 ~~~{.r}
-root@docker:~# gpg -a --export E084DAB9 | sudo apt-key add 
+ubuntu@ip-172-31-22-122:~$ sudo apt-get update && sudo apt-get install r-base
+ubuntu@ip-172-31-22-122:~$ sudo apt-get install r-base-dev
 ~~~
 
-4. 바이러리 R을 설치한다. 만약 소스코드에 R 팩키지를 컴파일한다면 `r-base-dev` 도 함께 설치한다.
+3. 원문은 [스택오버플러어 웹사이트](http://stackoverflow.com/questions/10476713/how-to-upgrade-r-in-ubuntu), 혹은 
+[How do I install/upgrade r-base to the latest version?](https://askubuntu.com/questions/431380/how-do-i-install-upgrade-r-base-to-the-latest-version)을 참조한다.
 
 
 ~~~{.r}
-root@docker:~# sudo apt-get update && sudo apt-get install r-base
-root@docker:~# sudo apt-get install r-base-dev
-~~~
+ubuntu@ip-172-31-22-122:~$ R
 
-5. 원문은 [스택오버플러어 웹사이트](http://stackoverflow.com/questions/10476713/how-to-upgrade-r-in-ubuntu)를 참조한다.
-
-
-~~~{.r}
-root@docker:~# R
-
-R version 3.2.1 (2015-06-18) -- "World-Famous Astronaut"
-Copyright (C) 2015 The R Foundation for Statistical Computing
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
-R은 자유 소프트웨어이며, 어떠한 형태의 보증없이 배포됩니다.
-또한, 일정한 조건하에서 이것을 재배포 할 수 있습니다.
-배포와 관련된 상세한 내용은 'license()' 또는 'licence()'을 통하여 확인할 수 있습니다.
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
 
-R은 많은 기여자들이 참여하는 공동프로젝트입니다.
-'contributors()'라고 입력하시면 이에 대한 더 많은 정보를 확인하실 수 있습니다.
-그리고, R 또는 R 패키지들을 출판물에 인용하는 방법에 대해서는 'citation()'을 통해 확인하시길 부탁드립니다.
+  Natural language support but running in an English locale
 
-'demo()'를 입력하신다면 몇가지 데모를 보실 수 있으며, 'help()'를 입력하시면 온라인 도움말을 이용하실 수 있습니다.
-또한, 'help.start()'의 입력을 통하여 HTML 브라우저에 의한 도움말을 사용하실수 있습니다
-R의 종료를 원하시면 'q()'을 입력해주세요.
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
 
 >
+~~~
+
+또 다른 방법은 [Michael Rutter PPA](https://askubuntu.com/questions/909689/upgrading-r-version-3-3-in-ubuntu-16-04/912292)을 이용하는 방식으로 
+[Michael Rutter](https://launchpad.net/~marutter/+archive/ubuntu/rrutter)님께서 PPA를 꾸준히 갱신하고 있다.
+사용법은 다음과 같다. **PPA(Personal Package Archive)**는 우분투 개인 패키지 저장소로,
+PPA는 런치패드(유명한 패키지 저장소중 하나)에서 제공하는 우분투의 공식 패키지 저장소에 없는 
+서드 파티 소프트웨어를 위한 개인용 소프트웨어 패키지 저장소다. 사실 우분투 입장에서 보면 R은 그다지 중요한 핵심 팩키지는 아닐 수 있다.
+
+
+~~~{.r}
+ubuntu@ip-172-31-22-122:~$ sudo add-apt-repository ppa:marutter/rrutter
+ubuntu@ip-172-31-22-122:~$ sudo apt update
+ubuntu@ip-172-31-22-122:~$ sudo apt full-upgrade
 ~~~
 
 ### 2.3. R 엔진 업그레이드 (레드햇 리눅스) [^r-rhel-install]
