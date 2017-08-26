@@ -64,17 +64,16 @@ R 환경에서 쉘명령을 직접 실행해본다.
 success
 ~~~
 
+## 2. 방송 3 사 8시 뉴스 혈투와 JTBC의 고민 {#news-viewer-ratings} 
 
+### 2.1. 다음에서 방송 3사 시청률 데이터를 긁어온다.  {#stations} 
 
-## 2. KT 주식데이터 팬텀 JS로 가져오기 {#kt-phantomJS} 
+방송 3 사 8시 뉴스 혈투를 살펴보면 흥미로운 사실이 통계분석을 통해 나타난다.
+이를 위해서 `scrape_daum_jtbc.js` 파일에 [다음 JTBC 뉴스룸](http://movie.daum.net/tv/ratings?tvProgramId=66868) 시청률 정보를 가져오는데,
+[다음 SBS 8시 뉴스](http://movie.daum.net/tv/ratings?tvProgramId=48152), [다음 MBC 뉴스데스크](http://movie.daum.net/tv/ratings?tvProgramId=48135)도 
+방송 시청률 데이터를 끌어오는 작업을 수행한다.
 
-### 2.1. 다음 주식 데이터 긁어오기 {#kt-phantomJS-crawl} 
-
-`phantomjs` 를 쉘명령으로 실행해서 로컬 컴퓨터에 `data/daum_kt_stock.html` 파일로 저장한다.
-저장된 `.html` 파일 중 특정 표(테이블)만 가져온다.
-
-
-> ### `scrape_daum_kt_stock.js` 파일 {.callout}
+> ### `scrape_daum_jtbc.js` 파일 {.callout}
 > 
 > 
 > ~~~{.r}
@@ -82,100 +81,131 @@ success
 > var page = webPage.create();
 > 
 > var fs = require('fs');
-> var path = 'data/daum_kt_stock.html';
+> var path = 'data/daum_jtbc.html';
 > 
-> page.open('http://finance.daum.net/item/quote.daum?code=030200', function (status) {
+> page.open('http://movie.daum.net/tv/ratings?tvProgramId=66868', function (status) {
 >   var content = page.content;
->   page.render('fig/daum_kt_stock.png');
+>   page.render('fig/daum_jtbc.png');
 >   fs.write(path, content, 'w');
 >   phantom.exit();
 > });
 > ~~~
 
+
 ~~~{.r}
 # 0. 환경설정 --------------------------
-
 # library(rvest)
 # library(stringr)
 # library(tidyverse)
+# library(ggthemes)
+# library(extrafont)
+# loadfonts()
 
-# 1. 팬텀JS 헬로우 월드 --------------------------
+# 1. 데이터 긁어오기 --------------------------
+system("phantomjs ./code/scrape_daum_jtbc.js")
+system("phantomjs ./code/scrape_daum_sbs.js")
+system("phantomjs ./code/scrape_daum_mbc.js")
 
-# 2. 데이터 긁어오기 --------------------------
-system("phantomjs ./code/scrape_daum_kt_stock.js")
-
-# Sys.setlocale("LC_ALL", "C")
-
-kt_price_raw <- read_html("data/daum_kt_stock.html") %>%
-  html_nodes(xpath='//*[@id="contentWrap"]/div[5]/table') %>% 
-  html_table(fill = TRUE) %>% 
-  .[[1]]
-
-# Sys.setlocale("LC_ALL", "Korean")
-
-kt_price_raw
+Sys.setlocale("LC_ALL", "C")
 ~~~
 
 
 
 ~~~{.output}
-               X1          X2         X3         X4
-1          현재가      32,600       시가     32,000
-2          전일비        ▲800       고가     32,700
-3       등락률(%)      +2.52%       저가     31,600
-4          거래량     392,413       매도     32,600
-5  거래대금(백만)      12,650       매수     32,550
-6          상한가      41,300  52주 고가     35,550
-7          하한가      22,300  52주 저가     28,850
-8     연중 최고가      35,550  50일 고가     35,550
-9     연중 최저가      28,850  50일 저가     31,550
-10   시가총액(억)      85,122 자본금(억)     15,645
-11     상장주식수 261,111,808     액면가      5,000
-12         결산월        12월     상장일 1998.12.23
-13    업종PER(배)       12.45    PER(배)       12.0
+[1] "C"
 
 ~~~
 
-### 2.2. 다음 KT 주식 데이터 시각화 {#kt-phantomJS-viz} 
-
-시각화학 가능한 형태로 데이터를 변환시킨다.
 
 
 ~~~{.r}
-# 3. 시세 분석 --------------------------
-## 3.1. 데이터 정제 ---------------------
-kt_price_part_1 <- kt_price_raw %>% select(key = X1, value = X2)
-kt_price_part_2 <- kt_price_raw %>% select(key = X3, value = X4)
+jtbc_raw <- read_html("data/daum_jtbc.html") %>%
+  html_nodes(xpath='//*[@id="menuSlide"]/div[2]/div[1]/table[2]') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
 
-kt_price_df <- bind_rows(kt_price_part_1, kt_price_part_2)
+sbs_raw <- read_html("data/daum_sbs.html") %>%
+  html_nodes(xpath='//*[@id="menuSlide"]/div[2]/div[1]/table[2]') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
 
-kt_date <- kt_price_df %>% 
-  filter(key == "상장일") %>% 
-  mutate(상장일 = (str_replace_all(value, "\\.", "-")))  %>% 
-  select(상장일)
+mbc_raw <- read_html("data/daum_mbc.html") %>%
+  html_nodes(xpath='//*[@id="menuSlide"]/div[2]/div[1]/table[2]') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
 
-kt_price_ochl_df <- kt_price_df %>% 
-  filter(key  %in% c("상한가", "하한가", "시가", "고가", "저가", "현재가")) %>% 
-  mutate(value = as.numeric(str_replace_all(value, ",", ""))) %>% 
-  spread(key, value) %>% bind_cols(kt_date)
+Sys.setlocale("LC_ALL", "Korean")
+~~~
 
-## 3.2. 시각화 ---------------------
 
-kt_price_ochl_df %>% 
+
+~~~{.output}
+[1] "LC_COLLATE=Korean_Korea.949;LC_CTYPE=Korean_Korea.949;LC_MONETARY=Korean_Korea.949;LC_NUMERIC=C;LC_TIME=Korean_Korea.949"
+
+~~~
+
+### 2.2. 데이터 정제  {#stations-data-wrangling} 
+
+웹에서 긁어온 방송 3사 데이터를 데이터 분석이 가능하고, 시각화가 가능한 형태로 데이터를 가공한다.
+특히, 주별 사이클이 확연히 존재하기 때문에 이를 최대한 파악하기 용이한 형태로 작업한다.
+
+
+~~~{.r}
+# 2. 데이터 정제 ---------------------
+jtbc_df <- jtbc_raw %>% 
+  mutate(방송사 = "JTBC", 
+         시청률 = as.numeric(str_replace(시청률, "%", "")) / 100,
+         날짜 = lubridate::ymd(str_replace(str_sub(날짜, 1, 10), "\\.", "-"))) %>% 
+  select(방송사, 날짜, 시청률)
+
+sbs_df <- sbs_raw %>% 
+  mutate(방송사 = "SBS", 
+            시청률 = as.numeric(str_replace(시청률, "%", "")) / 100,
+            날짜 = lubridate::ymd(str_replace(str_sub(날짜, 1, 10), "\\.", "-"))) %>% 
+  select(방송사, 날짜, 시청률)
+
+mbc_df <- mbc_raw %>% 
+  mutate(방송사 = "MBC", 
+            시청률 = as.numeric(str_replace(시청률, "%", "")) / 100,
+            날짜 = lubridate::ymd(str_replace(str_sub(날짜, 1, 10), "\\.", "-"))) %>% 
+  select(방송사, 날짜, 시청률)
+
+station_df <- bind_rows(jtbc_df, sbs_df) %>% 
+  bind_rows(mbc_df) %>% 
+  mutate(방송사 = factor(방송사, levels=c("JTBC", "SBS", "MBC")))
+
+station_df %>% spread(방송사, 시청률) %>% 
+  mutate(요일 = lubridate::wday(날짜, label=TRUE)) %>% 
+  select(날짜, 요일, everything()) %>% 
   DT::datatable() %>% 
-  DT::formatCurrency(c(1:6), currency="", digits=0, interval =3 )
+  DT::formatPercentage(c(2,3,4), digits=1)
 ~~~
 
-<!--html_preserve--><div id="htmlwidget-9951f78f2ed08f7a3dfd" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9951f78f2ed08f7a3dfd">{"x":{"filter":"none","data":[["1"],[32700],[41300],[32000],[31600],[22300],[32600],["1998-12-23"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>고가<\/th>\n      <th>상한가<\/th>\n      <th>시가<\/th>\n      <th>저가<\/th>\n      <th>하한가<\/th>\n      <th>현재가<\/th>\n      <th>상장일<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatCurrency(this, row, data, 1, '', 0, 3, ',', '.', true);\nDTWidget.formatCurrency(this, row, data, 2, '', 0, 3, ',', '.', true);\nDTWidget.formatCurrency(this, row, data, 3, '', 0, 3, ',', '.', true);\nDTWidget.formatCurrency(this, row, data, 4, '', 0, 3, ',', '.', true);\nDTWidget.formatCurrency(this, row, data, 5, '', 0, 3, ',', '.', true);\nDTWidget.formatCurrency(this, row, data, 6, '', 0, 3, ',', '.', true);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-728e920e42dc0efcb6f6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-728e920e42dc0efcb6f6">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54"],["2017-07-02","2017-07-04","2017-07-05","2017-07-06","2017-07-07","2017-07-08","2017-07-09","2017-07-10","2017-07-11","2017-07-12","2017-07-13","2017-07-14","2017-07-15","2017-07-16","2017-07-17","2017-07-18","2017-07-19","2017-07-20","2017-07-21","2017-07-22","2017-07-23","2017-07-24","2017-07-25","2017-07-26","2017-07-27","2017-07-28","2017-07-29","2017-07-30","2017-07-31","2017-08-01","2017-08-02","2017-08-03","2017-08-04","2017-08-05","2017-08-06","2017-08-07","2017-08-08","2017-08-09","2017-08-10","2017-08-11","2017-08-12","2017-08-13","2017-08-14","2017-08-15","2017-08-16","2017-08-17","2017-08-18","2017-08-19","2017-08-20","2017-08-21","2017-08-22","2017-08-23","2017-08-24","2017-08-25"],["Sun","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri"],[null,null,null,null,0.04193,0.02548,0.0302,0.06212,0.04781,0.04979,0.04743,0.04964,0.02797,0.03232,0.05798,0.05295,0.05629,0.05055,0.04086,0.02499,0.03163,0.05771,0.05243,0.04848,0.0538,0.04022,0.02324,0.02703,0.05539,0.04704,0.05401,0.04619,0.04096,0.02552,0.02961,0.06197,0.05209,0.05638,0.05143,0.043,0.02751,0.02761,0.06049,0.06071,0.05125,0.05842,0.04378,0.02902,0.03015,0.06233,0.05897,0.05486,0.05856,0.04535],[null,0.043,0.046,0.037,0.053,0.048,0.054,0.049,0.036,0.035,0.04,0.045,0.047,0.049,0.045,0.039,0.035,0.044,0.041,0.045,0.055,0.042,0.037,null,0.036,0.038,0.043,0.046,null,0.038,0.045,0.044,0.041,0.037,0.054,0.048,0.04,0.049,0.044,0.041,0.047,0.048,0.051,null,0.043,0.041,0.039,0.048,0.061,0.044,0.038,0.043,0.041,0.039],[0.044,0.05,0.047,0.046,0.048,0.056,0.043,0.053,0.037,0.044,0.039,0.045,0.05,0.055,0.051,0.043,0.042,0.038,0.048,0.052,0.053,0.05,0.041,0.037,0.043,0.04,0.047,0.045,0.053,0.045,null,0.046,null,0.04,0.048,0.051,0.042,0.048,0.043,0.044,0.046,0.04,0.046,0.05,0.045,0.041,null,0.05,0.086,0.045,0.046,0.041,0.039,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>날짜<\/th>\n      <th>요일<\/th>\n      <th>JTBC<\/th>\n      <th>SBS<\/th>\n      <th>MBC<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatPercentage(this, row, data, 2, 1);\nDTWidget.formatPercentage(this, row, data, 3, 1);\nDTWidget.formatPercentage(this, row, data, 4, 1);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
+
+### 2.3. 방송 3사 시청률 시각화  {#stations-data-wrangling} 
+
+방송 3사 최근 약 2개월 방송 시청률을 보면 손석희 앵커가 진행하는 주중에는 확연한 JTBC 우위,
+손석희 앵커가 빠지는 금요일부터 토요일 일요일은 MBC와 SBS가 경쟁하는 추세가 명확히 확인된다.
+
 
 ~~~{.r}
-ggplot(data=kt_price_ochl_df, aes(x=상장일)) +
-  theme_bw() +
-  geom_linerange(aes(ymin=저가, ymax=고가)) +
-  geom_segment(aes(y = 시가, yend = 현재가, xend = 상장일), size =3, color = "blue") +
-  labs(x="", y="") +
-  scale_y_continuous(labels = scales::comma)
+# 3. 데이터 시각화 ---------------------
+station_colors <- c("#d60cbb", "#1187c6", "#465977")
+
+station_df %>% 
+  ggplot(aes(x=날짜, y=시청률, color=방송사)) +
+  geom_line(size=1.1, alpha=0.3) +
+  geom_point(size=1.5, alpha=0.7) +
+  theme_tufte(base_family = "NanumGothic") +
+  labs(x="", y="시청률", title="방송3사 8시 뉴스 혈투") +
+  scale_y_continuous(labels=scales::percent) +
+  scale_x_date(date_labels = "%m-%d-%A", 
+               breaks = seq(min(station_df$날짜), max(station_df$날짜), by="week")) +
+  scale_fill_manual(values= station_colors) +
+  theme(legend.position = "top",
+        axis.text.x=element_text(angle=90,hjust=1))
 ~~~
 
-<img src="fig/crawl-kt-viz-2.png" style="display: block; margin: auto;" />
+<img src="fig/viz-news-viewer-ratings-1.png" style="display: block; margin: auto;" />
