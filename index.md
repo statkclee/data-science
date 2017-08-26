@@ -71,6 +71,7 @@ title: 데이터 과학
     - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
     - **웹 데이터**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
+        - [R 팬텀JS (phantomJS) - 이미지 데이터 긁어오기](ds-phantomJS.html)
         - [아마존 알렉사 웹정보(웹API) - KBO 프로야구 웹사이트](data-webapi-aws-alexa.html)
         - [아마존 알렉사 웹정보(웹API) - 인터넷 쇼핑(쿠팡, 위메프, 티몬)](data-webapi-social-shopping.html)
         - [아마존 알렉사 웹정보(웹API) - 대한민국 주요 정당](data-webapi-party.html)
