@@ -85,7 +85,7 @@ success
 
 ## 2. KT 주식데이터 팬텀 JS로 가져오기 {#kt-phantomJS} 
 
-### 2.1. 다음 주식 데이터 긁어오기
+### 2.1. 다음 주식 데이터 긁어오기 {#kt-phantomJS-crawl} 
 
 `phantomjs` 를 쉘명령으로 실행해서 로컬 컴퓨터에 `data/daum_kt_stock.html` 파일로 저장한다.
 저장된 `.html` 파일 중 특정 표(테이블)만 가져온다.
@@ -108,7 +108,7 @@ success
 > });
 
 
-``` {r crawl-kt}
+``` {r crawl-kt-with-phantomJS}
 # 0. 환경설정 --------------------------
 
 # library(rvest)
@@ -120,23 +120,23 @@ success
 # 2. 데이터 긁어오기 --------------------------
 system("phantomjs ./code/scrape_daum_kt_stock.js")
 
-Sys.setlocale("LC_ALL", "C")
+# Sys.setlocale("LC_ALL", "C")
 
 kt_price_raw <- read_html("data/daum_kt_stock.html") %>%
   html_nodes(xpath='//*[@id="contentWrap"]/div[5]/table') %>% 
   html_table(fill = TRUE) %>% 
   .[[1]]
 
-Sys.setlocale("LC_ALL", "Korean")
+# Sys.setlocale("LC_ALL", "Korean")
 
 kt_price_raw
 ```
 
-### 2.2. 다음 KT 주식 데이터 시각화
+### 2.2. 다음 KT 주식 데이터 시각화 {#kt-phantomJS-viz} 
 
 시각화학 가능한 형태로 데이터를 변환시킨다.
 
-``` {r crawl-kt}
+``` {r crawl-kt-viz}
 # 3. 시세 분석 --------------------------
 ## 3.1. 데이터 정제 ---------------------
 kt_price_part_1 <- kt_price_raw %>% select(key = X1, value = X2)
