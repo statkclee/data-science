@@ -82,10 +82,9 @@ success
 ```
 
 
+## 3. KT 주식데이터 팬텀 JS로 가져오기 {#kt-phantomJS} 
 
-## 2. KT 주식데이터 팬텀 JS로 가져오기 {#kt-phantomJS} 
-
-### 2.1. 다음 주식 데이터 긁어오기 {#kt-phantomJS-crawl} 
+### 3.1. 다음 주식 데이터 긁어오기 {#kt-phantomJS-crawl} 
 
 `phantomjs` 를 쉘명령으로 실행해서 로컬 컴퓨터에 `data/daum_kt_stock.html` 파일로 저장한다.
 저장된 `.html` 파일 중 특정 표(테이블)만 가져온다.
@@ -132,7 +131,7 @@ kt_price_raw <- read_html("data/daum_kt_stock.html") %>%
 kt_price_raw
 ```
 
-### 2.2. 다음 KT 주식 데이터 시각화 {#kt-phantomJS-viz} 
+### 3.2. 다음 KT 주식 데이터 시각화 {#kt-phantomJS-viz} 
 
 시각화학 가능한 형태로 데이터를 변환시킨다.
 
@@ -166,4 +165,124 @@ ggplot(data=kt_price_ochl_df, aes(x=상장일)) +
   geom_segment(aes(y = 시가, yend = 현재가, xend = 상장일), size =3, color = "blue") +
   labs(x="", y="") +
   scale_y_continuous(labels = scales::comma)
+```
+
+## 2. 방송 3 사 8시 뉴스 혈투와 JTBC의 고민 {#news-viewer-ratings} 
+
+### 2.1. 다음에서 방송 3사 시청률 데이터를 긁어온다.  {#stations} 
+
+방송 3 사 8시 뉴스 혈투를 살펴보면 흥미로운 사실이 통계분석을 통해 나타난다.
+이를 위해서 `scrape_daum_jtbc.js` 파일에 [다음 JTBC 뉴스룸](http://movie.daum.net/tv/ratings?tvProgramId=66868) 시청률 정보를 가져오는데,
+[다음 SBS 8시 뉴스](http://movie.daum.net/tv/ratings?tvProgramId=48152), [다음 MBC 뉴스데스크](http://movie.daum.net/tv/ratings?tvProgramId=48135)도 
+방송 시청률 데이터를 끌어오는 작업을 수행한다.
+
+> ### `scrape_daum_jtbc.js` 파일 {.callout}
+> 
+> ``` {r daum-jtbc, eval=FALSE}
+> 
+> var webPage = require('webpage');
+> var page = webPage.create();
+> 
+> var fs = require('fs');
+> var path = 'data/daum_jtbc.html';
+> 
+> page.open('http://movie.daum.net/tv/ratings?tvProgramId=66868', function (status) {
+>   var content = page.content;
+>   page.render('fig/daum_jtbc.png');
+>   fs.write(path, content, 'w');
+>   phantom.exit();
+> });
+> ```
+
+``` {r crawl-news-viewer-ratings}
+# 0. 환경설정 --------------------------
+# library(rvest)
+# library(stringr)
+# library(tidyverse)
+# library(ggthemes)
+# library(extrafont)
+# loadfonts()
+
+# 1. 데이터 긁어오기 --------------------------
+system("phantomjs ./code/scrape_daum_jtbc.js")
+system("phantomjs ./code/scrape_daum_sbs.js")
+system("phantomjs ./code/scrape_daum_mbc.js")
+
+Sys.setlocale("LC_ALL", "C")
+
+jtbc_raw <- read_html("data/daum_jtbc.html") %>%
+  html_nodes(xpath='//*[@id="menuSlide"]/div[2]/div[1]/table[2]') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
+
+sbs_raw <- read_html("data/daum_sbs.html") %>%
+  html_nodes(xpath='//*[@id="menuSlide"]/div[2]/div[1]/table[2]') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
+
+mbc_raw <- read_html("data/daum_mbc.html") %>%
+  html_nodes(xpath='//*[@id="menuSlide"]/div[2]/div[1]/table[2]') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
+
+Sys.setlocale("LC_ALL", "Korean")
+```
+
+### 2.2. 데이터 정제  {#stations-data-wrangling} 
+
+웹에서 긁어온 방송 3사 데이터를 데이터 분석이 가능하고, 시각화가 가능한 형태로 데이터를 가공한다.
+특히, 주별 사이클이 확연히 존재하기 때문에 이를 최대한 파악하기 용이한 형태로 작업한다.
+
+``` {r wrangle-news-viewer-ratings}
+# 2. 데이터 정제 ---------------------
+jtbc_df <- jtbc_raw %>% 
+  mutate(방송사 = "JTBC", 
+         시청률 = as.numeric(str_replace(시청률, "%", "")) / 100,
+         날짜 = lubridate::ymd(str_replace(str_sub(날짜, 1, 10), "\\.", "-"))) %>% 
+  select(방송사, 날짜, 시청률)
+
+sbs_df <- sbs_raw %>% 
+  mutate(방송사 = "SBS", 
+            시청률 = as.numeric(str_replace(시청률, "%", "")) / 100,
+            날짜 = lubridate::ymd(str_replace(str_sub(날짜, 1, 10), "\\.", "-"))) %>% 
+  select(방송사, 날짜, 시청률)
+
+mbc_df <- mbc_raw %>% 
+  mutate(방송사 = "MBC", 
+            시청률 = as.numeric(str_replace(시청률, "%", "")) / 100,
+            날짜 = lubridate::ymd(str_replace(str_sub(날짜, 1, 10), "\\.", "-"))) %>% 
+  select(방송사, 날짜, 시청률)
+
+station_df <- bind_rows(jtbc_df, sbs_df) %>% 
+  bind_rows(mbc_df) %>% 
+  mutate(방송사 = factor(방송사, levels=c("JTBC", "SBS", "MBC")))
+
+station_df %>% spread(방송사, 시청률) %>% 
+  mutate(요일 = lubridate::wday(날짜, label=TRUE)) %>% 
+  select(날짜, 요일, everything()) %>% 
+  DT::datatable() %>% 
+  DT::formatPercentage(c(2,3,4), digits=1)
+```
+
+### 2.3. 방송 3사 시청률 시각화  {#stations-data-wrangling} 
+
+방송 3사 최근 약 2개월 방송 시청률을 보면 손석희 앵커가 진행하는 주중에는 확연한 JTBC 우위,
+손석희 앵커가 빠지는 금요일부터 토요일 일요일은 MBC와 SBS가 경쟁하는 추세가 명확히 확인된다.
+
+``` {r viz-news-viewer-ratings}
+# 3. 데이터 시각화 ---------------------
+station_colors <- c("#d60cbb", "#1187c6", "#465977")
+
+station_df %>% 
+  ggplot(aes(x=날짜, y=시청률, color=방송사)) +
+  geom_line(size=1.1, alpha=0.3) +
+  geom_point(size=1.5, alpha=0.7) +
+  theme_tufte(base_family = "NanumGothic") +
+  labs(x="", y="시청률", title="방송3사 8시 뉴스 혈투") +
+  scale_y_continuous(labels=scales::percent) +
+  scale_x_date(date_labels = "%m-%d-%A", 
+               breaks = seq(min(station_df$날짜), max(station_df$날짜), by="week")) +
+  scale_fill_manual(values= station_colors) +
+  theme(legend.position = "top",
+        axis.text.x=element_text(angle=90,hjust=1))
 ```
