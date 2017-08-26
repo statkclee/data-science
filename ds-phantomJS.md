@@ -5,7 +5,7 @@ xwMOOC
 
 
 
-## 1. 팬텀JS (PhantomJS) {#about-phantomJS} [^datacamp-phantomJS]
+## 1. 팬텀JS (PhantomJS) [^datacamp-phantomJS] {#about-phantomJS}
 
 [^datacamp-phantomJS]: [Web Scraping with R and PhantomJS](https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r)
 
@@ -97,6 +97,7 @@ success
 # library(rvest)
 # library(stringr)
 # library(tidyverse)
+# library(gganimate)
 # library(ggthemes)
 # library(extrafont)
 # loadfonts()
@@ -181,10 +182,10 @@ station_df %>% spread(방송사, 시청률) %>%
   DT::formatPercentage(c(2,3,4), digits=1)
 ~~~
 
-<!--html_preserve--><div id="htmlwidget-728e920e42dc0efcb6f6" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-728e920e42dc0efcb6f6">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54"],["2017-07-02","2017-07-04","2017-07-05","2017-07-06","2017-07-07","2017-07-08","2017-07-09","2017-07-10","2017-07-11","2017-07-12","2017-07-13","2017-07-14","2017-07-15","2017-07-16","2017-07-17","2017-07-18","2017-07-19","2017-07-20","2017-07-21","2017-07-22","2017-07-23","2017-07-24","2017-07-25","2017-07-26","2017-07-27","2017-07-28","2017-07-29","2017-07-30","2017-07-31","2017-08-01","2017-08-02","2017-08-03","2017-08-04","2017-08-05","2017-08-06","2017-08-07","2017-08-08","2017-08-09","2017-08-10","2017-08-11","2017-08-12","2017-08-13","2017-08-14","2017-08-15","2017-08-16","2017-08-17","2017-08-18","2017-08-19","2017-08-20","2017-08-21","2017-08-22","2017-08-23","2017-08-24","2017-08-25"],["Sun","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri"],[null,null,null,null,0.04193,0.02548,0.0302,0.06212,0.04781,0.04979,0.04743,0.04964,0.02797,0.03232,0.05798,0.05295,0.05629,0.05055,0.04086,0.02499,0.03163,0.05771,0.05243,0.04848,0.0538,0.04022,0.02324,0.02703,0.05539,0.04704,0.05401,0.04619,0.04096,0.02552,0.02961,0.06197,0.05209,0.05638,0.05143,0.043,0.02751,0.02761,0.06049,0.06071,0.05125,0.05842,0.04378,0.02902,0.03015,0.06233,0.05897,0.05486,0.05856,0.04535],[null,0.043,0.046,0.037,0.053,0.048,0.054,0.049,0.036,0.035,0.04,0.045,0.047,0.049,0.045,0.039,0.035,0.044,0.041,0.045,0.055,0.042,0.037,null,0.036,0.038,0.043,0.046,null,0.038,0.045,0.044,0.041,0.037,0.054,0.048,0.04,0.049,0.044,0.041,0.047,0.048,0.051,null,0.043,0.041,0.039,0.048,0.061,0.044,0.038,0.043,0.041,0.039],[0.044,0.05,0.047,0.046,0.048,0.056,0.043,0.053,0.037,0.044,0.039,0.045,0.05,0.055,0.051,0.043,0.042,0.038,0.048,0.052,0.053,0.05,0.041,0.037,0.043,0.04,0.047,0.045,0.053,0.045,null,0.046,null,0.04,0.048,0.051,0.042,0.048,0.043,0.044,0.046,0.04,0.046,0.05,0.045,0.041,null,0.05,0.086,0.045,0.046,0.041,0.039,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>날짜<\/th>\n      <th>요일<\/th>\n      <th>JTBC<\/th>\n      <th>SBS<\/th>\n      <th>MBC<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatPercentage(this, row, data, 2, 1);\nDTWidget.formatPercentage(this, row, data, 3, 1);\nDTWidget.formatPercentage(this, row, data, 4, 1);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-0083812dd404e8838713" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0083812dd404e8838713">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54"],["2017-07-02","2017-07-04","2017-07-05","2017-07-06","2017-07-07","2017-07-08","2017-07-09","2017-07-10","2017-07-11","2017-07-12","2017-07-13","2017-07-14","2017-07-15","2017-07-16","2017-07-17","2017-07-18","2017-07-19","2017-07-20","2017-07-21","2017-07-22","2017-07-23","2017-07-24","2017-07-25","2017-07-26","2017-07-27","2017-07-28","2017-07-29","2017-07-30","2017-07-31","2017-08-01","2017-08-02","2017-08-03","2017-08-04","2017-08-05","2017-08-06","2017-08-07","2017-08-08","2017-08-09","2017-08-10","2017-08-11","2017-08-12","2017-08-13","2017-08-14","2017-08-15","2017-08-16","2017-08-17","2017-08-18","2017-08-19","2017-08-20","2017-08-21","2017-08-22","2017-08-23","2017-08-24","2017-08-25"],["Sun","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri","Sat","Sun","Mon","Tues","Wed","Thurs","Fri"],[null,null,null,null,0.04193,0.02548,0.0302,0.06212,0.04781,0.04979,0.04743,0.04964,0.02797,0.03232,0.05798,0.05295,0.05629,0.05055,0.04086,0.02499,0.03163,0.05771,0.05243,0.04848,0.0538,0.04022,0.02324,0.02703,0.05539,0.04704,0.05401,0.04619,0.04096,0.02552,0.02961,0.06197,0.05209,0.05638,0.05143,0.043,0.02751,0.02761,0.06049,0.06071,0.05125,0.05842,0.04378,0.02902,0.03015,0.06233,0.05897,0.05486,0.05856,0.04535],[null,0.043,0.046,0.037,0.053,0.048,0.054,0.049,0.036,0.035,0.04,0.045,0.047,0.049,0.045,0.039,0.035,0.044,0.041,0.045,0.055,0.042,0.037,null,0.036,0.038,0.043,0.046,null,0.038,0.045,0.044,0.041,0.037,0.054,0.048,0.04,0.049,0.044,0.041,0.047,0.048,0.051,null,0.043,0.041,0.039,0.048,0.061,0.044,0.038,0.043,0.041,0.039],[0.044,0.05,0.047,0.046,0.048,0.056,0.043,0.053,0.037,0.044,0.039,0.045,0.05,0.055,0.051,0.043,0.042,0.038,0.048,0.052,0.053,0.05,0.041,0.037,0.043,0.04,0.047,0.045,0.053,0.045,null,0.046,null,0.04,0.048,0.051,0.042,0.048,0.043,0.044,0.046,0.04,0.046,0.05,0.045,0.041,null,0.05,0.086,0.045,0.046,0.041,0.039,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>날짜<\/th>\n      <th>요일<\/th>\n      <th>JTBC<\/th>\n      <th>SBS<\/th>\n      <th>MBC<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatPercentage(this, row, data, 2, 1);\nDTWidget.formatPercentage(this, row, data, 3, 1);\nDTWidget.formatPercentage(this, row, data, 4, 1);\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
 
-### 2.3. 방송 3사 시청률 시각화  {#stations-data-wrangling} 
+### 2.3. 방송 3사 시청률 시각화  {#stations-static-view} 
 
 방송 3사 최근 약 2개월 방송 시청률을 보면 손석희 앵커가 진행하는 주중에는 확연한 JTBC 우위,
 손석희 앵커가 빠지는 금요일부터 토요일 일요일은 MBC와 SBS가 경쟁하는 추세가 명확히 확인된다.
@@ -192,6 +193,7 @@ station_df %>% spread(방송사, 시청률) %>%
 
 ~~~{.r}
 # 3. 데이터 시각화 ---------------------
+## 3.1. 정적 시각화
 station_colors <- c("#d60cbb", "#1187c6", "#465977")
 
 station_df %>% 
@@ -209,3 +211,28 @@ station_df %>%
 ~~~
 
 <img src="fig/viz-news-viewer-ratings-1.png" style="display: block; margin: auto;" />
+
+### 2.3. 방송 3사 시청률 변화  {#stations-animation} 
+
+`gganimate` 팩키지를 활용하여 시각화할 경우 손석희 앵커의 주중 효과에 대해서 좀더 명확히 확인할 수 있다.
+
+
+~~~{.r}
+## 3.2. 동적 시각화
+
+station_gg <- ggplot(station_df, aes(x=날짜, y=시청률, color=방송사)) +
+    geom_line(size=1.1, alpha=0.3) +
+    geom_point(aes(frame=날짜), size=3.7, alpha=0.7) +
+    theme_tufte(base_family = "NanumGothic") +
+    labs(x="", y="시청률", title="방송3사 8시 뉴스 혈투") +
+    scale_y_continuous(labels=scales::percent) +
+    scale_x_date(date_labels = "%m-%d-%A", 
+                 breaks = seq(min(station_df$날짜), max(station_df$날짜), by="week")) +
+    scale_fill_manual(values= station_colors) +
+    theme(legend.position = "top",
+          axis.text.x=element_text(angle=90,hjust=1))
+
+gganimate(station_gg, "fig/jtbc_sbs_mbc.gif", ani.width = 800, ani.height = 600)
+~~~
+
+<img src="fig/jtbc_sbs_mbc.gif" alt="시청률 애니메이션" width="100%" />

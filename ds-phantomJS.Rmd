@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, fig.width=12)
 library(rvest)
 library(stringr)
 library(tidyverse)
+library(gganimate)
 library(ggthemes)
 library(extrafont)
 loadfonts()
@@ -28,7 +29,7 @@ par(family = "NanumGothic")
 ```
 
 
-## 1. 팬텀JS (PhantomJS) {#about-phantomJS} [^datacamp-phantomJS]
+## 1. 팬텀JS (PhantomJS) [^datacamp-phantomJS] {#about-phantomJS}
 
 [^datacamp-phantomJS]: [Web Scraping with R and PhantomJS](https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r)
 
@@ -116,6 +117,7 @@ success
 # library(rvest)
 # library(stringr)
 # library(tidyverse)
+# library(gganimate)
 # library(ggthemes)
 # library(extrafont)
 # loadfonts()
@@ -181,13 +183,14 @@ station_df %>% spread(방송사, 시청률) %>%
   DT::formatPercentage(c(2,3,4), digits=1)
 ```
 
-### 2.3. 방송 3사 시청률 시각화  {#stations-data-wrangling} 
+### 2.3. 방송 3사 시청률 시각화  {#stations-static-view} 
 
 방송 3사 최근 약 2개월 방송 시청률을 보면 손석희 앵커가 진행하는 주중에는 확연한 JTBC 우위,
 손석희 앵커가 빠지는 금요일부터 토요일 일요일은 MBC와 SBS가 경쟁하는 추세가 명확히 확인된다.
 
 ``` {r viz-news-viewer-ratings}
 # 3. 데이터 시각화 ---------------------
+## 3.1. 정적 시각화
 station_colors <- c("#d60cbb", "#1187c6", "#465977")
 
 station_df %>% 
@@ -203,3 +206,27 @@ station_df %>%
   theme(legend.position = "top",
         axis.text.x=element_text(angle=90,hjust=1))
 ```
+
+### 2.3. 방송 3사 시청률 변화  {#stations-animation} 
+
+`gganimate` 팩키지를 활용하여 시각화할 경우 손석희 앵커의 주중 효과에 대해서 좀더 명확히 확인할 수 있다.
+
+``` {r animate-news-viewer-ratings, eval=FALSE}
+## 3.2. 동적 시각화
+
+station_gg <- ggplot(station_df, aes(x=날짜, y=시청률, color=방송사)) +
+    geom_line(size=1.1, alpha=0.3) +
+    geom_point(aes(frame=날짜), size=3.7, alpha=0.7) +
+    theme_tufte(base_family = "NanumGothic") +
+    labs(x="", y="시청률", title="방송3사 8시 뉴스 혈투") +
+    scale_y_continuous(labels=scales::percent) +
+    scale_x_date(date_labels = "%m-%d-%A", 
+                 breaks = seq(min(station_df$날짜), max(station_df$날짜), by="week")) +
+    scale_fill_manual(values= station_colors) +
+    theme(legend.position = "top",
+          axis.text.x=element_text(angle=90,hjust=1))
+
+gganimate(station_gg, "fig/jtbc_sbs_mbc.gif", ani.width = 800, ani.height = 600)
+```
+
+<img src="fig/jtbc_sbs_mbc.gif" alt="시청률 애니메이션" width="100%" />
