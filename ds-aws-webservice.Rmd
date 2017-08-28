@@ -1,0 +1,148 @@
+---
+layout: page
+title: xwMOOC 데이터 과학
+subtitle: 아마존 웹 서비스(AWS) - EC2 사양과 가격
+date: "`r Sys.Date()`"
+author: xwMOOC
+output:
+  html_document: 
+    keep_md: yes
+    toc: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, fig.width=12)
+
+library(httr)
+library(jsonlite)
+library(listviewer)
+library(tidyverse)
+library(stringr)
+library(ggthemes)
+library(extrafont)
+loadfonts()
+
+par(family = "NanumGothic")
+```
+
+
+## 1. AWS 웹서비스 가격 API {#aws-price-api}
+
+아마존 웹 서비스(AWS) 가격 API (AWS Price List API)는 2015년 말 AWS 고객 요청으로 제공되게 되었다.
+관련된 자세한 사항은 [Amazon Web Services 한국 블로그 - AWS Price List API 업데이트 – 리전별 가격 정보 제공](https://aws.amazon.com/ko/blogs/korea/aws-price-list-api-update-regional-price-lists/)를
+참조한다.
+
+AWS 웹서비스 가격을 수작업을 하는 것보다 API를 통해 가져오게 되면 필요에 따라 가격표를 다운로드하여 원하는 업무를 최적화할 수 있으며,
+가격이 변동될 때마다 알람을 설정하여 실시간 대응도 가능하게 된다.
+
+1. `https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json` 파일을 먼저 확인한다.
+1. `currentRegionIndexUrl`에서 서울 리젼(ap-northeast-2)을 확인한다.
+1. `currentVersionUrl`에서 사양과 가격을 확인한다. 
+
+## 2. AWS EC2 사양 {#aws-ec2-spec}
+
+### 2.1. API 데이터 긁어오기 
+
+`httr` 팩키지 `GET()` 함수를 기본으로 해서 결국 서울 리젼에서 제공하는 EC2 인스턴스 사양과 가격을 확인해보자.
+
+1. `httr` 팩키지 `GET()` 함수를 통해 원데이터를 가져와서, 원본데이터를 읽고 해석할 수 있는 형태로 데이터를 가공한다.
+1. `$offers$AmazonEC2$currentRegionIndexUrl` 을 다시 AWS 던져 EC2 컴퓨터, 서울리젼(ap-northeast-2) 정보를 확인한다.
+1. `aws_ec2_json$regions$`ap-northeast-2`$currentVersionUrl`을 다시 던져 가격과 사양 정보를 가져온다.
+
+``` {r aws-api}
+# 0. 환경설정 -----------------------------------
+# http://blog.zorangagic.com/2016/03/aws-pricing-api.html
+# https://aws.amazon.com/ko/blogs/korea/aws-price-list-api-update-regional-price-lists/
+
+# library(httr)
+# library(jsonlite)
+# library(listviewer)
+# library(tidyverse)
+# library(stringr)
+# library(ggthemes)
+# library(extrafont)
+# loadfonts()
+
+# 1. 데이터 긁어오기 ----------------------------
+## 1.1. AWS API ---------------------------------
+aws_api_url  <- "https://pricing.us-east-1.amazonaws.com"
+path <- "offers/v1.0/aws/index.json"
+
+aws_api_rd <- GET(url = aws_api_url, path = path)
+
+aws_api_json <- rawToChar(aws_api_rd$content) %>% 
+    fromJSON()
+
+## 1.2. EC2 + 리젼   ----------------------------
+aws_ec2_path <- aws_api_json$offers$AmazonEC2$currentRegionIndexUrl
+aws_ec2_rd <- GET(url = aws_api_url, path = aws_ec2_path)
+
+aws_ec2_json <- rawToChar(aws_ec2_rd$content) %>% 
+    fromJSON()
+
+## 1.3. EC2 + 리젼 + 사양/가격   ----------------------------
+aws_ec2_region_path <- aws_ec2_json$regions$`ap-northeast-2`$currentVersionUrl
+aws_ec2_region_rd <- GET(url = aws_api_url, path = aws_ec2_region_path)
+
+aws_ec2_region_json <- rawToChar(aws_ec2_region_rd$content) %>% 
+    fromJSON()
+
+jsonedit(aws_ec2_region_json)
+```
+
+### 2.2. 데이터 전처리 {#aws-api-wrangling}
+
+JSON 파일을 R로 리스트 객체로 변환시켰다. 다음 단계로 이를 데이터 분석이 가능한 형태인 데이터프레임으로 
+변환시키는 작업을 수행한다.
+
+``` {r aws-api-wrangling}
+# 2. 데이터 전처리 ----------------------------
+## 2.1. EC2 인스턴스 사양 ---------------------
+aws_ec2_spec_name <- map(aws_ec2_region_json$products, "sku") 
+length(aws_ec2_spec_name)
+
+aws_ec2_spec_df <- map_df(aws_ec2_region_json$products, "attributes") 
+
+aws_ec2_spec_df <- aws_ec2_spec_name %>% enframe() %>% 
+    bind_cols(aws_ec2_spec_df) %>% 
+    select(-value)
+
+aws_ec2_spec_df <- aws_ec2_spec_df %>% 
+    filter(servicecode != "AWSDataTransfer")
+```
+
+### 2.3. AWS 서울리젼에 제공되는 EC2 컴퓨터 CPU와 메모리 사양 {#aws-api-wrangling}
+
+AWS 서울 리전에 제공되는 EC2 인스턴스 사양 특히, CPU갯수와 메모리용량 관계에 대해 살펴보자.
+이를 위해 문자열이 포함된 CPU, 메모리 변수를 제거하고 숫자형으로 변환시키고 나서,
+이를 `ggplot`에 던져 AWS 서울리젼에 제공되는 EC2 컴퓨터 CPU와 메모리 사양을 시각화보고 관련성을 찾아본다.
+
+``` {r aws-api-ggplot}
+# 3. 데이터 분석 ----------------------------
+
+aws_ec2_spec_num_df <- aws_ec2_spec_df %>% select(vcpu, clockSpeed, memory) %>% 
+    mutate(vcpu = as.numeric(vcpu)) %>% 
+    # mutate(clockSpeed = as.numeric(str_extract(clockSpeed, "[0-9]+\\.[0-9]+"))) %>% 
+    mutate(memory = as.numeric(str_extract(memory, "\\d{0,3}(\\.\\d{1,2})?")))
+
+aws_ec2_spec_num_df %>% 
+    ggplot(aes(x=vcpu, y=memory, color=clockSpeed)) +
+    geom_point(size=2) +
+    theme_bw(base_family = "NanumGothic") +
+    labs(x="중앙처리장치갯수(CPU)", y="메모리 용량(GB)",
+         title="AWS 제공하는 EC2 컴퓨터 사양") +
+    scale_y_continuous(labels = scales::comma) +
+    scale_x_log10()
+
+aws_ec2_spec_num_df %>% 
+    ggplot(aes(x=vcpu, y=memory, color=clockSpeed)) +
+    geom_point(size=2) +
+    theme_bw(base_family = "NanumGothic") +
+    labs(x="중앙처리장치갯수(CPU)", y="메모리 용량(GB)",
+         title="AWS 제공하는 EC2 컴퓨터 사양") +
+    scale_y_continuous(labels = scales::comma)
+```
