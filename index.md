@@ -86,6 +86,7 @@ title: 데이터 과학
     - **R 눈을 달다**
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
         - [PDF 감옥에서 데이터를 탈출시키다.](ds-extract-text-from-pdf-survey.html)
+    - [보안 - 패킷분석](ds-packet.html)
 1. [데이터 제품](data-product.html)
     - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
     - [Shiny 웹앱](shiny-overview.html)
