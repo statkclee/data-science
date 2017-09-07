@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 데이터 과학
+title: 데이터 제품
 subtitle: 통계학 전공자와 데이터 공유 방법
 output:
   html_document: 

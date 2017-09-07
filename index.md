@@ -87,16 +87,6 @@ title: 데이터 과학
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
         - [PDF 감옥에서 데이터를 탈출시키다.](ds-extract-text-from-pdf-survey.html)
     - [보안 - 패킷분석](ds-packet.html)
-1. [데이터 제품](data-product.html)
-    - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
-    - [Shiny 웹앱](shiny-overview.html)
-        - [Shiny 웹앱 개발](shiny-app.html)    
-        - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
-        - [Shiny 프론트엔트 개발](shiny-frontend.html)
-    - [보고서 작성 자동화(30분)](ds-report-automation.html)
-    - [R로 전자우편 자동 전송](ds-gmail.html)        
-    - [공공 데이터 제품](data-product-civic-hacking.html)
-    - [야구 MLB](ds-baseball-mlb.html)    
 1. [정렬(Sort)](data-handling-sorting.html) 
 
 
