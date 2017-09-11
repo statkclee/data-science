@@ -1,9 +1,10 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: (AWS) `sparklyr` = 스파크 + `dplyr` 설치
+subtitle: 단독형 스파크 설치 - PC/노트북, EC2 원격 컴퓨터
 output:
   html_document: 
+    toc: yes
     keep_md: yes
   pdf_document:
     latex_engine: xelatex
@@ -18,11 +19,11 @@ mainfont: NanumGothic
 > * 로컬 머신의 경우 RStudio 프리뷰 버젼을 설치에 적극활용한다.
 > * AWS 클라우드 EC2 인스턴스에 스파크를 설치한다.
 
-<img src="fig/ds-sparklyr.png" alt="아파치 sparklyr 소개" width="37%" />
+<img src="fig/spark-standalone.png" alt="아파치 스파크 sparklyr 설치" width="77%" />
 
-## 1. 로컬 컴퓨터 스파크 설치
+## 1. 로컬 컴퓨터 스파크 설치 {#install-spark}
 
-### 1.1. `sparklyr` 설치 (윈도우) [^sparklyr-windows]
+### 1.1. `sparklyr` 설치 (윈도우) [^sparklyr-windows] {#install-spark-windows}
 
 [^sparklyr-windows]: [Running Apache Spark with sparklyr and R in Windows](http://yokekeong.com/running-apache-spark-with-sparklyr-and-r-in-windows/)
 
@@ -60,7 +61,6 @@ spark_installed_versions()
 devtools::install_github("rstudio/sparklyr")
 library(sparklyr)
 
-
 # 2. 스파크 클러스터 로컬에 설치 
 # 가능한 설정 확인
 spark_available_versions()
@@ -78,7 +78,7 @@ src_tbls(sc)
 # [1] "iris"
 ~~~
 
-### 1.2. `sparklyr` 설치 유닉스 계열 [^sparklyr] [^install-jdk-on-mac-osx]
+### 1.2. `sparklyr` 설치 유닉스 계열 [^sparklyr] [^install-jdk-on-mac-osx] {#install-spark-unix}
 
 [^sparklyr]: [sparklyr — R interface for Apache Spark](http://spark.rstudio.com/)
 
@@ -145,6 +145,7 @@ Contents $ nano Info.plist
 </array>
 ~~~
 
+`sparklyr` 팩키지 설치과정은 윈도우 설치과정과 대동소이하다.
 
 
 ~~~{.r}
@@ -173,16 +174,16 @@ src_tbls(sc)
 # [1] "batting" "flights" "iris"  
 ~~~
 
-### 1.3. `sparklyr` RStudio 활용
+### 1.3. `sparklyr` RStudio 활용 {#sparklyr-rstudio}
 
 `sparklyr` RStudio 에서 편한게 사용할 수 있도록 다양한 기능을 제공하고 있다. 이를 위해서 [RStudio v0.99.1273 Preview](https://www.rstudio.com/products/rstudio/download/preview/) 버젼을 다운로드해서 설치한다. **Spark** 탭이 별도로 생성되고 이를 통해 스파크에 대한 전반적인 상황을 확인할 수 있다.
 
 <img src="fig/ds-sparklyr-rstudio.png" alt="RStudio Spark 인터페이스" width="77%" />
 
 
-## 2. AWS 클라우드 스파크 설치 
+## 2. AWS 클라우드 스파크 설치 {#aws-ec2-spark}
 
-### 2.1. 우분투 자바 설치 [^aws-ubuntu-java]
+### 2.1. 우분투 자바 설치 [^aws-ubuntu-java] {#aws-ec2-java}
 
 [^aws-ubuntu-java]: [How To Install Java with Apt-Get on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-ubuntu-16-04)
 
@@ -211,7 +212,7 @@ $ echo $JAVA_HOME
 /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 ~~~
 
-### 2.2. 스파크 설치
+### 2.2. 스파크 설치 {#aws-ec2-spark-install}
 
 [Download Apache Spark™](https://spark.apache.org/downloads.html) 사이트를 방문하여 아파치 스파크를 다운로드 한다. 물론 스파크내부에 하둡도 같이 포함되어 있는 것을 다운로드 받으면 편리하다.
 `tar xvf` 명령어로 압축을 풀고 나서 스파크가 설치된 환경변수 디렉토리를 기억해 둔다. 
@@ -225,7 +226,7 @@ $ pwd
 /home/rstudio/spark-2.0.2-bin-hadoop2.7
 ~~~
 
-### 2.3. RStudio 스파크 적용
+### 2.3. RStudio 스파크 적용 {#aws-ec2-sparklyr}
 
 `SPARK_HOME =` 디렉토리 설정을 맞춰주면 스파크를 `sparklyr` 명령어를 통해 활용이 가능하다.
 [EC2 인스턴스 사양](https://aws.amazon.com/ko/ec2/pricing/on-demand/)에 맞춰 스파크 클러스터 환경을 `spark_config()`에 맞춰 설정한다. 
@@ -235,24 +236,23 @@ $ pwd
 ~~~{.r}
 # 1. EC2 Startup code ===============================================
 
-list.of.packages <- c("sparklyr")
+# install.packages("sparklyr")
 library(sparklyr)
 
-Sys.setenv(SPARK_HOME = '/home/rstudio/spark-2.0.2-bin-hadoop2.7')
+Sys.setenv(SPARK_HOME = '/home/rstudio/spark/spark-2.1.0-bin-hadoop2.7')
 
 # Hardware Spec: https://aws.amazon.com/ko/ec2/pricing/on-demand/
 config <- spark_config()
-config$spark.executor.cores <- 16
+config$spark.executor.cores <- 4
 config$spark.executor.memory <- "8G"
-config$spark.driver.memory <- "64G"
-sc <- spark_connect(master = "local", config = config, version = '2.0.2')
+sc <- spark_connect(master = "local", config = config, version = '2.1.0')
 
 # 4. 예제 R 데이터프레임을 스파크에 복사
 library(dplyr)
 iris_tbl <- copy_to(sc, iris)
 # install.packages("nycflights13")
 # install.packages("Lahman")
-flights_tbl <- copy_to(sc, nycflights13::flights, "flights")
+# flights_tbl <- copy_to(sc, nycflights13::flights, "flights")
 batting_tbl <- copy_to(sc, Lahman::Batting, "batting")
 
 # 5. 데이터 테이블 확인

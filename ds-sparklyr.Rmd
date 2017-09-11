@@ -146,7 +146,7 @@ Contents $ nano Info.plist
 
 `sparklyr` 팩키지 설치과정은 윈도우 설치과정과 대동소이하다.
 
-``` {r spark-eval=FALSE}
+``` {r spark, eval=FALSE}
 # 1. sparklyr 팩키지 설치
 install.packages("devtools")
 devtools::install_github("rstudio/sparklyr")
@@ -239,7 +239,7 @@ Sys.setenv(SPARK_HOME = '/home/rstudio/spark/spark-2.1.0-bin-hadoop2.7')
 config <- spark_config()
 config$spark.executor.cores <- 4
 config$spark.executor.memory <- "8G"
-sc <- spark_connect(master = "local", config = config, version = '2.0.2')
+sc <- spark_connect(master = "local", config = config, version = '2.1.0')
 
 # 4. 예제 R 데이터프레임을 스파크에 복사
 library(dplyr)
