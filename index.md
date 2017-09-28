@@ -69,7 +69,7 @@ title: 데이터 과학
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)      
 1. **다양한 데이터**
     - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
-    - **웹 데이터**
+    - **[웹 데이터](ds-webdata.html)**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
         - [R 팬텀JS (phantomJS) - 방송3사 시청률 경쟁 그리고 JTBC 손석희 앵커](ds-phantomJS.html)
         - [아마존 알렉사 웹정보(웹API) - KBO 프로야구 웹사이트](data-webapi-aws-alexa.html)
