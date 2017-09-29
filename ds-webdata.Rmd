@@ -316,4 +316,153 @@ leaflet(data = logistics_df) %>%
                                            "&middot; 시군명: ", sigun_nm, "<br>", 
                                            "&middot; 회사명: ", bizplc_nm, "<br>", 
                                            "&middot; 종업원수: ", emply_cnt, "<br>")))
+```
+
+## 4. 날씨 예보 {#webdata-webapi-openweather}
+
+R 팩키지 [ROpenWeatherMap: R Interface to OpenWeatherMap API](https://cran.r-project.org/web/packages/ROpenWeatherMap/index.html)를 활용하는 
+것도 가능하지만, 직접 [Open Weather Map API](http://openweathermap.org/)에서 데이터를 가져와서 시각화하는 것도 가능하다.
+이를 위해서 R 팩키지 사용법과는 별도로 일부 HTTP GET/POST에 대한 학습이 추가로 필요하다.
+
+### 4.1. 날씨 예보 도시 하나 {#webdata-webapi-openweather-city}
+
+[Open Weather Map API](http://openweathermap.org/)에서 도시 하나를 선택하여 날씨 정보를 가져온다.
+가져온 중첩 JSON/XML 형태 데이터를 리스트 형태 데이터로 변환한 후에 `leaflet`으로 넘겨 
+날씨정보를 시각화한다.
+
+``` {r openweather-city, eval=FALSE}
+# 0. 환경설정 -----------------------------------
+# library(rvest)
+# library(httr)
+
+API_KEY <- config::get("weather_key")
+
+# 1. 데이터 가져오기 ----------------------------
+
+query_param <- list(APPID=API_KEY, 
+                    q="Seoul,kr",
+                    units="metric")
+
+weather_seoul <- GET("http://api.openweathermap.org/data/2.5/weather", query=query_param,
+                     user_agent("kwangchun.lee.7@gmail.com studying..."))
+
+weather_seoul_lst <- content(weather_seoul)
+listviewer::jsonedit(weather_seoul_lst)
+
+# 2. 데이터프레임 변환 ----------------------------
+
+weather_df <- weather_seoul_lst %>% {
+  tibble(
+    city = weather_seoul_lst$name,
+    lon = weather_seoul_lst$coord$lon,
+    lat = weather_seoul_lst$coord$lat,
+    temp = weather_seoul_lst$main$temp,
+    temp_min = weather_seoul_lst$main$temp_min,
+    temp_max = weather_seoul_lst$main$temp_max,
+    humidity = weather_seoul_lst$main$humidity,
+    speed = weather_seoul_lst$wind$speed,
+    deg = weather_seoul_lst$wind$deg
+  )
+}
+
+
+
+# 3. 날씨 시각화 ----------------------------
+
+leaflet(data = weather_df) %>% 
+  addProviderTiles(providers$OpenStreetMap) %>% 
+  addMarkers(lng=~lon, lat=~lat, clusterOptions = markerClusterOptions(),
+             popup = ~ as.character(paste0("<strong> 날씨 예보</strong><br><br>",
+                                           "&middot; 시군명: ", city, "<br>", 
+                                           "&middot; 평균온도: ", temp, " 도<br>",
+                                           "&middot; 최저온도: ", temp_min, " 도<br>", 
+                                           "&middot; 최고온도: ", temp_max, " 도<br>",
+                                           "&middot; 바람속도: ", speed, " m/s<br>", 
+                                           "&middot; 풍향: ", deg, " 도 <br>", 
+                                           "&middot; 습도: ", humidity, " % <br>")))
+```
+
+### 4.2. 날씨 예보 도시 여러개 {#webdata-webapi-openweather-cities}
+
+도시를 하나 시각화 했으면... 도시를 여러개 가져와야 한다.
+리스트 하나가 아닌 여러 도시를 리스트에 묶는 과정이 추가로 필요하고 입수한 데이터를 다시 풀어 
+데이터프레임으로 변환하여 `leaflet`으로 시각화한다.
+
+``` {r openweather-cities, eval=FALSE}
+# 0. 환경설정 -----------------------------------
+
+API_KEY <- config::get("weather_key")
+
+# 1. 데이터 가져오기 ----------------------------
+
+weather_lst <- list()
+
+cities <- c("Seoul,kr", "Pusan,kr", "Sokcho,kr", "Daejeon,kr", "Daegu,kr")
+
+for(city in cities) {
+  query_param <- list(APPID=API_KEY, 
+                      q=city,
+                      units="metric")
+  
+  city_weather_lst <- GET("http://api.openweathermap.org/data/2.5/weather", query=query_param,
+                  user_agent("kwangchun.lee.7@gmail.com studying..."))
+  weather_lst[[city]] <- city_weather_lst 
+}
+
+weather_content_lst <- map(weather_lst, content)
+
+listviewer::jsonedit(weather_content_lst)
+
+# 2. 데이터프레임 변환 ----------------------------
+
+weather_df <- weather_content_lst %>% {
+  tibble(
+    city = weather_content_lst$name,
+    lon = weather_content_lst$coord$lon,
+    lat = weather_content_lst$coord$lat,
+    temp = weather_content_lst$main$temp,
+    temp_min = weather_content_lst$main$temp_min,
+    temp_max = weather_content_lst$main$temp_max,
+    humidity = weather_content_lst$main$humidity,
+    speed = weather_content_lst$wind$speed,
+    deg = weather_content_lst$wind$deg
+  )
+}
+
+name_df <- map(weather_content_lst, `[`, "name") %>% flatten %>% unlist %>% tibble
+names(name_df) <- "city_name"
+lon_df <- map(weather_content_lst, `[`, "coord") %>% flatten %>% map(., `[`, "lon") %>% unlist %>% tibble
+names(lon_df) <- "lon"
+lat_df <- map(weather_content_lst, `[`, "coord") %>% flatten %>% map(., `[`, "lat") %>% unlist %>% tibble
+names(lat_df) <- "lat"
+temp_df <- map(weather_content_lst, `[`, "main") %>% flatten %>% map(., `[`, "temp") %>% unlist %>% tibble
+names(temp_df) <- "temp"
+temp_min_df <- map(weather_content_lst, `[`, "main") %>% flatten %>% map(., `[`, "temp_min") %>% unlist %>% tibble
+names(temp_min_df) <- "temp_min"
+temp_max_df <- map(weather_content_lst, `[`, "main") %>% flatten %>% map(., `[`, "temp_max") %>% unlist %>% tibble
+names(temp_max_df) <- "temp_max"
+humidity_df <- map(weather_content_lst, `[`, "main") %>% flatten %>% map(., `[`, "humidity") %>% unlist %>% tibble
+names(humidity_df) <- "humidity"
+speed_df <- map(weather_content_lst, `[`, "wind") %>% flatten %>% map(., `[`, "speed") %>% unlist %>% tibble
+names(speed_df) <- "speed"
+deg_df <- map(weather_content_lst, `[`, "wind") %>% flatten %>% map(., `[`, "deg") %>% unlist %>% tibble
+names(deg_df) <- "deg"
+
+weather_df <- bind_cols(name_df, lon_df, lat_df, temp_df, temp_min_df, temp_max_df, humidity_df, speed_df, deg_df)
+
+# 3. 날씨 시각화 ----------------------------
+
+leaflet(data = weather_df) %>% 
+  addProviderTiles(providers$OpenStreetMap) %>% 
+  addMarkers(lng=~lon, lat=~lat, clusterOptions = markerClusterOptions(),
+             popup = ~ as.character(paste0("<strong> 날씨 예보</strong><br><br>",
+                                           "&middot; 시군명: ", city, "<br>", 
+                                           "&middot; 평균온도: ", temp, " 도<br>",
+                                           "&middot; 최저온도: ", temp_min, " 도<br>", 
+                                           "&middot; 최고온도: ", temp_max, " 도<br>",
+                                           "&middot; 바람속도: ", speed, " m/s<br>", 
+                                           "&middot; 풍향: ", deg, " 각도<br>", 
+                                           "&middot; 습도: ", humidity, " % <br>")))
+```
+
 
