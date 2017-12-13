@@ -2,7 +2,7 @@
 layout: page
 title: 데이터 과학
 subtitle: R 저작권과 라이선스(license)
-date: "`r Sys.Date()`"
+date: "2017-12-13"
 output:
   html_document: 
     toc: yes
@@ -11,16 +11,7 @@ output:
 mainfont: NanumGothic
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, verbose =TRUE, cache = FALSE, fig.width=12, fig.height = 10)
 
-# 0. 환경설정 ---------------
-library(purrr)
-library(tidyverse)
-library(stringr)
-library(DT)
-
-```
 
 ## 1. 데이터 과학 툴체인 {#data-science-environment}
 
@@ -94,7 +85,8 @@ R 코어 엔진, 통합개발환경(IDE), 웹서비스 제공 도구(Shiny)는 �
 `installed.packages()` 함수를 통해 설치된 팩키지를 데이터프레임으로 변환하여 기초 통계분석을 통해 라이선스 준수 여부를 
 쉽게 파악할 수 있다.
 
-```{r data-science-license}
+
+```r
 pkg_df <- installed.packages() %>% as_tibble()
 
 pkg_df %>% mutate(
@@ -121,13 +113,18 @@ pkg_df %>% mutate(
       formatPercentage(c("비율", "누적비"), digits=1)
 ```
 
+![plot of chunk data-science-license](figure/data-science-license-1.png)
+
 팩키지에 대한 오픈소스 라이선스 구체적인 정보는 다음과 같다.
 
-```{r data-science-license-detail}
+
+```r
 pkg_df %>% 
     select(Package, Version, License, License_is_FOSS, Depends) %>% 
     datatable()
 ```
+
+![plot of chunk data-science-license-detail](figure/data-science-license-detail-1.png)
 
 
 
