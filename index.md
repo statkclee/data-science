@@ -12,7 +12,8 @@ title: 데이터 과학
 ### R, RStudio, `tidyverse`, 스파크, AWS 와 함께하는 데이터 과학 
 
 1. **[R 언어](ds-r-lang.html)**
-    - [R 환경설정과 업데이트](ds-r-environment.html) 
+    - [R 환경설정과 업데이트, 파일-객체 크기](ds-r-environment.html) 
+    - [R 저작권과 라이선스(license)](ds-r-license.html) 
     - [R 프로그래밍 모범사례 - R 함수와 자료구조](ds-writing-fn.html)
     - [통계학 전공자와 데이터 공유 방법](ds-datasharing.html) : [영어원문](https://github.com/jtleek/datasharing), [구글 번역본](ds-datasharing-translation.html) 
     - [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
