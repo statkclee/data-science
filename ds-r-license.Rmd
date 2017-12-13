@@ -33,7 +33,9 @@ library(DT)
 
 <img src="fig/r-license-ecosystem.png" alt="R 툴체인" width="77%" />
 
-## 2. 데이터 과학 소프트웨어 라이선스 {#data-science-license}
+## 2. 데이터 과학 소프트웨어 라이선스 [^open-source-for-business] {#data-science-license}
+
+[^open-source-for-business]: [비즈니스를 위한 오픈 소스 소프트웨어 한국어 번역](http://statkclee.github.io/open-source-for-business/)
 
 R 코어 엔진과 R 팩키지는 [R 라이선스](https://www.r-project.org/Licenses/)에 명시되어 있고, 
 대부분 오픈소스 프로젝트에서 일반적으로 많이 사용되는 라이선스가 주종을 이루고 있다.
