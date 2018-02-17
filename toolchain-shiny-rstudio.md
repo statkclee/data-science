@@ -2,6 +2,13 @@
 layout: page
 title: 데이터 과학
 subtitle: 한글처리 가능한 RStudio 개발환경
+date: "2017-12-13"
+output:
+  html_document: 
+    toc: yes
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
 ---
 
 > ### 학습 목표 {.objectives}
@@ -15,7 +22,8 @@ subtitle: 한글처리 가능한 RStudio 개발환경
 > *  Shiny 앱 개발을 위한 RStudio를 설치한다.
 > *  데이터 과학 응용프로그램 운영 Shiny 서버를 설치한다.
 
-<img src="fig/virtualbox-vagrant-rstudio-toolchain.png" alt="RStudio 개발 환경 설정" width="50%" />
+
+<img src="fig/virtualbox-vagrant-rstudio-toolchain.png" alt="RStudio 개발 환경 설정" width="55%" />
 
 R과 RStudio를 설치하여 데이터과학을 위한 개발환경을 구축하는 방법이 크게 세가지로 정리된다. 각 방법에 대한 장단점이 존재하는 만큼 충분히 숙지한 후에 최적의 방안을 찾아도 되지만, [라즈베리파이](http://raspbery-pi.xwmooc.org) 등 저렴한 하지만 강력한 하드웨어와 더불어 오픈 소프트웨어가 많은 만큼 날 잡고서 몇일 나름의 최적 R설치방안을 찾아보기 바란다. 특히, 데이터과학을 인생에 중요한 전환점이라고 생각한다면 꼭 한번 도전해볼 가치가 있다고 생각된다.
 
@@ -41,14 +49,16 @@ R과 RStudio를 설치하여 데이터과학을 위한 개발환경을 구축하
 
 <img src="fig/virtualbox-RStudio_encoding.png" alt="RStudio 개발 환경 설정" width="50%" />
 
-### 1. 윈도우 환경 R 개발환경 설정
+## 1. 윈도우 환경 R 개발환경 설정 {#windows-r-setup}
 
 윈도우 환경 가상상자와 부랑자에 대한 설치는 [윈도 가상 개발환경 구축](http://raspberry-pi.xwmooc.org/raspberry-pi-virtual-window.html)을 참조한다.
 
-R과 RStudio를 설치할 경우 포트번호를 8787 포트포워딩해서 가상컴퓨터와 호스트컴퓨터 응용프로그램간 통신을 할 수 있게 조정을 해야 한다. 더불어, `config.vm.synced_folder` 설정으로 호스트 윈도우 환경과 리눅스 환경 사이 폴더를 동기화하여 `scp`, `sftp`같은 번거로운 복사 작업을 최소화한다.
+R과 RStudio를 설치할 경우 포트번호를 8787 포트포워딩해서 가상컴퓨터와 호스트컴퓨터 응용프로그램간 통신을 할 수 있게 조정을 해야 한다. 
+더불어, `config.vm.synced_folder` 설정으로 호스트 윈도우 환경과 리눅스 환경 사이 폴더를 동기화하여 `scp`, `sftp`같은 번거로운 복사 작업을 최소화한다.
 devtools, Rcpp등 일부 덩치가 크고 중요한 팩키지의 경우 메모리를 1024 즉, 1GByte로 설정한 경우 오류를 내는 경우가 있어 최소 2GB이상 설정한다.
 
-~~~ {.input}
+
+```r
 Vagrant.configure(2) do |config|
 # 우분투 리눅스를 설치한다.
   config.vm.box = "ubuntu/trusty64"
@@ -62,35 +72,56 @@ Vagrant.configure(2) do |config|
      vb.memory = "2048"
   end
 end
-~~~
+```
 
 `vagrant up` 명령어를 입력하면 RStudio 서버가 구동하게 되고 `vagrant ssh` 명령어를 입력하고 들어가서 R과 RStudio 서버를 설치한다.
 
-최신버젼 R을 설치하는 경우 다음 명령어를 터미널에서 입력한다. [^latest-r-install]
+최신버젼 R을 설치하는 경우 다음 명령어를 터미널에서 입력한다. [^latest-r-install] [^latest-r-install-digital-ocean]
 
 [^latest-r-install]: [How to install latest version of R on Ubuntu 12.04 LTS? [duplicate]](http://askubuntu.com/questions/614530/how-to-install-latest-version-of-r-on-ubuntu-12-04-lts)
+[^latest-r-install-digital-ocean]: [DigitalOcean - How To Install R on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-16-04-2)
 
-~~~ {.shell}
+
+```r
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+$ sudo add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
 $ sudo apt-get update
-$ sudo apt-get upgrade
-$ codename=$(lsb_release -c -s)
-$ echo "deb http://cran.fhcrc.org/bin/linux/ubuntu $codename/" | sudo tee -a /etc/apt/sources.list /dev/null
-$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-$ sudo add-apt-repository ppa:marutter/rdev
-$ sudo apt-get install r-base r-base-dev
-~~~
+$ sudo apt-get install r-base
+$ sudo -i R
+R version 3.4.2 (2017-09-28) -- "Short Summer"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+>
+```
 
 최신버젼 R을 설치한 경우 RStudio **서버** 를 [다운로드](https://www.rstudio.com/products/rstudio/download-server/)받아 설치한다. 
 
-~~~ {.shell}
+
+```r
 $ sudo apt-get install gdebi-core
-$ wget https://download2.rstudio.org/rstudio-server-0.99.893-amd64.deb
-$ sudo gdebi rstudio-server-0.99.893-amd64.deb
-~~~
+$ wget https://download2.rstudio.org/rstudio-server-1.1.383-amd64.deb
+$ sudo gdebi rstudio-server-1.1.383-amd64.deb
+```
 
-`wget`이 막힌 경우 `curl -O https://download2.rstudio.org/rstudio-server-0.99.893-amd64.deb` 명령어를 사용한다.
+`wget`이 막힌 경우 `curl -O https://download2.rstudio.org/rstudio-server-1.1.383-amd64.deb` 명령어를 사용한다.
 
-~~~ {.output}
+
+```r
 KwangChun@paris MINGW64 ~/docs/rstudio
 $ vagrant up
 Bringing machine 'default' up with 'virtualbox' provider...
@@ -117,88 +148,99 @@ Bringing machine 'default' up with 'virtualbox' provider...
     default: /home/vagrant => C:/Users/KwangChun/docs/rstudio
 ==> default: Machine already provisioned. Run `vagrant provision` or use the `--provision`
 ==> default: flag to force provisioning. Provisioners marked to run always will still run.
-~~~
+```
 
-`vagrant up` 명령어를 실행하면 먼저 설정된 `Vagrantfile`을 읽어 이를 차례로 실행한다. 웹브라우져를 열고 `localhost:8787`을 입력하면 로그인 창이 뜬다. RStudio 서버의 경우 보안상의 이유로 `root`로 로그인이 금지되어 있고, `/home` 디렉토리에 
-사용자를 생성하고 그 사용자를 사용하여야만 되지만, `vagrant` 사용자가 이미 설정되어 있기 때문에 동일한 비밀번호를 입력하고 들어가면 RStudio를 바로 사용할 수 있게 된다.
+`vagrant up` 명령어를 실행하면 먼저 설정된 `Vagrantfile`을 읽어 이를 차례로 실행한다. 
+웹브라우져를 열고 `localhost:8787`을 입력하면 로그인 창이 뜬다. 
+RStudio 서버의 경우 보안상의 이유로 `root`로 로그인이 금지되어 있고,
+`/home` 디렉토리에 사용자를 생성하고 그 사용자를 사용하여야만 되지만, 
+`vagrant` 사용자가 이미 설정되어 있기 때문에 동일한 비밀번호를 입력하고 들어가면 RStudio를 바로 사용할 수 있게 된다.
 
 <img src="fig/virtualbox-rstudio-server-vagrant-login.png" alt="RStudio 개발 환경 설정" width="50%" />
 
-R 팩키지를 설치할 때 `XML` 관련 오류가 생겨나는 경우 터미널에서 해당 프로그램을 설치한다. `vagrant ssh` 명령어를 통해서 윈도우 쉘에서 바로 작업이 가능한다. 지도 관련 오류가 나는 경우 `libgdal-dev` 팩키지를 추가로 설치한다.
+R 팩키지를 설치할 때 `XML` 관련 오류가 생겨나는 경우 터미널에서 해당 프로그램을 설치한다. 
+`vagrant ssh` 명령어를 통해서 윈도우 쉘에서 바로 작업이 가능한다. 
+지도 관련 오류가 나는 경우 `libgdal-dev` 팩키지를 추가로 설치한다.
 
-~~~ {.shell}
+
+```r
 # XML누락 관련
 $ sudo apt-get -y build-dep libcurl4-gnutls-dev
 $ sudo apt-get -y install libcurl4-gnutls-dev
 # 지도 관련 팩키지 설치 시 오류가 나는 경우
 $ sudo apt-get install libgdal-dev
 $ sudo apt-get install libgdal1-dev libproj-dev
-~~~
+```
 
-### 2. 리눅스나 맥에서 R 개발환경 설정
+## 2. 리눅스나 맥에서 R 개발환경 설정 {#setup-linux-mac}
 
 리눅스나 맥에서 R 개발환경을 설정하는 것은 매우 직관적이다.
 RStudio IDE를 다운로드 받아 GUI를 사용할 경우 *다음* 버튼을 여러번 누르면 바로 개발환경 설정이 된다.
 명령라인 인터페이스를 사용하는 경우 다음 클라우드 환경에서 R개발환경 설정을 참고하기 바란다.
 
-> ### 가장최신 R 설치 [^r-latest-install] {.callout}
-> 
-> ~~~ {.shell}
-> $ codename=$(lsb_release -c -s)
-> $ echo "deb http://cran.fhcrc.org/bin/linux/ubuntu $codename/" | sudo tee -a /etc/apt/sources.list > /dev/null
-> $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-> $ sudo add-apt-repository ppa:marutter/rdev
-> $ sudo apt-get update
-> $ sudo apt-get upgrade
-> $ sudo apt-get install r-base r-base-dev
-> ~~~
+### 2.1. 가장 최신 R 설치 {#install-r-latest-on-linx}
 
-[^r-latest-install]: [How to install latest version of R on Ubuntu 12.04 LTS?](http://askubuntu.com/questions/614530/how-to-install-latest-version-of-r-on-ubuntu-12-04-lts)
+윈도우에서 부랑자(Vagrant)를 설치하고 R을 설치하는 과정과 동일하다.
 
 
-> ### RStudio 설치 {.callout}
-> 
-> [Download RStudio Server](https://www.rstudio.com/products/rstudio/download-server-2/)로
-> 가서 RStudio 서버를 다운로드하고 설치한다.
-> 
-> ~~~ {.shell}
-> $ sudo apt-get install gdebi-core
-> $ wget https://download2.rstudio.org/rstudio-server-0.99.902-amd64.deb
-> $ sudo gdebi rstudio-server-0.99.902-amd64.deb
-> ~~~
-> 
-> `rstudio`를 사용자로 등록하고 나서 웹브라우져를 열고 `http://localhost:8787`에 접속하고 나서,
-> `rstudio` 계정으로 로그인한다.
-> 
-> ~~~ {.shell}
-> parallels@ubuntu:~/spark-1.6.1$ sudo useradd -m rstudio
-> parallels@ubuntu:~/spark-1.6.1$ sudo passwd rstudio
-> Enter new UNIX password: 
-> Retype new UNIX password: 
-> passwd: password updated successfully
-> ~~~
+```r
+$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+$ sudo add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
+$ sudo apt-get update
+$ sudo apt-get install r-base
+$ sudo -i R
+```
+
+### 2.2. 가장 최신 RStudio 서버 설치 {#install-rstudio-latest-on-linx}
+
+최신 버젼 R을 설치한 후에 RStudio **서버** 를 [다운로드](https://www.rstudio.com/products/rstudio/download-server/)받아 설치한다. 
 
 
-### 3. 클라우드 환경 R 개발환경 설정
+```r
+$ sudo apt-get install gdebi-core
+$ wget https://download2.rstudio.org/rstudio-server-1.1.383-amd64.deb
+$ sudo gdebi rstudio-server-1.1.383-amd64.deb
+```
 
-[소프트레이어(SoftLayer)](http://www.softlayer.com/m-ko/) 웹인터페이스를 사용하는 것도 가능하지만 API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오고 가장컴퓨터 주문도 가능하다.
 
-먼저, 소프트레이어 계정정보에 악의적인 사용을 막기위해서 계정정보 `API Access Information` 아래 `Allowed IPs`를 `ifconfig` 명령을 통해서 등록한다. 다음 소프트레이어 API 문서를 참고해서 다음과 같이 파이썬 코드를 작성하고 실행한다.
+`rstudio`를 사용자로 등록하고 나서 웹브라우져를 열고 `http://localhost:8787`에 접속하고 나서,
+`rstudio` 계정으로 로그인한다.
 
-~~~ {.python}
+
+```r
+$ parallels@ubuntu:~/spark-1.6.1$ sudo useradd -m rstudio
+$ parallels@ubuntu:~/spark-1.6.1$ sudo passwd rstudio
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+```
+
+
+## 3. 클라우드 환경 R 개발환경 설정 {#setup-r-development-environment}
+
+[소프트레이어(SoftLayer)](http://www.softlayer.com/m-ko/) 웹인터페이스를 사용하는 것도 가능하지만, 
+API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오고 가장컴퓨터 주문도 가능하다.
+
+먼저, 소프트레이어 계정정보에 악의적인 사용을 막기위해서 계정정보 `API Access Information` 
+아래 `Allowed IPs`를 `ifconfig` 명령을 통해서 등록한다. 다음 소프트레이어 API 문서를 참고해서 다음과 같이 파이썬 코드를 작성하고 실행한다.
+
+
+```r
 # SoftLayer API를 사용해서 계정(Account) 주소정보 중 도시를 읽어오는 프로그램
 import SoftLayer
 client = SoftLayer.create_client_from_env(username="SLXXXXXX", api_key="7c769b8...")
 resp = client['Account'].getObject()
 print 'Account city info : ', resp['city']
-~~~
+```
 
-먼저 `SoftLayer` 모듈을 가져오고, `client` 객체를 생성하고, `getObject()` 메쏘드를 통해서 resp에 `Account` 계정정보를 가져오고, 계정정보 중 도시정보를 다음과 같이 출력한다. 
+먼저 `SoftLayer` 모듈을 가져오고, `client` 객체를 생성하고, 
+`getObject()` 메쏘드를 통해서 resp에 `Account` 계정정보를 가져오고, 계정정보 중 도시정보를 다음과 같이 출력한다. 
 
-~~~ {.output}
+
+```r
 root@shiny:~# python python-start.py
 Account city info :  Seoul
-~~~
+```
 
 > ### 웹 API {.callout}
 >
@@ -208,9 +250,11 @@ Account city info :  Seoul
 > 요즘은 홈페이지 구축이나 추가개편 시 따로 추가로 개발하지 않고도로 이런 오픈 api를 가져와 사용하는 추세이다.
 > 출처: [위키피디아 API](http://ko.wikipedia.org/wiki/API) 
 
-#### 3.1. 데이터 과학 응용프로그램 개발 가상 컴퓨터 주문
+### 3.1. 데이터 과학 응용프로그램 개발 가상 컴퓨터 주문 {#order-from-softlayer}
 
-데이터 과학 응용프로그램 개발을 위한 가상 컴퓨터를 파이썬 프로그램을 작성해서 주문한다. 컴퓨터 호스트 이름은 `shiny-sl`이고 프로세서는 1개, 주기억장치는 1GB, 보조기억장치는 25GB를 달러스 데이터센터에 우분투 최신 버젼 OS를 가지고 비용절감을 위해서 공용으로 주문한다.
+데이터 과학 응용프로그램 개발을 위한 가상 컴퓨터를 파이썬 프로그램을 작성해서 주문한다. 
+컴퓨터 호스트 이름은 `shiny-sl`이고 프로세서는 1개, 주기억장치는 1GB, 보조기억장치는 25GB를 달러스 데이터센터에 
+우분투 최신 버젼 OS를 가지고 비용절감을 위해서 공용으로 주문한다.
 
 |   구성항목     |  명칭           |  선택 사양   |
 | -------------|:----------------|:-------------|
@@ -224,7 +268,8 @@ Account city info :  Seoul
 | 공용/전용     |  public/private |  public      | 
 | 요금 청구단위 |  billing        |  hourly     |
 
-~~~ {.python}
+
+```r
 import SoftLayer
 client = SoftLayer.create_client_from_env(username="SLXXXXXX", api_key="7c7xxxxxxxxxxxxxxxxxxxxxxxxx")
 
@@ -242,9 +287,10 @@ shiny_object = client['Virtual_Guest'].createObject({
 
 for key, value in shiny_object.iteritems():
     print key, " : ", value
-~~~
+```
 
-~~~ {.output}
+
+```r
 root@shiny:~# python shiny-create.py
 domain  :  xwmooc.net
 maxMemory  :  1024
@@ -264,44 +310,47 @@ modifyDate  :
 accountId  :  xxxxxxx
 id  :  xxxxxxxxx
 fullyQualifiedDomainName  :  shiny-sl.xwmooc.net
-~~~
+```
 
-##### 3.1.1. 주문한 가상 컴퓨터 생성 확인
+#### 3.1.1. 주문한 가상 컴퓨터 생성 확인 {#check-order-from-sl}
 
 `slcli vs list` 명령어를 통해서 새로운 가상 컴퓨터 `shiny-sl`이 생성된 것을 확인할 수 있다.
 
-~~~ {.input}
+
+```r
 root@shiny:~# slcli vs list
 :.........:..........:.................:................:............:........:
 :    id   : hostname :    primary_ip   :   backend_ip   : datacenter : action :
 :.........:..........:.................:................:............:........:
 : 9535091 : shiny-sl :  169.53.232.11  : 10.121.217.205 :   dal09    :   -    :
 :.........:..........:.................:................:............:........:
-~~~
+```
 
-##### 3.1.2. 주문한 가상 컴퓨터 삭제
+#### 3.1.2. 주문한 가상 컴퓨터 삭제 {#delete-order-from-sl}
 
 파이썬 프로그램으로 가상컴퓨터를 간단히 삭제할 수 있다.
 삭제하는 방법은 `id`를 `cancel_instance()` 메쏘드에 인자로 넣어주면 끝이다.
 
-~~~ {.python}
+
+```r
 import SoftLayer
 client = SoftLayer.create_client_from_env(username="SLXXXXXX", api_key="7c7xxxxxxxxxxxxxxxxxxxxxxxxx")
 
 mgr = SoftLayer.VSManager(client)
 mgr.cancel_instance(9535091)
-~~~
+```
 
 주문한 `shiny-sl` 컴퓨터를 주문취소하여 진행되는 과정이 보여지고 있다. 
 
-~~~ {.output}
+
+```r
 root@shiny:~# slcli vs list
 :.........:..........:.................:................:............:.....................:
 :    id   : hostname :    primary_ip   :   backend_ip   : datacenter :        action       :
 :.........:..........:.................:................:............:.....................:
 : 9535091 : shiny-sl :  169.53.232.11  : 10.121.217.205 :   dal09    : Cloud ISO Tear Down :
 :.........:..........:.................:................:............:.....................:
-~~~
+```
 
 
 > ## REST {.callout}
@@ -315,9 +364,9 @@ root@shiny:~# slcli vs list
 
 SoftLayer REST에 대한 자세한 사항은 [http://sldn.softlayer.com/article/rest](http://sldn.softlayer.com/article/rest) 기사를 참조한다.
 
-~~~ {.output}
-root@shiny:~# curl -s https://SLXXX:API-KEY@api.softlayer.com/rest/v3/SoftLayer_Account.json | pyt
-hon -m json.tool
+
+```r
+root@shiny:~# curl -s https://SLXXX:API-KEY@api.softlayer.com/rest/v3/SoftLayer_Account.json | python -m json.tool
 {
     "accountManagedResourcesFlag": false,
     "accountStatusId": 1XXX,
@@ -341,19 +390,20 @@ hon -m json.tool
     "state": "OT",
     "statusDate": null
 }
-~~~
+```
 
 <img src="fig/toolchain-shiny-install-overview.png" alt="클라우드 가상 컴퓨터 위에 Shiny 웹서버와 RStudio IDE 설치" width="50%" />
 
 
-#### 3.2. Shiny 서버 설치
+### 3.2. Shiny 서버 설치 {#install-shiny-server-on-softlayer}
 
-##### 3.2.1. 가상 컴퓨터 사양 확인 
+#### 3.2.1. 가상 컴퓨터 사양 확인 {#check-spec-on-softlayer}
 
 `Shiny R`을 설치하기에 앞서 클라우드 데이터 과학 분석을 위한 가상 컴퓨터를 살펴보자.
 데이터 과학용 클라우드 가상 컴퓨터가 준비되었으면 `ssh root@169.53.232.11`를 이용해서 `lshw` 명령어를 통해서 하드웨어 기본 사양을 확인한다.
 
-~~~ {.input}
+
+```r
 $ ssh root@169.53.232.11
 Password:
 Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-51-generic x86_64)
@@ -366,9 +416,10 @@ the exact distribution terms for each program are described in the individual fi
 Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law.
 
 root@shiny-sl:~#
-~~~
+```
 
-~~~ {.input}
+
+```r
 root@shiny-sl:~# lshw
 shiny-sl
     description: Computer
@@ -395,20 +446,21 @@ shiny-sl
        serial: 06:2c:2b:b1:43:ed
        capabilities: ethernet physical
        configuration: broadcast=yes driver=vif ip=169.53.232.9 link=yes multicast=yes
-~~~
+```
 
 하드웨어 사양을 확인했으니, 운영체제 사양도 확인한다. 우분투의 경우 `lsb_release -a` 명령어를 콘솔에 타이핑하면 된다.
 
-~~~ {.input}
+
+```r
 root@shiny-sl:~# lsb_release -a
 No LSB modules are available.
 Distributor ID: Ubuntu
 Description:    Ubuntu 14.04.2 LTS
 Release:        14.04
 Codename:       trusty
-~~~
+```
 
-##### 3.2.2. `Shiny` 서버 설치 
+#### 3.2.2. `Shiny` 서버 설치 {#install-shiny-server}
 
 기본적으로 `R` 라이선스가 `GPL`을 따르기 때문에 `Shiny` 서버도 동일한 라이선스를 따르니 리눅스를 이용하는 기분으로 소프트웨어를 사용한다.
 이제 Shiny 서버를 클라우드에 구축하기 위해서 Shiny 서버를 다운로드하여 설치한다.
@@ -418,30 +470,33 @@ Codename:       trusty
 `r-base`를 설치하고 난 다음에는 `Shiny 서버`를 설치하기 전에 `Shiny R` 팩키지를 설치해야한다. 물론 `R`로 들어가서 
 `install.packages('shiny', repos='http://cran.rstudio.com/')`를 해서 `shiny` 팩키지를 설치해도 된다. 
 
-~~~ {.input}
+
+```r
 root@shiny-sl:~# sudo apt-get install r-base
 root@shiny-sl:~# $ sudo su - -c "R -e \"install.packages('shiny', repos='http://cran.rstudio.com/')\""
-~~~
+```
 
 `R`과 `Shiny` 패키지를 설치한 다음에 **gdebi**를 다음에 설치해야 한다. 그리고 나서 `gdebi`를 통해서 `Shiny 서버`를 설치할 수 있다.
 
 `wget`을 통해서 `Shiny 서버` 설치 파일을 다운로드받고, `gdebi`를 통해서 `Shiny 서버`를 설치한다.
 
-~~~ {.input}
+
+```r
 root@shiny-sl:~# sudo apt-get install gdebi-core
 root@shiny-sl:~# wget http://download3.rstudio.org/ubuntu-12.04/x86_64/shiny-server-1.3.0.403-amd64.deb
 root@shiny-sl:~# sudo gdebi shiny-server-1.3.0.403-amd64.deb
-~~~
+```
 
 `Shiny 서버`가 잘 실행되고 있는지 `status shiny-server` 명령어를 통해서 확인해보고, 만약 서비스가 시작되지 않았다면, `sudo start shiny-server` 명령어로 실행시킨다. 
 
-~~~ {.input}
+
+```r
 root@shiny-sl:~# status shiny-server
 shiny-server start/running, process 14553
 
 root@shiny-sl:~# sudo start shiny-server
 start: Job is already running: shiny-server
-~~~
+```
 
 이제 웹브라우져를 열고 **포트번호(port, 3838)**를 뒤에 `:3838`을 붙여 `http://169.53.232.11:3838/`와 같이 입력하면 
 브라우져 상단에 다음과 같은 메시지가 출력되면 설치가 완료되고 사용준비가 완료된 것이다.
@@ -450,21 +505,23 @@ start: Job is already running: shiny-server
 
 첫 설치 페이지 우측 하단에 `rmarkdown` 설치가 되지 않아 생기는 오류사항은 `R`에서 `install.packages("rmarkdown")`를 통해서 `rmarkdown` 팩키지를 설치해서 해결할 수 있고 다음과 같은 메시지가 보이면 설치가 모두 완료된 것이다.
 
-~~~ {.output}
-With Shiny and `rmarkdown` installed, you should see a Shiny doc above.
-~~~
 
-##### 3.2.3. `shinyapp.io` 공용 Shiny 서버 설정
+```r
+With Shiny and `rmarkdown` installed, you should see a Shiny doc above.
+```
+
+#### 3.2.3. `shinyapp.io` 공용 Shiny 서버 설정 {#shinyapp-io-configuration}
 
 `Tools` --> `ShinyApps` --> `Manage Accounts...`를 통해 RStudio에서 바로 [https://www.shinyapps.io/](https://www.shinyapps.io/) 공용 Shiny 서버로 응용프로그램을 배포할 수 있다. 먼저 [https://www.shinyapps.io/](https://www.shinyapps.io/) 웹사이트에 접속해서 계정을 생성한다. 
 
 [https://www.shinyapps.io/](https://www.shinyapps.io/) 웹사이트에 로그인한 뒤에 사용자명(우측상단)을 클릭하고 **Tokens**를 클릭하면 토큰과 비밀키 정보가 함께 볼 수 있다. 
 
-~~~ {.output}
+
+```r
 shinyapps::setAccountInfo(name='xwmooc',
         token='C9CXXXXXXXXXXXXXXXXXXXXX',
         secret='<SECRET>')
-~~~
+```
 
 토큰 정보를 `Tools` --> `ShinyApps` --> `Manage Accounts...`에 등록한다.
 
@@ -474,16 +531,15 @@ shinyapps::setAccountInfo(name='xwmooc',
 
 <img src="fig/toolchain-shiny-shinyapp-io-connect-menu.png" alt="RStudio IDE에서 shinyapp.io에 개발한 응용프로그램을 바로 배포(Publish App...)" width="30%" />
 
-#### 3.3. `RStudio` 서버 설치
+### 3.3. `RStudio` 서버 설치 {#install-rstudio-server-on-softlayer}
 
 `Shiny 서버`를 설치한 다음에 `RStudio` 개발환경을 설치한다.
 `gdebi`는 `Shiny 서버` 소프트웨어를 설치할 때 설치했기 때문에 바로 최신 버전을 `wget`을 통해 다운로드하고 나서 설치한다.
 
-~~~ {.input}
-root@shiny-sl:~# wget http://download2.rstudio.org/rstudio-server-0.98.1103-amd64.deb
-~~~
 
-~~~ {.output}
+```r
+root@shiny-sl:~# wget http://download2.rstudio.org/rstudio-server-0.98.1103-amd64.deb
+
 --2015-05-22 03:42:29--  http://download2.rstudio.org/rstudio-server-0.98.1103-amd64.deb
 Resolving download2.rstudio.org (download2.rstudio.org)... 54.192.7.233, 54.230.4.176, 54.230.5.20,
 ...
@@ -495,13 +551,11 @@ Saving to: 'rstudio-server-0.98.1103-amd64.deb'
 100%[==========================================================>] 36,304,754  19.5MB/s   in 1.8s
 
 2015-05-22 03:42:31 (19.5 MB/s) - 'rstudio-server-0.98.1103-amd64.deb' saved [36304754/36304754]
-~~~
 
-~~~ {.input}
 root@shiny-sl:~# sudo gdebi rstudio-server-0.98.1103-amd64.deb
-~~~
+```
 
-#### 3.3.1 `RStudio` IDE 접속
+### 3.3.1 `RStudio` IDE 접속 {#connect-to-rstudio-ide}
 
 이제 웹브라우져를 열고 **포트번호(port, 8787)**를 뒤에 `:8787`을 붙여 `http://169.53.232.11:8787/`와 같이 입력하면 
 `Sign in to RStudio` 화면에 사용자명(`username:`)과 비밀번호(`Password:`)를 넣고 `Sign In`하라고 한다.
@@ -511,7 +565,8 @@ root@shiny-sl:~# sudo gdebi rstudio-server-0.98.1103-amd64.deb
   
 **주의**: `sudo useradd -m xwmooc` 명령어에서 `-m` 옵션 플래그는 홈디렉토리를 생성하게 만든다. 그래야지만 정상적으로 `RStudio` 작업이 가능하다.
 
-~~~ {.input}
+
+```r
 root@shiny-sl:~# sudo useradd -m xwmooc
 root@shiny-sl:~# sudo adduser -m xwmooc
 adduser: The user `xwmooc' already exists.
@@ -520,7 +575,7 @@ Enter new UNIX password:
 Retype new UNIX password:
 passwd: password updated successfully
 root@shiny-sl:~#
-~~~
+```
 
 이제 `RStudio`를 사용하기 위해서 `http://169.53.232.11:8787/` 사이트에서 사용자명 `xwmooc`를 넣고 비밀번호를 입력하게 되면 `RStudio`를 사용할 수 있게 된다.
 

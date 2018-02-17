@@ -4,7 +4,7 @@ title: 데이터 과학
 subtitle: R 언어
 output:
   html_document: 
-    keep_md: yes
+    toc: yes
   pdf_document:
     latex_engine: xelatex
 mainfont: NanumGothic
@@ -20,7 +20,21 @@ mainfont: NanumGothic
 > * 사용자와 개발자를 나누는 사회적 장벽을 이해하고, 두언어 문제를 살펴본다.
 > * R 언어 시작과 끝을 맛본다.
 
-### 1. 통계팩키지 SAS/SPSS/Stata 주요 구성요소 비교 [^r4sas-spss]
+## 1. R 역사 [^r-history] {#rhistory}
+
+[^r-history]: [Revolutions (2017), An Updated History of R](http://blog.revolutionanalytics.com/2017/10/updated-history-of-r.html)
+
+[Revolutions](http://blog.revolutionanalytics.com/2017/10/updated-history-of-r.html)에서 정리한 최근 R 역사는 
+1992년 처음 뉴질랜드 오클랜드에서 Robert Gentleman, Ross Ihaka 교수가 개발을 시작한 후에 
+GPL 라이선스를 장착하여 소스코드를 공개한 후에 R 코어 그룹이 만들어지고, 팩키지 배포 CRAN이 순차적으로 공개되고 나서,
+[R 웹사이트](https://www.r-project.org/)가 만들어지고, 처음으로 2000년에 R 1.0.0 으로 배포되고 R 저널, UseR! 컨퍼런스, 
+R 재단, R 컨소시엄이 전세계 수많은 재능있고 열정있는 수많은 사람에 의해서 만들어졌습니다. 
+그리고 한국에서도 [R Meetup](https://github.com/KaggleBreak/xwmooc_Rmeetup)을 2017년부터 시작되었습니다.
+
+<img src="fig/rhistory-1.png" title="plot of chunk rhistory" alt="plot of chunk rhistory" style="display: block; margin: auto;" /><img src="fig/rhistory-2.png" title="plot of chunk rhistory" alt="plot of chunk rhistory" style="display: block; margin: auto;" />
+
+
+## 2. 통계팩키지 SAS/SPSS/Stata 주요 구성요소 비교 [^r4sas-spss] {#comparison-with-packages}
 
 R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자료분석을 위해 언어 + 팩키지 + 환경이 하나로 묶여있다.
 특히, 컴퓨터 주기억장치 한계가 존재하지만, 오픈 소스로 모든 코드가 공개되어 있어 자유로이 이용이 가능하다. R은 John Chambers가 주축이 되어 벨연구소에서 
@@ -38,7 +52,7 @@ R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자�
 
 이와 비교하여 R은 5가지 구성요소가 **언어 + 팩키지 + 환경** 으로 구성된다는 점에서 차이가 크다.
 
-### 2. 두 언어 문제 [^Ousterhout-dichotomy]
+## 3. 두 언어 문제 [^Ousterhout-dichotomy] {#two-language-problem}
 
 <iframe width="320" height="200" src="https://www.youtube.com/embed/B9moDuSYzGo" frameborder="0" allowfullscreen></iframe>
 
@@ -62,7 +76,7 @@ R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자�
 과거 데이터 과학자가 선형대수, 통계&시각화, 속도, 통합작업과 관련하여 다양한 언어와 도구를 익혀야 했지만,
 2010년 중반을 넘어서는 현시점에서 파이썬과 R을 함께 사용하는 것으로 중지가 모아지고 있다.
 
-### 3. 왜 R 언어인가? [^r-rank] [^r-r4stats]
+## 4. 왜 R 언어인가? [^r-rank] [^r-r4stats] {#why-r}
 
 [Rexer Analytics](http://www.rexeranalytics.com/)가 2015년 응답자 1,220명을 대상으로 실시한 결과 R이 데이터 분석 소프트웨어 분야에서 압도적인 1위 위치를 점유하고 있음을 확인할 수 있다.
 
@@ -75,20 +89,17 @@ R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자�
 |-----------------------------------|-----------------------------------|
 |<img src="fig/rexersurveyalltools2015.png" alt="Rexer Analytics 설문조사 2015 (응답자 1,220)" width="70%"> | <img src="fig/ieee-r-ranking.png" alt="IEEE 조사" width="70%">
 
+R이 1등을 하는 분야는 없지만, 2017년 10월 기준 [스택오버플로우-What are the Most Disliked Programming Languages?](https://stackoverflow.blog/2017/10/31/disliked-programming-languages/) 블로그를 
+참조하면 가장 싫어하지 않는 언어 1위에 등극했습니다.
 
-### 4. R 시작과 끝 (맛보기)
+<img src="fig/languages-r-dislike.png" alt="가장 혐오하지 않는 언더" width="77%" />
+
+
+## 5. R 시작과 끝 (맛보기) {#r-a-bit-taste}
 
 R이 설치되고, 필요한 패키지가 준비되면 분석에 사용할 데이터를 작업 메모리상에 올려야 한다. 
 분석 데이터를 R 작업공간에 준비하는 방법은 어려가지가 있다. 
 Web URL을 활용한 웹 데이터를 가져오거나, `read.table`을 이용한 로컬 디스크 상의 데이터를 메모리로 불러올 수 있다.
-
-
-~~~{.r}
-abalone <- read.csv(url("http://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data"), header=F)
-names(abalone) <- c("Sex","Length","Diameter","Height","Whole weight","Shucked weight","Viscera weight","Shell weight","Rings")
-head(abalone)
-~~~
-
 
 
 ~~~{.output}
@@ -109,29 +120,9 @@ FALSE 6        0.120     8
 
 ~~~
 
-
-
-~~~{.r}
-#   Sex Length Diameter Height Whole weight Shucked weight  Viscera weight Shell weight Rings
-# 1   M  0.455    0.365  0.095       0.5140         0.2245          0.1010        0.150    15
-# 2   M  0.350    0.265  0.090       0.2255         0.0995          0.0485        0.070     7
-# 3   F  0.530    0.420  0.135       0.6770         0.2565          0.1415        0.210     9
-# 4   M  0.440    0.365  0.125       0.5160         0.2155          0.1140        0.155    10
-# 5   I  0.330    0.255  0.080       0.2050         0.0895          0.0395        0.055     7
-# 6   I  0.425    0.300  0.095       0.3515         0.1410          0.0775        0.120     8
-~~~
-
 분석을 진행하기 위해서 간단한 R 스크립트를 작성하여 보자. 
 메뉴상단의 `File > New File > R Script` 혹은 `CTRL+SHIFT+N` 단축키를 사용하여 데이터 분석 결과를 스크립트로 작성하여 저장할 수 있다. 
 분석이 완료된 스크립트는 `SimpleR.R`로 저장한다.
-
-
-~~~{.r}
-# 기본 분석 스크립트
-# abalone <- read.csv("abalone.csv")
-table(abalone$Sex)
-~~~
-
 
 
 ~~~{.output}
@@ -139,12 +130,6 @@ FALSE
 FALSE    F    I    M 
 FALSE 1307 1342 1528
 
-~~~
-
-
-
-~~~{.r}
-plot(Length ~ Sex, data=abalone)
 ~~~
 
 <img src="fig/r-lang-table-plot-1.png" title="plot of chunk r-lang-table-plot" alt="plot of chunk r-lang-table-plot" style="display: block; margin: auto;" />
@@ -177,12 +162,6 @@ RStudio_RMarkdown 을 이용하여 작업파일을 만든 후에 `knit HTML` 버
 `R`과 `Rstudio` 관련 도움말은 구글 검색이나, [stack exchange](http://stackexchange.com/)를 통해 얻을 수 있다. 
 작업을 하다면 콘솔화면을 깨끗이하고 다시 시작하고 싶은 경우가 있다. 
 윈도나 도스의 경우 `cls` 명령어가 있는데 R에는 딱히 그런 명령어가 없다. 이런 경우 사용자 정의 함수를 하나 만들어서 실행할 수 있다. 
-
-
-~~~{.r}
-cls <- function() cat(rep("\n",50))
-cls()
-~~~
 
 
  
@@ -240,16 +219,4 @@ cls()
 혹은, `CTRL+L` 키를 눌러 화면을 깨끗이하며 커서를 맨 위 상단으로 이동한다.
 
 
-~~~{.r}
-….
-local({
-    br <- Sys.getenv("R_BROWSER", NA_character_)
-    if(!is.na(br)) options(browser = br)
-    tests_startup <- Sys.getenv("R_TESTS")
-    if(nzchar(tests_startup)) source(tests_startup)
-})
-
-# 사용자 정의함수
-cls <- function() cat(rep("\n",50))
-~~~
 

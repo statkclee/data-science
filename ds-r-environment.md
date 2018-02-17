@@ -1,11 +1,10 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: R 업그레이드와 환경설정
+subtitle: R 업그레이드와 환경설정, 파일-객체 크기
 output:
   html_document: 
     toc: yes
-    keep_md: yes
   pdf_document:
     latex_engine: xelatex
 mainfont: NanumGothic
@@ -19,7 +18,7 @@ mainfont: NanumGothic
 > * R 코어엔진, RStudio 통합개발환경, 팩키지에 대해 이해한다.
 > * R 시작할 때 반복적으로 실행하는 작업을 자동화한다.
 
-## 1. R, RStudio, 팩키지 업그레이드 [^r-packages-update]
+## 1. R, RStudio, 팩키지 업그레이드 [^r-packages-update] {#r-upgrade}
 
 적어도 1년에 한번 새로운 버젼 R 엔진이 출시되면 연례행사로 신경을 써야 되는 부분이 된다.
 R 엔진이 업그레이드 되면서 3.4.0 버젼의 경우 속도 향상 및 버그 수정을 주요 기능으로 내세우고 있다.
@@ -33,8 +32,7 @@ R 엔진이 올라가는 운영체제에 따라 R 엔진을 설치하는 방법�
 
 <img src="fig/library-r-rstudio-upgrade.png" alt="R 업그레이드" width="77%" />
 
-
-## 2. R 엔진 업그레이드 [^r-upgrade] [^r-upgrade-3-4]
+## 2. R 엔진 업그레이드 [^r-upgrade] [^r-upgrade-3-4] {#r-engine-upgrade}
 
 [^r-upgrade]: [R 3.2.4 is released](http://www.r-bloggers.com/r-3-2-4-is-released/)
 
@@ -43,7 +41,7 @@ R 엔진이 올라가는 운영체제에 따라 R 엔진을 설치하는 방법�
 R 버젼이 3.2.3(2015-12-10) 에서 3.2.4(2016-03-10)로 4개월만에 업그레이드가 되었고,
 얼마 지나지 않아 3.4.0(코드명  “You Stupid Darkness”) 버젼이 17년 4월 출시되었고, 속도가 비약적으로 향상되었다.
 
-### 2.1. R 버젼확인 
+### 2.1. R 버젼확인  {#r-engine-upgrade-version}
 
 `sessionInfo()` 명령어를 통해서 현재 버전을 확인한다. 만약 설치할 버젼과 같다면 굳이 R 버젼을 바꿀 이유는 없다.
 
@@ -71,7 +69,7 @@ loaded via a namespace (and not attached):
 [1] tools_3.2.3
 ~~~
 
-### 2.2. R 엔진 업그레이드 (우분투 리눅스)
+### 2.2. R 엔진 업그레이드 (우분투 리눅스) {#r-engine-upgrade-ubuntu}
 
 몇가지 방법을 사용해서 최신 R 버전으로 업그레이드가 가능하다.
 [R 저장소](https://cran.r-project.org/bin/linux/ubuntu/)를 `/etc/apt/sources.list` 파일에 추가해서 
@@ -135,7 +133,7 @@ ubuntu@ip-172-31-22-122:~$ sudo apt update
 ubuntu@ip-172-31-22-122:~$ sudo apt full-upgrade
 ~~~
 
-### 2.3. R 엔진 업그레이드 (레드햇 리눅스) [^r-rhel-install]
+### 2.3. R 엔진 업그레이드 (레드햇 리눅스) [^r-rhel-install] {#r-engine-upgrade-redhat}
 
 [^r-rhel-install]: [Install R and R packages on RHEL 6 (x86_64)](http://jianlu.github.io/2016/02/10/Install-R-and-R-Packages-on-RHEL6/)
 
@@ -151,7 +149,7 @@ sudo yum update -y
 sudo yum install -y R --nogpgcheck
 ~~~
 
-### 2.4. R 엔진 업그레이드 (윈도우)
+### 2.4. R 엔진 업그레이드 (윈도우) {#r-engine-upgrade-windows}
 
 [installr](http://cran.r-project.org/web/packages/installr/) 팩키지를 사용해서 간단히 R 을 최신 버젼으로 업그레이드 한다.
 
@@ -187,7 +185,7 @@ loaded via a namespace (and not attached):
 [1] tools_3.2.4
 ~~~
 
-## 3. RStudio IDE 업그레이드
+## 3. RStudio IDE 업그레이드 {#rstudio-ide-upgrade}
 
 R 엔진을 업그레이드 한 후에 RStudio IDE도 업그레이드가 빈번하게 일어난다.
 또한, 경우에 따라서 R 버전과 RStudio 버번이 맞지 않는 경우 그래픽 등에서 문제가 발생할 수 있으니,
@@ -199,7 +197,7 @@ R과 RStudio 버젼을 맞춰 놓는다. RStudio 상단 메뉴에서 `Help` &rar
 
 <img src="fig/library-rstudio-upgrade.png" alt="RStudio IDE 업그레이드" width="50%" />
 
-## 4. 팩키지 업그레이드
+## 4. 팩키지 업그레이드 {#r-upgrade-packages}
 
 R을 새로 설치하게 되면 R에서 제공하는 기본 팩키지만 설치되어 기존에 오랜 시간 걸려 설치한 팩키지를 사용할 수 없는 문제가 발생된다.
 아직 자동으로 팩키지를 업그레이드하는 기능은 제공하고 있지 않아, 일일이 새롭게 설치하면 시간도 많이 걸리고 다소 번거럽기도 하다.
@@ -211,7 +209,7 @@ R을 새로 설치하게 되면 R에서 제공하는 기본 팩키지만 설치�
 1. `install.packages()` 명령어를 통해 팩키지를 일괄 설치한다.
 1. `update.packages()` 명령어를 통해 최신 버젼 팩키지로 갱신한다.
 
-### 4.1. 기존 설치된 팩키지 추출
+### 4.1. 기존 설치된 팩키지 추출 {#r-upgrade-packages-extract}
 
 기존 설치된 팩키지를 추출하는 `installed.packages()` 명령어로 추출하고 나서, `installed_old.rda` 파일로 저장한다.
 
@@ -222,7 +220,7 @@ installedpkgs <- as.vector(tmp[is.na(tmp[,"Priority"]), 1])
 save(installedpkgs, file="installed_old.rda")
 ~~~
 
-### 4.2. 누락된 팩키지 설치
+### 4.2. 누락된 팩키지 설치 {#r-upgrade-packages-extract-install}
 
 `setdiff` 명령어로 누락된 팩키지를 찾아내고 나서, 
 `install.packages()` 명령어를 통해 누락된 팩키지를 일괄 설치한다.
@@ -238,7 +236,7 @@ install.packages(missing)
 update.packages()
 ~~~
 
-## 5. R 팩키지 설치 [^r-packages-install]
+## 5. R 팩키지 설치 [^r-packages-install] {#r-packages-knowhow}
 
 [^r-packages-install]: [How should I deal with “package 'xxx' is not available (for R version x.y.z)” warning?](http://stackoverflow.com/questions/25721884/how-should-i-deal-with-package-xxx-is-not-available-for-r-version-x-y-z-wa)
 
@@ -277,7 +275,7 @@ GitHub을 통해 코드가 공유되면서 다양한 팩키지를 설치방법�
     * `install_bitbucket("packageauthor/foobarbaz")` : Bitbucket에서 설치하는 경우
     * `install_gitorious("packageauthor/foobarbaz")` : Gitorious에서 설치하는 경우
 
-## 6. R 시작 환경설정 [^r-startup]  [^r-finding-location] [^r-Rprofile-customization]
+## 6. R 시작 환경설정 [^r-startup]  [^r-finding-location] [^r-Rprofile-customization] {#r-start-profile}
 
 R 시작환경을 설정하여 일일이 설정하지 않고, R이 시작될 때 자동으로 실행되어 바로 작업을 수행하게 시키면 처음에는 수고스럽지만 장기적으로 많은 이익이 된다.
 자동으로 실행될 정보를 저장할 파일은 크게 두가지로 나뉜다: `.Rprofile`, `Rprofile.site`. 두 파일의 차이점은 `Rprofile.site`는 모든 사용자에게 영향을 미친다는 점이고,
@@ -321,7 +319,7 @@ $ Filter(file.exists, candidates)
 [^r-Rprofile-customization]: [Fun with .Rprofile and customizing R startup](https://www.r-bloggers.com/fun-with-rprofile-and-customizing-r-startup/)
 
 
-### 6.1. `.Rprofile`, `Rprofile.site` 예제
+### 6.1. `.Rprofile`, `Rprofile.site` 예제 {#r-start-profile-example}
 
 `.Rprofile`, `Rprofile.site` 파일에 적용하고자 하는 부분을 찾아 다음과 같이 설정한다. 자주 사용하는 기능을 넣어 특히, 
 `.First` 함수에 넣어 두어 자동으로 시작되게 하고, `.Last` 함수에는 그와 반대로 R을 끄고 나갈 때 설정한다.
@@ -399,7 +397,8 @@ message("Yesterday is history\n", "Tomorrow is a mystery\n", "but today is a gif
 
 다시 R 세션을 시작하면 출력결과가 다음과 같이 나타난다.
 
-~~~ {.output}
+
+~~~{.r}
 Restarting R session...
 
 Yesterday is history
@@ -411,8 +410,7 @@ That is why it is called the present.
 $ 
 ~~~
 
-
-## 7. 기본 R 쉘 명령어
+## 7. 기본 R 쉘 명령어 {#r-basic-shell-command}
 
 현재 작업공간을 확인하는 명령어는 `getwd()` 이며, 새로운 작업공간을 설정하는 명령어는 `setwd()` 이다. 
 현재 작업공간이 “C:\” 디렉토리인데 `setwd()` 명령어를 통해서 새로운 작업 공간으로 변경을 했다. 
@@ -427,3 +425,35 @@ getwd()
 [1] "D:/01. Work/09. Data_Products"
 system("ls") # 윈도우에서는 shell("dir"), dir()
 ~~~
+
+
+## 8. 파일 데이터 및 객체 크기{#r-file-object-size}
+
+R 콘솔에서 직접 파일 크기와 R 객체 크기를 갈음하는 것이 효율적인 데이터분석을 위해 필요한 기본적인 명령어는 숙지한다.
+기본적으로 제공되는 기능에 더하여 [`pryr` 팩키지](https://cran.r-project.org/web/packages/pryr/index.html)의 염탐기능도 활용할 필요가 있다. 
+
+우선 읽어들일 파일 크기를 확인하는 것이 필요하다. 이때 `file.size()` 함수를 통해 데이터 분석을 통해 읽어들일 파일 크기를 갈음한다.
+또한, `10^6`으로 나눠 MB 단위로 추론하거나, `utils:::format.object_size("auto")` 기능을 통해 사람이 이해하기 쉬운 단위로 변환한다.
+
+파일을 R 객체로 불러 들이게 되면 메모리 공간 내부의 객체크기를 확인할 필요가 있다. 
+이런 경우 `pry::object_size()` 함수를 활용하면 해당 객체에 대한 크기를 파악하는데 도움이 된다.
+
+파일은 사람이 읽을 수 있는 아스키 파일 뿐만 아니라 `.rds` 바이너리 파일도 `file.size()` 함수를 통해 확인이 가능하다.
+
+
+~~~{.r}
+> file.size("data/eu-asia-us/eu-2017-12-07.csv") %>% 
++     utils:::format.object_size("auto")
+[1] "59 Mb"
+ 
+> df <- read_csv("data/eu-asia-us/eu-2017-12-07.csv")
+> pryr::object_size(df)
+35.2 MB
+
+> file.size("data_processed/rds_df.rds") %>% 
++     utils:::format.object_size("auto")
+[1] "21.6 Mb"
+> 
+~~~
+
+

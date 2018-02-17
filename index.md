@@ -12,7 +12,8 @@ title: 데이터 과학
 ### R, RStudio, `tidyverse`, 스파크, AWS 와 함께하는 데이터 과학 
 
 1. **[R 언어](ds-r-lang.html)**
-    - [R 환경설정과 업데이트](ds-r-environment.html) 
+    - [R 환경설정과 업데이트, 파일-객체 크기](ds-r-environment.html) 
+    - [R 저작권과 라이선스(license)](ds-r-license.html) 
     - [R 프로그래밍 모범사례 - R 함수와 자료구조](ds-writing-fn.html)
     - [통계학 전공자와 데이터 공유 방법](ds-datasharing.html) : [영어원문](https://github.com/jtleek/datasharing), [구글 번역본](ds-datasharing-translation.html) 
     - [스프레드쉬트에서 데이터베이스로](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/)
@@ -50,11 +51,11 @@ title: 데이터 과학
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)
     - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html) 
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
-    - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
-    - [한글처리 가능한 RStudio 개발환경](toolchain-shiny-rstudio.html)    
-    - [RStudio 개발환경(IDE)과 단축키](rstudio.html)
+    - **[RStudio 개발환경 - 프로젝트](rstudio-project.html)**
+        - [RStudio 개발환경(IDE)과 단축키](rstudio.html)
+        - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
+        - [한글처리 가능한 RStudio 개발환경](toolchain-shiny-rstudio.html)        
     - **[스파크(Spark)](http://statkclee.github.io/parallel-r/spark-mooc.html)**
-        - [`sparklyr` = 스파크 + `dplyr` 설치](ds-sparklyr.html)
         - [SparkR 하둡 클러스터 설치](ds-spark-hadoop-install.html)
         - [$H_2 O$ 하둡 스파크 클러스터 설치](ds-h2o-spark-hadoop.html)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
@@ -69,12 +70,13 @@ title: 데이터 과학
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)      
 1. **다양한 데이터**
     - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
-    - **웹 데이터**
+    - **[웹 데이터](ds-webdata.html)**
         - [웹 스크래핑(Web Scraping)](data-scraping.html)
         - [R 팬텀JS (phantomJS) - 방송3사 시청률 경쟁 그리고 JTBC 손석희 앵커](ds-phantomJS.html)
         - [아마존 알렉사 웹정보(웹API) - KBO 프로야구 웹사이트](data-webapi-aws-alexa.html)
         - [아마존 알렉사 웹정보(웹API) - 인터넷 쇼핑(쿠팡, 위메프, 티몬)](data-webapi-social-shopping.html)
         - [아마존 알렉사 웹정보(웹API) - 대한민국 주요 정당](data-webapi-party.html)
+        - [아마존 웹 서비스(AWS) - EC2 사양과 가격](ds-aws-webservice.html)
         - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
             - [데이터 입수](http://statkclee.github.io/web-data-python/01-getdata.html)
             - [CSV 데이터 처리](http://statkclee.github.io/web-data-python/02-csv.html)
@@ -85,16 +87,7 @@ title: 데이터 과학
     - **R 눈을 달다**
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
         - [PDF 감옥에서 데이터를 탈출시키다.](ds-extract-text-from-pdf-survey.html)
-1. [데이터 제품](data-product.html)
-    - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
-    - [Shiny 웹앱](shiny-overview.html)
-        - [Shiny 웹앱 개발](shiny-app.html)    
-        - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
-        - [Shiny 프론트엔트 개발](shiny-frontend.html)
-    - [보고서 작성 자동화(30분)](ds-report-automation.html)
-    - [R로 전자우편 자동 전송](ds-gmail.html)        
-    - [공공 데이터 제품](data-product-civic-hacking.html)
-    - [야구 MLB](ds-baseball-mlb.html)    
+    - [보안 - 패킷분석](ds-packet.html)
 1. [정렬(Sort)](data-handling-sorting.html) 
 
 
