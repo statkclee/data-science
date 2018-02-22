@@ -13,6 +13,7 @@ title: 데이터 과학
 
 1. **[R 언어](ds-r-lang.html)**
     - [R 환경설정과 업데이트, 파일-객체 크기](ds-r-environment.html) 
+    - [R 구문평가 - tidyeval](ds-r-tidyeval.html) 
     - [R 저작권과 라이선스(license)](ds-r-license.html) 
     - [R 프로그래밍 모범사례 - R 함수와 자료구조](ds-writing-fn.html)
     - [통계학 전공자와 데이터 공유 방법](ds-datasharing.html) : [영어원문](https://github.com/jtleek/datasharing), [구글 번역본](ds-datasharing-translation.html) 
