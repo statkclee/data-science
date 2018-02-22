@@ -4,9 +4,12 @@ title: 데이터 과학
 subtitle: R 언어
 output:
   html_document: 
+    theme: journal
     toc: yes
-  pdf_document:
-    latex_engine: xelatex
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
 mainfont: NanumGothic
 ---
 
@@ -18,6 +21,7 @@ mainfont: NanumGothic
 > * R 언어의 역사를 이해한다.
 > * 통계 팩키지와 다른 데이터과학 언어를 R 언어과 비교한다.
 > * 사용자와 개발자를 나누는 사회적 장벽을 이해하고, 두언어 문제를 살펴본다.
+> * 주요 R언어 구문을 이해한다.
 > * R 언어 시작과 끝을 맛본다.
 
 ## 1. R 역사 [^r-history] {#rhistory}
@@ -31,7 +35,43 @@ GPL 라이선스를 장착하여 소스코드를 공개한 후에 R 코어 그�
 R 재단, R 컨소시엄이 전세계 수많은 재능있고 열정있는 수많은 사람에 의해서 만들어졌습니다. 
 그리고 한국에서도 [R Meetup](https://github.com/KaggleBreak/xwmooc_Rmeetup)을 2017년부터 시작되었습니다.
 
-<img src="fig/rhistory-1.png" title="plot of chunk rhistory" alt="plot of chunk rhistory" style="display: block; margin: auto;" /><img src="fig/rhistory-2.png" title="plot of chunk rhistory" alt="plot of chunk rhistory" style="display: block; margin: auto;" />
+
+~~~{.r}
+# 1. R 역사 연대기 표 --------------
+
+DT::datatable(rhistory_df)
+~~~
+
+<img src="fig/rhistory-1.png" title="plot of chunk rhistory" alt="plot of chunk rhistory" style="display: block; margin: auto;" />
+
+~~~{.r}
+# 2. R 역사 연대기 시각화 --------------
+
+rhistory_df <- rhistory_df %>% 
+    mutate(event_date = ymd(event_date))
+~~~
+
+
+
+~~~{.output}
+Error in mutate_impl(.data, dots): Evaluation error: (converted from warning) unknown timezone 'zone/tz/2017c.1.0/zoneinfo/Asia/Seoul'.
+
+~~~
+
+
+
+~~~{.r}
+timelineS(rhistory_df, main = "R 연대기", buffer.days = 3600,
+          label.direction = "up", label.length = c(0.2,0.8,0.4,1.2), label.position = 3,
+          labels = rhistory_df[[1]])
+~~~
+
+
+
+~~~{.output}
+Error in min(event.dates) - buffer.days: 이항연산자에 수치가 아닌 인수입니다
+
+~~~
 
 
 ## 2. 통계팩키지 SAS/SPSS/Stata 주요 구성요소 비교 [^r4sas-spss] {#comparison-with-packages}
@@ -94,12 +134,19 @@ R이 1등을 하는 분야는 없지만, 2017년 10월 기준 [스택오버플�
 
 <img src="fig/languages-r-dislike.png" alt="가장 혐오하지 않는 언더" width="77%" />
 
-
 ## 5. R 시작과 끝 (맛보기) {#r-a-bit-taste}
 
 R이 설치되고, 필요한 패키지가 준비되면 분석에 사용할 데이터를 작업 메모리상에 올려야 한다. 
 분석 데이터를 R 작업공간에 준비하는 방법은 어려가지가 있다. 
 Web URL을 활용한 웹 데이터를 가져오거나, `read.table`을 이용한 로컬 디스크 상의 데이터를 메모리로 불러올 수 있다.
+
+
+~~~{.r}
+abalone <- read.csv(url("http://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data"), header=F)
+names(abalone) <- c("Sex","Length","Diameter","Height","Whole weight","Shucked weight","Viscera weight","Shell weight","Rings")
+head(abalone)
+~~~
+
 
 
 ~~~{.output}
@@ -120,16 +167,42 @@ FALSE 6        0.120     8
 
 ~~~
 
+
+
+~~~{.r}
+#   Sex Length Diameter Height Whole weight Shucked weight  Viscera weight Shell weight Rings
+# 1   M  0.455    0.365  0.095       0.5140         0.2245          0.1010        0.150    15
+# 2   M  0.350    0.265  0.090       0.2255         0.0995          0.0485        0.070     7
+# 3   F  0.530    0.420  0.135       0.6770         0.2565          0.1415        0.210     9
+# 4   M  0.440    0.365  0.125       0.5160         0.2155          0.1140        0.155    10
+# 5   I  0.330    0.255  0.080       0.2050         0.0895          0.0395        0.055     7
+# 6   I  0.425    0.300  0.095       0.3515         0.1410          0.0775        0.120     8
+~~~
+
 분석을 진행하기 위해서 간단한 R 스크립트를 작성하여 보자. 
 메뉴상단의 `File > New File > R Script` 혹은 `CTRL+SHIFT+N` 단축키를 사용하여 데이터 분석 결과를 스크립트로 작성하여 저장할 수 있다. 
 분석이 완료된 스크립트는 `SimpleR.R`로 저장한다.
 
 
-~~~{.output}
-FALSE 
-FALSE    F    I    M 
-FALSE 1307 1342 1528
+~~~{.r}
+# 기본 분석 스크립트
+# abalone <- read.csv("abalone.csv")
+table(abalone$Sex)
+~~~
 
+
+
+~~~{.output}
+
+   F    I    M 
+1307 1342 1528 
+
+~~~
+
+
+
+~~~{.r}
+plot(Length ~ Sex, data=abalone)
 ~~~
 
 <img src="fig/r-lang-table-plot-1.png" title="plot of chunk r-lang-table-plot" alt="plot of chunk r-lang-table-plot" style="display: block; margin: auto;" />
@@ -162,6 +235,12 @@ RStudio_RMarkdown 을 이용하여 작업파일을 만든 후에 `knit HTML` 버
 `R`과 `Rstudio` 관련 도움말은 구글 검색이나, [stack exchange](http://stackexchange.com/)를 통해 얻을 수 있다. 
 작업을 하다면 콘솔화면을 깨끗이하고 다시 시작하고 싶은 경우가 있다. 
 윈도나 도스의 경우 `cls` 명령어가 있는데 R에는 딱히 그런 명령어가 없다. 이런 경우 사용자 정의 함수를 하나 만들어서 실행할 수 있다. 
+
+
+~~~{.r}
+cls <- function() cat(rep("\n",50))
+cls()
+~~~
 
 
  
@@ -219,4 +298,15 @@ RStudio_RMarkdown 을 이용하여 작업파일을 만든 후에 `knit HTML` 버
 혹은, `CTRL+L` 키를 눌러 화면을 깨끗이하며 커서를 맨 위 상단으로 이동한다.
 
 
+~~~{.r}
+local({
+    br <- Sys.getenv("R_BROWSER", NA_character_)
+    if(!is.na(br)) options(browser = br)
+    tests_startup <- Sys.getenv("R_TESTS")
+    if(nzchar(tests_startup)) source(tests_startup)
+})
+
+# 사용자 정의함수
+cls <- function() cat(rep("\n",50))
+~~~
 
