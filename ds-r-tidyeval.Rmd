@@ -7,7 +7,7 @@ output:
   html_document: 
     theme: journal
     toc: yes
-    toc_depth: 2
+    toc_depth: 3
     toc_float: true
     highlight: tango
     code_folding: show
@@ -330,7 +330,7 @@ ast(expr(f(!!x, y)))
 `ggplot`을 성공적으로 시각화시킨다.
 동일하게 `dplyr` 팩키지 `summarize()` 함수에 `!!var`을 통해 변수명을 성공적으로 넘겨 요약통계량을 산출한다.
 
-``` {r rlang-quote-unquote, eval=FALSE}
+``` {r rlang-quote-unquote, eval=TRUE}
 # 4. Quote + Unquote 조합 -----
 ## 4.1. 시각화 사례
 my_scatterplot <- function(df, xvar, yvar) {
