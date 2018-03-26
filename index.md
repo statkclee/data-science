@@ -11,7 +11,7 @@ title: 데이터 과학
 
 ### R, RStudio, `tidyverse`, 스파크, AWS 와 함께하는 데이터 과학 
 
-1. **[R 언어](ds-r-lang.html)**
+1. **[데이터 과학과 R 언어](ds-r-lang.html)**
     - [R 환경설정과 업데이트, 파일-객체 크기](ds-r-environment.html) 
     - [R 구문평가 - tidyeval](ds-r-tidyeval.html) 
     - [R 저작권과 라이선스(license)](ds-r-license.html) 
