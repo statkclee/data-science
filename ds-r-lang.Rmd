@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: R 언어
+subtitle: 데이터 과학과 R 언어
 output:
   html_document: 
     theme: journal
@@ -23,6 +23,8 @@ library(timelineS) # devtools::install_github("daheelee/timelineS")
 library(tidyverse)
 library(lubridate)
 library(googleVis)
+
+Sys.setenv(TZ='Asia/Seoul')
 
 rhistory_df <- tribble(
     ~event, ~event_date, ~event_eng,
@@ -56,7 +58,55 @@ rhistory_df <- tribble(
 > * 주요 R언어 구문을 이해한다.
 > * R 언어 시작과 끝을 맛본다.
 
-## 1. R 역사 [^r-history] {#rhistory}
+
+
+# 1. 데이터 과학 (Data Science) {#data-science}
+
+자연법칙은 변수(Variable), 관측점(Observation), 값(Value)으로 구성된다. 
+변수는 측정한 정량 혹은 정성적 특성이 되고, 
+값은 측정한 시점에 변수의 상태이며, 관측점은 유사한 조건하에 측정한 여러 변수값 집합이다. 
+자연법칙은 동일한 관측점 값에 적용되어 동작하는 변수를 다룬다. 
+따라서, 자연법칙은 데이터에 **패턴(pattern)**으로 나타난다. 
+
+변수, 관측점, 값으로 구성된 데이터를 가지고 있지만 현실 세계를 움직이는 자연법칙을 모른다면 패턴을 찾아서 자연법칙을 모사할 수 있고, 
+현실 세계에 대한 자연법칙을 찾았다면 데이터를 통해서 확증하는 것도 가능하다.
+
+<img src="fig/data-science-overview.png" alt="데이터 과학 개요" width="70%" />
+
+## 1.1. 데이터 과학 프로세스 {#data-science-process}
+
+[CRISP-DM(Cross-industry standard process for data mining)](https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining)가 과거 유명한 
+데이터 마이닝 모형이었다. [^crisp-dm-kor]
+
+[^crisp-dm-kor]: [데이터 마이닝 방법론/프로세스 CRISP-DM](http://itlab.tistory.com/122)
+
+- Business Understanding: 비즈니스 문제 인식 및 해결을 위한 데이터 마이닝 프로세스 명료화
+- Data understanding: 데이터 탐색 및 이해
+- Data prepation: 데이터를 통한 문제 인식 및 해결
+- Modelding: 데이터 마이닝 기법 적용
+- Evaluation: 비즈니스 상황에 따른 데이터 마이닝 결과의 해설
+- Deployment: 데이터 마이닝 결과의 전개 및 유지
+
+<img src="fig/data-science-process-as-is-to-be.png" alt="데이터 과학 프로세스 비교" width="50%" />
+
+최근에 RStudio의 최고 데이터과학자 위캠 박사가 `tidyverse`을 통해 데이터과학을 새롭게 정의하고 있다.
+
+> ### 데이터와 사투(Data Wrangling) {.callout}
+>
+> 데이터 먼징(Data Munging) 혹은 데이터 랭글링(Data Wrangling)은 원자료(raw data)를 또다른 형태로 수작업으로 
+> 전환하거나 매핑하는 과정으로 데이터 원천(Data Source)에서 원래 최초 형태로 자료를 추출, 
+> 알고리즘(예로, 정렬)을 사용해서 원자료를 "먼징(munging)"하거나 사전 정의된 자료구조로 데이터를 파싱(parsing)한다. 
+> 마지막으로 저장이나 미래 사용을 위해 작업완료한 콘텐츠를 데이터 싱크(data sink)에 놓아두는 과정.
+> 
+> **데이터 랭글링(Data Wrangling)**
+>     - 데이터 조작(Data Manipulation) : `dplyr`
+>     - 데이터 깔끔화(Data Tidying) : `tidyr`
+>     - 데이터 시각화(Data Visualization) : `ggplot`
+>     - 모형(Modelling) : `broom`
+>     - 데이터 프로그래밍(Data Programming) : `purrr`
+
+
+# 2. R 역사 [^r-history] {#rhistory}
 
 [^r-history]: [Revolutions (2017), An Updated History of R](http://blog.revolutionanalytics.com/2017/10/updated-history-of-r.html)
 
@@ -83,7 +133,7 @@ timelineS(rhistory_df, main = "R 연대기", buffer.days = 3600,
 ```
 
 
-## 2. 통계팩키지 SAS/SPSS/Stata 주요 구성요소 비교 [^r4sas-spss] {#comparison-with-packages}
+# 3. 통계팩키지 SAS/SPSS/Stata 주요 구성요소 비교 [^r4sas-spss] {#comparison-with-packages}
 
 R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자료분석을 위해 언어 + 팩키지 + 환경이 하나로 묶여있다.
 특히, 컴퓨터 주기억장치 한계가 존재하지만, 오픈 소스로 모든 코드가 공개되어 있어 자유로이 이용이 가능하다. R은 John Chambers가 주축이 되어 벨연구소에서 
@@ -101,7 +151,7 @@ R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자�
 
 이와 비교하여 R은 5가지 구성요소가 **언어 + 팩키지 + 환경** 으로 구성된다는 점에서 차이가 크다.
 
-## 3. 두 언어 문제 [^Ousterhout-dichotomy] {#two-language-problem}
+# 4. 두 언어 문제 [^Ousterhout-dichotomy] {#two-language-problem}
 
 <iframe width="320" height="200" src="https://www.youtube.com/embed/B9moDuSYzGo" frameborder="0" allowfullscreen></iframe>
 
@@ -125,7 +175,7 @@ R은 현존하는 가장 강력한 통계 컴퓨팅 언어로, 그래픽과 자�
 과거 데이터 과학자가 선형대수, 통계&시각화, 속도, 통합작업과 관련하여 다양한 언어와 도구를 익혀야 했지만,
 2010년 중반을 넘어서는 현시점에서 파이썬과 R을 함께 사용하는 것으로 중지가 모아지고 있다.
 
-## 4. 왜 R 언어인가? [^r-rank] [^r-r4stats] {#why-r}
+# 5. 왜 R 언어인가? [^r-rank] [^r-r4stats] {#why-r}
 
 [Rexer Analytics](http://www.rexeranalytics.com/)가 2015년 응답자 1,220명을 대상으로 실시한 결과 R이 데이터 분석 소프트웨어 분야에서 압도적인 1위 위치를 점유하고 있음을 확인할 수 있다.
 
@@ -143,7 +193,7 @@ R이 1등을 하는 분야는 없지만, 2017년 10월 기준 [스택오버플�
 
 <img src="fig/languages-r-dislike.png" alt="가장 혐오하지 않는 언더" width="77%" />
 
-## 5. R 시작과 끝 (맛보기) {#r-a-bit-taste}
+# 6. R 시작과 끝 (맛보기) {#r-a-bit-taste}
 
 R이 설치되고, 필요한 패키지가 준비되면 분석에 사용할 데이터를 작업 메모리상에 올려야 한다. 
 분석 데이터를 R 작업공간에 준비하는 방법은 어려가지가 있다. 
