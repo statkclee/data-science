@@ -40,7 +40,6 @@ title: 데이터 과학
         - [데이터테이블](data-handling-datatable.html)
 1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
-    - [데이터 가져오기](data-handling-import.html)    
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
     - [데이터 작업 공구(dplyr)](data-handling-dplyr.html)
         - [데이터 병렬 작업 공구(multiplyr)](data-handling-multiplyr.html) 
@@ -69,22 +68,8 @@ title: 데이터 과학
 1. [R 팩키지](ds-r-pkgs.html)    
     - [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)    
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)      
-1. **다양한 데이터**
+1. **[다양한 데이터](https://statkclee.github.io/ingest-data/)**
     - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
-    - **[웹 데이터](ds-webdata.html)**
-        - [웹 스크래핑(Web Scraping)](data-scraping.html)
-        - [R 팬텀JS (phantomJS) - 방송3사 시청률 경쟁 그리고 JTBC 손석희 앵커](ds-phantomJS.html)
-        - [아마존 알렉사 웹정보(웹API) - KBO 프로야구 웹사이트](data-webapi-aws-alexa.html)
-        - [아마존 알렉사 웹정보(웹API) - 인터넷 쇼핑(쿠팡, 위메프, 티몬)](data-webapi-social-shopping.html)
-        - [아마존 알렉사 웹정보(웹API) - 대한민국 주요 정당](data-webapi-party.html)
-        - [아마존 웹 서비스(AWS) - EC2 사양과 가격](ds-aws-webservice.html)
-        - [웹에 있는 데이터 작업 - 파이썬](http://statkclee.github.io/web-data-python/)
-            - [데이터 입수](http://statkclee.github.io/web-data-python/01-getdata.html)
-            - [CSV 데이터 처리](http://statkclee.github.io/web-data-python/02-csv.html)
-            - [오류(Error) 처리와 일반화](http://statkclee.github.io/web-data-python/03-generalize.html)
-            - [시각화](http://statkclee.github.io/web-data-python/04-visualize.html)
-            - [데이터 게시](http://statkclee.github.io/web-data-python/05-makedata.html)
-            - [데이터를 찾을 수 있게 만들기](http://statkclee.github.io/web-data-python/06-findable.html)
     - **R 눈을 달다**
         - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
         - [PDF 감옥에서 데이터를 탈출시키다.](ds-extract-text-from-pdf-survey.html)
