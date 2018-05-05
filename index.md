@@ -65,9 +65,8 @@ title: 데이터 과학
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
     - [윈도우 10 - 우분투 배쉬](ds-windows-bash.html)
-1. [R 팩키지](ds-r-pkgs.html)    
-    - [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)    
-    - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)      
+1. [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)
+    - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)
 1. **[다양한 데이터](https://statkclee.github.io/ingest-data/)**
     - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
     - **R 눈을 달다**
