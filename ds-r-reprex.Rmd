@@ -1,0 +1,42 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 도와줘요 - `reprex`
+output:
+  html_document: 
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+mainfont: NanumGothic
+---
+
+
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+# 초심자의 고민 {#we-have-some-concern}
+
+누구나 초심자로서 고민이 있다. 특히, 난관에 몰렸을 때 본인이 지금까지 겪었던 문제를 
+문제를 해결해야 될 사람에게 전달하기가 참 쉽지 않다.
+
+이런 고민에 대해서 도움이 될 수 있는 R 팩키지가 나왔다. [reprex](http://reprex.tidyverse.org/)는
+**repr**oducible **ex**ample 의 줄임말로 [GitHub issues](https://guides.github.com/features/issues/), 
+[stackoverflow](https://stackoverflow.com/questions/tagged/r), [Slack snippets](https://get.slack.help/hc/en-us/articles/204145658-Create-a-snippet)에 
+도움을 받을 수 있도록 R 코드를 작성을 도와준다.
+
+<iframe width="300" height="180" src="https://www.youtube.com/embed/ft_rdnFKvnc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+# `reprex` 사용법 {#reprex}
+
+`reprex` 사용법은 생각보다 단순하다.
+
+1. R 코드를 복사해서 클립보드에 집어넣는다.
+1. `library(reprex)` 팩키지를 불러오고 `reprex()`을 실행한다.
+1. **RStudio’s Viewer** 패널에 R 코드 실행결과가 나타난다.
+    - R 코드와 R코드 실행결과를 적절히 사용해서... [GitHub issues](https://guides.github.com/features/issues/), 
+[stackoverflow](https://stackoverflow.com/questions/tagged/r), [Slack snippets](https://get.slack.help/hc/en-us/articles/204145658-Create-a-snippet)에 활용한다.
