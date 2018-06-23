@@ -26,9 +26,7 @@ title: 데이터 과학
         - [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
 1. [측도와 R 자료구조](ds-data-structure.html)
     - **자료구조**
-        - [시간 데이터 기초](ds-date-basics.html)
-            - [시간데이터(lubridate)](data-handling-timendate.html)
-            - [불규칙 시계열 데이터](ds-irregular-time-series.html) 
+        - [날짜/시간 데이터](https://statkclee.github.io/finance/): **`2018-06-23`일부터 금융, 시계열로 이동**
         - [요인(Factor) - 범주형 자료형](ds-factor-cdata.html)
             - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
             - [범주형 데이터 시각화 기초](ds-factor-dplyr-mosaic.html)
