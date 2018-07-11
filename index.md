@@ -37,6 +37,8 @@ title: 데이터 과학
     - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
         - [데이터테이블](data-handling-datatable.html)
+1. **데이터 정제(Data Cleaning)**
+    - [데이터 과학자가 아니라 청소부](ds-janitor.html)
 1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
     - [데이터분석 파이프라인](data-handling-pipeline.html)
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)

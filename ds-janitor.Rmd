@@ -1,0 +1,185 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 데이터 과학자가 아니라 청소부(janitor)
+output:
+  html_document: 
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+mainfont: NanumGothic
+---
+
+
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+# 데이터 전처리 {#data-janitor}
+
+데이터 과학자는 사실 데이터 청소부라는 역할이 더 걸맞는 직무일지도 모른다.
+왜냐하면, 대부분의 시간을 데이터 청소에 보내기 때문이다.
+다음 뉴욕 타임즈(2014) 기사에 어떻게 보면 데이터과학 본질이 잘 나타나 있다.
+
+ <style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+Data scientists, according to interviews and expert estimates, spend from 50 percent to 80 percent of their time mired in this more mundane labor of collecting 
+and preparing unruly digital data, before it can be explored for useful nuggets.
+
+-- "For Big-Data Scientists, 'Janitor Work' Is Key Hurdle to Insight" - The New York Times, 2014
+</div>
+
+원본데이터를 `readr` 팩키지 다양한 함수로 가져오면 가장 먼저하는 역할이 데이터를 길들이는 것이다.
+모형과 시각화를 위해서 **데이터 사각형화(data rectangling)** 이전에 데이터 전처리가 수반되고,
+데이터 전처리는 **데이터 정제작업(cleaning)**과 함께 **데이터 길들이기(taming)**를 포함한다.
+
+이를 위해서 [청소부(janitor)](https://github.com/sfirke/janitor) 팩키지와 `skimr`이 동원되고, 
+`tidyr`, `dplyr`가 필수적인 연장이 된다.
+
+<img src="fig/ds-janitor-skimr.png" alt="데이터 청소부 역할" width="77%" />
+
+# 데이터 청소부 [^medium-data-janitor] {#data-janitor-preprocess}
+
+[^medium-data-janitor]: [SWIMMING IN THE DATA LAKE(2017), "Janitor, a good R package for data cleaning"](https://medium.com/@verajosemanuel/janitor-a-good-r-package-for-data-cleaning-f3c733632ad9)
+
+초창기 관심을 받아 안정화 단계를 거친 것으로 평가받고 있으며 크게 데이터 정제과정에서 애로가 많은 
+변수명과 중복행 검출, 그리고 표 데이터 생성에 유용하다.
+
+## 변수명 {#data-janitor-preprocess-varname}
+
+과거 `make.names()` 함수로 난잡한 변수명 문제를 처리했다면, 
+이제 `clean_names()` 함수로 변수명 문제를 깔끔하게 정리할 수 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+
+**난감한 상황**
+
+``` {r data-janitor-preprocess-varname}
+# 0. 환경설정 -----
+library(janitor)
+library(tidyverse)
+
+# browseVignettes(package="janitor")
+
+# 1. 변수명 -----
+test_df <- as.data.frame(matrix(ncol = 6))
+names(test_df) <- c("hIgHlo", "REPEAT VALUE", "REPEAT VALUE", "% successful (2009)",  "abc@!*", "")
+
+test_df
+```
+
+  </div>
+  <div class = "col-md-6">
+
+**청수부 동원**
+
+``` {r data-janitor-preprocess-varname-new}
+# make.names
+
+test_df %>% 
+    clean_names()
+```
+
+
+  </div>
+</div>
+
+
+## 중복행(row) - 중복제거 {#data-janitor-preprocess-dedup}
+
+`get_dedups()` 함수로 중복되는 행을 빠를게 찾아내서 검출할 수 있다.
+
+``` {r data-janitor-preprocess-dedup}
+# 2. 중복행(row): dedup rows -----
+mtcars %>% 
+    get_dupes(wt, cyl)
+```
+
+## 표 {#data-janitor-preprocess-table}
+
+범주형 데이터를 살펴보기 위해서 표를 많이 사용한다. 
+하지만, `table()` 함수로 데이터를 살펴보면 난감하기 그지없다.
+
+``` {r data-janitor-preprocess-table}
+# 3. 표 데이터 -----
+table(mtcars$gear, mtcars$cyl)
+```
+
+이를 타계하기 위해서 `tabyl()` 함수를 사용하고 다양한 꾸미기 동사를 동원해서 
+표를 생성시킬 수 있다. 행중심과 열중심으로 데이터프레임을 표형식 데이터프레임으로 변환시킨다.
+
+<div class = "row">
+  <div class = "col-md-6">
+
+**열중심 표**
+
+``` {r data-janitor-preprocess-table-col}
+mtcars %>%
+    tabyl(gear, cyl) %>%
+    adorn_totals("col") %>%
+    adorn_percentages("row") %>%
+    adorn_pct_formatting(digits = 2) %>%
+    adorn_ns() %>% 
+    DT::datatable(rownames = FALSE)
+```
+
+  </div>
+  <div class = "col-md-6">
+
+**행중심 표**
+
+``` {r data-janitor-preprocess-table-row}
+mtcars %>%
+    tabyl(gear, cyl) %>%
+    adorn_totals("row") %>%
+    adorn_percentages("col") %>%
+    adorn_pct_formatting(digits = 2) %>%
+    adorn_ns() %>% 
+    DT::datatable(rownames = FALSE)
+```
+
+
+  </div>
+</div>
+
+
+
+### 단변량 표 {#data-janitor-preprocess-table-univariate}
+
+앞서 맞보기한 `tabyl()` 함수를 단변량인 경우 파이프 연산자를 동원하여 빈도수와 비율을 계산한다.
+
+``` {r data-janitor-preprocess-table-univariate}
+## 3.1. 단변량 표 -----
+humans <- starwars %>%
+    filter(species == "Human")
+
+humans %>%
+    tabyl(eye_color) %>% 
+    adorn_totals("row") %>%
+    adorn_pct_formatting() %>% 
+    arrange(desc(n))
+```
+
+### 이변량 표 {#data-janitor-preprocess-table-biivariate}
+
+이변량인 경우도 앞서와 같은 방식으로 표작성도 가능하고 
+`knitr` 팩키지 `kable()` 함수로 바로 뽑아 꾸미는 것도 가능하다.
+
+``` {r data-janitor-preprocess-table-bivariate, as.is=TRUE}
+## 3.2. 두변량 표 -----
+humans %>%
+    tabyl(eye_color, gender) %>% 
+    adorn_percentages("row") %>%
+    adorn_pct_formatting(rounding = "half up", digits = 0) %>%
+    adorn_ns() %>%
+    adorn_title("combined", row_name = "눈색상", col_name = "성별") %>%
+    knitr::kable()
+```
