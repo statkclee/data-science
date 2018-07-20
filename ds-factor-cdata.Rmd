@@ -210,7 +210,9 @@ gss_cat %>%
     geom_bar()
 ```
 
-## 범주형 변수 필수기능 두가지 {#ds-factor-gss-absolute-two}
+## 범주형 변수 필수기능 두가지 [^r-for-journalism] {#ds-factor-gss-absolute-two}
+
+[^r-for-journalism]: [R FOR JOURNALISTS](https://learn.r-journalism.com/)
 
 요인과 관련되어 가장 많이 사용하는 기능은 다음과 같다.
 
@@ -262,6 +264,24 @@ relig %>%
     geom_point()
 ```
 
+종교별 TV 시청시간에 대한 실제품으로 사용으로 될 수 있도록 마무리를 해보자.
+이를 위해서 `geom_segment()` 함수를 활용하여 직선을 추가한다.
+그리고 기타 색상과 점크기를 조정하고 x축과 y축에 대한 라벨과 제목을 추가한다.
+
+``` {r factor-gss-reorder-levels-polishing}
+ggplot(relig, aes(tvhours, fct_reorder(relig, tvhours))) +
+    geom_point(color="red", size=3.5, alpha=0.7) +
+    geom_segment(
+        aes(x = 0,
+            y=fct_reorder(relig, tvhours, desc=TRUE),
+            xend = tvhours,
+            yend = fct_reorder(relig, tvhours, desc=TRUE)),
+        color = "pink",
+        linetype = "dashed",
+        size = 1) +
+    theme_minimal(base_family = "NanumGothic") +
+    labs(x="TV 시청시간", y="종교", title="종교별 TV 시청시간")
+```
 
 ## 요인변수 내부 명칭 변경 {#ds-factor-recode}
 
