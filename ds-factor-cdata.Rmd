@@ -20,6 +20,68 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
 
 ```
 
+# 들어가며 - 캐글 설문 {#ds-factor-forcats-kaggle}
+
+[Kaggle ML and Data Science Survey, 2017](https://www.kaggle.com/kaggle/kaggle-survey-2017) 설문조사 데이터의 학습플랫폼 설문문항이
+전형적인 설문문항의 한 사례가 될 수 있다.
+
+데이터를 가져와서 특정 변수만 추출하고 `select(contains("LearningPlatformUsefulness"))`,
+폭넓은 자료형태(wide)를 긴 자료형태(long)로 변형시킨다.
+그리고 나서 `mutate_if()` 함수로 문자형자료형을 요인형자료형으로 변형시키고 나서 데이터를 정제시킨다.
+
+``` {r kaggle-case-forcats}
+# 0. 환경설정 -----
+library(tidyverse)
+library(extrafont)
+loadfonts()
+
+# 1. 데이터 -----
+
+kaggle_dat <- read_csv("https://raw.githubusercontent.com/bkaniskan/KaggleDSsurvey/master/data/multipleChoiceResponses.csv")
+
+## 1.1. 데이터 정제 -----
+kaggle_df <- kaggle_dat %>% 
+    select(contains("LearningPlatformUsefulness")) %>% 
+    gather(platform, value) %>% 
+    mutate_if(is.character, as.factor) %>% 
+    mutate(platform = str_remove(platform, "LearningPlatformUsefulness")) %>% 
+    filter(!is.na(value))
+```
+
+플랫폼별로 빈도수를 조사한 후에 요인형 변수를 수준(level) 조정을 하고 시각화가 깔끔하게 될 수 있도록 라벨명을 조정한다.
+
+``` {r kaggle-case-forcats-cleansing}
+## 1.2. 요인형 자료 -----
+kaggle_cat_df <- kaggle_df %>% 
+    group_by(platform) %>% 
+    count(value) %>% 
+    add_count(platform, wt=n) %>% 
+    mutate(pcnt = n / nn) %>% 
+    mutate(value = fct_relevel(value, "Not Useful", "Somewhat useful", "Very useful")) %>% 
+    mutate(value = case_when(
+        str_detect(value, "Somewhat") ~ "Somewhat",
+        str_detect(value, "Not") ~ "Not useful",
+        str_detect(value, "Very") ~ "Very useful"
+    ))
+```
+
+작은 창에 각 학습플랫폼별로 내용일 잘 나타날 수 있도록 시각화한다.
+
+``` {r kaggle-case-forcats-viz, fig.width=12, fig.height=9}
+# 2. 탐색적 데이터 분석 -----
+## 2.1. 시각화 -----
+kaggle_cat_df %>% 
+    ggplot(aes(x=value, y=pcnt, group=platform)) +
+      geom_line() +
+      geom_point() +
+      facet_wrap(~platform)  +
+      theme_minimal(base_family = "NanumGothic") +
+      scale_y_continuous(labels = scales::percent) +
+      labs(x="", y="응답 비율", title="캐글 설문조사", 
+           subtitle = "학습 플랫폼별 유용성 설문",
+           caption = "자료출처: Kaggle ML and Data Science Survey, 2017(https://www.kaggle.com/kaggle/kaggle-survey-2017)")
+```
+
 
 # `forcats` 팩키지 [^forcats-pkg] {#ds-factor-forcats}
 
