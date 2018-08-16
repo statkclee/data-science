@@ -1,0 +1,47 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: 데이터 과학 교육
+output:
+  html_document: 
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+mainfont: NanumGothic
+---
+
+
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+# 최고의 데이터 과학 교육 {#data-science-education}
+
+과연 우리나라에서 좋은 데이터과학은 어떤 것일까에 대한 고민이 [한국 Tidyverse](https://www.facebook.com/groups/1404219106509417)에서 
+**"대중의 지혜(wisdom of the crowd)"**를 동원하여 풀어보고자 하네요.
+
+지금(`r Sys.Date()`)까지 논의된 사항을 정리하면 다음과 같습니다.
+네가지 강의유형이 있지만, 모든 강의가 공개되어 있고 유료로 진행되는 강의가 가장 좋은 데이터과학 교육과정으로 검토되고 있습니다. 
+
+- 유료강의로 모든 콘텐트가 공개된 데이터과학 교육과정 
+    - 유료강의로 콘텐트가 수강생에게만 공개되는 교육과정 (@나성호)
+    - 무료강의로 콘텐트가 수강생에게만 공개되는 교육과정
+    - 무료강의로 콘텐트가 모두에게 공개되는 교육과정
+    - 특정 강의에 준비된 분이 아니라, 일단 강의를 만들고 강사는 랜덤으로 지원받아 배정하는 방식도 있습니다. (@김경민)
+
+그외 @김정훈님이 언급하신 vicious circle도 있습니다.
+
+- 사업이 성사 된다 -> 누군가가 교육과정을 짠다. -> 각 파트별로 강사를 조립하여 모집한다. -> 각자 시간이 한정되어 얕은 수준의 이야기에서 끝이난다. -> 장시간 맛만 본다.
+
+# 우수 데이터 과학 교육 {#data-science-lecture}
+
+- [문건웅 교수님 Shiny 강의](https://github.com/cardiomoon/shinyLecture2)
+    + 강사님이 대학교수로 전문 교육인
+    + R전문가를 대상으로 R Meetup에서 무료 진행
+    + 라이브 코딩으로 3시간 동안 수강생에게 실도움이 되도록 강의를 진행
+- [김재광 교수님 유튜브 강의](https://www.youtube.com/channel/UC9K0bDBTcuzvQK72Tftn-VA)
+    + [Computer Age Statistical Inference](https://web.stanford.edu/~hastie/CASI/)를 한국말로 그것도 동영상으로 무료강의
