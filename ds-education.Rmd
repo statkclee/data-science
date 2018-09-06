@@ -19,6 +19,36 @@ source("tools/chunk-options.R")
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
+# 통계학 [^statistics] {#data-science-education-definition}
+
+[^statistics]: [김충락 부산대 통계학과 교수 한국통계학회장, "통계를 ‘권력의 시녀’로 만들려는 유혹"](https://news.joins.com/article/22939324)
+
+통계학은 영어로 ‘Statistics’인데 이는 국가(State)를 통치하는 데 필요한 학문이라는 어원을 갖고 있고, 통계학은 크게 세 단계로 정의된다.
+
+1. 자료를 수집 (sampling), 
+1. 자료를 분석 (analysis), 
+1. 이를 바탕으로 일반화된 결론을 끌어냄(generalization)
+
+“자료 그 자체에 충실하라(Let the data speak for  themselves)”는 말이 있다.
+과학적 성과의 입증이나 정부의 정책을 뒷받침하는 과정에서 자료나 통계가 조금이라도 왜곡되거나 조작되면 안 된다. 이를 흔히 우리는 **통계의 중립성**과 **독립성**이라 부른다. 
+
+과거 통계학이 경제학의 보조학문 정도로 사용됐으나 현재는 경제학·의학·생물학·공학·사회과학 등 여러 학문 분야에서 통계학적 기법을 빌어서 활용하고 있다. 국가 통계 담당 통계청의 역사는 다음과 같다.
+
+- 1948년: 공보처 통계국으로 시작
+- 1955년: 내무부 통계국
+- 1961년: 경제기획원 조사통계국
+- 1990년: 12월 통계청 
+
+# 데이터 과학 [^wiki-data-science] {#data-science-definition}
+
+[^wiki-data-science]: [Wikipedia, "Data Science"](https://en.wikipedia.org/wiki/Data_science)
+
+**데이터 과학(data science)**이란, 데이터 마이닝(Data Mining)과 유사하게 정형, 비정형 형태를 포함한 다양한 데이터로부터 지식과 인사이트를 추출하는데 과학적 방법론, 프로세스, 알고리즘, 시스템을 동원하는 융합분야다. 데이터 과학은 데이터를 통해 실제 현상을 이해하고 분석하는데 통계학, 데이터 분석, 기계학습과 연관된 방법론을 통합하는 개념으로 정의되기도 한다.
+
+데이터의 구체적인 내용이 아닌 서로 다른 성질의 내용이나 형식의 데이터에 공통으로 존재하는 성질, 또는 그것들을 다루기 위한 기술의 개발에 착안점을 둔다는 특징을 가진다.
+
+튜링상을 수상한 짐그레이(Jim Gray) 박사는 데이터 과학은 과학의 네번째 패러다임으로 정의하고 과학(경험, 이론, 계산, 그리고 이제 데이터)에 관한 모든 것이 바뀌고 있는데 이유는 정보기술과 데이터 범람(data deluge) 때문이라고 주장했다.
+
 # 최고의 데이터 과학 교육 {#data-science-education}
 
 과연 우리나라에서 좋은 데이터과학은 어떤 것일까에 대한 고민이 [한국 Tidyverse](https://www.facebook.com/groups/1404219106509417)에서 
