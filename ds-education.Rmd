@@ -49,6 +49,24 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 
 튜링상을 수상한 짐그레이(Jim Gray) 박사는 데이터 과학은 과학의 네번째 패러다임으로 정의하고 과학(경험, 이론, 계산, 그리고 이제 데이터)에 관한 모든 것이 바뀌고 있는데 이유는 정보기술과 데이터 범람(data deluge) 때문이라고 주장했다.
 
+## 데이터 과학의 불편한 진실 [^data-science-fun-fact] {#data-science-fact}
+
+[^data-science-fun-fact]: [Kamil Bartocha (lastminute.com), "The Inconvenient Truth About Data Science""](https://www.kdnuggets.com/2015/05/data-science-inconvenient-truth.html)
+
+[KDnuggets](https://www.kdnuggets.com/) 웹사이트에 올라오 데이터과학에 관한 불편한 진실을 김재광 교수님께서 번역하여 페이스북에 공유해 주셨습니다. 가슴이 아프지만, 실무를 해보신 분은 누구나 공감하실 듯 싶습니다. 하지만, 채용과정에서는 딥러닝, 인공지능, 기계학습에 대한 내용에 상당부분 할애하는 경우가 다반사입니다. 그런 이유인지 몰라도 신입직원에 대한 조기 퇴사율이 높은 이유를 설명하는데 도움이 될 듯 싶습니다.
+
+1. Data is never clean.(데이터는 절대 깨끗하지 않다)
+1. You will spend most of your time cleaning and preparing data.(당신은 분석의 대부분의 시간을 전처리 단계에서 보내게 될 것이다)
+1. 95% of tasks do not require deep learning (95% 일은 Deep Learning을 필요로 하지 않는다)
+1. In 90% of cases generalized linear regression will do the trick. (실제 분석의 90%는 GLM으로 해결된다 )
+1. Big Data is just a tool (빅 데이터는 단지 도구일 뿐이다)
+1. You should embrace the Bayesian approach (당신은 베이지안 접근을 포용해야 한다)
+1. No one cares how you did it. (사용자 입장에서는 네가 어떤 방법을 사용했는가는 중요하지 않다.) 
+1. Academia and business are two different worlds. (학계와 산업계는 서로 다른 세계이다)
+1. Presentation is key - be a master of Power Point (프리젠테이션이 핵심이다: PowerPoint 의 마스터가 되라)
+1. All models are false, but some are useful. (모든 모델은 틀렸다, 하지만 몇몇은 유용하다)
+1. There is no fully automated Data Science. You need to get your hands dirty (완전 자동화된 데이터 과학같은 것은 없다. 인간이 개입되어야 할 부분이 있다)
+
 # 최고의 데이터 과학 교육 {#data-science-education}
 
 과연 우리나라에서 좋은 데이터과학은 어떤 것일까에 대한 고민이 [한국 Tidyverse](https://www.facebook.com/groups/1404219106509417)에서 
