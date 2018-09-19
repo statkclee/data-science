@@ -4,11 +4,11 @@ title: 데이터 과학
 subtitle: 데이터 과학 교육
 output:
   html_document: 
-    theme: journal
     toc: yes
     toc_depth: 2
     toc_float: true
     highlight: tango
+    number_section: true
     code_folding: show
 mainfont: NanumGothic
 ---
@@ -51,7 +51,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 
 ## 데이터 과학의 불편한 진실 [^data-science-fun-fact] {#data-science-fact}
 
-[^data-science-fun-fact]: [Kamil Bartocha (lastminute.com), "The Inconvenient Truth About Data Science""](https://www.kdnuggets.com/2015/05/data-science-inconvenient-truth.html)
+[^data-science-fun-fact]: [Kamil Bartocha (lastminute.com), "The Inconvenient Truth About Data Science"](https://www.kdnuggets.com/2015/05/data-science-inconvenient-truth.html)
 
 [KDnuggets](https://www.kdnuggets.com/) 웹사이트에 올라오 데이터과학에 관한 불편한 진실을 김재광 교수님께서 번역하여 페이스북에 공유해 주셨습니다. 가슴이 아프지만, 실무를 해보신 분은 누구나 공감하실 듯 싶습니다. 하지만, 채용과정에서는 딥러닝, 인공지능, 기계학습에 대한 내용에 상당부분 할애하는 경우가 다반사입니다. 그런 이유인지 몰라도 신입직원에 대한 조기 퇴사율이 높은 이유를 설명하는데 도움이 될 듯 싶습니다.
 
@@ -66,6 +66,98 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 1. Presentation is key - be a master of Power Point (프리젠테이션이 핵심이다: PowerPoint 의 마스터가 되라)
 1. All models are false, but some are useful. (모든 모델은 틀렸다, 하지만 몇몇은 유용하다)
 1. There is no fully automated Data Science. You need to get your hands dirty (완전 자동화된 데이터 과학같은 것은 없다. 인간이 개입되어야 할 부분이 있다)
+
+## 데이터 과학업무 세분화 [^airbnb-data-science] {#data-science-specialization}
+
+[^airbnb-data-science]: [Elena Grewal(July 25, 2018), "One Data Science Job Doesn’t Fit All"](https://www.linkedin.com/pulse/one-data-science-job-doesnt-fit-all-elena-grewal/)
+
+데이터 과학(Data Science)는 2012년을 변곡점으로 해서 급격하게 관심도가 높아지고 있다. [Google Trends](https://trends.google.com/trends/explore?date=all&geo=US&q=data%20science)
+초창기 데이터 과학자가 데이터에 대한 수집, 분석, 모형개발, 추론, 제품/서비스 개발 및 운영을 모두 했다면 최근 2~3년 동안 업무의 분화가 가속화되어 일어나고 있다.
+
+<img src="fig/data-science-airbnb.png" alt="데이터 과학 에어비앤비" width="100%" />
+
+**분석(Analytics) 데이터 과학자**는 좋은 질문을 던질 수 있고, 탐색적 데이터 분석을 통해서 명확히 하는 재주가 있고, 대쉬보드와 시각화를 통해 데이터 분석을 자동화하고,
+추천 결과물로 비즈니스를 변화시킨다. **알고리즘(algorithm) 데이터 과학자**는 기계학습에 특기가 있는 사람에 적합하고 제품/서비스, 프로세스에 
+데이터를 녹여내서 비즈니스 가치를 창출한다. **추론(inference) 데이터 과학자**는 통계를 사용해서 의사결정을 향상시키고, 업무의 영향도를 측정하는데 주로 통계학자, 
+경제학자, 사화과학자에 적합하다.
+ 
+|  구분 |                                                         설명                                                 |
+|-------|--------------------------------------------------------------------------------------------------------------|
+| 기술  | - Analytics - Defines and monitors metrics, creates data narratives, and builds tools to drive decisions     |
+|       | - Algorithms - Builds and interprets algorithms that power data products                                     |
+|       | - Inference - Employs statistics to establish causal relationships                                           |
+|       | - Foundation - Demonstrates ownership and accountability for data quality and code (expected for all tracks) |
+|       |                                                                                                              |
+| 사업  | - Ownership - Able to drive projects to success, enables others, owns impact                                 |
+|       | - Influence - Communicates clearly, demonstrates teamwork, and builds relationships                          |
+|       | - Enrichment - Contributes to team-building through mentorship, culture, recruiting, and diversity efforts   |
+
+# R의 파이썬 대비 우수성 [^linkedin-r-python] {#data-science-education-r}
+
+[^linkedin-r-python]: [Alfonso R. Reyes, Chief Data Scientist at AEM Enersol (September 11, 2018), "For what things R programming language is better than Python?", LinkedIn](https://www.linkedin.com/pulse/what-things-r-programming-language-better-than-python-reyes/)
+
+저자는 10년이상 파이썬 응용프로그램을 작성했지만, 지금은 R을 사용하고 있다.
+R을 사용하진 2년이 지난 시점에서 파이썬 보다 R의 우수성에 대해서 10가지로 요약하고 있다.
+
+간략히 요약하면, R은 데이터 과학과 기계학습 프로젝트에 이례적인 도구라고 볼 수 있다.
+R로 개발할 때 생산성은 훨씬 더 크게 느껴진다. 하지만, R을 익숙하게 다루는데는 시간이 다소 소요되기 때문에
+시간에 대한 투자도 당근 고려되어야 한다. 특히, 파이썬이 근접할 수 없는 분야는 
+프로토타입을 개발할 때 재현성을 비롯한 상당한 매력과 장점이 있다. 파이썬은 다용도 언어로 데이터 과학 선택지로서 
+입지를 다져가고 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**한글 번역**
+
+1. R은 과학, 통계학, 수학, 공학에 집중한다. 따라서 과학과 공학에 R로 접근하는 것이 엄청 필요하다.
+1. 지원에 대해서는 세계적이다. 어디를 가나 StackOverflow, 포럼, 트위터, 링크트인, 팟캐스트 등을 쉽게 접할 수 있고,
+R 커뮤니티 자체가 매우 이타적이라 모두 기꺼이 도움을 주고 받고 해서 R 실력이 더 향상되도록 한다.
+1. 재현성(reproducibility)이 황우석 사태 이후 큰 주목을 받고 있다. 재현성을 구현하는데 팩키지가 이미 다수 개발되어 있고 진화를 거듭하고 있다.
+작업한 결과물은 팀뿐만 아니라, 외부에서도 재현되어야 하는데, 데이터 과학의 궁극의 목적으로 재현성을 최극단까지 도달할 수 있도록 R 커뮤니티가 노력을 경주하고 있다.
+1. 로마시절에 라틴어가 만인의 언어이고, 현재 영어가 전세계 공용어이듯이, R마크다운은 R에서 공용 의사소통언어로 자리 잡았다.
+R마크다운으로 보고서, 슬라이드, 학위논문, 논문, 책을 집필할 수 있다. R마크다운을 쥬피터 노트북과 비교하면 생산성이 1000:1 정도 될 것이다.
+하지만, 반대로 R을 학습하는데 상당한 시간을 투여해야 되는 것도 사실이다.
+1. 정말 빠른 배포. RStudio 회사 직원이 어떻게 하는지 모르겠지만, 어쨌든 제품을 단 1,2년만에 뚝딱 만들어 냈다.
+Shiny를 말하고 싶은데, 파이썬으로 몇주 몇달 걸리는 것과 비교하여 단지, 몇분, 몇시간이면 뚝딱 웹앱을 배포할 수 있다.
+다른 말로, 파이썬으로 개발한 것은 실무적으로 공유하기 힘들다(non-shareable). 
+1. 가장 단순하면서도 최상의 통합개발환경(IDE)가 발명되었다. RStudio는 매우 단순하지만, 동시에 개발에 확장이 가능한 개발환경을 제공하고 있다.
+처음에 믿을 수가 없겠지만, 작은 창 4개를 가지고 어마어마한 작업을 수행할 수 있다. 단순하지만 더 단순할 수 없도록 만들었다.
+1. 팩키지 품질관리. CRAN(the Comprehensive R Archive Network)에 팩키지를 올리려면 상당한 품질 기준을 만족해야 된다.
+문서가 없는 팩키지는 승인되지 않는데, 이런 점이 현재 R을 만들었다. 현시점 기준 13,000개가 넘는 팩키지가 있는데 갯수가 중요한 것이 아니라,
+R을 강하고 확장가능하게 만든 것은 문서의 품질이라고 본다.
+1. 확장성(extendable). 팩키지 품질관리로 통해서 품질 좋은 팩키지가 만들어져서 이후 만들어지는 팩키지는 이런 토대위에 제작되어 더 좋은 팩키지로 거듭남.
+누가 가장 혜택을 볼 수 있을까? 바로 사용자.
+1. 고품질 그래프. `matplotlib`에 관해 무엇을 언급하든, Base 그래프, 그래프 문법 ggplot2 그래프에는 근접하지 못한다.
+Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래프는 뭐든지 맨땅에서부터 작성해야 했다. 
+반대로 R은 ggplot2를 비롯한 방대한 기능을 아직도 모두 소진해본적은 없는듯 싶다.
+물론, 그래프에 대해 지켜야할 몇가지 기본 규칙이 부수적으로 따라온다: 다중 y축을 사용하지 말고, 원그래프는 피하고, 
+3D 그래프를 과사용하지 말고, 특별한 이유가 없다면 맨 처음부터 그래프 작성을 시작한다.
+1. 함수(function) 중심. 파이썬과 R을 기본적으로 다르게 만드는 것 중 하나다.
+클래스는 파아썬에서 남용에 가깝게 사용되곤 한다. 때로는 특별한 이유도 없다.
+클래스와 객체형 프로그래밍을 배우려고 한다면, 파이썬을 추천한다. 세상에서 가장 배우기 쉬운 것 중 하나다.
+이런 관점에 반대하여 R 세상은 다르다; 함수가 R세상에서는 첫째 시민(first class citizen)이다. 
+다른 언어와 달리 R에서 클래스는 함수 아래서 동작한다. S3와 S4는 자바와 파이썬 클래스와는 근본적으로 다르게 동작한다; 가장 가까운 친적이 R6가 될 듯 싶다.
+
+
+  </div>
+  <div class = "col-md-6">
+**영어 원문**
+
+1. Its focus in science, statistics, mathematics and engineering. It is intense to the point that it is required from you to apply scientific rigor on the work you do in R.
+1. The support is best in class. Wherever you go: StackOverflow, forums, Twitter, LinkedIn. Everyone is willing to help and make you better at R. Very altruistic spirit in the R community.
+1. Reproducibility receives great focus. A good number of packages have evolved around this. The concept, again, comes from the scientific rigor, that in essence, any work you do, has to be able to be reproduced by anyone in your team, or from the outside world. The community go to extremes to make reproducibility the king and master of data science.
+1. Universal text editing platform. Rmarkdown is the lingua franca in R. Everything that you write can be made in Rmarkdown: reports, slides, thesis, papers, books, literate programming, etc. No rock has been unturned with Rmarkdown. If you compare Rmarkdown with Jupyter notebooks, Rmarkdown will give you a yield of 1000:1. However, you have to invest a pretty good portion of time in learning R.
+1. Fast deployment. I don’t know how they do it but the people in RStudio made a product, probably, in couple of years, that takes your breath away. I am talking about Shiny. You can web deploy an app in few minutes to hours, compared to Python, weeks to months, or never. In other words, what you develop in Python, is practically, non-shareable.
+1. One of the simplest and best IDE ever invented. Again, RStudio makes the grade for coming out with this simple, and at the same time, ever-expanding platform for development. At first sight, it fools you. Difficult to believe that with four panes you can do so much stuff. Made simple but not simpler.
+1. Package quality control. CRAN (the Comprehensive R Archive Network) has a high bar if you want to publish a package. They will not allow a package that doesn’t come with full documentation. And that what makes R what it is. Yes, there are more than 11,000 packages in CRAN but that is not the point. I think it is the quality of the documentation of the functions what makes R so strong and expandable.
+1. Extendable. This is a consequence of the point above. Many, many high quality packages have been built over the solid foundation of existing libraries. And the packages offspring give birth to even better packages. And who is to to benefit? The users.
+1. Publishing quality graphics. Say what you want about matplotlib but it will never be that close to the base graphics or R; or ggplot2, for that matter. I used matplotlib quite a lot but everything that is non-standard has to be created from scratch. On the side of R, I haven't been able yet to exhaust what seems to be an infinite pool of graphics functions of base-graphics and ggplot2 and its offspring. Takes your breath away. Of course, this comes with a set of basic rules on plotting: cannot use multiple y-axis; avoid pie-charts and bars; don't abuse of 3D, or avoid it at all; start plots at zero unless you have a good reason; and couple more.
+1. Function centric. This is one of the things that makes R so different than Python. Classes have been used to an abuse in Python, and sometime with no reason. Probably, because of the way Python's idea was sold. Still, if you want to learn classes and Object Oriented Programming, I would recommend doing it with Python; easiest in the world. Opposing this view, the world in R is different: the function is a first class citizen in the R world. You may not want to believe this but there are at least four class frameworks in R: S3, S4, R6, RC. There are more but these four comes quickly in my mind. The difference with other languages (I have used classes in Java and Python), is that in R the class works underneath the function. S3 and S4 work radically different than Java and Python classes; the closest relative would be R6.
+
+  </div>
+</div>
+
+
 
 # 최고의 데이터 과학 교육 {#data-science-education}
 
@@ -93,3 +185,9 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
     + 라이브 코딩으로 3시간 동안 수강생에게 실도움이 되도록 강의를 진행
 - [김재광 교수님 유튜브 강의](https://www.youtube.com/channel/UC9K0bDBTcuzvQK72Tftn-VA)
     + [Computer Age Statistical Inference](https://web.stanford.edu/~hastie/CASI/)를 한국말로 그것도 동영상으로 무료강의
+- [소프트웨어/데이터 카펜트리(Software/Data Carpentry)](http://statkclee.github.io/swcarpentry-version-5-3-new/)
+    + 과학 컴퓨팅(Scientific Computing)에 대한 기본기 교육
+    + 수십년에 걸쳐 전세계 검증된 교육과정
+    + [Software Carpentry](https://software-carpentry.org/)
+
+
