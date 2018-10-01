@@ -4,25 +4,29 @@ title: 데이터 과학
 subtitle: 결측데이터
 output:
   html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+    lib_dir: gapminder
+editor_options: 
+  chunk_output_type: console
 ---
 
 
 ```{r, include=FALSE}
-source("tools/chunk-options.R")
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = TRUE, fig.align = 'center')
+
+library(here)
+
 ```
 
-> ## 학습 목표 {.objectives}
->
-> * 결측데이터, 무응답의 연관성을 파악한다.
-> * 결측데이터를 이해하고 결측데이터 툴체인을 구축한다.
-> * 결측데이터 처리 전략을 이해한다.
-> * 결측데이터 전략에 따른 성능향상을 확인한다.
 
-## 1. 미국대선 여론조사 [^presidential-election] [^why-trump]
+# 미국대선 여론조사 [^presidential-election] [^why-trump] {#president-election}
 
 [^why-trump]: [미국 대선 - 트럼프 대이변은 어떻게 일어났는가](http://ilyo.co.kr/?ac=article_view&entry_id=213504)
 
@@ -43,18 +47,116 @@ source("tools/chunk-options.R")
     - 2016년 미국 대선에서 `non-ignorable nonresponse` 문제를 해결하지 못해 예측에 실패함.
     - 인공지능 인도 벤처기업 제니크.ai(Genic.ai) 인공지능 모그IA(MogIA)는 빅데이터 분석을 통해 10월부터 트럼프 승리 예측
 
-> ### 결측값 구분 {.callout}
->
-> - **MCAR(Missing Completely At Random)**: 모든 정보가 데이터에 담겨있어 결측값이 문제가 되지 않는 경우.
-> - **MNAR(: )missing not at random)**: 결측값이 무작위가 아니라서 주도면밀한 추가 조사가 필요한 경우. 
-> 데이터 생성과정을 이해하고 각 단계별로 왜 데이터에 누락이 발생했는지 따진다. 예를 들어, 미국 대선에서 왜 일부 유권자가 
-> 설문조사에 응답을 거부했는지 파악하고, 설문 항목에 문제가 없는지, 설문 문항에 불명확한 점이 있는지 다각도로 조사한다.
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
 
-## 2. 결측데이터 
+**결측값 구분** [^missing-type]
+
+[^missing-type]: [Zakarie A Hashi(July 29, 2018), "Difference between MAR , MCAR and MNAR missing data"](https://www.linkedin.com/pulse/difference-between-mar-mcar-mnar-missing-data-zakarie-a-hashi/)
+
+- **MCAR(Missing Completely At Random)**: 모든 정보가 데이터에 담겨있어 결측값이 문제가 되지 않는 경우.
+- **MAR(Missing At Random)**: 더 이해하기 쉬운 명칭은 Missing Conditionally at Random으로 결측조건이 다른 변수에 따라 조건부로 발생되는 경우. 결측값이 관측된 데이터가 아닌 관측되지 않는 데이터에 따라 결정.
+    - 예를 들어, 남성이 여성보다 더 솔찍하게 나이, 몸무게 등을 밝힐 듯 싶다.
+- **MNAR(Missing Not At Random)**: 결측값이 무작위가 아니라서 주도면밀한 추가 조사가 필요한 경우. 
+    - 예를 들어, 작업장에서 결측된 사람들 대부분은 아마도 몸이 아파 조사에서 결측되고, 교육수준이 낮은 사람이 교육조사에 결측될 듯 싶다.
+
+데이터 생성과정을 이해하고 각 단계별로 왜 데이터에 누락이 발생했는지 따진다. 예를 들어, 미국 대선에서 왜 일부 유권자가 
+설문조사에 응답을 거부했는지 파악하고, 설문 항목에 문제가 없는지, 설문 문항에 불명확한 점이 있는지 다각도로 조사한다.
+</div>
+
+# R에서 `NA`  {#missing-data-na}
+
+결측값은 기록되어야만 하지만 기록되지 않는 값을 의미한다. `NA`는 `**N**ot **A**vailable`의 약자다.
+[`naniar` 팩키지](https://github.com/njtierney/naniar)는 요인형 자료형 처리를 위해 개발된
+`forcats`와 유사하게 `NA` 결측값 데이터 처리를 위해 개발된 팩키지로 자리잡고 있다.
+
+## 결측값 파악 {#missing-data-na-identify}
+
+먼저 특정 벡터에 결측값이 있는지 여부는 `any_na` 함수로 파악하고, 해당 벡터의 원소가 
+결측값인지는 `are_na` 함수로 파악한다.
+
+그리고 `n_miss()`, `prop_miss()` 함수로 결측갯수와 결측비율도 산출이 가능하다.
+
+
+<div class = "row">
+  <div class = "col-md-6">
+**NA 파악**
+
+```{r r-lang-missing}
+library(naniar)
+missing_v <- c(7, NA, 17, NA, NA, 25, 36, NA, NA, 100)
+
+any_na(missing_v)
+
+are_na(missing_v)
+```
+
+
+  </div>
+  <div class = "col-md-6">
+
+**NA 갯수와 비율**
+
+```{r r-lang-missing-count}
+n_miss(missing_v)
+
+prop_miss(missing_v)
+
+```
+
+  </div>
+</div>
+
+
+## 결측값 연산 {#missing-data-na-operation}
 
 컴퓨터 과학에서 일반적으로 결측값(missing value)은 존재하지 않는 값(null)으로 컴퓨터에서 표현된다. 하지만 
 데이터 과학에서는 결측값이 무응답 혹은 단순히 자리만 차지하는 `NA`, $\frac {0}{0}$을 표현하는 `NaN` (Not a Number), 
-무한을 표현하는 `inf`가 있다. 결측데이터를 처리하기 전에 결측데이터를 처리하는 프로세스는 다음과 같다.
+무한을 표현하는 `inf`가 있다. 
+
+R에 `NA`와 같이 미리 예약된 예약어가 몇개 있다. `NaN`, `NULL`, `Inf`가 대표적인다.
+
+- `NULL`: 값이 없다로 즉, 값이 존재하지 않는다는 의미로 사용
+- `NaN`: Not a Number로 $\frac{0}{0}$처럼 수학적으로 정의가 되지않는다는 의미.
+- `Inf`: Infinite의 약자로 무한대를 의미하는데, 수학적으로 $\frac{10}{0}$은 무한대가 된다.
+
+`NaN`, `NULL`, `Inf` 각각이 결측값(NA)인지 살펴보자.
+`any_na(NULL)`은 TRUE로 결측값이 되고, 나머지는 결측값이 아니다.
+결측값의 정의에서 기록되어야 하지만 기록되지 않은 값이 결측값이기 때문에 정의에 맞춰 잘 계산됨이 확인된다.
+
+```{r na-nan-null-inf}
+any_na(NaN)
+
+any_na(NULL)
+
+any_na(Inf)
+```
+
+다음으로 R에서 특별히 정의된 예약어에 대해 연산을 수행하면 어떤 값이 되는지 확인해 보자.
+
+`NA`에 TRUE/FALSE를 적용하면 TRUE/FALSE에 따라 값이 달라지고, `NA`와 `NaN`를 연산하면 연산순서에 따라 결과가 달라진다.
+
+```{r na-nan-null-inf-ops}
+NA | TRUE
+
+FALSE | NA
+
+NA + NaN
+
+NaN + NA
+```
+
+
+# 결측값 식별과 현황파악 [^missing-value-treatment] [^identify-missing-value] {#identify-missing-values}
+
+
+[^missing-value-treatment]: [R-bloggers: Missing Value Treatment](https://www.r-bloggers.com/missing-value-treatment/)
+[^identify-missing-value]: [Imputing Missing Data with R; MICE package](http://datascienceplus.com/imputing-missing-data-with-r-mice-package/)
+
+
+결측데이터를 처리하기 전에 결측데이터를 처리하는 프로세스는 다음과 같다.
 
 1. 결측값을 식별한다. 원본데이터에서 다양한 형태로 결측정보가 표현되어 있으니 우선 현황 파악이 먼저다.
 1. 파악된 현황정보를 바탕으로 결측값을 컴퓨터가 처리가능한 형태로 부호화한다.
@@ -62,55 +164,94 @@ source("tools/chunk-options.R")
 
 <img src="fig/ds-missing-value-strategy.png" alt="결측값 대체 프로세스" width="97%" />
 
-## 2. 결측값 식별과 현황파악 [^missing-value-treatment] [^identify-missing-value]
-
-[^missing-value-treatment]: [R-bloggers: Missing Value Treatment](https://www.r-bloggers.com/missing-value-treatment/)
-[^identify-missing-value]: [Imputing Missing Data with R; MICE package](http://datascienceplus.com/imputing-missing-data-with-r-mice-package/)
+## 결측데이터 생성 {#identify-missing-values-dataset}
 
 `mlbench` 보스톤 주택가격 데이터셋을 기본으로 결측값 관련 학습 내용에 대한 실습을 진행한다.
+이를 위해서 연속형 변수 "ptratio"에 30개 `NA` 결측값을 주입하고, 범주형 변수 "rad"에 50개 `NA` 결측값를 주입한다.
 
-``` {r boston-housing-na, warnings=FALSE}
+``` {r boston-housing-na}
 ## 실습데이터
-# install.packages("mlbench")
-suppressWarnings(suppressMessages(library(mlbench)))
-suppressWarnings(suppressMessages(library(dplyr)))
+
+library(mlbench)
+library(tidyverse)
 data("BostonHousing")
+
 # 원데이터를 나중에 복구하기 위해 잠시 `original` 데이터프레임으로 저장
 original <- BostonHousing
+
 # "ptratio 연속형, "rad"범주형 
-BostonHousing[sample(1:nrow(BostonHousing), 40), "ptratio"] <- NA
-BostonHousing[sample(1:nrow(BostonHousing), 40), "rad"] <- NA
+BostonHousing[sample(1:nrow(BostonHousing), 30), "ptratio"] <- NA
+BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
 ```
 
-연속형 변수 "ptratio"에 40개 `NA` 결측값을 주입했고,  
-범주형 변수 "rad"에 40개 `NA` 결측값을 주입했다.
 
-### 2.1. 결측값 현황 파악
+## 결측값 현황 파악 {#boston-house-missing-data-count}
 
-`apply` 계열 함수를 사용해서 변수별, 관측점별 결측값이 얼마나 포함되어 있는지 파악한다.
+결측값 현황 파악을 위해서 변수기준으로 결측값이 얼마나 되는지 파악하는 것과, 관측점 기준으로 얼마나 결측값이
+발생되었는지 파악하는 두가지 경우가 있다.
+
+먼저, `apply` 계열 함수를 사용해서 변수별, 관측점별 결측값이 얼마나 포함되어 있는지 파악한다.
 `check_missing_value()` 함수를 활용하여 변수별, 관측점별 결측값 백분율을 계산한다.
 만약 5%이상 관측점 혹은 변수에 결측값이 포함되어 있으면 변수를 버리거나 혹은 관측점을 제거하는 전략을 택할 수도 있다.
 
-``` {r boston-housing-check-5-pcnt, warnings=FALSE}
+다음으로 `naniar` 팩키지에 내장된 함수를 사용하는 방법이 있다.
+
+- 전반적인 결측값 현황 파악
+    - `n_miss()`
+    - `n_complete()`
+- 변수와 관측점별 결측값 파악
+    - `miss_var_summary()`
+    - `miss_case_summary()`
+- 변수와 관측점 교차표
+    - `miss_var_table()`
+    - `miss_case_table()`
+- 시계열
+    - `miss_var_span()`
+    - `miss_var_run()`
+    
+<div class = "row">
+  <div class = "col-md-6">
+**`apply` 계열함수 사용**
+
+``` {r boston-housing-check-5-pcnt}
 check_missing_value <- function(x){sum(is.na(x))/length(x)*100}
 apply(BostonHousing, 2, check_missing_value)
 apply(BostonHousing, 1, check_missing_value) %>% head(20)
 ```
 
-### 2.2. `mice`, `VIM` 팩키지
+  </div>
+  <div class = "col-md-6">
+**`naniar` 팩키지 함수**
+
+``` {r boston-housing-naniar-descriptive}
+n_miss(BostonHousing)
+n_complete(BostonHousing)
+
+miss_var_summary(BostonHousing)
+miss_case_summary(BostonHousing)
+```
+  </div>
+</div>
+
+
+## 결측값 시각화 {#missing-value-visualization-birds-eye-view}
+
+데이터프레임 행과 열에 걸쳐 분포되어 있는 결측값 현황을 새의 눈 관점(birds eye view)으로 살펴보자.
+
+### `mice`, `VIM` 팩키지 {#missing-value-visualization}
 
 `mice` 팩키지를 사용해서 `md.pattern` 함수를 사용해서 "ptratio" 변수에 40개 주입한 `NA` 결측값을 확인해본다.
 
-``` {r boston-housing-mice-md, warnings=FALSE}
-suppressWarnings(suppressMessages(library(mice)))
+``` {r boston-housing-mice-md}
+library(mice)
 md.pattern(BostonHousing)
 ````
 
 혹은 `VIM` 팩키지를 활용하여 결측값을 시각화하는 것도 좋다. 결측값은 빨강색(`red`)로 설정하여 
 각변수별로 결측값에 대한 현황을 파악하기 쉽게 도식화했다.
 
-``` {r boston-housing-vim, warnings=FALSE}
-suppressWarnings(suppressMessages(library(VIM)))
+``` {r boston-housing-vim}
+library(VIM)
 aggr_plot <- aggr(BostonHousing, col=c('gray','red'), numbers=TRUE, 
 	sortVars=TRUE, labels=names(BostonHousing), cex.axis=.7, gap=3, ylab=c("Histogram of missing data", "Pattern"))
 
@@ -119,7 +260,103 @@ marginplot(BostonHousing[, c('ptratio','medv')])
 
 `marginplot(BostonHousing[, c('ptratio','medv')])` 그래프를 통해 변수 2개만 가능하지만, 결측값이 포함된 경우와 결측값이 없는 경우를 비교해 볼 수도 있다.
 
-## 3. 결측값 처리 전략 
+### `naniar` 팩키지 {#missing-value-visualization-naniar}
+
+`naniar` 팩키지 `viz_miss()` 함수로 데이터프레임 전체에 대한 시각화가 가능합니다.
+`cluster=TRUE` 선택옵션을 지정하면 전반적인 현황을 한눈에 파악할 수 있다.
+
+``` {r boston-housing-mice-naniar}
+bh_orig_v <- vis_miss(BostonHousing)
+bh_cluster_v <- vis_miss(BostonHousing, cluster=TRUE)
+
+cowplot::plot_grid(bh_orig_v, bh_cluster_v)
+```
+
+`naniar` 팩키지 `gg_miss_var()`, `gg_miss_case()` 함수를 사용하면 변수별, 관측점별로 
+결측값에 대한 정보를 더 자세히 파악할 수 있다.
+
+``` {r boston-housing-mice-naniar-var-case}
+bh_var_v  <- gg_miss_var(BostonHousing)
+bh_case_v <- gg_miss_case(BostonHousing, show_pct = FALSE) + labs(y="결측 건수")
+
+cowplot::plot_grid(bh_var_v, bh_case_v)
+```
+
+`facet`을 지정하여 범주형 변수 수준별로 결측변수별 결측값을 파악하는 것도 가능하다.
+
+``` {r boston-housing-mice-naniar-var-case-facet}
+gg_miss_var(BostonHousing, facet = chas)
+```
+
+`gg_miss_upset()` 함수를 통해 변수와 관측점간 결측값도 동시에 시각화를 할 수 있다.
+
+``` {r boston-housing-mice-naniar-var-case-upset}
+gg_miss_upset(BostonHousing)
+```
+
+그외에도 `gg_miss_fct()`, `gg_miss_span()` 함수로 범주형 변수와 시계열 변수들에 대한 결측값도 시각화를 할 수 있다.
+
+# 결측값 처리 {#missing-value-impute}
+
+결측값을 지정하여 이를 처리할 경우 먼저 결측값을 지정해야 한다. 그리고 나서 
+결측값을 `NA` 채워넣는다.
+
+## 결측값 지정 {#missing-value-impute-tag}
+
+난잡한 데이터프레임을 하나 만들고 나서, 특정값 예를 들어 `-99`를 결측값으로 지정한 경우 
+`-99` 결측값이 포함된 변수가 어떤 것이며 결측값이 몇개나 되는지 파악하는 것이 `miss_scan_count()` 함수를 통해 가능하다.
+두가지 이상 지정하는 것도 가능한데 `search = list("-99", "-98")`와 같이 저정하면 다수 결측값 패턴을 명시할 수 있다.
+
+
+```{r missing-value-impute}
+miss_df <- tribble(~alpha,  ~beta  , ~gamma,
+              -99  ,  "E"    ,    97,
+              4    ,  "missing",  95,
+              -99  ,  "na"     ,  92,
+              7    ,  "n/a"    ,  -98,
+              10   ,  "missing",  "",
+              3    ,  "N/A"   ,   -99,
+              12   ,  "."     ,   88,
+              16   ,  "."     ,   "",
+              9    ,  "N/a"   ,   86)
+
+
+miss_df %>% 
+    miss_scan_count(search = list("-99", "-98"))
+```
+
+## 결측값 채워넣기 {#missing-value-impute-fill}
+
+결측값 채워넣을 때 `dplyr` 팩키지 변수 선택과 유사하게 다양한 방식으로 `NA`로 채워넣을 있다.
+
+`replace_with_na()`: 특정변수 값을 지정하여 결측값으로 채워넣기
+`replace_with_na_all()`: 모든 변수 특정 조건을 만족하는 값을 결측값으로 채워넣기
+`replace_with_na_at()`: 변수 일부만 골라 특정 조건을 만족하는 값을 결측값으로 채워넣기
+`replace_with_na_if()`: 특정 조건을 만족하는 변수만 골라 특정 조건을 만족하는 값을 결측값으로 채워넣기
+
+`-99`, `-98`, `"N/a"` 값을 결측값으로 지정해서 `replace_with_na_all()` 함수로 모든 변수에 대해 결측값으로 채워넣는다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**결측값 채워 넣기 전**
+
+```{r missing-value-impute-fill-original}
+miss_df
+```
+
+  </div>
+  <div class = "col-md-6">
+**결측값 채워 넣은 후**
+
+```{r missing-value-impute-fill}
+miss_df %>% 
+    replace_with_na_all(condition = ~.x %in% c(-99, -98, "N/a"))
+```
+
+  </div>
+</div>
+
+# 결측값 처리 사례 - 옛날 방식 {#missing-value-impute-fill-old-way}
 
 결측값 처리 전략은 다음과 같은 4가지 전략이 존재한다.
 
@@ -131,10 +368,10 @@ marginplot(BostonHousing[, c('ptratio','medv')])
 3. 평균/중위수/최빈값으로 대체(impute)
     - 결측값을 변수가 연속형 숫자형인 경우 평균/중위수로 대체하고, 범주형 요인형인 경우 최빈값으로 대체한다.
 
-``` {r boston-housing-impute, warnings=FALSE}
-suppressWarnings(suppressMessages(library(Hmisc)))
-suppressWarnings(suppressMessages(library(DMwR)))
-suppressWarnings(suppressMessages(library(dplyr)))
+``` {r boston-housing-impute-old-way}
+library(Hmisc)
+library(DMwR)
+library(dplyr)
 impute(BostonHousing$ptratio, mean) %>% head # 평균으로 대체
 impute(BostonHousing$ptratio, median) %>% head  # 중위수로 대체
 impute(BostonHousing$ptratio, 20) %>% head  # 특정 값으로 대체
@@ -163,7 +400,7 @@ regr.eval(actuals, predicteds)
 - 먼저, `rpart`를 사용하는 경우 연속형 변수, 범주형 변수 모두 의사결정나무 모형을 순차적으로 적합시킨다.
 
 ``` {r boston-housing-impute-rpart, warnings=FALSE}
-suppressWarnings(suppressMessages(library(rpart)))
+library(rpart)
 data(BostonHousing)
 BostonHousing[sample(1:nrow(BostonHousing), 40), "ptratio"] <- NA
 BostonHousing[sample(1:nrow(BostonHousing), 40), "rad"] <- NA
@@ -177,7 +414,7 @@ ptratio_pred <- predict(anova_mod, BostonHousing[is.na(BostonHousing$ptratio), ]
 - `mice`를 사용하는 경우: `mice()` 함수를 사용해서 먼저 모형을 생성시키고 나서, `complete()` 함수를 사용해서 결측값을 채워넣는 2단계 과정을 거침.
 
 ``` {r boston-housing-impute-mice, warnings=FALSE}
-suppressWarnings(suppressMessages(library(mice)))
+library(mice)
 data(BostonHousing)
 BostonHousing[sample(1:nrow(BostonHousing), 40), "ptratio"] <- NA
 miceMod <- mice(BostonHousing[, !names(BostonHousing) %in% "medv"], method="rf")  # 확률숲(random forest) 모형으로 결측모형 생성.
@@ -185,9 +422,8 @@ miceOutput <- complete(miceMod)  # 생성된 데이터를 채워 넣음.
 anyNA(miceOutput)    
 ```
 
-## 4. 결측값 처리 방법에 따른 성능 평가
 
-### 4.1. 결측값 처리 방법에 따른 성능 평가 -- 연속형 변수 `ptratio`
+## 성능 평가 -- 연속형 변수 `ptratio` {#boston-housing-performance-old-way-continuous}
 
 다양한 결측값 처리 방법에 따른 성능 차이를 비교하는 것이 왜 고급 결측값 처리 방법을 활용해야 하는 근거도 된다.
 
@@ -198,7 +434,7 @@ anyNA(miceOutput)
 
 [^mape]: Mean absolute percentage error, 평균절대 백분율 오차. $\mbox{M} = \frac{100}{n}\sum_{t=1}^n  \left|\frac{A_t-F_t}{A_t}\right|$
 
-``` {r boston-housing-impute-perf-mean, warnings=FALSE}
+``` {r boston-housing-impute-perf-mean}
 data(BostonHousing)
 original <- BostonHousing
 BostonHousing[sample(1:nrow(BostonHousing), 50), "ptratio"] <- NA
@@ -238,7 +474,7 @@ ptratio_rf_pred <- mice_output[is.na(BostonHousing$ptratio), "ptratio"]
 regr.eval(actuals, ptratio_rf_pred)
 ```
 
-### 4.2. 결측값 처리 방법에 따른 성능 평가 -- 범주형 변수 `rad`
+## 성능 평가 -- 범주형 변수 `rad` {#boston-housing-performance-old-way-categorical}
 
 범주형 변수의 경우, 다양한 결측값 처리 방법에 따른 성능의 차이를 비교해보자.
 "rad" 변수는 연속형 변수로 506개 변수중 50개 즉 10%를 결측값, `NA`로 치환한다.
@@ -246,7 +482,7 @@ regr.eval(actuals, ptratio_rf_pred)
 먼저, `names(sort(-table(BostonHousing$rad)))[1]` 명령어를 통해 최빈값을 파악한다.
 그리고 이를 결측값에 꽂아 넣는다. 
 
-``` {r boston-housing-impute-perf-mode, warnings=FALSE}
+``` {r boston-housing-impute-perf-mode}
 data(BostonHousing)
 original <- BostonHousing
 BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
@@ -259,7 +495,7 @@ mean(actuals_rad != rad_mode_pred)
 
 두번째로 `rpart` 의사결정나무 모형을 활용하여 결측값을 채워넣는다. 
 
-``` {r boston-housing-impute-perf-rpart2, warnings=FALSE}
+``` {r boston-housing-impute-perf-rpart2}
 data(BostonHousing)
 original <- BostonHousing
 BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
@@ -276,7 +512,7 @@ mean(actuals_rad != rad_rpart_pred)
 
 마지막으로 `mice` 확률숲 `rf` 모형을 사용해서 결측값을 채워넣는다. 
 
-``` {r boston-housing-impute-perf-mice2, warnings=FALSE}
+``` {r boston-housing-impute-perf-mice2}
 data(BostonHousing)
 original <- BostonHousing
 BostonHousing[sample(1:nrow(BostonHousing), 50), "rad"] <- NA
@@ -289,3 +525,50 @@ actuals_rad <- original$rad[is.na(BostonHousing$rad)]
 rad_rf_pred <- mice_output[is.na(BostonHousing$rad), "rad"]
 mean(actuals_rad != rad_rf_pred)
 ```
+
+# 명시적, 묵시적 결측값 {#missing-implicit-explicit}
+
+결측값이 명시적으로 나타난 경우와 암묵적으로 나타난 경우로 나눌 수 있다.
+명시적, 묵시적 결측값 처리를 위한 사례로 `tetris_df` 데이터프레임을 생각해보자.
+광춘, 성호, 충현이 테트리스 게임을 모두 했는데, 데이터에 보면 성호만 저녁에 게임을 한 기록이 누락된 것이 파악된다. 이런 경우 데이터는 모두 완전한 데이터지만, 묵시적인 결측값이 포함된 경우다.
+
+`spread()` 함수로 긴형태 데이터프레임을 넓은 형태 데이터프레임으로 변환시키게 되면 결측값이 확인히 나타나게 된다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**묵시적 결측값 사례**
+
+```{r missing-explicit-implicit}
+tetris_df <- tribble (
+    ~name,    ~time,     ~game_score,
+    "광춘",  "morning",   358,
+    "광춘",  "afternoon", 534,
+    "광춘",  "evening",   100,
+    "성호",  "morning",   139,
+    "성호",  "afternoon", 177,
+    "충현",  "morning",   963,
+    "충현",  "afternoon", 962,
+    "충현",  "evening",   929)
+
+tetris_df
+```
+
+  </div>
+  <div class = "col-md-6">
+**명시적으로 결측값 보이게 하기**
+
+```{r missing-explicit-implicit-view}
+tetris_df %>% 
+    spread(time, game_score)
+```
+
+  </div>
+</div>
+
+이와 같은 결측값을 채워넣는 경우 `tidyr::complete()` 함수가 제격이다.
+
+```{r tetris-na-complete-fix}
+tetris_df %>%
+    tidyr::complete(name, time)
+```
+
