@@ -11,6 +11,8 @@ output:
     number_section: true
     code_folding: show
 mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -191,3 +193,75 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
     + [Software Carpentry](https://software-carpentry.org/)
 
 
+# 구글 추세로 본 데이터 과학 {#data-science-google-trends}
+
+구글 추세로 본 미국과 한국의 차이점을 데이터를 통해서 살펴보자.
+
+## 국가코드 추출 {#data-science-google-trends-countries}
+
+대한민국을 추출하기 위해서 `gtrendsR` 팩키지에서 담고 있는 국가코드를 추출한다.
+이를 바탕으로 미국과 대한민국 `geo`가 각각 `KR`, `US`를 파악한다.
+
+```{r google-trends-with-keywords}
+library(tidyverse)
+library(gtrendsR)
+
+data("countries")
+
+countries %>% 
+  filter(str_detect(name, "KOREA|UNITED"))
+```
+
+## 구글 추세 데이터 {#data-science-google-trends-countries-dataset}
+
+구글 추세 데이터를 추출하는데 지역을 미국으로 한정하고 검색어를 "big data", "data science", "machine learning", "deep learning"으로 놓고 데이터를 추출하여 
+`us_df`에 저장한다.
+동일한 방식으로 지역을 한국으로 한정하고 4차 산업혁명시대 검색어를 동일하게 "빅데이터", "데이터 과학", "기계 학습", "딥러닝"으로 놓고 `kr_df`로 저장한다.
+시간은 "2010"년부터 최근까지 시간으로 삼는다.
+
+```{r google-trends-with-keywords-plot, eval=FALSE}
+# 미국
+us_df <- gtrends(c("big data", "data science", "machine learning", "deep learning"), geo = c("US"), time="2010-01-01 2018-10-09", hl = "en-US")
+
+# 대한민국
+Sys.setlocale("LC_ALL", "C")
+kr_df <- gtrends(c("빅데이터", "데이터 과학", "기계 학습", "딥러닝"), geo = c("KR"), time="2010-01-01 2018-10-09", hl = "ko-KR")
+Sys.setlocale("LC_ALL", "Korean")
+
+# us_df %>% write_rds("data/us_df.rds")
+# kr_df %>% write_rds("data/kr_df.rds")
+```
+
+## 구글 추세 비교 {#data-science-google-trends-countries-viz}
+
+구글 추세 데이터를 다운로드 받아 이를 `ggplot`으로 시각화한다.
+2017년을 기준으로 빅데이터에 대한 검색어보다 기계학습과 데이터과학에 대한 인기도가 급상승하는 것으로 나타나고 있다.
+가능한 해석은 미국 사회는 데이터 축적을 넘어 데이터과학, 기계학습, 딥러닝을 통해 가치를 창출하는 단계로 넘어간 것으로 파악된다.
+
+```{r google-trends-comparison-us}
+library(extrafont)
+loadfonts()
+us_df <- read_rds("data/us_df.rds")
+kr_df <- read_rds("data/kr_df.rds")
+
+us_df$interest_over_time %>% tbl_df %>% 
+  mutate(hits = as.integer(hits)) %>% 
+  ggplot(aes(x=date, y=hits, color=keyword)) +
+    geom_line() +
+    labs(x="", y="구글 인기도", color="구글 검색어", title="미국 4차 산업혁명 구글 추세") +
+    theme_minimal(base_family = "NanumGothic") +
+    theme(legend.position = "top")
+
+```
+
+대한민국은 상대적으로 빅데이터와 딥러닝이 인기를 얻어가고 기계학습과 데이터과학은 거의 회자되지 않는 것으로 나타난다.
+
+```{r google-trends-comparison-kr}
+kr_df$interest_over_time %>% tbl_df %>% 
+  mutate(hits = as.integer(hits)) %>% 
+  ggplot(aes(x=date, y=hits, color=keyword)) +
+    geom_line() +
+    labs(x="", y="구글 인기도", color="구글 검색어", title="대한민국 4차 산업혁명 구글 추세") +
+    theme_minimal(base_family = "NanumGothic") +
+    theme(legend.position = "top")
+```
