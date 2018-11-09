@@ -1,4 +1,3 @@
-
 README.html
 LAYOUT.html
 FAQ.html
@@ -14,3 +13,4 @@ s3_website.yml
 data/portal_mammals.sqlite
 .Rhistory
 config.yml
+.httr-oauth

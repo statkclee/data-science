@@ -1,0 +1,95 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "소프트웨어 카펜트리 워크샵 - googlesheets"
+output:
+  html_document: 
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+
+``` {r, include=FALSE}
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+```
+
+# 스프레드시트 작업흐름도 {#googlesheets-workflow}
+
+구글 스프레드 시트(google sheets)와 같은 "스프레드 시트"로부터 데이터를 작업할 경우 다수 사용자가 공동으로 데이터 작업을 수행하고 이를 [`googlesheets`](https://github.com/jennybc/googlesheets) 팩키지를 사용하여 인증 및 접속을 하여 데이터를 R로 가져와서 추가적인 작업을 수행하게 된다.
+
+<img src="fig/googlesheets-swcarpentry.png" alt="소프트웨어 카펜트리" width="100%" />
+
+소프트웨어 카펜트리가 2015년부터 여러해에 걸쳐 다수 워크샵이 진행되다보니 인원관리에 대한 필요성이 제기되어 각 회차별 소프트웨어 카펜트리 데이터를 정제하고 각종 통계 작업을 할 필요성이 발생했습니다.
+
+
+# 소프트웨어 카펜트리 데이터 {#googlesheets-workflow-data}
+
+먼저, 구글쉬트의 인증과정을 거치고 해당 스프레드 쉬트를 특정하여 구글에서 가져온다.
+
+```{r swcarpentry-data}
+library(tidyverse)
+library(googlesheets)
+
+gs_auth(new_user = TRUE)
+
+swc_gs <- gs_key("1tZT9s3D1eS7s265DF7_Va8iP0mJxlu-a41EnxvKxWP8")
+
+```
+
+# 소프트웨어 카펜트리 명부 정리 {#googlesheets-workflow-data-clean}
+
+구글 스프레드 쉬트 내부에 시트를 뽑아내서 각각의 데이터프레임으로 변환하고 통계작업을 위해서 하나의 데이터프레임으로 정리한다.
+
+```{r google-swcarpentry}
+## 워크샵 -----
+swc_gs_01_sheet <- gs_read(swc_gs, ws="1차") %>% 
+  mutate_if(is.logical, as.character)
+swc_gs_02_sheet <- gs_read(swc_gs, ws="2차") %>% 
+  mutate_if(is.logical, as.character)
+swc_gs_03_sheet <- gs_read(swc_gs, ws="3차") %>% 
+  mutate_if(is.logical, as.character)
+swc_gs_04_sheet <- gs_read(swc_gs, ws="4차") %>% 
+  mutate_if(is.logical, as.character)
+swc_gs_05_sheet <- gs_read(swc_gs, ws="5차") %>% 
+  mutate_if(is.logical, as.character)
+
+# swc_gs_05_waiting <- gs_read(swc_gs, ws="waiting") %>% 
+# mutate_if(is.logical, as.character)
+
+swc_df <- bind_rows(swc_gs_01_sheet, swc_gs_02_sheet) %>% 
+  bind_rows(swc_gs_03_sheet) %>% 
+  bind_rows(swc_gs_04_sheet) %>% 
+  bind_rows(swc_gs_05_sheet)
+
+```
+
+
+# SW 카펜트리 명부 정리  {#googlesheets-workflow-data-clean-eda}
+
+`swc_df` 데이터프레임으로 각종 통계작업과 시각화 작업을 수행한다.
+
+```{r swcarpentry-eda}
+swc_df %>% 
+  group_by(행사, 구분) %>% 
+  summarise(complete = n()) %>% 
+  spread(구분, complete, fill=0) %>% 
+  DT::datatable()
+```
+
+
+```{r swcarpentry-eda-viz}
+swc_df %>% 
+  count(구분, 행사) %>% 
+  ggplot(aes(x=행사,y=n, fill=구분)) +
+    geom_col()
+```

@@ -25,6 +25,7 @@ title: 데이터 과학
         - [들어가며](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/01-intro.html)
         - [데이터 추출](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/02-extract.html)
         - [데이터베이스에 데이터 저장](http://statkclee.github.io/capstone-novice-spreadsheet-biblio/03-db.html)
+        - [소프트웨어 카펜트리 워크샵 - googlesheets](ds-googlesheets.html)
 1. [측도와 R 자료구조](ds-data-structure.html)
     - **자료구조**
         - [날짜/시간 데이터](https://statkclee.github.io/finance/): **`2018-06-23`일부터 금융, 시계열로 이동**
