@@ -23,7 +23,9 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
 
 ```
 
-# 스프레드시트 작업흐름도 {#googlesheets-workflow}
+# 스프레드시트 작업흐름도 [^ds-plus-googlesheets] {#googlesheets-workflow}
+
+[^ds-plus-googlesheets]: [Rob Grant(2017-12), "How to Use googlesheets to Connect R to Google Sheets"](https://datascienceplus.com/how-to-use-googlesheets-to-connect-r-to-google-sheets/)
 
 구글 스프레드 시트(google sheets)와 같은 "스프레드 시트"로부터 데이터를 작업할 경우 다수 사용자가 공동으로 데이터 작업을 수행하고 이를 [`googlesheets`](https://github.com/jennybc/googlesheets) 팩키지를 사용하여 인증 및 접속을 하여 데이터를 R로 가져와서 추가적인 작업을 수행하게 된다.
 
