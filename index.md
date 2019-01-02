@@ -58,7 +58,7 @@ title: 데이터 과학
         - [RStudio 개발환경(IDE)과 단축키](rstudio.html)
         - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
         - [한글처리 가능한 RStudio 개발환경](toolchain-shiny-rstudio.html)        
-    - **[빅데이터 - 스파크(Spark)](https://statkclee.github.io/bigdata/)
+    - [빅데이터 - 스파크(Spark)](https://statkclee.github.io/bigdata/)
     - [도커(Docker) 기초](toolchain-docker-basic.html)
         - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
         - [데이터 과학 도커 - R](toolchain-docker-r.html)  
