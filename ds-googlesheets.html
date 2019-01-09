@@ -10,6 +10,7 @@
 
 
 
+<meta name="date" content="2019-01-09" />
 
 <title>데이터 과학</title>
 
@@ -2197,7 +2198,8 @@ DTWidget.formatCurrency = function(thiz, row, data, col, currency, digits, inter
 DTWidget.formatString = function(thiz, row, data, col, prefix, suffix) {
   var d = data[col];
   if (d === null) return;
-  $(thiz.api().cell(row, col).node()).html(prefix + d + suffix);
+  var cell = $(thiz.api().cell(row, col).node());
+  cell.html(prefix + cell.html() + suffix);
 };
 
 DTWidget.formatPercentage = function(thiz, row, data, col, digits, interval, mark, decMark) {
@@ -2226,7 +2228,7 @@ DTWidget.formatDate = function(thiz, row, data, col, method, params) {
   // (new Date('2015-10-28')).toDateString() may return 2015-10-27 because the
   // actual time created could be like 'Tue Oct 27 2015 19:00:00 GMT-0500 (CDT)',
   // i.e. the date-only string is treated as UTC time instead of local time
-  if (method === 'toDateString' && /^\d{4,}\D\d{2}\D\d{2}$/.test(d)) {
+  if ((method === 'toDateString' || method === 'toLocaleDateString') && /^\d{4,}\D\d{2}\D\d{2}$/.test(d)) {
     d = d.split(/\D/);
     d = new Date(d[0], d[1] - 1, d[2]);
   } else {
@@ -2335,6 +2337,9 @@ HTMLWidgets.widget({
     if (data.class) $table.addClass(data.class);
     if (data.caption) $table.prepend(data.caption);
 
+    if (!data.selection) data.selection = {
+      mode: 'none', selected: null, target: 'row'
+    };
     if (HTMLWidgets.shinyMode && data.selection.mode !== 'none' &&
         data.selection.target === 'row+column') {
       if ($table.children('tfoot').length === 0) {
@@ -2425,7 +2430,16 @@ HTMLWidgets.widget({
       options.ajax.dataSrc = function(json) {
         DT_rows_all = $.makeArray(json.DT_rows_all);
         DT_rows_current = $.makeArray(json.DT_rows_current);
-        return json.data;
+        var data = json.data;
+        if (!colReorderEnabled()) return data;
+        var table = $table.DataTable(), order = table.colReorder.order(), flag = true, i, j, row;
+        for (i = 0; i < order.length; ++i) if (order[i] !== i) flag = false;
+        if (flag) return data;
+        for (i = 0; i < data.length; ++i) {
+          row = data[i].slice();
+          for (j = 0; j < order.length; ++j) data[i][j] = row[order[j]];
+        }
+        return data;
       };
     }
 
@@ -2433,7 +2447,11 @@ HTMLWidgets.widget({
     if (instance.fillContainer) $table.on('init.dt', function(e) {
       thiz.fillAvailableHeight(el, $(el).innerHeight());
     });
-
+    // If the page contains serveral datatables and one of which enables colReorder,
+    // the table.colReorder.order() function will exist but throws error when called.
+    // So it seems like the only way to know if colReorder is enabled or not is to
+    // check the options.
+    var colReorderEnabled = function() { return "colReorder" in options; };
     var table = $table.DataTable(options);
     $el.data('datatable', table);
 
@@ -2488,7 +2506,15 @@ HTMLWidgets.widget({
         }
 
         if (e.sender !== instance.ctselectHandle && e.value && e.value.length) {
-          $table[0].ctselect = keysToMatches(e.value);
+          var matches = keysToMatches(e.value);
+
+          // persistent selection with plotly (& leaflet)
+          var ctOpts = crosstalk.var("plotlyCrosstalkOpts").get() || {};
+          if (ctOpts.persistent === true) {
+            var matches = $.extend(matches, $table[0].ctselect);
+          }
+
+          $table[0].ctselect = matches;
           table.draw();
         } else {
           if ($table[0].ctselect) {
@@ -2587,9 +2613,7 @@ HTMLWidgets.widget({
             }
           });
           if (searchCol) filter[0].selectize.setValue(JSON.parse(searchCol));
-          // an ugly hack to deal with shiny: for some reason, the onBlur event
-          // of selectize does not work in shiny
-          $x.find('div > div.selectize-input > input').on('blur', function() {
+          filter[0].selectize.on('blur', function() {
             $x.hide().trigger('hide'); $input.parent().show(); $input.trigger('blur');
           });
           filter.next('div').css('margin-bottom', 'auto');
@@ -2680,11 +2704,13 @@ HTMLWidgets.widget({
               filter.val(v);
             }
           });
-          var formatDate = function(d) {
+          var formatDate = function(d, isoFmt) {
             d = scaleBack(d, scale);
             if (type === 'number') return d;
             if (type === 'integer') return parseInt(d);
             var x = new Date(+d);
+            var fmt = ('filterDateFmt' in data) ? data.filterDateFmt[i] : undefined;
+            if (fmt !== undefined && isoFmt === false) return x[fmt.method].apply(x, fmt.params);
             if (type === 'date') {
               var pad0 = function(x) {
                 return ('0' + x).substr(-2, 2);
@@ -2721,7 +2747,10 @@ HTMLWidgets.widget({
             }
             r1  = t1; r2 = t2;
           })();
-          $span1.text(formatDate(r1)); $span2.text(formatDate(r2));
+          var updateSliderText = function(v1, v2) {
+            $span1.text(formatDate(v1, false)); $span2.text(formatDate(v2, false));
+          };
+          updateSliderText(r1, r2);
           var updateSlider = function(e) {
             var val = filter.val();
             // turn off filter if in full range
@@ -2733,7 +2762,7 @@ HTMLWidgets.widget({
             } else {
               $input.attr('title', '').val('');
             }
-            $span1.text(v1); $span2.text(v2);
+            updateSliderText(val[0], val[1]);
             if (e.type === 'slide') return;  // no searching when sliding only
             if (server) {
               table.column(i).search($td.data('filter') ? ival : '').draw();
@@ -2768,22 +2797,29 @@ HTMLWidgets.widget({
           if (typeof filter === 'undefined' || !$td.data('filter')) return true;
 
           var r = filter.val(), v, r0, r1;
+          var i_data = function(i) {
+            if (!colReorderEnabled()) return i;
+            var order = table.colReorder.order(), k;
+            for (k = 0; k < order.length; ++k) if (order[k] === i) return k;
+            return i; // in theory it will never be here...
+          }
+          v = data[i_data(i)];
           if (type === 'number' || type === 'integer') {
-            v = parseFloat(data[i]);
+            v = parseFloat(v);
             // how to handle NaN? currently exclude these rows
             if (isNaN(v)) return(false);
             r0 = parseFloat(scaleBack(r[0], scale))
             r1 = parseFloat(scaleBack(r[1], scale));
             if (v >= r0 && v <= r1) return true;
           } else if (type === 'date' || type === 'time') {
-            v = new Date(data[i]);
+            v = new Date(v);
             r0 = new Date(r[0] / scale); r1 = new Date(r[1] / scale);
             if (v >= r0 && v <= r1) return true;
           } else if (type === 'factor') {
-            if (r.length === 0 || inArray(data[i], r)) return true;
+            if (r.length === 0 || inArray(v, r)) return true;
           } else if (type === 'logical') {
             if (r.length === 0) return true;
-            if (inArray(data[i] === '' ? 'na' : data[i], r)) return true;
+            if (inArray(v === '' ? 'na' : v, r)) return true;
           }
           return false;
         };
@@ -3059,7 +3095,7 @@ HTMLWidgets.widget({
         // server-side tables, we have to *real* row indices are in `selected1`
         if (server) table.on('draw.dt', selectRows);
         methods.selectRows = function(selected) {
-          selected1 = selected ? selected : [];
+          selected1 = $.makeArray(selected);
           selectRows();
           changeInput('rows_selected', selected1);
         }
@@ -3093,7 +3129,7 @@ HTMLWidgets.widget({
         selectCols();  // in case users have specified pre-selected columns
         if (server) table.on('draw.dt', selectCols);
         methods.selectColumns = function(selected) {
-          selected2 = selected ? selected : [];
+          selected2 = $.makeArray(selected);
           selectCols();
           changeInput('columns_selected', selected2);
         }
@@ -3234,6 +3270,20 @@ HTMLWidgets.widget({
         searchColumn(i, v);
       });
       table.draw();
+    }
+
+    methods.hideCols = function(hide, reset) {
+      if (reset) table.columns().visible(true, false);
+      table.columns(hide).visible(false);
+    }
+
+    methods.showCols = function(show, reset) {
+      if (reset) table.columns().visible(false, false);
+      table.columns(show).visible(true);
+    }
+
+    methods.colReorder = function(order, origOrder) {
+      table.colReorder.order(order, origOrder);
     }
 
     methods.selectPage = function(page) {
@@ -3513,10 +3563,10 @@ padding-right: inherit;
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -3529,13 +3579,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -3576,10 +3624,38 @@ code span.st { color: #4e9a06; } /* String */
 code span.va { color: #000000; } /* Variable */
 code span.vs { color: #4e9a06; } /* VerbatimString */
 code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-div.sourceCode {
-  overflow-x: visible;
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
 }
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -3642,6 +3718,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -3649,9 +3728,70 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -3664,7 +3804,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("show" === "show");
 });
 </script>
-
 
 
 
@@ -3779,6 +3918,9 @@ div.tocify {
 
 <h1 class="title toc-ignore">데이터 과학</h1>
 <h3 class="subtitle"><em>소프트웨어 카펜트리 워크샵 - googlesheets</em></h3>
+<h4 class="author"><em>xwMOOC</em></h4>
+<address class="author_afil">
+Tidyverse Korea<br><h4 class="date"><em>2019-01-09</em></h4>
 
 </div>
 
@@ -3797,46 +3939,47 @@ div.tocify {
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">gs_auth</span>(<span class="dt">new_user =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">swc_gs &lt;-<span class="st"> </span><span class="kw">gs_key</span>(<span class="st">&quot;1tZT9s3D1eS7s265DF7_Va8iP0mJxlu-a41EnxvKxWP8&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb1-6" data-line-number="6">meetup_gs &lt;-<span class="st"> </span><span class="kw">gs_key</span>(<span class="st">&quot;1tZT9s3D1eS7s265DF7_Va8iP0mJxlu-a41EnxvKxWP8&quot;</span>)</a></code></pre></div>
 </div>
 <div id="googlesheets-workflow-data-clean" class="section level1">
 <h1><span class="header-section-number">3</span> 소프트웨어 카펜트리 명부 정리</h1>
-<p>구글 스프레드 쉬트 내부에 시트를 뽑아내서 각각의 데이터프레임으로 변환하고 통계작업을 위해서 하나의 데이터프레임으로 정리한다.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">## 워크샵 -----</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">swc_gs_<span class="dv">01</span>_sheet &lt;-<span class="st"> </span><span class="kw">gs_read</span>(swc_gs, <span class="dt">ws=</span><span class="st">&quot;1차&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">swc_gs_<span class="dv">02</span>_sheet &lt;-<span class="st"> </span><span class="kw">gs_read</span>(swc_gs, <span class="dt">ws=</span><span class="st">&quot;2차&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">swc_gs_<span class="dv">03</span>_sheet &lt;-<span class="st"> </span><span class="kw">gs_read</span>(swc_gs, <span class="dt">ws=</span><span class="st">&quot;3차&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character)</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">swc_gs_<span class="dv">04</span>_sheet &lt;-<span class="st"> </span><span class="kw">gs_read</span>(swc_gs, <span class="dt">ws=</span><span class="st">&quot;4차&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character)</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">swc_gs_<span class="dv">05</span>_sheet &lt;-<span class="st"> </span><span class="kw">gs_read</span>(swc_gs, <span class="dt">ws=</span><span class="st">&quot;5차&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character)</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co"># swc_gs_05_waiting &lt;- gs_read(swc_gs, ws=&quot;waiting&quot;) %&gt;% </span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co"># mutate_if(is.logical, as.character)</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">swc_df &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(swc_gs_<span class="dv">01</span>_sheet, swc_gs_<span class="dv">02</span>_sheet) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="st">  </span><span class="kw">bind_rows</span>(swc_gs_<span class="dv">03</span>_sheet) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="st">  </span><span class="kw">bind_rows</span>(swc_gs_<span class="dv">04</span>_sheet) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="st">  </span><span class="kw">bind_rows</span>(swc_gs_<span class="dv">05</span>_sheet)</a></code></pre></div>
+<p>구글 스프레드 쉬트 내부에 시트를 뽑아내서 각각의 데이터프레임으로 변환하고 통계작업을 위해서 하나의 데이터프레임으로 정리한다. 소프트웨어 카펜트리와</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## 워크샵 -----</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">swc_gs &lt;-<span class="st"> </span><span class="kw">gs_read</span>(meetup_gs, <span class="dt">ws=</span><span class="st">&quot;SWC참석자&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character) </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">ds_gs &lt;-<span class="st"> </span><span class="kw">gs_read</span>(meetup_gs, <span class="dt">ws=</span><span class="st">&quot;DS참석자&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate_if</span>(is.logical, as.character)</a></code></pre></div>
 </div>
 <div id="googlesheets-workflow-data-clean-eda" class="section level1">
 <h1><span class="header-section-number">4</span> SW 카펜트리 명부 정리</h1>
-<p><code>swc_df</code> 데이터프레임으로 각종 통계작업과 시각화 작업을 수행한다.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">swc_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(행사, 구분) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<p><code>swc_gs</code> 데이터프레임으로 각종 통계작업과 시각화 작업을 수행한다. 우선 2015년부터 진행된 소프트웨어 카펜트리 워크샵 행사에 대한 수료와 미수료 정보를 바탕으로 표를 작성한다.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">swc_gs <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">행사</span><span class="st">`</span>, <span class="st">`</span><span class="dt">수료여부</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">complete =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">spread</span>(구분, complete, <span class="dt">fill=</span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">spread</span>(<span class="st">`</span><span class="dt">수료여부</span><span class="st">`</span>, complete, <span class="dt">fill=</span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>()</a></code></pre></div>
-<div id="htmlwidget-dfb5a5c34d341b765f81" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-dfb5a5c34d341b765f81">{"x":{"filter":"none","data":[["1","2","3","4","5"],["1차","2차","3차","4차","5차"],[0,5,0,0,3],[12,3,10,21,13]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>행사<\/th>\n      <th>미수료<\/th>\n      <th>수료<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">swc_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(구분, 행사) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>행사,<span class="dt">y=</span>n, <span class="dt">fill=</span>구분)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">    </span><span class="kw">geom_col</span>()</a></code></pre></div>
-<p><img src="data:image/png;base64,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" width="672" style="display: block; margin: auto;" /></p>
+<div id="htmlwidget-573af06d771911b2dad2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-573af06d771911b2dad2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8"],["1차","2018-10","2차","3차","4차","5차","영남대","판교"],[0,3,5,0,0,3,2,3],[12,12,3,10,21,13,10,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>행사<\/th>\n      <th>미수료<\/th>\n      <th>수료<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="googlesheets-workflow-data-clean-email" class="section level1">
+<h1><span class="header-section-number">5</span> SW 카펜트리 명부와 데이터 사이언스 밋업</h1>
+<p>소프트웨어 카펜트리 워크샵과 데이터 사이언스 밋업과 관련하여 전자우편 발표 목록을 작성한다. 즉, 중복된 전자우편 주소 및 정제를 목적으로 작업한다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">swc_email_gs &lt;-<span class="st"> </span>swc_gs <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="st">`</span><span class="dt">이름</span><span class="st">`</span>=<span class="st">`</span><span class="dt">국문이름</span><span class="st">`</span>, <span class="st">`</span><span class="dt">이메일</span><span class="st">`</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">ds_email_gs &lt;-<span class="st"> </span>ds_gs <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(<span class="st">`</span><span class="dt">이름</span><span class="st">`</span>, <span class="st">`</span><span class="dt">이메일</span><span class="st">`</span>)</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">swc_ds_df &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(swc_email_gs, ds_email_gs)</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="kw">dim</span>(swc_ds_df)</a></code></pre></div>
+<pre><code>[1] 134   2</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">unique</span>(swc_ds_df) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span>dim</a></code></pre></div>
+<pre><code>[1] 116   2</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># unique(swc_ds_df) %&gt;% </span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co"># pull(이메일) %&gt;% dput</span></a></code></pre></div>
 </div>
 <div class="footnotes">
 <hr />

@@ -2,6 +2,11 @@
 layout: page
 title: 데이터 과학
 subtitle: "소프트웨어 카펜트리 워크샵 - googlesheets"
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
 output:
   html_document: 
     toc: yes
@@ -44,54 +49,56 @@ library(googlesheets)
 
 gs_auth(new_user = TRUE)
 
-swc_gs <- gs_key("1tZT9s3D1eS7s265DF7_Va8iP0mJxlu-a41EnxvKxWP8")
+meetup_gs <- gs_key("1tZT9s3D1eS7s265DF7_Va8iP0mJxlu-a41EnxvKxWP8")
 
 ```
 
 # 소프트웨어 카펜트리 명부 정리 {#googlesheets-workflow-data-clean}
 
-구글 스프레드 쉬트 내부에 시트를 뽑아내서 각각의 데이터프레임으로 변환하고 통계작업을 위해서 하나의 데이터프레임으로 정리한다.
+구글 스프레드 쉬트 내부에 시트를 뽑아내서 각각의 데이터프레임으로 변환하고 통계작업을 위해서 하나의 데이터프레임으로 정리한다. 소프트웨어 카펜트리와 
 
 ```{r google-swcarpentry}
 ## 워크샵 -----
-swc_gs_01_sheet <- gs_read(swc_gs, ws="1차") %>% 
-  mutate_if(is.logical, as.character)
-swc_gs_02_sheet <- gs_read(swc_gs, ws="2차") %>% 
-  mutate_if(is.logical, as.character)
-swc_gs_03_sheet <- gs_read(swc_gs, ws="3차") %>% 
-  mutate_if(is.logical, as.character)
-swc_gs_04_sheet <- gs_read(swc_gs, ws="4차") %>% 
-  mutate_if(is.logical, as.character)
-swc_gs_05_sheet <- gs_read(swc_gs, ws="5차") %>% 
-  mutate_if(is.logical, as.character)
+swc_gs <- gs_read(meetup_gs, ws="SWC참석자") %>% 
+  mutate_if(is.logical, as.character) 
 
-# swc_gs_05_waiting <- gs_read(swc_gs, ws="waiting") %>% 
-# mutate_if(is.logical, as.character)
-
-swc_df <- bind_rows(swc_gs_01_sheet, swc_gs_02_sheet) %>% 
-  bind_rows(swc_gs_03_sheet) %>% 
-  bind_rows(swc_gs_04_sheet) %>% 
-  bind_rows(swc_gs_05_sheet)
-
+ds_gs <- gs_read(meetup_gs, ws="DS참석자") %>% 
+  mutate_if(is.logical, as.character)
 ```
 
 
 # SW 카펜트리 명부 정리  {#googlesheets-workflow-data-clean-eda}
 
-`swc_df` 데이터프레임으로 각종 통계작업과 시각화 작업을 수행한다.
+`swc_gs` 데이터프레임으로 각종 통계작업과 시각화 작업을 수행한다.
+우선 2015년부터 진행된 소프트웨어 카펜트리 워크샵 행사에 대한 수료와 미수료 정보를 바탕으로 표를 작성한다.
 
 ```{r swcarpentry-eda}
-swc_df %>% 
-  group_by(행사, 구분) %>% 
+swc_gs %>% 
+  group_by(`행사`, `수료여부`) %>% 
   summarise(complete = n()) %>% 
-  spread(구분, complete, fill=0) %>% 
+  spread(`수료여부`, complete, fill=0) %>% 
   DT::datatable()
 ```
 
+# SW 카펜트리 명부와 데이터 사이언스 밋업  {#googlesheets-workflow-data-clean-email}
 
-```{r swcarpentry-eda-viz}
-swc_df %>% 
-  count(구분, 행사) %>% 
-  ggplot(aes(x=행사,y=n, fill=구분)) +
-    geom_col()
+소프트웨어 카펜트리 워크샵과 데이터 사이언스 밋업과 관련하여 전자우편 발표 목록을 작성한다.
+즉, 중복된 전자우편 주소 및 정제를 목적으로 작업한다.
+
+```{r swcarpentry-eda-email}
+swc_email_gs <- swc_gs %>% 
+  select(`이름`=`국문이름`, `이메일`)
+
+ds_email_gs <- ds_gs %>% 
+  select(`이름`, `이메일`)
+
+swc_ds_df <- bind_rows(swc_email_gs, ds_email_gs)
+
+dim(swc_ds_df)
+
+unique(swc_ds_df) %>% 
+  dim
+
+# unique(swc_ds_df) %>% 
+# pull(이메일) %>% dput
 ```
