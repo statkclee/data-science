@@ -72,9 +72,6 @@ title: 데이터 과학
     - [CRAN 팩키지 제출](r-pkg-cran.html)
 1. **[다양한 데이터](https://statkclee.github.io/ingest-data/)**
     - [공간통계 - 지리정보](https://statkclee.github.io/spatial/)
-    - **R 눈을 달다**
-        - [pdf 파일 데이터 추출](ds-extract-text-from-pdf.html)
-        - [PDF 감옥에서 데이터를 탈출시키다.](ds-extract-text-from-pdf-survey.html)
     - [보안 - 패킷분석](ds-packet.html)
 1. [정렬(Sort)](data-handling-sorting.html) 
 
