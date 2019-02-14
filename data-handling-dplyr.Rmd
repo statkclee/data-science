@@ -1,27 +1,42 @@
 ---
 layout: page
-title: 데이터 과학
-subtitle: 데이터 변환(dplyr)
+title: 데이터 사이언스
+subtitle: "데이터 변환 -`dplyr`"
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
 ---
+ 
+``` {r, include=FALSE}
+# source("tools/chunk-options.R")
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(EDAWR)
+library(tidyverse)
+```
 
 
-```{r, include=FALSE}
-setwd("~/swc/data-science")
-#setwd("~/docs/data-science")
-source("tools/chunk-options.R")
-````
-
-> ## 학습 목표 [^wrangling-webinar] {.objectives}
->
-> * 데이터프레임과 동일하지만, `tbl`로 작업을 일원화한다. 
-> * 선행 작업 프로세스 `tidyr`을 받아 `dplyr`로 작업한다.
-> * `dplyr` 데이터 작업 동사 5개를 활용한다.
-> * 다수 데이터셋에 다양한 병합(join) 작업을 수행한다.
-
+# Hadley 데이터 처리 체계와 `dplyr` [^data-pliers] [^wrangling-webinar] {#hadly-dplyr-framework}
 
 [^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
 
-### 1. Hadley 데이터 처리 체계와 `dplyr` [^data-pliers]
+데이터프레임과 동일하지만, `tbl`로 작업을 일원화한다. 선행 작업으로 `tidyr`을 받아 `dplyr`로 작업한다.
+`dplyr` 데이터 작업 동사 5개를 활용한다. 단일 데이터프레임 `dplyr` 동사와 마찬가지로 
+두 데이터프레임에 대해서도 `join` 동사를 활용한다.
 
 [^data-pliers]: [Stupid Comics: Know your Pliers](http://www.misterkitty.org/extras/stupidcovers/stupidcomics507.html)
 
@@ -30,10 +45,18 @@ source("tools/chunk-options.R")
 정적 그래프(static graph)는 `ggplot`, 동적 그래프(dynamic graph)는 `ggvis`로 시각화하고 R의 다양한 모형화를 이용한 자료분석 체계도를 제안하였고, 
 `broom` 팩키지를 통해 R 모형에서 반환하는 결과값을 재활용한다.
 
-> ### `dplyr` 목표 {.callout}
->
-> 1. 데이터를 소프트웨어로 작업하기 적합하게 만든다.  
-> 2. 데이터를 쉽게 까볼 수 있게 한다.
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+**`dplyr` 목표**
+
+1. 데이터를 소프트웨어로 작업하기 적합하게 만든다.  
+1. 데이터를 쉽게 까볼 수 있게 한다.
+
+</div>
+
 
 <img src="fig/pliers-metaphor.png" alt="dplyr 비유" width="77%" />
 
@@ -50,80 +73,125 @@ source("tools/chunk-options.R")
 [^tidytext-pkg]: [Tidy Text Mining with R](http://tidytextmining.com/)
 
 
-### 2. `tidyr` 예제 데이터셋
- 
+# `dplyr`, `tidyr` 예제 데이터셋 {#dplyr-dataset}
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+`tidyr`, `dplyr` 팩키지로 자유로이 데이터를 다루는 방법에 대하여 `EDAWR` 팩키지에 포함된 데이터셋을 활용하여 살펴본다.
+
+``` {r tidy-dataset}
 # install.packages("devtools")
 # devtools::install_github("rstudio/EDAWR")
+library(tidyverse)
 library(EDAWR)
-?storms
-?pollution
-?cases 
-?tb
-library(tidyr)
+# ? cases
+# ?storms
+# ?pollution
+# ?tb
 ```
 
+# 사람 혹은 기계 중심 - `gather`, `spread`  {#dplyr-from-wide-to-long}
 
-> #### 깔끔한 데이터 - 결핵  {.challenge}
-> 
-> 결핵(Tuberculosis, tb) 데이터를 깔끔한 데이터로 변형한다.
->
-> **변경전 (Wide 형식, 사람 중심)**
->
-> | country | 2011  | 2012   | 2013  |
-> |---------|-------|--------|-------|
-> | FR      | 7000  | 6900   | 7000  |
-> | DE      | 5800  | 6000   | 6200  |
-> | US      | 15000 | 14000  | 13000 |
->
-> **변경후 (Long 형식, 기계 중심)** 
->
-> | country | year | n     |
-> |---------|------|-------|
-> |      FR | 2011 | 7000  |
-> |      DE | 2011 | 5800  |
-> |      US | 2011 | 15000 |
-> |      FR | 2012 | 6900  |
-> |      DE | 2012 | 6000  |
-> |      US | 2012 | 14000 |
-> |      FR | 2013 | 7000  |
-> |      DE | 2013 | 6200  |
-> |      US | 2013 | 13000 |
+## Wide 형식 &rarr; Long 형식 데이터 [^tidyexplain] {#dplyr-from-wide-to-long}
 
+[^tidyexplain]: [Animations of tidyverse verbs using R, the tidyverse, and gganimate](https://github.com/gadenbuie/tidyexplain)
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+먼저 `cases` 데이터프레임, 즉 사람이 읽기 좋은 형태로 표현된 데이터를
+기계가 처리하기 유익한 형태인 Long 형식으로 변환시킨다.
+
+<div class = "row">
+  <div class = "col-md-6">
+
+**변경전 (Wide 형식, 사람 중심)**
+
+| country | 2011  | 2012   | 2013  |
+|---------|-------|--------|-------|
+| FR      | 7000  | 6900   | 7000  |
+| DE      | 5800  | 6000   | 6200  |
+| US      | 15000 | 14000  | 13000 |
+
+  </div>
+  <div class = "col-md-6">
+
+**변경후 (Long 형식, 기계 중심)** 
+
+| country | year | n     |
+|---------|------|-------|
+|      FR | 2011 | 7000  |
+|      DE | 2011 | 5800  |
+|      US | 2011 | 15000 |
+|      FR | 2012 | 6900  |
+|      DE | 2012 | 6000  |
+|      US | 2012 | 14000 |
+|      FR | 2013 | 7000  |
+|      DE | 2013 | 6200  |
+|      US | 2013 | 13000 |
+
+  </div>
+</div>
+
+``` {r tb-gather}
+DT::datatable(cases)
+
 gather(cases, "year", "n", 2:4)
 ```
 
+## Long 형식 데이터 &rarr; Wide 형식 {#dplyr-from-long-to-wide}
 
-> #### 깔끔한 데이터 - 환경오염 {.challenge}
-> 
-> 환경오염(pollution) 데이터를 깔끔한 데이터로 변형한다.
->
-> **변경후 (Long 형식, 기계 중심)** 
->
-> |     city |  size | amount |
-> |----------|-------|--------|
-> | New York | large |     23 |
-> | New York | small |     14 |
-> |   London | large |     22 |
-> |   London | small |     16 |
-> |  Beijing | large |    121 |
-> |  Beijing | small |     56 |
-> 
-> **변경전 (Wide 형식, 사람 중심)**
->
-> 
-> |     city | large | small |
-> |----------|-------|--------|
-> |  Beijing |   121 |    56 |
-> |   London |    22 |    16 |
-> | New York |    23 |    14 |
+기계처리에 적합한 Long 형식 데이터프레임 환경오염(pollution) 데이터를 
+사람이 보기 편안한 Wide 형식 깔끔한 데이터로 변형한다.
+
+<div class = "row">
+  <div class = "col-md-6">
+
+**변경후 (Long 형식, 기계 중심)** 
+
+|     city |  size | amount |
+|----------|-------|--------|
+| New York | large |     23 |
+| New York | small |     14 |
+|   London | large |     22 |
+|   London | small |     16 |
+|  Beijing | large |    121 |
+|  Beijing | small |     56 |
+
+</div>
+<div class = "col-md-6">
+
+**변경전 (Wide 형식, 사람 중심)**
+
+|     city | large | small |
+|----------|-------|--------|
+|  Beijing |   121 |    56 |
+|   London |    22 |    16 |
+| New York |    23 |    14 |
+
+  </div>
+</div>
+
 
 ``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+DT::datatable(pollution)
 spread(pollution, size, amount)
 ```
+
+
+``` {r tb-gather-animation, eval=FALSE}
+source("R/tidyr_spread_gather.R")
+tidy_plots <- list()
+tidy_plots$wide <- bind_rows(sg_wide, sg_wide_labels)
+tidy_plots$long <- bind_rows(sg_long, sg_long_labels)
+tidy_plots <- map(tidy_plots, ~ mutate(., 
+  .text_color = ifelse(grepl("id|key|val", value), "black", "white"),
+  .text_size  = ifelse(grepl("id|key|val", value), 6, 10)
+)) %>% 
+  imap(~ plot_data(.x, .y))
+tidy_plots$wide <- tidy_plots$wide + ylim(-6.5, 0.5)
+save_static_plot(cowplot::plot_grid(plotlist = tidy_plots, axis = "t"), "original-dfs-tidy")
+```
+
+<img src="images/tidyr-spread-gather.gif" alt="Spread-Gather 예제" width="100%" />
+
+# `separate`, `unite` 동사  {#dplyr-separate-unite}
+
 
 > #### 깔끔한 데이터 - 태풍 허리케인 {.challenge}
 > 
