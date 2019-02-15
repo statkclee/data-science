@@ -90,7 +90,9 @@ library(EDAWR)
 
 # 사람 혹은 기계 중심 - `gather`, `spread`  {#dplyr-from-wide-to-long}
 
-## Wide 형식 &rarr; Long 형식 데이터 [^tidyexplain] {#dplyr-from-wide-to-long}
+## Wide 형식 &rarr; Long 형식 데이터 [^tidyexplain] [^omni-spread]   {#dplyr-from-wide-to-long}
+
+[^omni-spread]: [Omni Analytics Group, "Animating Data Transformations"](https://omnianalytics.io/2018/08/30/animating-the-data-transformation-process-with-gganimate/)
 
 [^tidyexplain]: [Animations of tidyverse verbs using R, the tidyverse, and gganimate](https://github.com/gadenbuie/tidyexplain)
 
@@ -174,61 +176,55 @@ spread(pollution, size, amount)
 ```
 
 
-``` {r tb-gather-animation, eval=FALSE}
-source("R/tidyr_spread_gather.R")
-tidy_plots <- list()
-tidy_plots$wide <- bind_rows(sg_wide, sg_wide_labels)
-tidy_plots$long <- bind_rows(sg_long, sg_long_labels)
-tidy_plots <- map(tidy_plots, ~ mutate(., 
-  .text_color = ifelse(grepl("id|key|val", value), "black", "white"),
-  .text_size  = ifelse(grepl("id|key|val", value), 6, 10)
-)) %>% 
-  imap(~ plot_data(.x, .y))
-tidy_plots$wide <- tidy_plots$wide + ylim(-6.5, 0.5)
-save_static_plot(cowplot::plot_grid(plotlist = tidy_plots, axis = "t"), "original-dfs-tidy")
-```
-
-<img src="images/tidyr-spread-gather.gif" alt="Spread-Gather 예제" width="100%" />
-
 # `separate`, `unite` 동사  {#dplyr-separate-unite}
 
+`storms` 태풍 허리케인 데이터에는 년월일 변수에 변수 세개가 숨겨져 있다.
+변수를 쪼개는데 `separate()` 함수를 사용한다. 합치는데는 `unite()` 함수를 사용한다.
 
-> #### 깔끔한 데이터 - 태풍 허리케인 {.challenge}
-> 
-> `storms` 태풍 허리케인 데이터에는 년월일 변수에 변수 세개가 숨겨져 있다.
-> 변수를 쪼개는데 `separate()` 함수를 사용한다. 합치는데는 `unite()` 함수를 사용한다.
-> 
-> **변경전 (합쳐진 변수)** 
->
-> |   storm |  wind | pressure |       date |
-> |---------|-------|----------|------------|
-> | Alberto |   110 |     1007 | 2000-08-03 |
-> |    Alex |    45 |     1009 | 1998-07-27 |
-> | Allison |    65 |     1005 | 1995-06-03 |
-> |     Ana |    40 |     1013 | 1997-06-30 |
-> |  Arlene |    50 |     1010 | 1999-06-11 |
-> |  Arthur |    45 |     1010 | 1996-06-17 |
->
-> **변경후 (쪼개진 변수)** 
->
-> |   storm | wind | pressure | year | month | day |
-> |---------|------|----------|------|-------|-----|
-> | Alberto |  110 |     1007 | 2000 |    08 |  03 |
-> |    Alex |   45 |     1009 | 1998 |    07 |  27 |
-> | Allison |   65 |     1005 | 1995 |    06 |  03 |
-> |     Ana |   40 |     1013 | 1997 |    06 |  30 |
-> |  Arlene |   50 |     1010 | 1999 |    06 |  11 |
-> |  Arthur |   45 |     1010 | 1996 |    06 |  17 |
+<div class = "row">
+  <div class = "col-md-6">
+  
+**변경전 (합쳐진 변수)**
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+|   storm |  wind | pressure |       date |
+|---------|-------|----------|------------|
+| Alberto |   110 |     1007 | 2000-08-03 |
+|    Alex |    45 |     1009 | 1998-07-27 |
+| Allison |    65 |     1005 | 1995-06-03 |
+|     Ana |    40 |     1013 | 1997-06-30 |
+|  Arlene |    50 |     1010 | 1999-06-11 |
+|  Arthur |    45 |     1010 | 1996-06-17 |
+
+  </div>
+  <div class = "col-md-6">
+  
+**변경후 (쪼개진 변수)** 
+
+|   storm | wind | pressure | year | month | day |
+|---------|------|----------|------|-------|-----|
+| Alberto |  110 |     1007 | 2000 |    08 |  03 |
+|    Alex |   45 |     1009 | 1998 |    07 |  27 |
+| Allison |   65 |     1005 | 1995 |    06 |  03 |
+|     Ana |   40 |     1013 | 1997 |    06 |  30 |
+|  Arlene |   50 |     1010 | 1999 |    06 |  11 |
+|  Arthur |   45 |     1010 | 1996 |    06 |  17 |
+
+  </div>
+</div>
+
+
+``` {r tidy-separte-unite}
+storms <- storms %>% 
+  mutate(date = lubridate::make_date(year, month, day)) %>% 
+  select(name, date, wind, pressure, year, month, day)
+
 separate(storms, date, c("year", "month", "day"), sep = "-")
-unite(storms2, "date", year, month, day, sep = "-")
+unite(storms, "kdate", year, month, day, sep = "-")
 ```
 
-### 3. `dplyr` 예제 데이터셋
+# `dplyr` 동사 {#dplyr-verbs}
 
-[dplyr](http://cran.r-project.org/web/packages/dplyr/dplyr.pdf) 패키지는 데이터프레임(data.frame) 자료처리를 위한 차세대 `plyr` 패키지로 기능은 그대로 유지하고,
-`plyr`의 속도문제를 나름 상당히 개선시켰다. 
+[dplyr](http://cran.r-project.org/web/packages/dplyr/dplyr.pdf) 패키지는 데이터프레임(data.frame) 자료처리를 위한 차세대 `plyr` 패키지로 기능은 그대로 유지하고, `plyr`의 속도문제를 나름 상당히 개선시켰다. 
 다음 6가지 함수가 핵심 함수로 SQL 기본 기능과 유사성이 높다. 따라서, 기존 다양한 자료처리 방식을 직관적이고 빠르며 효율적인 dplyr 패키지 함수로 생산성을 높여본다.
 
  - filter (관측점 필터링) : 특정 기준을 만족하는 행을 추출한다.
@@ -237,89 +233,104 @@ unite(storms2, "date", year, month, day, sep = "-")
  - mutate (변수 추가하기) : 새로운 변수를 추가한다. 
  - summarise (변수를 값으로 줄이기) : 변수를 값(스칼라)으로 요약한다.
 
+## 변수 `select` 동사 {#dplyr-verbs-select}
 
-> #### 데이터 변환 - 변수 선택 {.challenge}
-> 
-> `storms` 태풍 허리케인 데이터에서 변수를 뽑아낼 때
-> `select()`를 사용한다. `-`, `:` 연산자도 사용가능하다.
-> 
-> **변경전** 
->
-> |   storm |  wind| pressure |       date |
-> |---------|------|----------|------------|
-> | Alberto |   110|     1007 | 2000-08-03 |
-> |    Alex |    45|     1009 | 1998-07-27 |
-> | Allison |    65|     1005 | 1995-06-03 |
-> |     Ana |    40|     1013 | 1997-06-30 |
-> |  Arlene |    50|     1010 | 1999-06-11 |
-> |  Arthur |    45|     1010 | 1996-06-17 |
-> 
->  **변경후(변수 선택)** 
->
-> |   storm | pressure| 
-> |---------|---------| 
-> | Alberto |     1007| 
-> |    Alex |     1009| 
-> | Allison |     1005| 
-> |     Ana |     1013| 
-> |  Arlene |     1010| 
-> |  Arthur |     1010| 
+`storms` 태풍 허리케인 데이터에서 변수를 뽑아낼 때
+`select()`를 사용한다. `-`, `:` 연산자도 사용가능하다.
 
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-select(storms, storm, pressure)
-select(storms, -storm)
+<div class = "row">
+  <div class = "col-md-6">
+  
+**변경전**
+
+|   storm |  wind| pressure |       date |
+|---------|------|----------|------------|
+| Alberto |   110|     1007 | 2000-08-03 |
+|    Alex |    45|     1009 | 1998-07-27 |
+| Allison |    65|     1005 | 1995-06-03 |
+|     Ana |    40|     1013 | 1997-06-30 |
+|  Arlene |    50|     1010 | 1999-06-11 |
+|  Arthur |    45|     1010 | 1996-06-17 |
+
+
+  </div>
+  <div class = "col-md-6">
+  
+**변경후(변수 선택)**
+
+|   storm | pressure| 
+|---------|---------| 
+| Alberto |     1007| 
+|    Alex |     1009| 
+| Allison |     1005| 
+|     Ana |     1013| 
+|  Arlene |     1010| 
+|  Arthur |     1010| 
+
+  </div>
+</div>
+
+
+``` {r tidyr-select}
+storms %>% select(wind, pressure)
+select(storms, -name)
 select(storms, wind:date)
 ```
 
-#### 유용한 `select()` 내장 함수
+**유용한 `select()` 내장 함수**
 
 |     내장 함수   | 설명 |
 |---------------|-------------------------------------|
-| -             | 해당 변수를 제외한 모든 칼럼을 선택한다. |
-| :             | 해당 범위에 해당되는 칼럼을 선택한다.|
-| contains()    | 해당 문자열을 명칭을 포함한 칼럼을 선택한다. |
-| starts_with() | 해당 문자열로 시작하는 명칭을 포함한 칼럼을 선택한다.|
-| ends_with()   | 해당 문자열로 끝나는 명칭을 포함한 칼럼을 선택한다.|
-| everything()  | 모든 칼럼을 선택한다.|
-| matches()     | 정규표현식을 매칭하는 칼럼을 선택한다.|
-| num_range()   | x1, x2, x3, x4, x5 명칭이 붙은 칼럼을 선택한다.|
-| one_of()      | 그룹에 명칭이 담긴 칼럼을 선택한다.|
+| `-`             | 해당 변수를 제외한 모든 칼럼을 선택한다. |
+| `:`             | 해당 범위에 해당되는 칼럼을 선택한다.|
+| `contains()`    | 해당 문자열을 명칭을 포함한 칼럼을 선택한다. |
+| `starts_with()` | 해당 문자열로 시작하는 명칭을 포함한 칼럼을 선택한다.|
+| `ends_with()`   | 해당 문자열로 끝나는 명칭을 포함한 칼럼을 선택한다.|
+| `everything()`  | 모든 칼럼을 선택한다.|
+| `matches()`     | 정규표현식을 매칭하는 칼럼을 선택한다.|
+| `num_range()`   | x1, x2, x3, x4, x5 명칭이 붙은 칼럼을 선택한다.|
+| `one_of()`      | 그룹에 명칭이 담긴 칼럼을 선택한다.|
 
+## 관측점 `filter` 동사 {#dplyr-verbs-filter}
 
-> #### 데이터 변환 - 관측점 선택 {.challenge}
-> 
-> `storms` 태풍 허리케인 데이터에서 관측점을 필터링한다.
-> `filter()`를 사용한다.
-> 
-> **변경전** 
->
-> |   storm |  wind| pressure |       date |
-> |---------|------|----------|------------|
-> | Alberto |   110|     1007 | 2000-08-03 |
-> |    Alex |    45|     1009 | 1998-07-27 |
-> | Allison |    65|     1005 | 1995-06-03 |
-> |     Ana |    40|     1013 | 1997-06-30 |
-> |  Arlene |    50|     1010 | 1999-06-11 |
-> |  Arthur |    45|     1010 | 1996-06-17 |
-> 
->  **변경후(관측점 선택)** 
->
-> **변경후** 
->
-> |   storm |  wind| pressure |       date |
-> |---------|------|----------|------------|
-> | Alberto |   110|     1007 | 2000-08-03 |
-> | Allison |    65|     1005 | 1995-06-03 |
-> |  Arlene |    50|     1010 | 1999-06-11 |
+<div class = "row">
+  <div class = "col-md-6">
+  
+**변경전**
 
+|   storm |  wind| pressure |       date |
+|---------|------|----------|------------|
+| Alberto |   110|     1007 | 2000-08-03 |
+|    Alex |    45|     1009 | 1998-07-27 |
+| Allison |    65|     1005 | 1995-06-03 |
+|     Ana |    40|     1013 | 1997-06-30 |
+|  Arlene |    50|     1010 | 1999-06-11 |
+|  Arthur |    45|     1010 | 1996-06-17 |
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+  </div>
+  <div class = "col-md-6">
+  
+**변경후(관측점 선택)**
+
+|   storm |  wind| pressure |       date |
+|---------|------|----------|------------|
+| Alberto |   110|     1007 | 2000-08-03 |
+| Allison |    65|     1005 | 1995-06-03 |
+|  Arlene |    50|     1010 | 1999-06-11 |
+
+  </div>
+</div>
+
+`storms` 태풍 허리케인 데이터에서 관측점을 필터링한다.
+`filter()`를 사용한다.
+
+``` {r tidyr-filter}
 filter(storms, wind >= 50)
-filter(storms, wind >= 50, storm %in% c("Alberto", "Alex", "Allison"))
+filter(storms, wind >= 50, name %in% c("Alberto", "Alex", "Allison"))
 ```
 
-#### `filter()` R 논리 연산자
+**`filter()` R 논리 연산자**
 
 |  비교연산자 `?Comparison` | 설명 | 논리 연산자 `?base::Logic` | 설명 |
 |-------------|------|------------------------|-------------|
@@ -333,42 +344,50 @@ filter(storms, wind >= 50, storm %in% c("Alberto", "Alex", "Allison"))
 | `is.na`  |  `NA` 값이다      | | |
 | `!is.na` |  `NA` 값이 아니다.  | | |
 
+## 변수 생성 `mutate` 동사 {#dplyr-verbs-mutate}
+
+`storms` 태풍 허리케인 데이터에서 변수를 새로 생성한다.
+`mutate()`를 사용한다.
+
+<div class = "row">
+  <div class = "col-md-6">
+  
+**변경전** 
+
+|   storm |  wind| pressure |       date |
+|---------|------|----------|------------|
+| Alberto |   110|     1007 | 2000-08-03 |
+|    Alex |    45|     1009 | 1998-07-27 |
+| Allison |    65|     1005 | 1995-06-03 |
+|     Ana |    40|     1013 | 1997-06-30 |
+|  Arlene |    50|     1010 | 1999-06-11 |
+|  Arthur |    45|     1010 | 1996-06-17 |
+
+  </div>
+  <div class = "col-md-6">
+
+**변경후(변수 생성)** 
+ 
+|   storm |  wind| pressure |       date |    ratio |
+|---------|------|----------|------------|----------|
+| Alberto |   110|     1007 | 2000-08-03 | 9.154545 |
+|    Alex |    45|     1009 | 1998-07-27 |22.422222 |
+| Allison |    65|     1005 | 1995-06-03 |15.461538 |
+|     Ana |    40|     1013 | 1997-06-30 |25.325000 |
+|  Arlene |    50|     1010 | 1999-06-11 |20.200000 |
+|  Arthur |    45|     1010 | 1996-06-17 |22.444444 |
+
+  </div>
+</div>
 
 
-> #### 데이터 변환 - 신규변수 생성 {.challenge}
-> 
-> `storms` 태풍 허리케인 데이터에서 변수를 새로 생성한다.
-> `mutate()`를 사용한다.
-> 
-> **변경전** 
->
-> |   storm |  wind| pressure |       date |
-> |---------|------|----------|------------|
-> | Alberto |   110|     1007 | 2000-08-03 |
-> |    Alex |    45|     1009 | 1998-07-27 |
-> | Allison |    65|     1005 | 1995-06-03 |
-> |     Ana |    40|     1013 | 1997-06-30 |
-> |  Arlene |    50|     1010 | 1999-06-11 |
-> |  Arthur |    45|     1010 | 1996-06-17 |
-> 
->  **변경후(변수 생성)** 
->
-> |   storm |  wind| pressure |       date |    ratio |
-> |---------|------|----------|------------|----------|
-> | Alberto |   110|     1007 | 2000-08-03 | 9.154545 |
-> |    Alex |    45|     1009 | 1998-07-27 |22.422222 |
-> | Allison |    65|     1005 | 1995-06-03 |15.461538 |
-> |     Ana |    40|     1013 | 1997-06-30 |25.325000 |
-> |  Arlene |    50|     1010 | 1999-06-11 |20.200000 |
-> |  Arthur |    45|     1010 | 1996-06-17 |22.444444 |
 
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+``` {r tidy-mutate-storm}
 mutate(storms, ratio = pressure / wind)
 mutate(storms, ratio = pressure / wind, inverse = ratio^-1)
 ```
 
-#### 유용한 `mutate()` 내장 함수
+**유용한 `mutate()` 내장 함수**
 
 |  함수명 |  설명 |
 |-------------|----------------------|
@@ -383,36 +402,45 @@ mutate(storms, ratio = pressure / wind, inverse = ratio^-1)
 | `ntile()`                        | 벡터를 n개 구간을 분할 |
 | `dense_rank()`, `min_rank(),`, `percent_rank()`, `row_number()` | 다양한 순위 방법 |
 
+## 분석단위 변경(요약) `summerise` 동사 {#dplyr-verbs-summerise}
 
-> #### 데이터 변환 - 분석단위 변경(요약) {.challenge}
-> 
-> `pollution` 환경오염 데이터에 대한 분석단위를 변경한다.
-> `summarise()`를 사용한다.
-> 
-> **변경전** 
->
-> |     city |  size | amount |
-> |----------|-------|--------|
-> | New York | large |     23 |
-> | New York | small |     14 |
-> |   London | large |     22 |
-> |   London | small |     16 |
-> |  Beijing | large |    121 |
-> |  Beijing | small |     56 |
->
-> **변경후** 
->
-> | median | variance |
-> |--------|----------|
-> |   22.5 |   1731.6 |
+`pollution` 환경오염 데이터에 대한 분석단위를 변경한다.
+`summarise()`를 사용한다.
+
+<div class = "row">
+  <div class = "col-md-6">
+  
+**변경전** 
+
+|     city |  size | amount |
+|----------|-------|--------|
+| New York | large |     23 |
+| New York | small |     14 |
+|   London | large |     22 |
+|   London | small |     16 |
+|  Beijing | large |    121 |
+|  Beijing | small |     56 |
+
+  </div>
+  <div class = "col-md-6">
+
+**변경후** 
+
+| median | variance |
+|--------|----------|
+|   22.5 |   1731.6 |
+
+  </div>
+</div>
 
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+
+``` {r tidyr-summarize}
 pollution %>% summarise(median = median(amount), variance = var(amount))
 pollution %>% summarise(mean = mean(amount), sum = sum(amount), n = n())
 ```
 
-#### 유용한 `summarize()` 내장 함수
+**유용한 `summarize()` 내장 함수**
 
 |  함수명 |  설명 |
 |-------------|----------------------|
@@ -427,153 +455,175 @@ pollution %>% summarise(mean = mean(amount), sum = sum(amount), n = n())
 | `n()`            | 해당 벡터에 값 개수 |
 | `n_distinct()`   | 해당 벡터에 유일무이한 값 개수|
 
+## 정렬 `arrange` 동사 {#dplyr-verbs-arrange}
 
-> #### 데이터 변환 - 정렬 {.challenge}
-> 
-> `storms` 태풍 허리케인 데이터 칼럼을 정렬한다.
-> `arrange()` 함수를 사용한다.
->
-> **변경전** 
->
-> |   storm |  wind| pressure |       date |
-> |---------|------|----------|------------|
-> | Alberto |   110|     1007 | 2000-08-03 |
-> |    Alex |    45|     1009 | 1998-07-27 |
-> | Allison |    65|     1005 | 1995-06-03 |
-> |     Ana |    40|     1013 | 1997-06-30 |
-> |  Arlene |    50|     1010 | 1999-06-11 |
-> |  Arthur |    45|     1010 | 1996-06-17 |
-> 
->  **변경후(변수를 정렬)** 
-> 
-> |   storm |  wind | pressure |       date |
-> |---------|-------|----------|------------|
-> |     Ana |    40 |     1013 | 1997-06-30 |
-> |    Alex |    45 |     1009 | 1998-07-27 |
-> |  Arthur |    45 |     1010 | 1996-06-17 |
-> |  Arlene |    50 |     1010 | 1999-06-11 |
-> | Allison |    65 |     1005 | 1995-06-03 |
-> | Alberto |   110 |     1007 | 2000-08-03 |
+`storms` 태풍 허리케인 데이터 칼럼을 정렬한다. `arrange()` 함수를 사용한다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+<div class = "row">
+  <div class = "col-md-6">
+  
+**변경전** 
+
+|   storm |  wind| pressure |       date |
+|---------|------|----------|------------|
+| Alberto |   110|     1007 | 2000-08-03 |
+|    Alex |    45|     1009 | 1998-07-27 |
+| Allison |    65|     1005 | 1995-06-03 |
+|     Ana |    40|     1013 | 1997-06-30 |
+|  Arlene |    50|     1010 | 1999-06-11 |
+|  Arthur |    45|     1010 | 1996-06-17 |
+
+
+  </div>
+  <div class = "col-md-6">
+  
+ **변경후(변수를 정렬)** 
+
+|   storm |  wind | pressure |       date |
+|---------|-------|----------|------------|
+|     Ana |    40 |     1013 | 1997-06-30 |
+|    Alex |    45 |     1009 | 1998-07-27 |
+|  Arthur |    45 |     1010 | 1996-06-17 |
+|  Arlene |    50 |     1010 | 1999-06-11 |
+| Allison |    65 |     1005 | 1995-06-03 |
+| Alberto |   110 |     1007 | 2000-08-03 |
+
+  </div>
+</div>
+
+
+``` {r tidyr-arrange-storms}
 arrange(storms, wind)
 arrange(storms, desc(wind))
 arrange(storms, wind, date)
 ```
 
 
-> #### `dplyr`::`group_by()` 함수 (분석 단위)  {.challenge}
-> 
-> 분석단위별로 나눠서 자료분석을 할 경우 `group_by()` 함수를 조합한다.
-> 
-> **변경전** 
-> 
-> 
-> |     city |  size | amount |
-> |----------|-------|--------|
-> |    (chr) | (chr) |  (dbl) |
-> | New York | large |     23 |
-> | New York | small |     14 |
-> |   London | large |     22 |
-> |   London | small |     16 |
-> |  Beijing | large |    121 |
-> |  Beijing | small |     56 |
-> 
->  **변경후** 
-> 
-> |      city |  mean |  sum |    n |
-> |-----------|-------|------|------|
-> |  Beijing  | 88.5  | 177  |    2 |
-> |   London  | 19.0  |  38  |    2 |
-> | New York  | 18.5  |  37  |    2 |
+## (분석 단위) `group_by()` 함수 동사 {#dplyr-verbs-group_by}
+
+분석단위별로 나눠서 자료분석을 할 경우 `group_by()` 함수를 조합한다.
+
+<div class = "row">
+  <div class = "col-md-6">
+
+**변경전** 
+
+|     city |  size | amount |
+|----------|-------|--------|
+|    (chr) | (chr) |  (dbl) |
+| New York | large |     23 |
+| New York | small |     14 |
+|   London | large |     22 |
+|   London | small |     16 |
+|  Beijing | large |    121 |
+|  Beijing | small |     56 |
+
+  </div>
+  <div class = "col-md-6">
+  
+ **변경후** 
+
+|      city |  mean |  sum |    n |
+|-----------|-------|------|------|
+|  Beijing  | 88.5  | 177  |    2 |
+|   London  | 19.0  |  38  |    2 |
+| New York  | 18.5  |  37  |    2 |
+
+  </div>
+</div>
 
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
+
+``` {r tidyr-group_by}
 pollution %>% group_by(city) %>%
-  summarise(mean = mean(amount), sum = sum(amount), n = n())
-pollution %>% ungroup()  
+  summarise(mean = mean(amount), sum = sum(amount), n = n()) %>% 
+  ungroup()
 ```
 
-
-> ### `data.table`과 `dplyr` 비교 [^dt-dplyr-comparison]
-> 
-> `data.table`과 `dplyr`은 데이터 변환작업을 수행하지만, 다음 관점에서 살펴볼 필요가 있다.
-> 
-> 1. 속도
-> 1. 메모리 사용량
-> 1. 구문
-> 1. 기능 
+# `dplyr`과 비교 [^dt-dplyr-comparison] {#dplyr-comparison}
 
 [^dt-dplyr-comparison]: [data.table vs dplyr: can one do something well the other cannot or does poorly?](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly)
 
-### 4. `dplyr` 팩키지와 Base 비교
+`data.table`과 `dplyr` 비교할 때, `data.table`과 `dplyr` 모두 데이터 변환작업을 수행하지만, 
+다음 관점에서 살펴볼 필요가 있다. 즉, 동일한 기능을 제공하지만 품질속성에서는 차이가 난다.
+ 
+1. 속도
+1. 메모리 사용량
+1. 구문
+1. 기능 
 
-~~~ {.input}
+
+## `dplyr` 팩키지와 Base 비교 {#dplyr-base-comparison}
+
+`dplyr` 팩키지와 Base 비교를 위해서 범주형 변수, 숫자형 변수 각 하나씩을 갖는 데이터프레임을 생성시킨다.
+
+```{r base-dplyr-comparison}
 df <- data.frame( 
   color = c("blue", "black", "blue", "blue", "black"), 
   value = 1:5) 
-~~~
- 
-#### 4.1. 관측점(obervation) 필터링해서 선택하기 (filter)
+```
 
-| 전통적 R 코드 | `dplyr` R 코드 |
-|---------------|---------------|
-|`df[df$var01==3 & df$var02$==7]` |`filter(df, var01==3, var02==7)`|
-
-
-~~~ {.input}
-filter(df, color == "blue")
-filter(df, value %in% c(1, 4))
-~~~
-
-#### 4.2. 특정 변수 선택하기 (select)
+## 특정 변수 선택하기 (select) {#dplyr-base-select}
 
 | 전통적 R 코드 | `dplyr` R 코드 |
 |---------------|---------------|
 |`df[, c("var01","var02")]` |`select(df, var01)`|
 
 
-~~~ {.input}
+```{r base-dplyr-comparison-select}
 select(df, color)
 select(df, -color)
-~~~
+```
 
-#### 4.3. 다시 정렬하기 (arrange)
+## 관측점(obervation) 필터링해서 선택하기 (filter) {#dplyr-base-filter}
 
 | 전통적 R 코드 | `dplyr` R 코드 |
 |---------------|---------------|
-|`df[order(df$var01, df$var02)` |`arrange(df, var01, var02)`|
+|`df[df$var01==3 & df$var02$==7]` |`filter(df, var01==3, var02==7)`|
 
-~~~ {.input}
-arrange(df, color)
-arrange(df, desc(color))
-~~~
 
-#### 4.4. 새변수 생성하기 (mutate)
+```{r base-dplyr-comparison-filter}
+filter(df, color == "blue")
+filter(df, value %in% c(1, 4))
+```
+
+## 새변수 생성하기 (mutate) {#dplyr-base-mutate}
 
 | 전통적 R 코드 | `dplyr` R 코드 |
 |---------------|---------------|
 |`df$new <- df$var01/df$var02` |`df <- mutate(df, new=var01/var02)`|
 
-~~~ {.input}
+```{r base-dplyr-comparison-mutate}
 mutate(df, double = 2 * value)
 mutate(df, double = 2 * value, quadruple = 2 * double)
-~~~
+```
 
-#### 4.5. 변수 요약하기 (summarize)
+## 변수 요약하기 (summarize) {#dplyr-base-summarize}
 
 | 전통적 R 코드 | `dplyr` R 코드 |
 |---------------|---------------|
 |`aggregate(df$value, list(var01=df$var01), mean)` |`group_by(df, var01) %.% summarize(totalvalue = sum(value))`|
 
 
-~~~ {.input}
+```{r base-dplyr-comparison-summarize}
 summarise(df, total = sum(value))
 by_color <- group_by(df, color) 
 summarise(by_color, total = sum(value))
-~~~
+```
 
-### 5. `apply` 함수
+## 다시 정렬하기 (arrange) {#dplyr-base-arrange}
+
+| 전통적 R 코드 | `dplyr` R 코드 |
+|---------------|---------------|
+|`df[order(df$var01, df$var02)` |`arrange(df, var01, var02)`|
+
+```{r base-dplyr-comparison-arrange}
+arrange(df, color)
+arrange(df, desc(color))
+```
+
+
+# `apply` 계열 함수 {#apply-family}
 
 자료는 기본적으로 *벡터(Vector)*를 기본으로 한다. 
 하지만 벡터로 표현될 수 있는 정보량은 한정되어 있으며 이를 하나의 자료 형태로 구조화한 것을 *데이터프레임(dataframe)*으로 볼 수 있다. 
@@ -589,10 +639,8 @@ R을 사용하는 방법 중 하나는 반복을 통해 한번에 하나씩 연�
  - `tapply(x,요인변수,함수)` : 요인변수(factor)에 맞춰 `apply` 함수로 데이터를 처리한다. 
  - `vapply(리스트,함수,...)` : `lappy`의 고속처리 버젼.
 
-가공되지 않은 원자료(raw data)에서 자료를 자유자재로 다룰 수 있도록 수십년동안 수많은 통계/공학자들이 아낌없이 시간을 기부해 주었기 때문에 
-과거에는 전문가들만 할 수 있었던 고도의 어려운 작업도 정확하고 수월하게 수행할 수 있다. 
+가공되지 않은 원자료(raw data)에서 자료를 자유자재로 다룰 수 있도록 수십년동안 수많은 통계/공학자들이 아낌없이 시간을 기부해 주었기 때문에 과거에는 전문가들만 할 수 있었던 고도의 어려운 작업도 정확하고 수월하게 수행할 수 있다. 
 
 그 외에도 다양한 팩키지(package)를 파이썬과 마찬가지로 제공하여 R을 선택하는 순간 자료 분석, 모형, 제품화에 대해 강력한 무기를 손에 넣게 된다. 
 
-특히 `SQL`을 통해서 **데이터 조작(Data Manipulation)**에 대한 개념 잡고 `쉘(shell)`을 통한 작업 자동화 개념을 익히고, 
-패키지를 사용하면 추구하는 바를 신속하고 정확하게 달성할 수 있다. 
+특히 `SQL`을 통해서 **데이터 조작(Data Manipulation)**에 대한 개념 잡고 `쉘(shell)`을 통한 작업 자동화 개념을 익히고, 패키지를 사용하면 추구하는 바를 신속하고 정확하게 달성할 수 있다. 
