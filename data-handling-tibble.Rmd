@@ -1,0 +1,163 @@
+---
+layout: page
+title: 데이터 사이언스
+subtitle: "데이터프레임(`tibble`)"
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
+---
+ 
+``` {r, include=FALSE}
+# source("tools/chunk-options.R")
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(EDAWR)
+library(tidyverse)
+```
+
+
+# `tibble`의 탄생 [^tibble-intro] {#tibble-introduciotn}
+
+[^tibble-intro]: [jumping rivers (2018-01-08), "The Trouble with Tibbles""](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
+
+아마도 수십년동안 `data.frame()`을 사용하다가 똑똑한 사용자 및 개발자가 불필요한 것은 덜어내고 필요한 사항을 집약시킨 것이 `tibble()` 자료구조다.
+`tibble`은 `tidyverse` 생태계를 구성하는 한 멤버로 `tidyverse`를 설치하게 되면 즉시 활용할 수 있다.
+데이터프레임을 생성하고, 강제변환시키고, 외부 데이터를 데이터프레임으로 가져오는 방법에 사용되는 함수를 비교하면 다음과 같다.
+
+|  작업유형  |  데이터프레임 명령어  |      티블 명령어      |
+|------------|-----------------------|-----------------------|
+|  생성      | `data.frame()`        | `data_frame()`, `tibble()`, `tribble()` |
+| 강제변환 (Coercion) |	`as.data.frame()` |	`as_tibble()`   |
+| 데이터 불러오기 |	`read.*()`       | `read_delim()`, `read_csv()`, `read_csv2()`, `read_tsv()` |
+
+## 생성 {#tibble-dataframe-creation}
+
+`data.frame()` 함수를 사용해서 데이터프레임을 생성시킬 수 있지만,
+`tibble()`, `tribble()` 함수를 사용해서 좀더 직관적으로 데이터프레임을 생성시킬 수 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**데이터프레임(data.frame)**
+
+```{r tibble-dataframe}
+data.frame(a = 1:5, b = letters[1:5])  
+```
+
+
+  </div>
+  <div class = "col-md-6">
+**티블(tibble)**
+
+```{r tibble-tibble}
+a_value <- 1:5
+b_value <- letters[1:5]
+
+tibble(a = a_value, b = b_value)
+
+tribble( ~a, ~b, 
+       #---|----
+          1, "a", 
+          2, "b")
+```
+
+  </div>
+</div>
+
+## 강제변환 (Coercion) {#tibble-dataframe-coercion}
+
+`as_data_frame()`,`as_tibble()` 함수를 사용해서 기존 `data.frame` 객체를 `tibble` 객체로 강제변환 시킬 수 있다. 물론, 리스트, 배열, 벡터 등도 티블로 변환시키는 것이 가능하다.
+`as_data_frame()`은 일정 시간을 둔 후에 `as_tibble()`로 일원화 될 것이다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**as_data_frame() 함수**
+
+```{r tibble-dataframe-coercion}
+df <- data.frame(a = 1:5, b = letters[1:5])
+
+as_data_frame(df)
+```
+
+
+  </div>
+  <div class = "col-md-6">
+**티블(tibble)**
+
+```{r tibble-tibble-coercion}
+as_tibble(df)
+```
+
+  </div>
+</div>
+
+## 외부 데이터 가져오기 (importing) {#tibble-dataframe-import}
+
+`.csv` 파일 변수명이 흥미롭게 된 파일데이터를 기존 `read.csv()` 함수와 `read_csv()` 함수로 각각 불러오는 경우를 비교하여 보자. `read_csv()`가 원본 데이터를 깔끔하게 가져올 뿐만 아니라 속도도 빠르다.
+
+```{r tibble-dataframe-import-data}
+file_url <- "https://gist.githubusercontent.com/theoroe3/8bc989b644adc24117bc66f50c292fc8/raw/f677a2ad811a9854c9d174178b0585a87569af60/tibbles_data.csv"
+
+read_lines(file_url)
+```
+
+<div class = "row">
+  <div class = "col-md-6">
+**`read.csv()` 함수 &rarr; 데이터프레임**
+
+```{r tibble-dataframe-import}
+file_url <- "https://gist.githubusercontent.com/theoroe3/8bc989b644adc24117bc66f50c292fc8/raw/f677a2ad811a9854c9d174178b0585a87569af60/tibbles_data.csv"
+
+read.csv(file_url)
+```
+
+  </div>
+  <div class = "col-md-6">
+**`read_csv()` 함수 &rarr; 데블**
+
+```{r tibble-tibble-import}
+read_csv(file_url)
+```
+
+  </div>
+</div>
+
+
+## 10줄 한계 넘어서기 {#tibble-dataframe-line-number}
+
+`options()` 함수에 `tibble.print_min =`, `tibble.print_max =` 인자를 조절하여 콘솔창에 출력되는 티블 관측점 갯수를 조절할 수 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**최소 10줄**
+
+```{r tibble-dataframe-line-number}
+options(tibble.print_max = 20, tibble.print_min = 10)
+tibble(a = 1:26, b = letters) 
+```
+  </div>
+  <div class = "col-md-6">
+** 최소 3줄**
+
+```{r tibble-tibble-line-number-fix}
+options(tibble.print_max = 5, tibble.print_min = 3)
+tibble(a = 1:26, b = letters) 
+```
+
+  </div>
+</div>
+
+
