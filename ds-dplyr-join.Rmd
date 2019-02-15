@@ -2,23 +2,34 @@
 layout: page
 title: 데이터 과학
 subtitle: 두 테이블 동사(dplyr join)
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
 output:
   html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
 mainfont: NanumGothic
 ---
 
 
 ```{r, include=FALSE}
-source("tools/chunk-options.R")
-```
-> ## 학습 목표 {.objectives}
->
-> * 
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
 
-## 1. 두-테이블 동사 [^dplyr-join-vignette] [^stat545-dplyr-join]
+library(tidyverse)
+```
+
+
+# 두-테이블 동사 [^dplyr-join-vignette] [^stat545-dplyr-join] {#two-table-verbs}
 
 [^dplyr-join-vignette]: [Two-table verbs](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html)
 
@@ -31,19 +42,27 @@ source("tools/chunk-options.R")
 - **Mutating Join**: 두 테이블을 결합할 때, 두 테이블 간에 행이 매칭되는 경우 첫번째 테이블에 새로운 변수를 추가.
 - **Filtering Join**: 다른 테이블에 관측점이 매칭되냐 매칭되지 않냐에 근거하여 해당 테이블의 관측점을 필터링함.
 - **집합연산**: 마치 집합원소처럼 데이터셋의 관측점을 집합연산으로 조합.
-
-### 1.1. 중요개념
+ 
+## 중요개념 {#two-table-verb-key-concept}
 
 Base R에는 동일한 개념이 필요하여 `merge()` 함수로 기능을 제공하였지만, 
 `dplyr` 두-테이블 동사를 활용해서도 동일한 기능을 구현하는데 문제가 없다.
 
-> ### `merge`와 `dplyr` 두-테이블 동사 {.callout}
->
-> 기존 Base R에서 많이 사용된 `merge` 함수와 비교하여 `dplyr` 두-테이블 동사를 사용하는 경우 장점은 다음과 같다.
->
-> - 항상 행순서를 보존한다.
-> - 구문이 직관적이다.
-> - 관계형 데이터베이스, 스파크에도 적용할 수 있다.
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+**`merge`와 `dplyr` 두-테이블 동사**
+
+기존 Base R에서 많이 사용된 `merge` 함수와 비교하여 `dplyr` 두-테이블 동사를 사용하는 경우 장점은 다음과 같다.
+
+- 항상 행순서를 보존한다.
+- 구문이 직관적이다.
+- 관계형 데이터베이스, 스파크에도 적용할 수 있다.
+
+</div>
+
 
 테이블 두개를 결합할 경우 생각보다 다양한 조합의 수가 존재한다. 
 두 테이블을 병합할 때, 먼저 두 테이블 모두 공통된 변수가 존재해야 된다. 
@@ -52,7 +71,7 @@ Base R에는 동일한 개념이 필요하여 `merge()` 함수로 기능을 제�
 기본키와 외래키를 꼭 한 필드로 고정할 필요는 없고, 다수 필드를 묶어 기본키와 외래키를 정의하는 것도 가능하다.
 
 
-## 2. 기본 병합(join)
+# 기본 병합(join) {#two-table-join}
 
 데이블 두개를 병합하는데 사용되는 기본 병합(join) 동사는 4개가 있다: `left_join()`, `right_join()`, `inner_join()`, `full_join()`
 
@@ -60,8 +79,8 @@ Base R에는 동일한 개념이 필요하여 `merge()` 함수로 기능을 제�
 
 먼저 `superheroes`, `publishers` 데이터프레임을 생성한다. 
 
-```{r}
-suppressPackageStartupMessages(library(dplyr))
+```{r two-table-join}
+library(tidyverse)
 library(readr)
 
 superheroes <- "
@@ -85,47 +104,51 @@ publishers <- "
 publishers <- read_csv(publishers, trim_ws = TRUE, skip = 1)
 ```
 
-### 2.1. `inner_join()` 
+## `inner_join()` {#two-table-inner-join} 
 
 `inner_join()`은 두 테이블 모두에 존재하는 행이 있는 경우 이를 병합하여 새로운 테이블을 생성시킨다.
 
 `inner_join(x,y)` 를 수행하면 기준 테이블의 모든 행을 반환시키는데 조건은 상대 테이블에 매칭되는 행이 있는 경우다.
 두 테이블 사이 다수가 매칭되면, 모든 매칭 조합이 반환된다. 대표적인 `mutating join` 사례다.
 
-```{r}
+```{r two-table-inner}
 ijsp <- inner_join(superheroes, publishers)
 ```
 
-```{r include = FALSE}
+```{r two-table-inner-table}
 superheroes_kable <- knitr::kable(superheroes)
 publishers_kable <- knitr::kable(publishers)
 ijsp_kable <- knitr::kable(ijsp)
 ```
 
 <table border = 1>
-<tr>
-	<td valign="top">
-		superheroes
-		`r superheroes_kable`
+  <tr>
+  <td valign="top">
+  superheroes
+  `r superheroes_kable`
 </td>
-	<td valign="top">
-	  publishers
-	  `r publishers_kable`
+  <td valign="top">
+  publishers
+  `r publishers_kable`
 </td>
-	<td valign="top">
-		inner_join(x = superheroes, y = publishers)
-	  `r ijsp_kable`
+  <td valign="top">
+  semi-join(x = superheroes, y = publishers)
+  `r ijsp_kable`
 </td>
 </tr>
 </table>
 
-### 2.2. `semi_join()`
 
-```{r}
+<img src="images/inner-join.gif" alt="inner join" width="100%" />
+
+
+## `semi_join()` {#two-table-semi-join} 
+
+```{r two-table-verbs-semi-join}
 (sjsp <- semi_join(superheroes, publishers))
 ```
 
-```{r include = FALSE}
+```{r two-table-verbs-semi-join-print}
 sjsp_kable <- knitr::kable(sjsp)
 ```
 
@@ -146,14 +169,16 @@ sjsp_kable <- knitr::kable(sjsp)
 </tr>
 </table>
 
-### 2.3. `left_join()`
+<img src="images/semi-join.gif" alt="semi join" width="100%" />
 
 
-```{r}
+## `left_join()` {#two-table-left-join} 
+
+```{r two-table-verb-left-join}
 (ljsp <- left_join(superheroes, publishers))
 ```
 
-```{r include = FALSE}
+```{r two-table-verb-left-join-table}
 ljsp_kable <- knitr::kable(ljsp)
 ```
 
@@ -174,16 +199,17 @@ ljsp_kable <- knitr::kable(ljsp)
 </tr>
 </table>
 
-### 2.4. `anti_join()`
+<img src="images/left-join.gif" alt="left join" width="100%" />
 
+## `right_join()` {#two-table-right-join} 
 
-```{r}
-(ajsp <- anti_join(superheroes, publishers))
+```{r two-table-verb-right-join}
+(rjsp <- right_join(superheroes, publishers))
 ```
 
 
-```{r include = FALSE}
-ajsp_kable <- knitr::kable(ajsp)
+```{r two-table-verb-right-join-table}
+rjsp_kable <- knitr::kable(rjsp)
 ```
 
 <table border = 1>
@@ -197,23 +223,23 @@ ajsp_kable <- knitr::kable(ajsp)
   `r publishers_kable`
 </td>
   <td valign="top">
-  anti_join(x = superheroes, y = publishers)
-  `r ajsp_kable`
+  right_join(x = superheroes, y = publishers)
+  `r rjsp_kable`
 </td>
 </tr>
 </table>
 
-### 2.5. `anti_join()`
+<img src="images/right-join.gif" alt="right join" width="100%" />
 
-> anti_join(x, y): Return all rows from x where there are not matching values in y, keeping just columns from x. This is a filtering join.
+## `anti_join()` {#two-table-verb-anti-join}
 
-```{r}
+`anti_join(x, y)`은 필터링 조인으로 `y` 데이터프레임에 매칭되지 않지만 `x` 데이터프레임에 있는 칼럼만 반환한다.
+
+```{r two-table-verb-anti-join}
 (ajps <- anti_join(publishers, superheroes))
 ```
 
-We keep __only__ publisher Image now (and the variables found in `x = publishers`).
-
-```{r include = FALSE}
+```{r two-table-verb-anti-join-table}
 ajps_kable <- knitr::kable(ajps)
 ```
 
@@ -235,15 +261,17 @@ anti_join(x = publishers, y = superheroes)
 </tr>
 </table>
 
+<img src="images/anti-join.gif" alt="anti join" width="100%" />
 
-### 2.6. `full_join()`
 
-```{r}
+## `full_join()` {#two-table-verb-full-join}
+
+```{r two-table-verb-full-join}
 (fjsp <- full_join(superheroes, publishers))
 ```
 
 
-```{r include = FALSE}
+```{r two-table-verb-full-join-table}
 fjsp_kable <- knitr::kable(fjsp)
 ```
 
@@ -264,8 +292,9 @@ fjsp_kable <- knitr::kable(fjsp)
 </tr>
 </table>
 
+<img src="images/full-join.gif" alt="full join" width="100%" />
 
-## R과 SQL 비교
+# R과 SQL 비교 {#two-table-verb-comparison}
 
 |    R	          |  SQL                                                               |
 |:----------------|:-------------------------------------------------------------------|
