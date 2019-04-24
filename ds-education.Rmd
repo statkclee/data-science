@@ -208,6 +208,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
     - 텍스트: [Julia Silge and David Robinson, (2019-03-23), "Text Mining with R
 A Tidy Approach"](https://www.tidytextmining.com/)
     - 시계열: [Rob J Hyndman and George Athanasopoulos, "Forecasting: Principles and Practice", Monash University, Australia](https://otexts.com/fpp2/)
+        - [한국어 번역, 김영호](https://otexts.com/fppkr/)
     - 공간정보: [Robin Lovelace, Jakub Nowosad, Jannes Muenchow (2019-04-22), "Geocomputation with R"](https://geocompr.robinlovelace.net/)
 - 시각화
     - [Claus O. Wilke, "Fundamentals of Data Visualization"](https://serialmentor.com/dataviz/)
