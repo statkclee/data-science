@@ -154,7 +154,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
 1. Package quality control. CRAN (the Comprehensive R Archive Network) has a high bar if you want to publish a package. They will not allow a package that doesn’t come with full documentation. And that what makes R what it is. Yes, there are more than 11,000 packages in CRAN but that is not the point. I think it is the quality of the documentation of the functions what makes R so strong and expandable.
 1. Extendable. This is a consequence of the point above. Many, many high quality packages have been built over the solid foundation of existing libraries. And the packages offspring give birth to even better packages. And who is to to benefit? The users.
 1. Publishing quality graphics. Say what you want about matplotlib but it will never be that close to the base graphics or R; or ggplot2, for that matter. I used matplotlib quite a lot but everything that is non-standard has to be created from scratch. On the side of R, I haven't been able yet to exhaust what seems to be an infinite pool of graphics functions of base-graphics and ggplot2 and its offspring. Takes your breath away. Of course, this comes with a set of basic rules on plotting: cannot use multiple y-axis; avoid pie-charts and bars; don't abuse of 3D, or avoid it at all; start plots at zero unless you have a good reason; and couple more.
-1. Function centric. This is one of the things that makes R so different than Python. Classes have been used to an abuse in Python, and sometime with no reason. Probably, because of the way Python's idea was sold. Still, if you want to learn classes and Object Oriented Programming, I would recommend doing it with Python; easiest in the world. Opposing this view, the world in R is different: the function is a first class citizen in the R world. You may not want to believe this but there are at least four class frameworks in R: S3, S4, R6, RC. There are more but these four comes quickly in my mind. The difference with other languages (I have used classes in Java and Python), is that in R the class works underneath the function. S3 and S4 work radically different than Java and Python classes; the closest relative would be R6.
+1. Function centric. This is one of the things that makes R so different than Python. Classes have been used to an abuse in Python, and sometime with no reason. Probably, because of the way Python idea was sold. Still, if you want to learn classes and Object Oriented Programming, I would recommend doing it with Python; easiest in the world. Opposing this view, the world in R is different: the function is a first class citizen in the R world. You may not want to believe this but there are at least four class frameworks in R: S3, S4, R6, RC. There are more but these four comes quickly in my mind. The difference with other languages (I have used classes in Java and Python), is that in R the class works underneath the function. S3 and S4 work radically different than Java and Python classes; the closest relative would be R6.
 
   </div>
 </div>
@@ -177,7 +177,10 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
 
 그외 @김정훈님이 언급하신 vicious circle도 있습니다.
 
-- 사업이 성사 된다 -> 누군가가 교육과정을 짠다. -> 각 파트별로 강사를 조립하여 모집한다. -> 각자 시간이 한정되어 얕은 수준의 이야기에서 끝이난다. -> 장시간 맛만 본다.
+- 사업이 성사 된다 &rarr; 누군가가 교육과정을 짠다. 
+  &rarr; 각 파트별로 강사를 조립하여 모집한다. 
+  &rarr; 각자 시간이 한정되어 얕은 수준의 이야기에서 끝이난다. 
+  &rarr; 장시간 맛만 본다.
 
 # 우수 데이터 과학 교육 {#data-science-lecture}
 
@@ -192,6 +195,26 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
     + 수십년에 걸쳐 전세계 검증된 교육과정
     + [Software Carpentry](https://software-carpentry.org/)
 
+# 데이터 사이언스 교재 {#data-science-book}
+
+데이터 사이언스 언어인 R이나 파이썬 모두 그렇지만 사람들이 갖고 있는 편견이 무섭습니다.
+무료라면 질이 떨어질 것으로 짐작하고 쳐다보지도 않는데 다음 데이터 사이언스 특히 R 교재를 
+살펴보면 달라질 것입니다.
+
+- 입문
+    - [Danielle Navarro (2019-01-11), "Learning statistics with R: A tutorial for psychology students and other beginners. (Version 0.6.1)"](https://learningstatisticswithr.com/book/)
+    - [Garrett Grolemund, Hadley Wickham, "R for Data Science"](https://r4ds.had.co.nz/)
+- 다양한 데이터
+    - 텍스트: [Julia Silge and David Robinson, (2019-03-23), "Text Mining with R
+A Tidy Approach"](https://www.tidytextmining.com/)
+    - 시계열: [Rob J Hyndman and George Athanasopoulos, "Forecasting: Principles and Practice", Monash University, Australia](https://otexts.com/fpp2/)
+    - 공간정보: [Robin Lovelace, Jakub Nowosad, Jannes Muenchow (2019-04-22), "Geocomputation with R"](https://geocompr.robinlovelace.net/)
+- 시각화
+    - [Claus O. Wilke, "Fundamentals of Data Visualization"](https://serialmentor.com/dataviz/)
+    - [Winston Chang (2019-04-20), "R Graphics Cookbook", 2nd edition](https://r-graphics.org/)
+- 심화학습
+    - [Hadley Wickham, "Advanced R"](http://adv-r.had.co.nz/)
+    - ["The R in Spark: Learning Apache Spark with R"](https://therinspark.com/)
 
 # 구글 추세로 본 데이터 과학 {#data-science-google-trends}
 
