@@ -2,6 +2,9 @@
 layout: page
 title: 데이터 과학
 subtitle: 데이터 과학 교육
+author:
+    name: xwMOOC
+date: "`r Sys.Date()`"
 output:
   html_document: 
     toc: yes
@@ -21,7 +24,30 @@ source("tools/chunk-options.R")
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
-# 통계학 [^statistics] {#data-science-education-definition}
+# 데이터 과학 [^wiki-data-science] {#data-science-definition}
+
+[^wiki-data-science]: [Wikipedia, "Data Science"](https://en.wikipedia.org/wiki/Data_science)
+
+**데이터 과학(data science)**이란, 데이터 마이닝(Data Mining)과 유사하게 정형, 비정형 형태를 포함한 다양한 데이터로부터 지식과 인사이트를 추출하는데 과학적 방법론, 프로세스, 알고리즘, 시스템을 동원하는 융합분야다. 데이터 과학은 데이터를 통해 실제 현상을 이해하고 분석하는데 통계학, 데이터 분석, 기계학습과 연관된 방법론을 통합하는 개념으로 정의되기도 한다.
+
+데이터의 구체적인 내용이 아닌 서로 다른 성질의 내용이나 형식의 데이터에 공통으로 존재하는 성질, 또는 그것들을 다루기 위한 기술의 개발에 착안점을 둔다는 특징을 가진다.
+
+튜링상을 수상한 짐그레이(Jim Gray) 박사는 데이터 과학은 과학의 네번째 패러다임으로 정의하고 과학(경험, 이론, 계산, 그리고 이제 데이터)에 관한 모든 것이 바뀌고 있는데 이유는 정보기술과 데이터 범람(data deluge) 때문이라고 주장했다.
+
+## 데이터로 할 수 있는 것 {#data-science-to-do}
+
+데이터가 엄청 많아지고 유용한 가치를 많이 지니고 있는 것은 알겠는데 데이터로 할 수 있는 것은 무엇인지 알아보자.
+
+1. 현재 상태를 객관적으로 파악할 수 있다.
+    - 기술통계량, 대쉬보드 등
+1. 비정상적인 사건을 탐지할 수 있음
+    - 이상점(outlier), 이상점 탐지(Anomaly Detection), 사기 탐지(fraud detection) 
+1. 특정 사건과 행태에 대한 원인을 파악하고 진단을 내릴 수 있음.
+    - A/B 검정, 인과관계(Causality)
+1. 장래 사건을 예측할 수 있음
+    - 예측모형(predictive model), 기계학습
+
+## 통계학 [^statistics] {#data-science-education-definition}
 
 [^statistics]: [김충락 부산대 통계학과 교수 한국통계학회장, "통계를 ‘권력의 시녀’로 만들려는 유혹"](https://news.joins.com/article/22939324)
 
@@ -41,15 +67,11 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 - 1961년: 경제기획원 조사통계국
 - 1990년: 12월 통계청 
 
-# 데이터 과학 [^wiki-data-science] {#data-science-definition}
+##  데이터 사이언스 작업흐름도 {#ds-workflow}
 
-[^wiki-data-science]: [Wikipedia, "Data Science"](https://en.wikipedia.org/wiki/Data_science)
+데이터 사이언스 작업흐름은 데이터를 수집하고 이를 이해하는 과정과 추상화하는 과정을 거쳐 최종 산출물로 사람이 최종 소비자가 되는 보고서/대쉬보드와 기계가 최종 소비자가 되는 API/코드 형태로 최종 작업이 이뤄지게 된다.
 
-**데이터 과학(data science)**이란, 데이터 마이닝(Data Mining)과 유사하게 정형, 비정형 형태를 포함한 다양한 데이터로부터 지식과 인사이트를 추출하는데 과학적 방법론, 프로세스, 알고리즘, 시스템을 동원하는 융합분야다. 데이터 과학은 데이터를 통해 실제 현상을 이해하고 분석하는데 통계학, 데이터 분석, 기계학습과 연관된 방법론을 통합하는 개념으로 정의되기도 한다.
-
-데이터의 구체적인 내용이 아닌 서로 다른 성질의 내용이나 형식의 데이터에 공통으로 존재하는 성질, 또는 그것들을 다루기 위한 기술의 개발에 착안점을 둔다는 특징을 가진다.
-
-튜링상을 수상한 짐그레이(Jim Gray) 박사는 데이터 과학은 과학의 네번째 패러다임으로 정의하고 과학(경험, 이론, 계산, 그리고 이제 데이터)에 관한 모든 것이 바뀌고 있는데 이유는 정보기술과 데이터 범람(data deluge) 때문이라고 주장했다.
+<img src="fig/data-science-workflow.png" alt="데이터 사이언스 작업흐름" width="100%" />
 
 ## 데이터 과학의 불편한 진실 [^data-science-fun-fact] {#data-science-fact}
 
@@ -69,7 +91,23 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 1. All models are false, but some are useful. (모든 모델은 틀렸다, 하지만 몇몇은 유용하다)
 1. There is no fully automated Data Science. You need to get your hands dirty (완전 자동화된 데이터 과학같은 것은 없다. 인간이 개입되어야 할 부분이 있다)
 
-## 데이터 과학업무 세분화 [^airbnb-data-science] {#data-science-specialization}
+## 데이터 사이언스 팀구성원 {#data-science-team}
+
+데이터 사이언스 팀은 크게 3가지 역할로 나눌 수 있다. 
+
+1. 데이터 엔지니어 (Data Engineer): 데이터를 저장하고 관리, SQL/자바/스칼라/파이썬
+1. 데이터 분석가 (Data Analyst): 탐색적 데이터 분석, 스프레드쉬트/SQL/상용 대쉬보드 도구
+1. 기계학습 데이터 과학자 (Machine Learning Data Scientist): 기계학습 모형 개발, R/파이썬
+
+데이터 엔지니어는 기본적으로 대량의 데이터를 수집하고, 저장하고, 관리하는 역할을 주된 업무로 한다. 이를 위해서 `SQL`이 기본 기술이고 데이터 수집과 자동 처리를 위해서 자바, 스칼라, 파이썬이 필요한 주된 기술로 전산 기본기가 특히 중요하다.
+
+데이터 분석가는 대쉬보드를 생성하고, 가설 검정, 데이터 시각화를 주된 업으로 하며 일차적으로 누군가 혹은 특정 장소에 저장된 데이터를 바탕으로 탐색적 데이터 분석을 수행하는 것을 업으로 한다. 이런 업무를 무리없이 수행하기 위해서 엑셀 혹은 구글 쉬트와 같은 스프레이쉬트를 자유자제로 다룰 수 있는 기본기가 필요하고, 데이터를 추출하기 위해서 SQL 쿼리 기술, 대쉬보드 작성을 위해 루커(looker), 타블로(Tableau), 파워 BI (Power BI) 더 나아가 R Shiny 대쉬보드를 활용할 수 있어야 한다.
+
+기계학습 데이터 과학자는 예측(Prediction & Extraploation)과 분류를 주된 업으로 하고 최근 들어 강조되고 있는 비정형 데이터 이미지와 텍스트를 딥러닝 방법론을 활용하여 개발하는 작업을 주된 업무로 한다. 이를 위해서 R과 파이썬을 주된 프로그래밍 언어로 강한 통계, 확률, 미적분, 선형대수 지식을 갖춰야 한다.
+
+
+
+## 데이터 사이언스 업무 세분화 [^airbnb-data-science] {#data-science-specialization}
 
 [^airbnb-data-science]: [Elena Grewal(July 25, 2018), "One Data Science Job Doesn’t Fit All"](https://www.linkedin.com/pulse/one-data-science-job-doesnt-fit-all-elena-grewal/)
 
@@ -93,6 +131,46 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 | 사업  | - Ownership - Able to drive projects to success, enables others, owns impact                                 |
 |       | - Influence - Communicates clearly, demonstrates teamwork, and builds relationships                          |
 |       | - Enrichment - Contributes to team-building through mentorship, culture, recruiting, and diversity efforts   |
+
+## 데이터 사이언스 팀구조 {#data-science-orgaization}
+
+데이터를 원재료로 이를 공학적으로 제품과 서비스를 개발하는데 있어 크게 3가지 기능이 필요하고 이를 어떻게 조합하냐에 따라 데이터 사이언스 팀구조가 다음과 같이 나눠진다. 먼저 데이터 엔지니어로 구성된 팀, 데이터를 통해 뭔가 유용한 제품과 서비스를 만들어 내는 공학팀, 데이터 사이언스 제품과 서비스를 설계하고 기획하는 팀으로 명확히 구분된 데이터 사이언스 조직을 운영할 수 있다.
+
+<img src="fig/ds-team-isolated.png" alt="격리 구조를 갖는 팀구조" width="100%" />
+
+다른 대안으로 데이터 엔지니어, 데이터 과학자, 기획자가 각각 팀을 이뤄 다양한 데이터 제품과 서비스를 기획하는 것도 가능한 형태다.
+
+<img src="fig/ds-team-embedded.png" alt="임베디드된 구조를 갖는 팀구조" width="100%" />
+
+마지막으로 상기 두 조직을 합친 형태로 데이터 사이언스 팀구조를 가져가는 것도 가능하다. 즉, 매트릭스 형태로 각 기능별 특징은 유지하면서 데이터 엔지니어와 분석가/모형 개발자, 그리고 제품 기획자가 하나의 팀으로 구성된 사례를 들 수 있다.
+
+<img src="fig/ds-matrix-organization.png" alt="임베디드된 구조를 갖는 팀구조" width="100%" />
+
+
+## 데이터 사이언스 응용 {#data-science-applications}
+
+데이터 사이언스 응용분야로 최근 떠오르는 분야를 포함하면 다음과 같다.
+
+1. 기계학습 - 예측모형
+    - 집값 예측, 제품 구매 확률, 클릭확률, 이상점/사기 탐지(Fraud Detection), 암세포 분류 등
+1. 사물 인터넷(Internet of Things, IoT)
+    - 스마트 워치, 하이패스, 지하철 탑승 티켓, POS 시스템, 전자 에너지 관리 시스템, CCTV 등
+1. 딥러닝
+    - 자연어 처리 (Natural Language Processing)
+    - 이미지 인식 (Computer Vision)
+
+기계학습(Machine Learning) 예측모형을 개발하여 성공적으로 적용시키기 위해서는 다음 세가지 질문에 대해서 답을 할 수 있어야 한다.
+
+1. 예측하고자 하는 사건에 대한 명확한 정의 
+    - 집값, 암세포일 확률, 이상/어뷰징 확률, 구매확률 등
+1. 라벨 데이터
+    - 집값, 기업가치, 암세포 혹은 암세포 아님, 구매 혹은 비구매 
+1. 알고리즘을 적용시켜 라벨 데이터와 엮을 수 있는 데이터
+    - 나이 성별 주소 등이 포함된 인구 통계, 날씨 범죄율 등 공공데이터, 거래내역, SNS 등 정형 비정형 데이터셋
+    
+전통적인 기계학습 알고리즘 방식을 기반으로 응용분야가 기존 전산 시스템을 넘어 IoT 기기를 통해서 확산되고 과거 정형데이터에서 이미지와 자연어를 다룰 수 있게 됨에 따라 파급력을 급격히 확대시켜 나가고 있다.
+
+
 
 # R의 파이썬 대비 우수성 [^linkedin-r-python] {#data-science-education-r}
 
@@ -161,7 +239,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
 
 
 
-# 최고의 데이터 과학 교육 {#data-science-education}
+# 데이터 과학 교육 {#data-science-education}
 
 과연 우리나라에서 좋은 데이터과학은 어떤 것일까에 대한 고민이 [한국 Tidyverse](https://www.facebook.com/groups/1404219106509417)에서 
 **"대중의 지혜(wisdom of the crowd)"**를 동원하여 풀어보고자 하네요.
@@ -182,7 +260,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
   &rarr; 각자 시간이 한정되어 얕은 수준의 이야기에서 끝이난다. 
   &rarr; 장시간 맛만 본다.
 
-# 우수 데이터 과학 교육 {#data-science-lecture}
+## 우수 데이터 과학 교육 {#data-science-lecture}
 
 - [문건웅 교수님 Shiny 강의](https://github.com/cardiomoon/shinyLecture2)
     + 강사님이 대학교수로 전문 교육인
@@ -195,7 +273,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
     + 수십년에 걸쳐 전세계 검증된 교육과정
     + [Software Carpentry](https://software-carpentry.org/)
 
-# 데이터 사이언스 교재 {#data-science-book}
+## 데이터 사이언스 교재 {#data-science-book}
 
 데이터 사이언스 언어인 R이나 파이썬 모두 그렇지만 사람들이 갖고 있는 편견이 무섭습니다.
 무료라면 질이 떨어질 것으로 짐작하고 쳐다보지도 않는데 다음 데이터 사이언스 특히 R 교재를 
@@ -289,3 +367,6 @@ kr_df$interest_over_time %>% tbl_df %>%
     theme_minimal(base_family = "NanumGothic") +
     theme(legend.position = "top")
 ```
+
+
+
