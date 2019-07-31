@@ -37,7 +37,7 @@ NoSQL, 빅데이터 등이 여전히 집중 관심을 받고 있지만, 데이�
 데이터 조작(Data Manipulation)의 기본을 잡고 더 나아가 `DBI` 팩키지를 통해 `dplyr`을 연결하여 그대로 활용하는 방안을
 살펴보자.
 
-<img src="fig/dplyr-dbi-sqlite.png" alt="dplyr, dbi, sqlite3 변환" width="77%" />
+<img src="fig/dplyr-dbi-sqlite.png" alt="dplyr, dbi, sqlite3 변환" width="100%" />
 
 R 개발자가 데이터를 분석할 때 데이터분석은 `dplyr`을 사용하고, 데이터베이스에 붙어 데이터 작업을 할 때는 `SQL`을 사용하는 것이 
 관례로 오랜동안 사용되어온 작업흐름이다. 하지만, 좀더 곰곰히 생각해 보면 왜 동일한 작업을 두번 중복해서 할까?
