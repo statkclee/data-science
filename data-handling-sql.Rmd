@@ -1,33 +1,39 @@
 ---
 layout: page
 title: xwMOOC 데이터 과학
-subtitle: R과 SQL - `DBI`, `dplyr` 
+subtitle: "R과 SQL - 소프트웨어 카펜트리"
 date: "`r Sys.Date()`"
-author: xwMOOC
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
 output:
   html_document: 
-    keep_md: yes
     toc: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
 ---
 
+
 ``` {r, include=FALSE}
-source("tools/chunk-options.R")
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, fig.width=12)
-
-library(DBI)
-library(tidyverse)
-
-par(family = "NanumGothic")
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+library(reticulate)
+use_condaenv("anaconda3")
+# reticulate::repl_python()
 ```
 
 
-## 1. R에서 바라본 SQL  {#r-sql}
+# R에서 바라본 SQL  {#r-sql}
 
 NoSQL, 빅데이터 등이 여전히 집중 관심을 받고 있지만, 데이터를 분석하는 입장에서 그럼에도 불구하고 
-여전히 SQL은 중요한 기본기가 된다. 이번 에피소드를 통해 *SQL*에 대한 이해를 바탕으로 하여 
+여전히 SQL은 중요한 기본기가 된다. 이번 에피소드를 통해 **SQL**에 대한 이해를 바탕으로 하여 
 데이터 조작(Data Manipulation)의 기본을 잡고 더 나아가 `DBI` 팩키지를 통해 `dplyr`을 연결하여 그대로 활용하는 방안을
 살펴보자.
 
@@ -38,7 +44,7 @@ R 개발자가 데이터를 분석할 때 데이터분석은 `dplyr`을 사용�
 이런 불편함에 대해 `dplyr`을 `DBI`, `odbc`와 붙여 사용하게 되면 `dplyr` 동사를 직접 사용해서 SQL 작업을 할 수 있다.
 중간 통역이 제공되어 온전히 `dplyr` 동사를 데이터베이스에 던지면 작업이 가능하게 되었다.
 
-### 1. SQL 자료처리 {#sql-basic}
+## SQL 자료처리 {#sql-basic}
 
 자료를 원하는 방향으로 처리하기 위해서는 다음과 같은 다양한 기본적인 자료 처리 방법을 조합하여 사용한다.
 
@@ -56,7 +62,7 @@ SELECT 칼럼명1, 칼럼명2....칼럼명N
 FROM   테이블명
 WHERE  조건;
 
-# 그룹에 따른 정렬 및 집합(aggregation)
+# 그룹에 따른 정렬 및 총계(aggregation)
 SELECT SUM(칼럼명)
 FROM   테이블명
 WHERE  조건
@@ -64,7 +70,7 @@ ORDER BY 칼럼명 {오름차순|내림차순};
 GROUP BY 칼럼명;
 ```
 
-## 2. SQLite와 실습 데이터베이스 {#sqlite}
+# SQLite와 실습 데이터베이스 {#sqlite}
 
 먼저 이론을 이해하는 것과 더블어 예제 데이터베이스를 설치하고 실습을 진행하기 위해서 
 먼저 명령-라인을 사용하여 어떻게 디렉토리 여기저기 이동하는지와 명령-라인에서 명령문을 어떻게 실행하는지 숙지할 필요가 있다.
@@ -88,7 +94,7 @@ $ mkdir ~/swc/sql
 $ cd ~/swc/sql
 ```
 
-### 2.1. SQLite 설치 [^install-sqlite3] {#install-sqlite}
+## SQLite 설치 [^install-sqlite3] {#install-sqlite}
 
 [^install-sqlite3]: [SQLite3 설치 및 간단한 사용법](http://blog.simplism.kr/?p=2329)
 
@@ -106,7 +112,7 @@ sqldiff.exe              sqlite3_analyzer.exe
 - survey.db: `sqlite3.exe` 명령어를 실행해서 `gen-survey-database.sql` 스크립트를 통해 생성된 데이터베이스
 
 
-### 2.2. 실습 예제 데이터베이스 다운로드 {#download-database}
+## 실습 데이터베이스 다운로드 {#download-database}
 
 `깃헙(GitHub)`에서 `gen-survey-database.sql` 파일을 어떻게 다운로드 받을까요?
 
@@ -155,9 +161,11 @@ Saving to: ‘gen-survey-database.sql’
 root@hangul:~/swc/sql$ sqlite3 survey.db < gen-survey-database.sql
 ```
 
-### 2.3. SQLite DB 연결 및 설치 테스트 {#connect-sqlite}
+## SQLite DB 연결/설치 테스트 {#connect-sqlite}
 
-생성된 데이터베이스에 연결하기 위해서, 데이터베이스를 생성한 디렉토리 안에서 SQLite를 시작한다. 그래서 `~/swc/sql` 디렉토리에서 다음과 같이 타이핑한다.
+생성된 데이터베이스에 연결하기 위해서, 
+데이터베이스를 생성한 디렉토리 안에서 SQLite를 시작한다. 
+그래서 `~/swc/sql` 디렉토리에서 다음과 같이 타이핑한다.
 
 ``` {r run-survey-db, eval=FALSE}
 root@hangul:~/swc/sql$ sqlite3 survey.db
@@ -185,7 +193,6 @@ seq  name             file
 0    main             ~/novice/sql/survey.db
 ```
 
-
 다음과 같이 타이핑해서 필요한 "Person", "Survey", "Site" "Visited" 테이블이 존재하는 것을 확인한다.
 `.table`의 출력결과는 다음과 같다.
 
@@ -194,9 +201,9 @@ sqlite> .tables
 Person   Site     Survey   Visited
 ```
 
-## 3. `dplyr` 동사 활용한 데이터베이스 작업 {#sql-dplyr}
+# `dplyr` 동사로 데이터베이스 작업 {#sql-dplyr}
 
-### 3.1. 데이터베이스 연결 {#db-connection}
+## 데이터베이스 연결 {#db-connection}
 
 가장 먼저 앞에서 생성한 sqlite3 데이터베이스에 R과 연결시킨다. 
 그리고 연결된 데이터베이스에 들어있는 테이블을 살펴본다.
@@ -204,8 +211,8 @@ Person   Site     Survey   Visited
 ``` {r connect-to-database}
 # 0. 환경설정 -----------------------
 
-# library(DBI)
-# library(tidyverse)
+library(DBI)
+library(tidyverse)
 
 # 1. 데이터 연결 -----------------------
 
@@ -213,7 +220,7 @@ con <- dbConnect(RSQLite::SQLite(), "data/survey.db")
 dbListTables(con)
 ```
 
-### 3.2. SQL을 직접 던지기 {#dplyr-sql}
+## SQL을 직접 던지기 {#dplyr-sql}
 
 `dbGetQuery` 명령어를 통해 연결된 `con`을 통해 데이터베이스에 질의문(query)를 직접 던질 수 있다.
 
@@ -222,7 +229,7 @@ dbListTables(con)
 dbGetQuery(con, 'SELECT * FROM Person LIMIT 5')
 ```
 
-### 3.3. dplyr 동사 활용 {#dplyr-dplyr}
+## dplyr 동사 활용 {#dplyr-dplyr}
 
 `tbl` 함수로 `con` 으로 연결된 데이터베이스의 특정 테이블 "Survey"를 뽑아낸다.
 
@@ -233,7 +240,7 @@ survey_df <- tbl(con, "Survey")
 head(survey_df)
 ```
 
-### 3.4. 데이터프레임 변환 {#dataframe}
+## 데이터프레임 변환 {#dataframe}
 
 `tbl` 함수로 `con` 으로 연결된 데이터베이스의 특정 테이블 "Survey"를 뽑아낸 상태는 아직
 R에서 작업이 가능한 데이터프레임이 아니라 `collect` 함수를 활용해서 데이터프레임으로 변환시켜 
@@ -247,7 +254,7 @@ survey_df %>% collect() %>%
     geom_boxplot()
 ```
 
-### 3.5. SQL 변환 과정 살펴보기 {#conversion}
+## SQL 변환 과정 살펴보기 {#conversion}
 
 `show_query` 함수를 사용해서 `dplyr` 동사가 SQL 질의문으로 변환된 상황을 살펴볼 수도 있다.
 
@@ -259,13 +266,86 @@ show_query({
 })
 ```
 
-### 3.6. 데이터베이스 연결 끊기 {#disconnect}
+## 데이터베이스 연결 끊기 {#disconnect}
 
 데이터베이스는 혼자 사용하는 것이 아니라 사용하지 않는 경우 필히 연결시켜 놓은 `con`을 반듯이 끊어 놓는다.
 
-``` {r db-disconnect}
+``` {r db-disconnect, eval=FALSE}
 # 7. 연결 끊기 -----------------------
 
 dbDisconnect(con)
 ```
 
+# 데이터모델 - `datamodelr` [^datamodelr] {#sqlite3-survey-model}
+
+[^datamodelr]: [Data model diagrams in R](https://github.com/bergant/datamodelr)
+
+`survey.db` 데이터베이스 정보를 바탕으로 데이터프레임을 추출한다. 
+이를 `datamodelr`에 넣어 데이터베이스 모델을 시각화한다.
+[`datamodelr`](https://github.com/bergant/datamodelr) 팩키지에 나와 있는 `nycflights13` 사례를 참조하여 유사하게 제작한다.
+
+먼저, 데이터프레임만 시각화한다.
+
+```{r survey-database-model}
+library(datamodelr)
+
+survey <- tbl(con, "Survey") %>% collect()
+person <- tbl(con, "Person") %>% collect()
+site <- tbl(con, "Site") %>% collect()
+visited <- tbl(con, "Visited") %>% collect()
+
+survey_model <- dm_from_data_frames(survey, person, site, visited)
+survey_graph <- dm_create_graph(survey_model, rankdir = "BT", col_attr = c("column", "type"))
+dm_render_graph(survey_graph)
+```
+
+
+<div class = "row">
+  <div class = "col-md-6">
+**`person` 테이블**
+
+```{r survey-person}
+person
+```
+
+**`visited` 테이블**
+
+```{r survey-visited}
+visited
+```
+
+  </div>
+  <div class = "col-md-6">
+**`survey` 테이블**
+
+```{r survey-survey}
+survey
+```
+
+**`site` 테이블**
+
+```{r survey-site}
+site
+```
+
+
+  </div>
+</div>
+
+
+다음으로 테이블의 키를 찾아 이를 연결시켜서 관계도 함께 표현되도록 작업한다.
+
+```{r survey-database-model-relation}
+survey_model <- dm_add_references(
+  survey_model,
+  
+  survey$person == person$ident,
+  visited$site == site$name,
+  survey$taken == visited$ident
+)
+
+survey_graph <- dm_create_graph(survey_model, rankdir = "BT", col_attr = c("column", "type"))
+dm_render_graph(survey_graph)
+
+dbDisconnect(con)
+```
