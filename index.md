@@ -33,12 +33,13 @@ title: 데이터 과학
             - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
             - [범주형 데이터 시각화 기초](ds-factor-dplyr-mosaic.html)
     - [결측데이터](ds-missing.html)
-    - [R과 SQL - `DBI`, `dplyr`](data-handling-sql.html) 
-        - [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
-    - [`dplyr` 데이터베이스](ds-dplyr-sql.html)        
     - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
         - [데이터테이블](data-handling-datatable.html)
+1. **관계형 데이터베이스(RDBMS)**
+    - [`dplyr` Database - 헬로월드](ds-dplyr-sql.html)
+    - [R과 SQL - `DBI`, `dplyr`](data-handling-sql.html) 
+        - [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
 1. **데이터 정제(Data Cleaning)**
     - [데이터 과학자가 아니라 청소부](ds-janitor.html)
 1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
