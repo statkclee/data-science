@@ -39,9 +39,11 @@ title: 데이터 과학
 1. **관계형 데이터베이스(RDBMS)**
     - [`dplyr` Database - 헬로월드](ds-dplyr-sql.html)
     - [R 데이터베이스 추상화 - DBI](ds-database-dbi.html)
+        - [xwMOOC 딥러닝 - "R 개발자가 알아야 되는 보안, 마리아 DB (MariaDB)"](http://statkclee.github.io/deep-learning/r-security.html#maria-db)
     - [R과 SQL - 소프트웨어 카펜트리](data-handling-sql.html) 
         - [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
         - [파이썬 판다스 - SQL](ds-pandas-sql.html)
+    - [R 병렬 프로그래밍 - "예측모형 데이터베이스(DBMS) 배포"](https://statkclee.github.io/parallel-r/r-database-tidypredict.html)
 1. **데이터 정제(Data Cleaning)**
     - [데이터 과학자가 아니라 청소부](ds-janitor.html)
 1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
