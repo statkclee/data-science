@@ -14,3 +14,4 @@ data/portal_mammals.sqlite
 .Rhistory
 config.yml
 .httr-oauth
+.ipynb_checkpoints/

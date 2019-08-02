@@ -40,6 +40,7 @@ title: 데이터 과학
     - [`dplyr` Database - 헬로월드](ds-dplyr-sql.html)
     - [R과 SQL - 소프트웨어 카펜트리](data-handling-sql.html) 
         - [데이터 카펜트리 SQL 학습교재(생태학, ecology)](https://statkclee.github.io/sql-ecology-lesson/)
+        - [파이썬 판다스 - SQL](ds-pandas-sql.html)
 1. **데이터 정제(Data Cleaning)**
     - [데이터 과학자가 아니라 청소부](ds-janitor.html)
 1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
