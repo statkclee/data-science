@@ -1,29 +1,55 @@
 ---
 layout: page
-title: 데이터 과학
-subtitle: 데이터분석을 위한 파이프라인
+title: 데이터 사이언스
+subtitle: "데이터 사이언스 파이프라인 - Base vs. Tidyverse"
+date: "`r Sys.Date()`"
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
 output:
   html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
-mainfont: NanumGothic
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
+``` {r, include=FALSE}
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+library(reticulate)
+use_condaenv("anaconda3")
+# reticulate::repl_python()
 ```
 
-> ## 학습 목표 [^pipeline-webinar] {.objectives}
->
-> * 전체적인 데이터 분석 파이프라인을 살펴본다.
-> * 원천 데이터를 깔끔한 데이터로 변환하는 이유를 이해한다.
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
 
+**데이터 분석 정의**
+
+데이터 분석은 데이터가 이해되고, 지식이 되고, 통찰을 얻게 되는 과정이다.  
+
+* "Data analysis is the process by which data becomes understanding, knowledge and insight"*    
+
+<br>
+--- Hadley Wickham
+</div>
+
+
+# 데이터 사이언스 파이프라인 [^before-and-after] [^pipeline-webinar] {#data-science-pipeline}
 
 [^pipeline-webinar]: [Pipelines for data analysis in R](https://www.rstudio.com/resources/webinars/pipelines-for-data-analysis-in-r/)
 
-### 1. 데이터 분석 파이프라인
+[^before-and-after]: [Jared P. Lander (2019) "R: Then and Now", New York R Conference](https://www.youtube.com/watch?v=gjpNEVcG1nU)
 
 데이터 분석은 다른 소프트웨어 개발과 동일하게 **컴퓨터 시간(Computer time)**과 
 **개발자 시간(Human time)**을 최적화하는 과정으로 볼 수 있다.
@@ -48,53 +74,19 @@ source("tools/chunk-options.R")
 |    열(column)      |    변수(Variable)     |
 
 
-#### 1.1. `magrittr` 코드와 일반 R 코드 비교 [^magrittr-vignette]
+# 데이터 사이언스 통합개발환경 {#ds-ide}
 
-`mtcars` 데이터셋을 파이프를 통해 데이터를 깔끔하게 정리하는 것과 기존 전통적 방식으로 개발된 코드를 비교해 보자.
+1990년대 초반 탄생한 R 언어는 초기 빈약하고 불편한 개발환경에서 진화에 진화를 거듭하여 RStudio 통합개발환경을 통해 4개의 작은창(pane)을 통해 데이터 사이언스 세계로 들어가는 포탈을 열었다는 평가를 받고 있다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
-library(magrittr)
+<img src="fig/ide-evolution.png" alt="통합개발환경 IDE" width="100%" />
 
-car_data <- 
-  mtcars %>%
-  subset(hp > 100) %>%
-  aggregate(. ~ cyl, data = ., FUN = . %>% mean %>% round(2)) %>%
-  transform(kpl = mpg %>% multiply_by(0.4251)) %>%
-  print
-```
+# 해들리 위컴과 브라이언 리플리 {#ds-who}
 
-전통적인 R코드는 본인이 작성하지 않았다면 해독하기가 만만치 않고, 괄호가 많다.
+[Brian D. Ripley](https://en.wikipedia.org/wiki/Brian_D._Ripley)는 "S Programming", "Modern Applied Statistics with S" 두권의 책으로 잘 알려져 있으면 베이스(Base) R로 알려진 핵심 코드의 상당부분을 저작한 것으로 유명하다. [Hadley Wickham](https://en.wikipedia.org/wiki/Hadley_Wickham)은 #JSM2019 에서 COPSS award를 수상하며 그동안 `tidyverse` 구축에 공헌한 것을 인정받았으며 최근 R 생태계 구축 및 R 코드 상당부분을 저작하여 기여했다.
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide"}
-car_data <- 
-  transform(aggregate(. ~ cyl, 
-                      data = subset(mtcars, hp > 100), 
-                      FUN = function(x) round(mean(x, 2))), 
-            kpl = mpg*0.4251)
-```
+<img src="fig/brian-hadley.png" alt="선수교체" width="100%" />
 
-결국 읽기 어렵고 이해하기 힘든 함수 조합을 가독성 높은 순열(sequence)로 변환하는 역할을 한다.
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide", eval=FALSE}
-x %>% f(y)
-# f(x, y)
-x %>% f(z, .)
-# f(z, x)
-x %>% f(y) %>% g(z)
-# g(f(x, y), z)
-```
-
-> ### 데이터 분석 정의 {.callout}
->
-> 데이터 분석은 데이터가 이해되고, 지식이 되고, 통찰을 얻게 되는 과정이다.  
-> 
-> *"Data analysis is the process by which data becomes understanding, knowledge and insight"*    
->
-> --- Hadley Wickham
-
-<img src="fig/ds-tidyverse.png" alt="깜끔한 세상" width="97%" />
-
-### 2. 데이터 과학을 위한 파이프라인 팩키지 모음 - `tidyverse`
+# 데이터 사이언스 팩키지- `tidyverse` {#tidyverse-packages}
 
 데이터 과학을 위한 파이프라인은 유닉스 파이프와 마찬가지로 
 각 모듈별로 통일된 인터페이스를 유지해야만, 
@@ -133,42 +125,89 @@ x %>% f(y) %>% g(z)
     - flexdashboard : 정적 인터랙티브 대쉬보드
     - shiny : 웹응용프로그램, 동적 대쉬보드
 
+<img src="fig/ds-tidyverse.png" alt="깜끔한 세상" width="97%" />
 
-#### 2.1. 깔끔한 데이터 -- `tidyr`
+# `Base R`과 `tidyverse` 비교 {#base-r-tidyverse}
 
-``` {r message=FALSE, warning=FALSE, comment=FALSE}
-suppressMessages(suppressWarnings(library(tidyr)))
-suppressMessages(suppressWarnings(library(readr)))
-suppressMessages(suppressWarnings(library(dplyr, warn.conflicts = FALSE)))
-suppressMessages(suppressWarnings(library(curl)))
+## `magrittr` 코드와 일반 R 코드 비교 [^magrittr-vignette] {#function}
 
-# 데이터 가져오기
-tb <- tbl_df(read_csv(url("https://raw.githubusercontent.com/hadley/tidyr/master/vignettes/tb.csv")))
-tb
+전통적인 R코드는 본인이 작성하지 않았다면 해독하기가 만만치 않고, 괄호가 많다.
+결국 읽기 어렵고 이해하기 힘든 함수 조합을 가독성 높은 순열(sequence)로 변환하는 역할을 한다.
 
-# 자료분석을 위한 형태로 변형한다.
-tb2 <- tb %>%
-  gather(demographic, n, m04:fu, na.rm = TRUE)
-tb2
-
-# 변수를 성별과 연령으로 쪼갠다.
-tb3 <- tb2 %>%
-  separate(demographic, c("sex", "age"), 1)
-tb3
-
-tb4 <- tb3 %>%
-  rename(country = iso2) %>%
-  arrange(country, year, sex, age)
-tb4
+``` {r message=FALSE, warning=FALSE, comment=FALSE, results="hide", eval=FALSE}
+x %>% f(y)
+# f(x, y)
+x %>% f(z, .)
+# f(z, x)
+x %>% f(y) %>% g(z)
+# g(f(x, y), z)
 ```
 
-#### 2.2. 변환 -- `dplyr`
+`mtcars` 데이터셋을 파이프를 통해 데이터를 깔끔하게 정리하는 것과 기존 전통적 방식으로 개발된 코드를 비교해 보자.
 
-- select: 데이터테이블에서 변수를 뽑아낸다.
-- filter: 값으로 관측점을 뽑아낸다.
-- mutate: 신규 변수를 생성한다. (log 변환)
-- summarise: 관측점을 하나로 축약한다. (평균)
-- arrange: 관측점을 오름차순, 내림차순으로 정렬한다.
+<div class = "row">
+  <div class = "col-md-6">
+**`tidyverse`**
+
+``` {r magrittr-nyc}
+library(magrittr)
+
+mtcars %>%
+  subset(hp > 100) %>%
+  aggregate(. ~ cyl, data = ., FUN = . %>% mean %>% round(2)) %>%
+  transform(kpl = mpg %>% multiply_by(0.4251)) %>%
+  print
+```
+
+  </div>
+  <div class = "col-md-6">
+**`Base R`**
+
+``` {r base-r-function}
+transform(aggregate(. ~ cyl, 
+                    data = subset(mtcars, hp > 100), 
+                    FUN = function(x) round(mean(x, 2))), 
+          kpl = mpg * 0.4251)
+```
+
+  </div>
+</div>
+
+
+## 깔끔한 데이터: `tidyr` {#tidyverse-tidyr}
+
+지저분한(messy) 데이터를 데이터 사이언스 작업에 적합한 형태로 `tidyr` 팩키지 핵심 동사 `gather`, `spread`, `separate`, `unite` 등을 활용하여 깔끔한 데이터로 파이프 연산자와 함께 연결시켜 변환시킨다.
+
+``` {r tidyverse-tidyr}
+library(tidyverse)
+
+# 데이터 가져오기
+tb <- read_csv("https://raw.githubusercontent.com/hadley/tidyr/master/vignettes/tb.csv")
+
+tb %>% 
+  DT::datatable()
+
+# 깔끔한 데이터 변환
+tidy_tb <- tb %>%
+  gather(demographic, n, m04:fu, na.rm = TRUE) %>% 
+  separate(demographic, c("sex", "age"), 1) %>%  # 변수를 성별과 연령으로 쪼갠다.
+  rename(country = iso2) %>%
+  arrange(country, year, sex, age)
+
+tidy_tb %>% 
+  sample_n(100) %>% 
+  DT::datatable()
+```
+
+## 변환: `dplyr` {#tidyverse-dplyr}
+
+- `select`: 데이터테이블에서 변수를 뽑아낸다.
+- `filter`: 값으로 관측점을 뽑아낸다.
+- `mutate`: 신규 변수를 생성한다. (log 변환)
+- `summarise`: 관측점을 하나로 축약한다. (평균)
+- `arrange`: 관측점을 오름차순, 내림차순으로 정렬한다.
+
+
 
 ### 2.3. 시각화 -- `ggvis`
 
