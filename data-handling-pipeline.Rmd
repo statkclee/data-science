@@ -29,6 +29,24 @@ use_condaenv("anaconda3")
 # reticulate::repl_python()
 ```
 
+# 빅데이터 {#tidyverse-bigdata-strategy}
+
+| 구분  |  데이터 크기 |
+|--------------|--------------|
+| 매우 큰 데이터 | 컴퓨터 한대 메모리에 저장될 수 없는 크기 : **>5 TB** |
+| 중간 데이터 | 서버 컴퓨터 메모리에 저장할 수 있는 크기 : **10 GB -- 5 TB** |
+| 작은 데이터 | 노트북 컴퓨터 메모리에 저장할 수 있는 크기 : **<10 GB** |
+
+전통적으로 R은 작은 데이터를 빠르게 탐색하는데 최적의 환경을 제공한다.
+중간크기 데이터를 작업하지 못할 기술적인 이유는 없지만, 거의 작업이 이뤄지지 않고 있다.
+
+빅데이터를 처리하는 전략
+
+1. 요약/표본추출/부분집합 추출 (90%)
+2. 작은 데이터 문제로 쪼개서 분할 정복 (9%)
+3. 더이상 어찌할 수 없는 큰 문제 데이터 (1%)
+
+
 <style>
 div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 </style>
@@ -43,6 +61,12 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 <br>
 --- Hadley Wickham
 </div>
+
+# 해들리 위컴과 브라이언 리플리 {#ds-who}
+
+[Brian D. Ripley](https://en.wikipedia.org/wiki/Brian_D._Ripley)는 "S Programming", "Modern Applied Statistics with S" 두권의 책으로 잘 알려져 있으면 베이스(Base) R로 알려진 핵심 코드의 상당부분을 저작한 것으로 유명하다. [Hadley Wickham](https://en.wikipedia.org/wiki/Hadley_Wickham)은 #JSM2019 에서 COPSS award를 수상하며 그동안 `tidyverse` 구축에 공헌한 것을 인정받았으며 최근 R 생태계 구축 및 R 코드 상당부분을 저작하여 기여했다.
+
+<img src="fig/brian-hadley.png" alt="선수교체" width="57%" />
 
 
 # 데이터 사이언스 파이프라인 [^before-and-after] [^pipeline-webinar] {#data-science-pipeline}
@@ -73,18 +97,56 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 |      행(row)       |   관측점(Observation) |
 |    열(column)      |    변수(Variable)     |
 
-
 # 데이터 사이언스 통합개발환경 {#ds-ide}
 
 1990년대 초반 탄생한 R 언어는 초기 빈약하고 불편한 개발환경에서 진화에 진화를 거듭하여 RStudio 통합개발환경을 통해 4개의 작은창(pane)을 통해 데이터 사이언스 세계로 들어가는 포탈을 열었다는 평가를 받고 있다.
 
 <img src="fig/ide-evolution.png" alt="통합개발환경 IDE" width="100%" />
 
-# 해들리 위컴과 브라이언 리플리 {#ds-who}
+## `setwd()`, `getwd()` &rarr; `here` [^ncsoft-danbi] {#tidyverse-here}
 
-[Brian D. Ripley](https://en.wikipedia.org/wiki/Brian_D._Ripley)는 "S Programming", "Modern Applied Statistics with S" 두권의 책으로 잘 알려져 있으면 베이스(Base) R로 알려진 핵심 코드의 상당부분을 저작한 것으로 유명하다. [Hadley Wickham](https://en.wikipedia.org/wiki/Hadley_Wickham)은 #JSM2019 에서 COPSS award를 수상하며 그동안 `tidyverse` 구축에 공헌한 것을 인정받았으며 최근 R 생태계 구축 및 R 코드 상당부분을 저작하여 기여했다.
+[^ncsoft-danbi]: [DANBI, "R 사용자를 위한 효과적인 패키지 및 폴더 관리"](https://danbi-ncsoft.github.io/etc/2018/08/14/head-of-r.html)
 
-<img src="fig/brian-hadley.png" alt="선수교체" width="100%" />
+개발환경이 준비되면 본격적인 데이터 사이언스 프로젝트를 시작해야 하는데 이에 필수적인 요소가 작업 디렉토리 설정(working directory)이 된다. `setwd("~/data-science")`와 같이 시작하거나, `setwd("D:\\workspace\\data-science")` 형태 작업을 수행하게 되는데, 본인이 여러대의 컴퓨터에서 작업하거나, 다른 작업자와 협업하는 경우 여간 고통스럽고 귀찮은 일이 아니다. `here` 팩키지는 상대경로를 절대경로로 바꿔주는 아주 편리하며 유용한 팩키지다.
+
+현재 프로젝트 작업 디렉토리 구조가 유지된다고 가정하면 누구의 컴퓨터이든지 관계없이 `here` 팩키지를 사용하게 되면 데이터에 대한 사항을 그대로 유지시킬 수가 있어 재현가능한 데이터 사이언스 작업환경이 된다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**작업 디렉토리 구조**
+
+```{r directory-structure, eval=FALSE}
+D:.                          
+├─code                       
+├─data                       
+│  ├─by_sido.csv
+│  └─by_city.csv
+...
+
+```
+
+  </div>
+  <div class = "col-md-6">
+**복사하여 붙여넣기**
+
+```{r here-package}
+library(tidyverse)
+library(here)
+
+here("data", "by_sido.csv")
+
+salary_df <- read_csv(here("data", "by_sido.csv"))
+
+salary_df %>% 
+  select(CTP_KOR_NM, CTPRVN_CD, votes_tlt) %>% 
+  sample_n(3) %>% 
+  DT::datatable()
+```
+  </div>
+</div>
+
+
+
 
 # 데이터 사이언스 팩키지- `tidyverse` {#tidyverse-packages}
 
@@ -131,6 +193,8 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 
 ## `magrittr` 코드와 일반 R 코드 비교 [^magrittr-vignette] {#function}
 
+[^magrittr-vignette]: [Library magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)
+
 전통적인 R코드는 본인이 작성하지 않았다면 해독하기가 만만치 않고, 괄호가 많다.
 결국 읽기 어렵고 이해하기 힘든 함수 조합을 가독성 높은 순열(sequence)로 변환하는 역할을 한다.
 
@@ -173,14 +237,41 @@ transform(aggregate(. ~ cyl,
   </div>
 </div>
 
+## 자료구조: `data.frame`, `tibble` {#tidyverse-dataframe}
+
+`data.frame`은 파이썬 판다스 데이터프레임과 어떤 점에서 유사한 점이 있고 작은 데이터(small data)를 가정하고 탐색적 데이터 분석과 모형개발에 사용하는 것을 염두에 두고 제작된 자료구조다. 반면에 `tibble`은 기존 `data.frame`이 갖고 있던 가정을 깨고 현재 상황에 맞춰 그동안의 데이터 사이언스 경험을 바탕으로 제작된 새로운 자료구조다.
+
+`row.names` 관련하여 행렬의 행명칭(row name)처럼 연산작업 중간에 엉키거나 유실되는 경우가 있지만, `tibble`은 이를 염두에 두고 분석가 친화적으로 만들어지고 가장 우려되는 데이터프레임에서 변수를 하나만 추출하게 되는 경우 벡터로 바뀌게 되는 문제를 미연에 방지해 둔 것이 예측가능성을 높혔다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**Base R**
+
+```{r mtcars-tidyverse}
+mtcars[, c("mpg")]
+
+subset(mtcars, select=mpg, drop = TRUE)
+```
+
+  </div>
+  <div class = "col-md-6">
+**`tidyverse` filter**
+
+```{r mtcars-tidyverse-filter}
+mtcars %>% 
+  rownames_to_column(var="car_name") %>% 
+  tbl_df() %>% 
+  select(car_name, mpg)
+```
+
+  </div>
+</div>
 
 ## 깔끔한 데이터: `tidyr` {#tidyverse-tidyr}
 
 지저분한(messy) 데이터를 데이터 사이언스 작업에 적합한 형태로 `tidyr` 팩키지 핵심 동사 `gather`, `spread`, `separate`, `unite` 등을 활용하여 깔끔한 데이터로 파이프 연산자와 함께 연결시켜 변환시킨다.
 
 ``` {r tidyverse-tidyr}
-library(tidyverse)
-
 # 데이터 가져오기
 tb <- read_csv("https://raw.githubusercontent.com/hadley/tidyr/master/vignettes/tb.csv")
 
@@ -207,65 +298,47 @@ tidy_tb %>%
 - `summarise`: 관측점을 하나로 축약한다. (평균)
 - `arrange`: 관측점을 오름차순, 내림차순으로 정렬한다.
 
+<div class = "row">
+  <div class = "col-md-6">
+**총계: `aggregate`**
 
-
-### 2.3. 시각화 -- `ggvis`
-
-- ggplot2
-- shiny
-- dplyr 파이프라인
-- vega 
-
-### 2.4. 모형 -- `broom`
-
-모형은 알려진 패턴을 제거하는데 탁월하다.
-
-``` {r message=FALSE, warning=FALSE, comment=FALSE, eval=FALSE}
-suppressMessages(suppressWarnings(library(tidyr)))
-suppressMessages(suppressWarnings(library(ggplot2)))
-suppressMessages(suppressWarnings(library(broom)))
-
-tx <- 
-  readRDS("tx-housing.rds") %>%
-  mutate(date = year + (month - 1) / 12) %>%
-  filter(!(city %in% c("Texas Totals", "Palestine")))
-tx
-
-ggplot(tx, aes(date, log(sales))) + 
-  geom_line(aes(group = city), alpha = 1/2)
-ggsave("sales.pdf", width = 8, height = 6)
-
-# Models as a tool --------------------------------------------------------
-tx <- tx %>% 
-  group_by(city) %>% 
-  mutate(
-    resid = 
-      lm(log(sales) ~ factor(month), na.action = na.exclude) %>%
-      resid()
-  )
-
-ggplot(tx, aes(date, resid)) +
-  geom_line(aes(group = city), alpha = 1/5) + 
-  geom_line(stat = "summary", fun.y = "mean", colour = "red")
+```{r tidyverse-aggregate}
+# 공식
+aggregate(mpg ~ cyl, data=mtcars, FUN="mean")
 ```
 
-### 5. 빅데이터 
+  </div>
+  <div class = "col-md-6">
+**`summarize`**
 
-| 구분  |  데이터 크기 |
-|--------------|--------------|
-| 매우 큰 데이터 | 컴퓨터 한대 메모리에 저장될 수 없는 크기 : **>5 TB** |
-| 중간 데이터 | 서버 컴퓨터 메모리에 저장할 수 있는 크기 : **10 GB -- 5 TB** |
-| 작은 데이터 | 노트북 컴퓨터 메모리에 저장할 수 있는 크기 : **<10 GB |
+```{r tidyverse-aggregate-group}
+# 공식
+mtcars %>% 
+  group_by(cyl) %>% 
+  summarise(mean_mpg = mean(mpg),
+            max_mpg  = max(mpg))
+```
 
-전통적으로 R은 작은 데이터를 빠르게 탐색하는데 최적의 환경을 제공한다.
-중간크기 데이터를 작업하지 못할 기술적인 이유는 없지만, 거의 작업이 이뤄지지 않고 있다.
+  </div>
+</div>
 
-빅데이터를 처리하는 전략
+# 시각화: `ggplot` {#viz-ggplot}
 
-1. 요약/표본추출/부분집합 추출 (90%)
-2. 작은 데이터 문제로 쪼개서 분할 정복 (9%)
-3. 더이상 어찌할 수 없는 큰 문제 데이터 (1%)
+R에는 [R 시각화 시스템](https://statkclee.github.io/viz/viz.html#2_r_%EC%8B%9C%EA%B0%81%ED%99%94_%EC%8B%9C%EC%8A%A4%ED%85%9C_5)에서 2017년 3월 조사한 내용에 따르면 크게 3가지 시각화 시스템이 존재한다. 자세한 사항은 R 시각화 시스템을 참조한다. 이외에도 [인터랙티브(Interactive) 시각화](https://statkclee.github.io/viz/viz-interactive.html), [`rbokeh`](https://statkclee.github.io/viz/viz-rbokeh.html)와 빅데이터 시각화를 위한 [`trelliscope`](https://statkclee.github.io/viz/viz-trelliscope.html) 등이 존재한다.
 
-### 참고자료
+- 정적 시각화
+    - `Base` 시각화
+    - `lattice`
+    - `ggplot`
+- 인터랙티브 시각화
+    - `plotly`
+    - `rbokeh`
+- 애니메이션
+    - `gganimate`
+- 빅데이터 시각화
+    - `trelliscope`
+    
+# 모형: `tidymodels` {#tidyverse-tidymodels}
 
-[^magrittr-vignette]: [Library magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)
+`tidyverse`에서 모형에 대한 자세한 사항은 [`tidymodels`](https://statkclee.github.io/model/tidyverse-model.html)를 참조한다.
+
