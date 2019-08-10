@@ -46,7 +46,7 @@ title: 데이터 과학
     - [R 병렬 프로그래밍 - "예측모형 데이터베이스(DBMS) 배포"](https://statkclee.github.io/parallel-r/r-database-tidypredict.html)
 1. **데이터 정제(Data Cleaning)**
     - [데이터 과학자가 아니라 청소부](ds-janitor.html)
-1. [`tidyverse` 데이터 과학 기본체계](ds-tidyverse.html)
+1. [`tidyverse` 데이터 사이언스 기본체계](ds-tidyverse.html)
     - [데이터 사이언스 파이프라인 - Base vs. Tidyverse](data-handling-pipeline.html)
     - [데이터프레임(tibble)](data-handling-tibble.html)
     - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
