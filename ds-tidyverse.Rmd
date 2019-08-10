@@ -1,25 +1,37 @@
 ---
 layout: page
-title: 데이터 과학
-subtitle: tidyverse 데이터 과학 기본체계
+title: 데이터 사이언스
+subtitle: "`tidyverse` 데이터 사이언스 기본체계"
+author:
+    name: xwMOOC
+date: "`r Sys.Date()`"
 output:
   html_document: 
     toc: yes
-    keep_md: yes
-mainfont: NanumGothic
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+editor_options: 
+  chunk_output_type: console
 ---
 
-```{r, include=FALSE}
-source("tools/chunk-options.R")
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+library(reticulate)
+use_condaenv("anaconda3")
+# reticulate::repl_python()
+
+theme_set(theme_minimal(base_family = "AppleGothic"))
 ```
 
-> ## 학습 목표 {.objectives}
->
-> * `tidyverse`와 `messyverse`를 이해한다.
-> * 사람과 컴퓨터를 작업 최적화를 위한 접점을 찾아본다.
-> * 데이터 과학 문제에 대한 R 진영 `tidyverse` 해결책을 이해한다.
 
-## 1. 데이터 과학 문제정의
+`tidyverse`와 `messyverse` 차이를 이해하고, 사람과 컴퓨터를 작업 최적화를 위한 접점을 찾아본다. 데이터 사이언스 문제에 대한 R 진영 `tidyverse` 해결책을 이해한다.
+
+# 데이터 과학 문제정의 {#tidyverse-messyverse}
 
 데이터 정제(Cleansing)는 원데이터를 시각화하거나 모형을 개발을 위해 다음 단계를 준비하는 사전 준비과정이다. 
 하지만, 데이터 정제는 과거 많이 사용된 개념으로 정형화된 데이터베이스 혹은 통계 팩키지에 데이터를 사전 준비하는 과정을 
@@ -34,7 +46,7 @@ source("tools/chunk-options.R")
 이런 문제에 대한 해결책을 오랜 기간동안 탐구해 왔지만, 문제의 본질을 파악하고 이에 대한 적절한 툴체인을 구축함으로써 
 문제를 기회를 바꿀 수 있다.
 
-<img src="fig/data-science-rationale.png" alt="전통적 문제정의" width="50%" />
+<img src="fig/data-science-rationale.png" alt="전통적 문제정의" width="77%" />
 
 데이터 과학은 컴퓨터와 사람이 데이터 프로그래밍 언어 R로 소통하는 과정으로 이해할 수 있다.
 사람이 인지하여 생각한 것을 코딩을 통해 기술하고 이를 컴퓨터에 넣어주면, 컴퓨터가 이를 실행하는 과정이다.
@@ -43,7 +55,7 @@ source("tools/chunk-options.R")
 사람이 가장 중요한 자원이 되었고, 컴퓨터에 작업명령을 기술하는 코딩도 기계중심 프로그래밍 언어에서
 인간중심 프로그래밍 언어로 진화하고 있다.
 
-## 2. 문제해결 개념 아키텍쳐
+# 문제해결 개념 아키텍쳐 {#tidyverse-problem-architecture}
 
 문제 해결의 중심에 사람이 있다. 하지만 `tidyr`을 통해 데이터테이블 형식의 
 데이터가 `dplyr`에 들어오는 것을 기본 가정으로 깔고 있다.
@@ -51,9 +63,9 @@ source("tools/chunk-options.R")
 알고리즘을 생각하고, 이를 코딩으로 기술해서,
 컴퓨터에 작업명령을 내린다.
 
-<img src="fig/data-science-countermeasure.png" alt="R진영 해결책" width="50%" />
+<img src="fig/data-science-countermeasure.png" alt="R진영 해결책" width="77%" />
 
-### 2.1. `dplyr` 동사 명령어
+##`dplyr` 동사 명령어 {#tidyvrse-dplyr}
 
 인지능력을 통해 데이터를 처리하는 알고리즘은 데이터 처리 동사 명령어로 볼 수 있다.
 `tidyr`을 통해 정규데이터 형태로 변형이 되었다고 가정하면,
@@ -69,7 +81,7 @@ source("tools/chunk-options.R")
 - summarise: 관측점을 하나로 축약한다. (평균)
 - arrange: 관측점을 오름차순, 내림차순으로 정렬한다.
 
-### 2.2. `%>%` 파이프라인 연산자
+## `%>%` 파이프라인 연산자 {#tidyverse-pipe}
 
 `dplyr`은 파이프 연산자 [magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)을 가져와서 사용한다. 
 `%>%`은 "then"으로, 혹은 "파이프" 발음한다.
@@ -80,41 +92,57 @@ source("tools/chunk-options.R")
 괄호내부를 외부 괄호와 연결하는등 상당히 많은 두뇌회전을 요구하지만, 
 파이프 연산자를 사용하면 매우 직관적으로 이해할 수 있다.
 
-> ### 전통적 R 코드와 파이프 연산자를 사용한 R 코드 비교 {.callout}
->
-> #### 전통적 R 코드
-> ~~~ {.input}
-> hourly_delay <- filter(   
->    summarise(   
->        group_by(   
->             filter(   
->                 flights,    
->                 !is.na(dep_delay)   
->             ),    
->             date, hour   
->        ),    
->    delay = mean(dep_delay),    
->         n = n()   
->    ),    
->    n > 10   
-> )
-> ~~~
->
-> #### 파이프 연산자를 사용한 R 코드
-> 
-> ~~~ {.r}
-> hourly_delay <- flights %>%  
->   filter(!is.na(dep_delay)) %>% 
->   group_by(date, hour) %>% 
->   summarise(delay = mean(dep_delay), n = n()) %>%  
->   filter(n > 10) 
-> ~~~
+전통적 R 코드와 파이프 연산자를 사용한 R 코드 비교하면 다음과 같다.
 
-### 2.3. SQL 코드 자동생성
+<div class = "row">
+  <div class = "col-md-6">
+
+**전통적 R 코드**
+
+```{r traditional-r-code, eval=FALSE}
+hourly_delay <- filter(   
+    summarise(   
+        group_by(   
+             filter(   
+                 flights,    
+                 !is.na(dep_delay)   
+             ),    
+             date, hour   
+        ),    
+    delay = mean(dep_delay),    
+         n = n()   
+    ),    
+    n > 10   
+)
+```
+
+
+  </div>
+  <div class = "col-md-6">
+
+**파이프 연산자를 사용한 R 코드**
+
+```{r tidyverse-r-code, eval=FALSE}
+hourly_delay <- flights %>%  
+  filter(!is.na(dep_delay)) %>% 
+  group_by(date, hour) %>% 
+  summarise(delay = mean(dep_delay), n = n()) %>%  
+  filter(n > 10) 
+```
+
+  </div>
+</div>
+
+
+## SQL 코드 자동생성 {#tidyverse-sql}
 
 `dplyr` 팩키지에 `translate_sql` 함수를 통해 R코드를 SQL 쿼리문으로 
 바꿔 데이터베이스에 질의를 던지게 된다. 이를 통해 빅데이터 및 다양한 데이터베이스에 
 존재하는 데이터를 R에서 인지적 부담없이 작업할 수 있게 된다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**`dplyr` 코드**
 
 ``` {r dplyr-code, eval=FALSE}
 flights %>%
@@ -124,6 +152,10 @@ flights %>%
  filter(n > 10)
 }
 ```
+
+  </div>
+  <div class = "col-md-6">
+**SQL 코드**
 
 ``` {r sql-code, eval=FALSE}
 SELECT "date", "hour", "delay", "n"
@@ -138,7 +170,12 @@ FROM (
 WHERE "n" > 10.0
 ```
 
-## 3. `tidyverse` 선언 [^tidyverse-menifesto]
+  </div>
+</div>
+
+
+
+# `tidyverse` 선언 [^tidyverse-menifesto] {#tidyverse-manifesto}
 
 데이터 과학 모형개발과 자료분석에서 R 팩키지 도구상자를 잘 갖추는 것도 중요한 작업이다.
 다행히도, 최근에 [`tidyverse`](https://cran.r-project.org/web/packages/tidyverse/index.html) 팩키지가 새로 나와 많은 부분 체계화되었다.
@@ -200,7 +237,7 @@ R은 함수형 언어라 객체지향언어나 다른 언어 패러다임과 싸
 > it is often the quality of the glue that most directly determines the power of the system.
 > - Programs must be written for people to read, and only incidentally for machines to execute.  
 
-## 4. 프로그래밍과 데이터 과학 작업흐름 [^jenny-plotcon-2016]
+# 프로그래밍과 데이터 사이언스 작업흐름 [^jenny-plotcon-2016] {#tidyverse-workflow}
 
 [^jenny-plotcon-2016]: [PLOTCON 2016: Jenny Bryan, Behind every great plot there's a great deal of wrangling](https://www.youtube.com/watch?v=4MfUCX_KpdE)
 
@@ -218,7 +255,7 @@ RESTful API로 모형을 제공하는 경우도 있어 이는 완전히 다른 �
 
 <iframe width="320" height="180" src="https://www.youtube.com/embed/4MfUCX_KpdE" frameborder="0" allowfullscreen></iframe>
 
-## 5. 가트너 데이터 과학
+# 가트너 데이터 과학 {#tidyverse-gartner}
 
 더이상 데이터를 분석하는 것이 뒤늦은 깨달음을 주고 이해를 하는 단계를 넘어섰다.
 가트너가 제시한 데이터를 활용하는 4단계 즉, 기술분석, 진단분석, 예측분석, 처방분석 단계는 
