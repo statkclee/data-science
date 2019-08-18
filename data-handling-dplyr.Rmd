@@ -34,9 +34,15 @@ library(tidyverse)
 
 [^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
 
-데이터프레임과 동일하지만, `tbl`로 작업을 일원화한다. 선행 작업으로 `tidyr`을 받아 `dplyr`로 작업한다.
-`dplyr` 데이터 작업 동사 5개를 활용한다. 단일 데이터프레임 `dplyr` 동사와 마찬가지로 
-두 데이터프레임에 대해서도 `join` 동사를 활용한다.
+가공되지 않은 원자료(raw data)에서 자료를 자유자재로 다룰 수 있도록 수십년동안 수많은 통계/공학자들이 아낌없이 시간을 기부해 주었기 때문에 과거에는 전문가들만 할 수 있었던 고도의 어려운 작업도 정확하고 수월하게 수행할 수 있다. 
+자료는 기본적으로 *벡터(Vector)*를 기본으로 한다. 하지만 벡터로 표현될 수 있는 정보량은 한정되어 있으며 이를 하나의 자료 형태로 구조화한 것을 *데이터프레임(dataframe)*으로 볼 수 있다. 
+따라서, 자료분석을 위한 기본 자료구조가 데이터프레임이 된다.
+
+특히 `SQL`을 통해서 **데이터 조작(Data Manipulation)**에 대한 개념 잡고 `쉘(shell)`을 통한 작업 자동화 개념을 익히고, 팩키지를 사용하면 추구하는 바를 신속하고 정확하게 달성할 수 있다. 
+
+데이터프레임과 동일하지만, `tbl`로 작업을 일원하고, 선행 작업으로 `tidyr`을 받아 `dplyr`로 작업한다.
+단일 데이터프레임은 `dplyr` 데이터 작업 동사 5개를 활용하며, 단일 데이터프레임 `dplyr` 동사와 마찬가지로 
+두 데이터프레임에 대해서도 `*_join` 동사를 활용한다.
 
 [^data-pliers]: [Stupid Comics: Know your Pliers](http://www.misterkitty.org/extras/stupidcovers/stupidcomics507.html)
 
@@ -88,9 +94,9 @@ library(EDAWR)
 # ?tb
 ```
 
-# 사람 혹은 기계 중심 - `gather`, `spread`  {#dplyr-from-wide-to-long}
+# 사람 혹은 기계 중심 - `gather`, `spread`  {#dplyr-from-wide-to-long-human}
 
-## Wide 형식 &rarr; Long 형식 데이터 [^tidyexplain] [^omni-spread]   {#dplyr-from-wide-to-long}
+## Wide 형식 &rarr; Long 형식 데이터 [^tidyexplain] [^omni-spread]   {#dplyr-from-wide-to-long-2}
 
 [^omni-spread]: [Omni Analytics Group, "Animating Data Transformations"](https://omnianalytics.io/2018/08/30/animating-the-data-transformation-process-with-gganimate/)
 
@@ -540,7 +546,7 @@ pollution %>% group_by(city) %>%
   ungroup()
 ```
 
-# `dplyr`과 비교 [^dt-dplyr-comparison] {#dplyr-comparison}
+# `dplyr` 동사와 Base 구문 비교 [^dt-dplyr-comparison] {#dplyr-comparison}
 
 [^dt-dplyr-comparison]: [data.table vs dplyr: can one do something well the other cannot or does poorly?](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly)
 
@@ -551,9 +557,6 @@ pollution %>% group_by(city) %>%
 1. 메모리 사용량
 1. 구문
 1. 기능 
-
-
-## `dplyr` 팩키지와 Base 비교 {#dplyr-base-comparison}
 
 `dplyr` 팩키지와 Base 비교를 위해서 범주형 변수, 숫자형 변수 각 하나씩을 갖는 데이터프레임을 생성시킨다.
 
@@ -622,16 +625,93 @@ arrange(df, color)
 arrange(df, desc(color))
 ```
 
+# `dplyr` 패턴과 `transmute` 동사 {#dplyr-group-by-mutate-transmute}
 
-# `apply` 계열 함수 {#apply-family}
+## `group_by` + `mutate`: 그룹별 비율 {#dplyr-group-by-mutate}
 
-자료는 기본적으로 *벡터(Vector)*를 기본으로 한다. 
-하지만 벡터로 표현될 수 있는 정보량은 한정되어 있으며 이를 하나의 자료 형태로 구조화한 것을 *데이터프레임(dataframe)*으로 볼 수 있다. 
-따라서, 자료분석을 위한 기본 자료구조가 데이터프레임이 된다.
+`group_by()` 동사와 `mutate()`를 적용시킨 패턴도 많이 사용하는 패턴이다.
+
+예를 들어, `gapminder` 데이터셋의 가장 최근 2007년 기준 각 대륙별 인구를 모두 더해서 `total_pop`를 계산하고 나서 각 대륙별로 가장 인구가 많은 국가와 가장 점유율이 높은 국가를 뽑아낼 수 있다. 먼저 각 대륙별 가장 인구가 많은 국가를 1곳 뽑아보자
+
+```{r group_by-mutate-top}
+library(gapminder)
+
+gapminder %>% 
+  mutate(pop = pop / 100000000) %>% # 단위 억명
+  filter(year == max(year)) %>% 
+  group_by(continent) %>% 
+  mutate(total_pop = sum(pop)) %>% 
+  top_n(1, wt=pop)
+```
+
+각 대륙별 국가 비율 `fraction`을 계산해서 가장 인구 비중이 높은 국가를 하나씩 뽑아보는 것도 가능하다.
+
+```{r group_by-mutate}
+gapminder %>% 
+  mutate(pop = pop / 100000000) %>% # 단위 억명
+  filter(year == max(year)) %>% 
+  group_by(continent) %>% 
+  mutate(total_pop = sum(pop),
+         fraction = pop / total_pop) %>% 
+  top_n(1, wt=fraction)
+```
+
+## `group_by` + 윈도우 함수: 그룹별 변화율 {#dplyr-group-by-mutate-difference}
+
+`group_by()` 동사와 윈도우 함수(`lag`, `lead` 등)를 사용해서 년도별 변화가 가장 큰 특징점을 뽑아낼 수 있다.
+이를 통해서 가장 인구가 많이 줄어든 시점과 국가를 쉽게 특정할 수 있다. 
+
+```{r group_by-mutate-difference}
+gapminder_window <- gapminder %>% 
+  group_by(continent, country) %>% 
+  arrange(continent, country, year) %>% 
+  mutate(lifeExp_lag = lag(lifeExp)) %>% 
+  mutate(difference = lifeExp - lifeExp_lag) %>% 
+  select(country, continent, year, lifeExp, lifeExp_lag, difference) %>% 
+  ungroup()
+
+worst_countries <- gapminder_window %>% 
+  top_n(5, wt=-difference) %>% 
+  pull(country)
+
+gapminder_window %>% 
+  filter(country %in% worst_countries) %>% 
+  arrange(difference)
+```
+
+
+## `transmute` 동사 {#dplyr-group-by-mutate-difference-transmute}
+
+`transmute` 동사는 `select`와 `mutate`를 결합한 동사로 코드를 좀더 간결하게 만들 수 있다.
+예를 들어, `GDP`를 계산하는데 인구(`pop`)와 일인당GDP(`gdpPercap`)을 곱해야 계산할 수 있는데, `mutate` + `select`를 동원하면 코드가 길어지는데 `transmute`를 사용하면 한줄로 깔끔하게 구할 수 있다.
+
+
+<div class = "row">
+  <div class = "col-md-6">
+**`select` + `mutate` 동사 조합**
+
+```{r dplyr-transmute-select-mutate}
+gapminder %>% 
+  mutate(GDP = pop * gdpPercap) %>% 
+  select(continent, country, GDP)
+```
+
+  </div>
+  <div class = "col-md-6">
+**`transmute` 동사**
+
+```{r dplyr-transmute}
+gapminder %>% 
+  transmute(continent, country, GDP = pop * gdpPercap)
+```
+
+  </div>
+</div>
+
+# 분할-적용-병합(Split-Apply-Combine) 전략 - `apply` 계열 {#apply-family}
 
 R을 사용하는 방법 중 하나는 반복을 통해 한번에 하나씩 연산을 수행하기 보다 단 한번 *호출(call)*을 통해 전체 벡터 연산을 수행한다. 
-또한 `apply` 함수를 사용해서 행, 열, 리스트에 대해 동일 연산을 수행한다. 
-또한 `reduce`를 사용해서 함수형 프로그래밍도 확장해서 수행한다.
+또한 `apply` 함수를 사용해서 행, 열, 리스트에 대해 동일 연산을 수행하고, `reduce`를 사용해서 함수형 프로그래밍도 확장해서 수행한다.
 
  - `lapply(리스트, 함수)` : 리스트(list) 자료형에 `apply` 함수를 적용하여 데이터를 처리한다.
  - `sapply(리스트, 함수)` : `lappy` 함수와 동일하나 리스트 대신에 벡터를 반환한다.
@@ -639,8 +719,5 @@ R을 사용하는 방법 중 하나는 반복을 통해 한번에 하나씩 연�
  - `tapply(x,요인변수,함수)` : 요인변수(factor)에 맞춰 `apply` 함수로 데이터를 처리한다. 
  - `vapply(리스트,함수,...)` : `lappy`의 고속처리 버젼.
 
-가공되지 않은 원자료(raw data)에서 자료를 자유자재로 다룰 수 있도록 수십년동안 수많은 통계/공학자들이 아낌없이 시간을 기부해 주었기 때문에 과거에는 전문가들만 할 수 있었던 고도의 어려운 작업도 정확하고 수월하게 수행할 수 있다. 
-
-그 외에도 다양한 팩키지(package)를 파이썬과 마찬가지로 제공하여 R을 선택하는 순간 자료 분석, 모형, 제품화에 대해 강력한 무기를 손에 넣게 된다. 
-
-특히 `SQL`을 통해서 **데이터 조작(Data Manipulation)**에 대한 개념 잡고 `쉘(shell)`을 통한 작업 자동화 개념을 익히고, 패키지를 사용하면 추구하는 바를 신속하고 정확하게 달성할 수 있다. 
+ Hadley Wickham의 2011년 Journal of Statistical Software 에 실린 "The Split-Apply-Combine Strategy for Data Analysis"를 바탕으로 [R 병렬 프로그래밍 - 분할-적용-병합(Split-Apply-Combine) 전략](https://statkclee.github.io/parallel-r/r-parallel-split-apply-combine.html) 구현하면 데이터 분석가도 복잡하고 난해한 고난도 데이터 분석 작업을 수월히 처리할 수 있다.
+ 
