@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 두 테이블 동사(dplyr join)
+subtitle: "두 테이블 동사(dplyr join)"
 author:
     name: xwMOOC
     url: https://www.facebook.com/groups/tidyverse/
@@ -29,7 +29,9 @@ library(tidyverse)
 ```
 
 
-# 두-테이블 동사 [^dplyr-join-vignette] [^stat545-dplyr-join] {#two-table-verbs}
+# 두-테이블 동사 [^dplyr-join-vignette] [^stat545-dplyr-join] [^tidyexplain-dplyr-join] {#two-table-verbs}
+
+[^tidyexplain-dplyr-join]: [gadenbuie/tidyexplain, "Animations of tidyverse verbs using R, the tidyverse, and gganimate"](https://github.com/gadenbuie/tidyexplain)
 
 [^dplyr-join-vignette]: [Two-table verbs](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html)
 
@@ -71,11 +73,12 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 기본키와 외래키를 꼭 한 필드로 고정할 필요는 없고, 다수 필드를 묶어 기본키와 외래키를 정의하는 것도 가능하다.
 
 
-# 기본 병합(join) {#two-table-join}
+# `mutate join` 유형 병합(join) {#two-table-join}
 
 데이블 두개를 병합하는데 사용되는 기본 병합(join) 동사는 4개가 있다: `left_join()`, `right_join()`, `inner_join()`, `full_join()`
+이런 유형의 두 데이터프레임 동사는 데이터프레임의 형태가 변형(`mutate`)된다는 특징이 있어 이를 `mutate join` 동사라고 한다.
 
-<img src="fig/ds-basic-join.png" alt="기본 병합" width="77%" />
+<img src="fig/ds-basic-join.png" alt="기본 병합" width="100%" />
 
 먼저 `superheroes`, `publishers` 데이터프레임을 생성한다. 
 
@@ -139,37 +142,7 @@ ijsp_kable <- knitr::kable(ijsp)
 </table>
 
 
-<img src="images/inner-join.gif" alt="inner join" width="100%" />
-
-
-## `semi_join()` {#two-table-semi-join} 
-
-```{r two-table-verbs-semi-join}
-(sjsp <- semi_join(superheroes, publishers))
-```
-
-```{r two-table-verbs-semi-join-print}
-sjsp_kable <- knitr::kable(sjsp)
-```
-
-<table border = 1>
-  <tr>
-  <td valign="top">
-  superheroes
-  `r superheroes_kable`
-</td>
-  <td valign="top">
-  publishers
-  `r publishers_kable`
-</td>
-  <td valign="top">
-  semi-join(x = superheroes, y = publishers)
-  `r sjsp_kable`
-</td>
-</tr>
-</table>
-
-<img src="images/semi-join.gif" alt="semi join" width="100%" />
+<img src="images/inner-join.gif" alt="inner join" width="57%" />
 
 
 ## `left_join()` {#two-table-left-join} 
@@ -199,7 +172,7 @@ ljsp_kable <- knitr::kable(ljsp)
 </tr>
 </table>
 
-<img src="images/left-join.gif" alt="left join" width="100%" />
+<img src="images/left-join.gif" alt="left join" width="57%" />
 
 ## `right_join()` {#two-table-right-join} 
 
@@ -229,40 +202,7 @@ rjsp_kable <- knitr::kable(rjsp)
 </tr>
 </table>
 
-<img src="images/right-join.gif" alt="right join" width="100%" />
-
-## `anti_join()` {#two-table-verb-anti-join}
-
-`anti_join(x, y)`은 필터링 조인으로 `y` 데이터프레임에 매칭되지 않지만 `x` 데이터프레임에 있는 칼럼만 반환한다.
-
-```{r two-table-verb-anti-join}
-(ajps <- anti_join(publishers, superheroes))
-```
-
-```{r two-table-verb-anti-join-table}
-ajps_kable <- knitr::kable(ajps)
-```
-
-<table border = 1>
-  <tr>
-<tr>
-<td valign="top">
-publishers
-`r publishers_kable`
-</td>
-<td valign="top">
-superheroes
-`r superheroes_kable`
-</td>
-<td valign="top">
-anti_join(x = publishers, y = superheroes)
-`r ajps_kable`
-</td>
-</tr>
-</table>
-
-<img src="images/anti-join.gif" alt="anti join" width="100%" />
-
+<img src="images/right-join.gif" alt="right join" width="57%" />
 
 ## `full_join()` {#two-table-verb-full-join}
 
@@ -292,7 +232,74 @@ fjsp_kable <- knitr::kable(fjsp)
 </tr>
 </table>
 
-<img src="images/full-join.gif" alt="full join" width="100%" />
+<img src="images/full-join.gif" alt="full join" width="57%" />
+
+# `filtering join` 유형 병합(join) {#two-table-join}
+
+`mutate join`과 달리 `filtering join`은 해당 데이터프레임에 새로운 것이 추가되거나 해서 변형되는 것이 아니라 다른 데이터프레임을 참조해서 필터링된다는 점에서 차이가 난다.
+
+## `semi_join()` {#two-table-semi-join} 
+
+`semi_join()`은 두 데이터프레임에 공통된 것을 필터로 찾아서 반환시키는 역할을 수행한다.
+
+```{r two-table-verbs-semi-join}
+(sjsp <- semi_join(superheroes, publishers))
+```
+
+```{r two-table-verbs-semi-join-print}
+sjsp_kable <- knitr::kable(sjsp)
+```
+
+<table border = 1>
+  <tr>
+  <td valign="top">
+  superheroes
+  `r superheroes_kable`
+</td>
+  <td valign="top">
+  publishers
+  `r publishers_kable`
+</td>
+  <td valign="top">
+  semi-join(x = superheroes, y = publishers)
+  `r sjsp_kable`
+</td>
+</tr>
+</table>
+
+<img src="images/semi-join.gif" alt="semi join" width="57%" />
+
+## `anti_join()` {#two-table-verb-anti-join}
+
+`anti_join()`은 두 데이터프레임에 공통된 것을 필터로 찾아서 `semi_join()`과 정반대 역할을 수행한다. 즉, `anti_join(x, y)`은 필터링 조인으로 `y` 데이터프레임에 매칭되지 않지만 `x` 데이터프레임에 있는 칼럼만 반환한다.
+
+```{r two-table-verb-anti-join}
+(ajps <- anti_join(publishers, superheroes))
+```
+
+```{r two-table-verb-anti-join-table}
+ajps_kable <- knitr::kable(ajps)
+```
+
+<table border = 1>
+  <tr>
+<tr>
+<td valign="top">
+publishers
+`r publishers_kable`
+</td>
+<td valign="top">
+superheroes
+`r superheroes_kable`
+</td>
+<td valign="top">
+anti_join(x = publishers, y = superheroes)
+`r ajps_kable`
+</td>
+</tr>
+</table>
+
+<img src="images/anti-join.gif" alt="anti join" width="57%" />
 
 # R과 SQL 비교 {#two-table-verb-comparison}
 
