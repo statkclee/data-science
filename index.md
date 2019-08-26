@@ -54,7 +54,7 @@ title: 데이터 과학
         - [데이터 병렬 작업 공구(multiplyr)](data-handling-multiplyr.html) 
         - [텍스트 작업 공구(tidytext)](data-handling-tidytext.html) 
         - [시계열 데이터 작업 공구(tidyquant)](data-handling-tidyquant.html) 
-    - [두 테이블 동사(dplyr join)](ds-dplyr-join.html)
+    - [두 테이블 동사(dplyr join) - **레고**](ds-dplyr-join.html)
     - [데이터 내보내기](data-handling-export.html)
     - [데이터 다수 다루기 - 파케이](ds-manip-multiple-data.html)        
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)

@@ -15,3 +15,11 @@ data/portal_mammals.sqlite
 config.yml
 .httr-oauth
 .ipynb_checkpoints/
+data/inventory_parts.csv
+data/inventory_sets.csv
+data/part_categories.csv
+data/parts.csv
+data/sets.csv
+data/themes.csv
+data/colors.csv
+data/inventories.csv
