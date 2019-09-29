@@ -291,3 +291,331 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 `broom`이다.
 
 [^tidy-workflow]: [broom: a package for tidying statistical models into data frames](http://www.r-bloggers.com/broom-a-package-for-tidying-statistical-models-into-data-frames/)
+
+# `pivot_*()` 인텍스(index)와 데카르트 평면(Cartesian) [^yutani-tokyor] [^tidyr-vignette] [^martin-fight] {#pivot-revolution}
+
+[^yutani-tokyor]: [tidyr 1.0.0の新機能 pivot_*() / tidyr-pivot](https://speakerdeck.com/yutannihilation/tidyr-pivot)
+
+[^tidyr-vignette]: [Tidyr, Pivoting](https://tidyr.tidyverse.org/dev/articles/pivot.html)
+
+[^martin-fight]: [Martin Frigaard (March 27, 2019), Pivoting data from columns to rows (and back!) in the tidyverse](http://www.storybench.org/pivoting-data-from-columns-to-rows-and-back-in-the-tidyverse/)
+
+해들리 위컴이 언급했듯이, `gather`/`spread`는 사라지지 않고 훨씬 더 나은 모습으로 재탄생했습니다.
+`pivot_longer()`, `pivot_wider()` 함수는 `gather()`, `spread()` 함수를 개선하면서 다른 팩키지의 최신 기능을 추가시켰다.
+
+- `pivot_longer()`은 `data.table` 팩키지 `melt()`, `dcast()`와 연관됨.
+- `cdata` 팩키지에 영감을 받아 `pivot_longer()`, `pivot_wider()` 명칭으로 통일됨.
+
+기억하기 좋게 인텍스(index)를 갖는 긴 자료형과 데카르트 평면(Cartesian)과 같은 넓은(wide) 자료형으로 구분한다. `tidyr`이 버전 1.0으로 정식 버전업하면서 생겨난 가장 큰 변화중의 하나가 아닐까 싶다.
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">New (draft) pivot_long() and pivot_wide() draw inspirations from improvements to the state of the art by <a href="https://twitter.com/MattDowle?ref_src=twsrc%5Etfw">@MattDowle</a> and John Mount &amp; Nina Zumel</p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/1108108205656363008?ref_src=twsrc%5Etfw">March 19, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+# 데카르트 &rarr; 인덱스: `pivot_longer()` {#pivot-longer-example}
+
+`pivot_longer()` 함수를 사용해서 데카르트 평면과 같이 넓은 데이터(wide)를 인덱스가 붙은 긴 형태(long) 데이터로 변환시킬 수 있다. `relig_income` 데이터는 `gather/spread` 시절부터 자주 예제 데이터로 사용되던 예제 데이터셋이다.
+
+`religion` 변수를 제외하고 나머지 변수가 `names_to`를 통해 인덱스 명을 바꿀 수 있고 이들이 담고 있던 값은 `values_to`로 떨어지게 된다.
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+```{r pivot-longer-cols, eval=FALSE}
+dataframe %>% 
+  pivot_longer(
+    cols,
+    ...
+  )
+
+```
+
+
+`cols`: `dplyr::select()` 구문과 동일하게 작성함.
+
+</div>
+
+
+<div class = "row">
+  <div class = "col-md-6">
+**데카르트 평면 넓은 데이터**
+
+```{r pivot-long}
+library(tidyr)
+
+relig_income %>% head
+```
+
+  </div>
+  <div class = "col-md-6">
+**인덱스 긴 형식 데이터**
+
+```{r pivot-long-relig}
+relig_income %>% 
+  pivot_longer(-religion, names_to="소득", values_to = "명수")
+```
+  </div>
+</div>
+
+## 접두사(prefix) 제거: `pivot_longer()` {#pivot-longer-example-prefix}
+
+`names_prefix`를 사용해서 `$`, `<$`, `>` 붙은 값을 제거시킬 수 있다.
+
+```{r pivot-long-relig-prefix}
+relig_income %>% 
+  pivot_longer(-religion, names_to="소득", 
+               values_to = "명수",
+               names_prefix = "\\$|<\\$|>")
+```
+
+## 자료형 변환: `pivot_longer()` {#pivot-longer-example-type}
+
+<div class = "row">
+  <div class = "col-md-6">
+**빌보드 원본 데이터: 자료변환 전**
+
+일단 주간 순위는 어찌해서 만들었지만, 주간 칼럼에 `wk`가 들어 있어 이를 `names_prefix`를 통해 날려버리고 나도 숫자로 되어 있는 문자를 다시 숫자형으로 칼럼 자료형을 바꿔야 한다.
+
+```{r billboard}
+billboard %>% 
+  pivot_longer(
+    cols = starts_with("wk"), 
+    names_to = "주간", 
+    values_to = "순위",
+    values_drop_na = TRUE
+  )
+```
+
+
+  </div>
+  <div class = "col-md-6">
+**빌보드 원본 데이터: 자료변환 후**
+
+```{r billboard-convert}
+billboard %>% 
+  pivot_longer(
+    cols = starts_with("wk"), 
+    names_to = "주간", 
+    values_to = "순위",
+    names_prefix = "wk",
+    names_ptypes = list(`주간` = integer()),
+    values_drop_na = TRUE
+  )
+```
+
+  </div>
+</div>
+
+
+## 다수 칼럼: `pivot_longer()` {#pivot-longer-example-columns}
+
+`who` 데이터셋과 같이 다수 칼럼이 포함된 경우가 있을 수 있다. 이런 경우 `names_pattern` 정규표현식을 적용시켜 변수를 추출할 수 있다. 먼저 `who` 데이터셋을 살펴보자.
+
+- `new_`/`new` 접두어
+- `sp`/`rel`/`sp`/`ep` 진단 구분
+- `m`/`f` 성별
+- `014`/`1524`/`2535`/`3544`/`4554`/`65` 연령대
+
+먼저, `country`, `iso2`, `iso3`,  `year` 4개 변수는 정리되어 있어 그대로 두고, 나머지 변수를 `dplyr::select` 문법에 맞춰 선택하고 이를 변경시킨다.
+`names_to`로 변수명 3개를 지정하고, `new_`/`new` 접두어는 고정되어 `names_pattern`에서 정규표현식으로 패턴을 적의한다. 이와 더불어 `names_ptypes`에서 자료형도 함께 지정한다.
+
+```{r pivot-longer-who}
+who %>% pivot_longer(
+  cols = new_sp_m014:newrel_f65,
+  names_to = c("diagnosis", "gender", "age"), 
+  names_pattern = "new_?(.*)_(m|f)(.*)",
+  names_ptypes = list(
+    gender = factor(levels = c("f", "m")),
+    age = factor(
+      levels = c("014", "1524", "2534", "3544", "4554", "5564", "65"), 
+      ordered = TRUE
+    )
+  ),
+  values_to = "count",
+)
+```
+
+## 한행에 다수 관측점: `pivot_longer()` {#pivot-longer-example-rows}
+
+한행에 관측점이 다수 있는 재미있는 데이터도 있다.
+즉, 첫번째 가정에 아이가 2명 있는데 첫째 아이 생일과 성별, 둘째 아이 생일과 성별이 한 행에 놓여있는 경우가 이에 해당된다.
+
+```{r pivot-longer-rows}
+family <- tribble(
+  ~family,  ~dob_child1,  ~dob_child2, ~gender_child1, ~gender_child2,
+       1L, "1998-11-26", "2000-01-29",             1L,             2L,
+       2L, "1996-06-22",           NA,             2L,             NA,
+       3L, "2002-07-11", "2004-04-05",             2L,             2L,
+       4L, "2004-10-10", "2009-08-27",             1L,             1L,
+       5L, "2000-12-05", "2005-02-28",             2L,             1L,
+)
+family
+```
+
+
+이를 원하는 이름으로 변경시키기 위해서 `names_to=`에 `.value`라는 특수명칭을 사용하여 한 관측점에 다수 관측점 정보가 포함된 문제를 해결한다.
+
+```{r pivot-longer-rows-clean}
+family %>% 
+  pivot_longer(
+    -family, 
+    names_to = c(".value", "child"), 
+    names_sep = "_", 
+    values_drop_na = TRUE
+  ) %>% 
+  dplyr::mutate(dob = parse_date(dob))
+```
+
+## 칼럼명이 중복됨: `pivot_longer()` {#pivot-longer-example-duplicated}
+
+종복된 칼럼명이 존재하는 경우 작업하기 까다로운데... `pivot_longer()`에서 자동으로 칼럼을 추가시켜 문제를 풀어준다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**중복칼럼 데이터셋**
+
+```{r pivot-longer-duplicated-columns}
+df <- tibble(x = 1:3, y = 4:6, y = 5:7, y = 7:9, .name_repair = "minimal")
+df
+```
+
+  </div>
+  <div class = "col-md-6">
+**중복칼럼 데이터셋 작업결과**
+
+```{r pivot-longer-duplicated-columns-clean}
+df %>% 
+  pivot_longer(-x, names_to = "name", values_to = "value")
+```
+
+  </div>
+</div>
+
+# 인덱스 &rarr; 데카르트 평면: `pivot_wider()` {#pivot-longer-wider}
+
+`pivot_wider()`는 깔끔한 데이터를 만드는데 그다지 흔한 경우는 아니지만, 요약표를 만드거나 할 때 종종 사용되고, `pivot_longer()`와 정반대라고 보면 된다.
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+```{r pivot-wider-cols, eval=FALSE}
+dataframe %>% 
+  pivot_wider(
+    names_from,
+    values_from,
+    ...
+  )
+
+```
+
+- `names_from`은 칼럼값을 지정하는 칼럼
+- `values-from`은 값(value)을 지정하는 칼럼
+
+</div>
+
+
+["Visualizing Fish Encounter Histories", February 3 2018](https://fishsciences.github.io/post/visualizing-fish-encounter-histories/)에 나온 물고기 포획 방류, 재포획 즉, capture-recapture 데이터셋으로 볼 수 있다.
+`pivot_wider()` 함수에 `names_from`, `value_from`을 지정하여 데카르트 평면에 좌표로 찍듯이 데이터를 펼친다. 결측값이 생기는 것은 `values_fill`을 사용해서 0으로 채워넣는다.
+
+<div class = "row">
+  <div class = "col-md-4">
+**깔끔한 데이터: 인덱스 긴 형식**
+
+```{r pivot-wider-fish}
+fish_encounters
+```
+
+  </div>
+  <div class = "col-md-8">
+**요약표 형태 데이터**
+
+```{r pivot-wider-fish-wider}
+fish_encounters %>% 
+  pivot_wider(names_from = station, 
+              values_from = seen,
+              values_fill = list(seen = 0)) %>% 
+  head(10)
+```
+
+  </div>
+</div>
+
+## 총계(aggregation): `pivot_wider()` {#pivot-longer-wider-aggregation}
+
+`pivot_wider()`를 통해 총계(aggregate)를 내야하는 상황이 발생하곤 한다. 
+실험계획법이 적용된 데이터 `warpbreaks`를 보면 `wool`, `tension` 두가지 요인으로 총 9번 실험한 결과가 `breaks`에 담겨진 것을 확인할 수 있다.
+
+```{r warpbreaks}
+warpbreaks <- warpbreaks %>% as_tibble() %>% select(wool, tension, breaks)
+warpbreaks %>% 
+  count(wool, tension)
+```
+
+현재 인덱스로 잘 정제된 긴형태 데이터를 요약표 형태로 데카르트 평면과 같이 정리하고자 하면 다음과 같이 작업하게 되면 `wool`, `tension` 요인별로 총 9개 `breaks`값이 한 곳에 몰려있는 것을 파악할 수 있다. `values_fn`을 사용해서 총계로 평균, 최대, 최소 등을 사용해서 하나의 값으로 요약할 수 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**요인별 원데이터**
+
+```{r warpbreaks-wider}
+warpbreaks %>% 
+  pivot_wider(
+    names_from = wool,
+    values_from = breaks
+  )
+```
+
+
+  </div>
+  <div class = "col-md-6">
+**요인별 총계: 최대값**
+
+```{r warpbreaks-aggregate}
+warpbreaks %>% 
+  pivot_wider(
+    names_from = wool,
+    values_from = breaks,
+    values_fn = list(breaks = max)
+  )
+```
+
+  </div>
+</div>
+
+## 재미있는 패턴 {#interesting-pattern}
+
+연락처 관련하여 데이터를 정리해보자.
+두행에 걸처 동일한 사람의 정보가 반복되고 있다.
+
+```{r step-one}
+contacts <- tribble(
+  ~field, ~value,
+  "name", "Jiena McLellan",
+  "company", "Toyota", 
+  "name", "John Smith", 
+  "company", "google", 
+  "email", "john@google.com",
+  "name", "Huxley Ratcliffe"
+)
+contacts
+```
+
+두행에 걸쳐있는 한사람 정보를 유일무이하게 식별할 수 있는 식별자를 붙인다.
+
+```{r step-two}
+contacts <- contacts %>% 
+  mutate(
+    person_id = cumsum(field == "name")
+  )
+contacts
+```
+
+이제 `pivot_wider()` 함수를 사용해서 데이터를 정리한다.
+
+```{r step-three}
+contacts %>% 
+  pivot_wider(names_from = field, values_from = value)
+```
+

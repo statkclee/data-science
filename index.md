@@ -50,7 +50,7 @@ title: 데이터 과학
 1. [`tidyverse` 데이터 사이언스 기본체계](ds-tidyverse.html)
     - [데이터 사이언스 파이프라인 - Base vs. Tidyverse](data-handling-pipeline.html)
     - [데이터프레임(tibble)](data-handling-tibble.html)
-    - [데이터 깔끔화(tidyr)](data-handling-tidyr.html)
+    - [데이터 깔끔화(tidyr): `pivot_*`](data-handling-tidyr.html)
     - [데이터 작업 공구(dplyr)](data-handling-dplyr.html)
         - [데이터 병렬 작업 공구(multiplyr)](data-handling-multiplyr.html) 
         - [텍스트 작업 공구(tidytext)](data-handling-tidytext.html) 
