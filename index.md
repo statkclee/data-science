@@ -36,6 +36,7 @@ title: 데이터 과학
     - [빅데이터 - `tidyverse` 스파크](ds-tidyverse-spark.html)   
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
         - [데이터테이블](data-handling-datatable.html)
+    - [**데이터 정제(Data Cleaning)**: 데이터 과학자가 아니라 청소부](ds-janitor.html)
 1. **관계형 데이터베이스(RDBMS)**
     - [`dplyr` Database - 헬로월드](ds-dplyr-sql.html)
     - [R 데이터베이스 추상화 - DBI](ds-database-dbi.html)
@@ -45,8 +46,6 @@ title: 데이터 과학
         - [파이썬 판다스 - SQL](ds-pandas-sql.html)
     - [R 병렬 프로그래밍 - "예측모형 데이터베이스(DBMS) 배포"](https://statkclee.github.io/parallel-r/r-database-tidypredict.html)
     - [`postgreSQL` - DVD 대여 데이터베이스](ds-postgreSQL.html)
-1. **데이터 정제(Data Cleaning)**
-    - [데이터 과학자가 아니라 청소부](ds-janitor.html)
 1. [`tidyverse` 데이터 사이언스 기본체계](ds-tidyverse.html)
     - [데이터 사이언스 파이프라인 - Base vs. Tidyverse](data-handling-pipeline.html)
     - [데이터프레임(tibble)](data-handling-tibble.html)
@@ -61,6 +60,7 @@ title: 데이터 과학
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)
     - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html) 
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
+    - [윈도우 10 - WSL (우분투 배쉬)](ds-windows-bash.html)
     - **[RStudio 개발환경 - 프로젝트](rstudio-project.html)**
         - [RStudio 개발환경(IDE)과 단축키](rstudio.html)
         - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
@@ -72,7 +72,6 @@ title: 데이터 과학
         - [데이터 과학 도커 - R 팩키지](toolchain-docker-r-pkgs.html)  
     - [지속적 통합(CI) - Travis](toolchain-ci-travis.html)    
     - [지속적 통합(CI) - GitHub](toolchain-travis-github.html)
-    - [윈도우 10 - 우분투 배쉬](ds-windows-bash.html)
 1. [R 팩키지 - 헬로우 월드](r-pkg-hello-world.html)
     - [`tidyverse` 기반 R 팩키지와 라이브러리](data-science-library.html)
     - [연관검색어 팩키지 - `suggestK`](r-pkg-suggestK.html)
