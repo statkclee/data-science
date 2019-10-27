@@ -37,7 +37,7 @@ title: 데이터 과학
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
         - [데이터테이블](data-handling-datatable.html)
     - [**데이터 정제(Data Cleaning)**: 데이터 과학자가 아니라 청소부](ds-janitor.html)
-1. **관계형 데이터베이스(RDBMS)**
+1. **관계형 데이터베이스(RDBMS)**    
     - [`dplyr` Database - 헬로월드](ds-dplyr-sql.html)
     - [R 데이터베이스 추상화 - DBI](ds-database-dbi.html)
         - [xwMOOC 딥러닝 - "R 개발자가 알아야 되는 보안, 마리아 DB (MariaDB)"](http://statkclee.github.io/deep-learning/r-security.html#maria-db)
@@ -46,6 +46,7 @@ title: 데이터 과학
         - [파이썬 판다스 - SQL](ds-pandas-sql.html)
     - [R 병렬 프로그래밍 - "예측모형 데이터베이스(DBMS) 배포"](https://statkclee.github.io/parallel-r/r-database-tidypredict.html)
     - [`postgreSQL` - DVD 대여 데이터베이스](ds-postgreSQL.html)
+    - [데이터웨어하우스(DW) - `star schema`](ds-dw-star.html): 준비중
 1. [`tidyverse` 데이터 사이언스 기본체계](ds-tidyverse.html)
     - [데이터 사이언스 파이프라인 - Base vs. Tidyverse](data-handling-pipeline.html)
     - [데이터프레임(tibble)](data-handling-tibble.html)
