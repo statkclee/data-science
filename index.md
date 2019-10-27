@@ -46,6 +46,7 @@ title: 데이터 과학
         - [파이썬 판다스 - SQL](ds-pandas-sql.html)
     - [R 병렬 프로그래밍 - "예측모형 데이터베이스(DBMS) 배포"](https://statkclee.github.io/parallel-r/r-database-tidypredict.html)
     - [`postgreSQL` - DVD 대여 데이터베이스](ds-postgreSQL.html)
+    - [DVD 대여 데이터베이스에서 인사이트 도출](ds-postgreSQL-insight.html)
     - [데이터웨어하우스(DW) - `star schema`](ds-dw-star.html): 준비중
 1. [`tidyverse` 데이터 사이언스 기본체계](ds-tidyverse.html)
     - [데이터 사이언스 파이프라인 - Base vs. Tidyverse](data-handling-pipeline.html)

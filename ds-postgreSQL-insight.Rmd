@@ -1,0 +1,196 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "DVD 대여 데이터베이스에서 인사이트 도출"
+author:
+    name: xwMOOC
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+editor_options: 
+  chunk_output_type: console
+mainfont: NanumGothic
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+```
+
+
+# DVT 대여 데이터베이스 {#dvd-rental-db-insight}
+
+DVT 대여 데이터베이스를 설치했다면 다음 단계로 다양한 SQL 쿼리문을 던져 뭔가 가치 있는 정보를 추출해야만 한다. [데이터 과학: "postgreSQL - DVD 대여 데이터베이스"](https://statkclee.github.io/data-science/ds-postgreSQL.html)에서 데이터베이스 설치와 접속에 대한 사항은 확인한다.
+
+## DB 접속 헬로월드 [^insight-query] {#dvd-rental-db-insight-sql}
+
+[^insight-query]: [Okoh Anita (2018-12-20), "How I analyzed DVD rental data with SQL", freeCodeCamp](https://www.freecodecamp.org/news/project-1-analyzing-dvd-rentals-with-sql-fd12dd674a64/)
+
+먼저 `DBI::dbConnect()`를 통해 접속하고 SQL 쿼리 헬로월드를 던져보자.
+
+```{r dvd-rental-sql-test}
+library(RPostgreSQL)
+library(DBI)
+
+pgdrv <- dbDriver("PostgreSQL")
+
+con <- dbConnect(pgdrv, dbname="dvd", 
+                 port="5432", 
+                 user="postgres", 
+                 password=postgre_PW, 
+                 host="localhost")
+
+actor <- dbGetQuery(con, "SELECT * FROM actor LIMIT 5")
+
+actor
+```
+
+
+# 이탈/잔존고객 구매금액 {#run-statistics-active}
+
+`customer` 테이블에는 `active` 칼럼을 통해 잔존고객과 이탈고객을 파악할 수 있다.
+이를 통해서 잔존고객과 이탈고객이 몇명이고 구매금액을 파악할 수 있다. 
+먼저 `datamodelr` 팩키지를 통해 해당 테이블을 뽑아내서 이를 시각화해보자.
+
+```{r table-schema}
+library(tidyverse)
+library(datamodelr)
+
+payment <- tbl(con, "payment") %>% collect()
+customer <- tbl(con, "customer") %>% collect()
+
+payment_customer_model <- dm_from_data_frames(payment, customer)
+
+payment_customer_model <- dm_add_references(
+  payment_customer_model,
+  customer$customer_id ==  payment$customer_id
+)
+
+payment_customer_graph <- dm_create_graph(payment_customer_model, rankdir = "LR", col_attr = c("column", "type"))
+dm_render_graph(payment_customer_graph)
+```
+
+`con`을 통해 DVD 대여 데이터베이스에 접속이 이루어진 상태다. 
+이탈고객과 잔존고객별로 구매금액에 대한 평균, 최소, 최대, 총합계를 구하려면 두 테이블을 `INNER JOIN`으로 `customer_id`를 키값으로 합치고 나서 기술통계를 산출한다.
+
+```{r query-payment-schema}
+sql_query <- 
+"SELECT active, 
+       COUNT(*) AS num_active, 
+       MIN(amount) AS min_amt, 
+       AVG(amount) AS avg_amt,
+       MAX(amount) AS max_amt, 
+       SUM(amount) AS total_amt
+FROM payment AS p
+INNER JOIN customer AS c
+  ON p.customer_id = c.customer_id
+GROUP BY c.active;"
+
+dbGetQuery(con, sql_query)
+```
+
+
+# 쟝르별 평균 대여평점 {#run-statistics-rental-rate}
+
+앞서와 마찬가지로 쟝르별 평균 대여평점을 계산할 수 있는 테이블을 쭉 뽑아본다.
+이를 통해서 3개 테이블, 즉 `category`, `film_category`, `film`을 뽑아놓고 각 해당 키값을 사용하여 결합시킨다.
+
+```{r table-schema-category}
+category <- tbl(con, "category") %>% collect()
+film_category <- tbl(con, "film_category") %>% collect()
+film <- tbl(con, "film") %>% collect()
+
+rental_rating_model <- dm_from_data_frames(category, film_category, film)
+
+rental_rating_model <- dm_add_references(
+  rental_rating_model,
+  category$category_id == film_category$category_id,
+  film_category$film_id == film$film_id
+)
+
+rental_rating_graph <- dm_create_graph(rental_rating_model, rankdir = "LR", col_attr = c("column", "type"))
+dm_render_graph(rental_rating_graph)
+```
+
+
+먼저 `film_category`와 `category`를 결합시켜 영화(`film`)가 속한 쟝르(`category`)를 파악한다.
+
+```{r table-schema-category-rating}
+rate_qry <- 
+"SELECT * 
+FROM category AS c
+INNER JOIN film_category AS fc
+  ON c.category_id = fc.category_id
+LIMIT 5;"
+
+dbGetQuery(con, rate_qry)
+```
+
+다음으로 `film` 테이블을 조인하여 `rental_rate`를 결합하고 
+쟝르(`category`) 별로 평균평점을 구하고 이를 `ORDER BY ... DESC`를 사용해서 내림차순으로 정렬한다. 
+
+```{r table-schema-category2}
+rate_qry <- 
+"SELECT c.name,
+        AVG(rental_rate) AS avg_rental_rate
+FROM category AS c
+INNER JOIN film_category AS fc
+  ON c.category_id = fc.category_id 
+INNER JOIN film AS f
+  ON fc.film_id = f.film_id
+GROUP BY c.category_id
+ORDER BY avg_rental_rate DESC;"
+
+dbGetQuery(con, rate_qry)
+```
+
+# Top 10 DVD 영화  {#run-statistics-rental-rate-top10}
+
+가장 많이 대여된 Top 10 DVD 영화를 찾아내기 위해서 이에 해당되는 연관 테이블을 검색하여 찾아낸다. `film`, `inventory`, `rental` 테이블을 특정하고 서로 연결시킬 수 있는 키값을 찾아 연결시킨다.
+
+```{r table-schema-category-top}
+film <- tbl(con, "film") %>% collect()
+inventory <- tbl(con, "inventory") %>% collect()
+rental <- tbl(con, "rental") %>% collect()
+
+top_10_model <- dm_from_data_frames(film, inventory, rental)
+
+top_10_model <- dm_add_references(
+  top_10_model,
+  film$film_id == inventory$film_id,
+  inventory$inventory_id == rental$inventory_id
+)
+
+top_10_graph <- dm_create_graph(top_10_model, rankdir = "LR", col_attr = c("column", "type"))
+dm_render_graph(top_10_graph)
+```
+
+`film` &rarr; `inventory` &rarr; `rental` 테이블을 순차적으로 `film_id`, `inventory_id`를 키값으로 삼아 결합시킨다. 그리고 나서 가장 많이 대여된 영화를 찾기 위해서 `COUNT()` 함수로 개수하고 나서 이를 내림차순 정리한다.
+
+```{r top-10-rental-movies}
+top_query <- 
+"SELECT f.title AS movie_title, 
+        COUNT(f.title) AS num_rentals
+FROM film AS f
+INNER JOIN inventory AS i
+  ON f.film_id = i.film_id
+INNER JOIN rental AS r
+  ON i.inventory_id = r.inventory_id
+GROUP BY f.title
+ORDER BY num_rentals DESC;"
+
+dbGetQuery(con, top_query) %>% 
+  DT::datatable()
+```
+
