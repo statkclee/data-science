@@ -101,7 +101,10 @@ $ git commit -m "added the most important feature ever before"
 $ git push origin master
 ```
 
-## `gitlab` 가지따기(`branch`) {#gitlab-branch-workflows} 
+## `gitlab` 가지따기(`branch`) [^git-remote-branch] {#gitlab-branch-workflows} 
+
+[^git-remote-branch]: [Git 리모트(remote) 브랜치 생성 및 삭제하기
+](https://trustyoo86.github.io/git/2017/11/28/git-remote-branch-create.html)
 
 `git` `master` 브랜치로 작업하는 것은 혼자서 모든 권한을 가지고 작업할 때 유용하다. 두 사람이상 여러명이 함께 개발작업을 할 경우 가지따기(`branch`) 즉 브랜치를 따서 작업하는 것이 유용하다. 
 
