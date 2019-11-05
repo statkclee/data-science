@@ -7,10 +7,11 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
-<meta name="date" content="2019-10-26" />
+<meta name="date" content="2019-11-05" />
 
 <title>데이터 과학</title>
 
@@ -68,8 +69,6 @@ overflow: auto;
 margin-left: 2%;
 position: fixed;
 border: 1px solid #ccc;
-webkit-border-radius: 6px;
-moz-border-radius: 6px;
 border-radius: 6px;
 }
 
@@ -97,9 +96,14 @@ font-size: 12px;
 .tocify-subheader .tocify-subheader {
 text-indent: 30px;
 }
-
 .tocify-subheader .tocify-subheader .tocify-subheader {
 text-indent: 40px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 50px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 60px;
 }
 
 .tocify .tocify-item > a, .tocify .nav-list .nav-header {
@@ -503,13 +507,13 @@ float: none;
 
           item.append($("<a/>", {
 
-            "text": self.text()
+            "html": self.html()
 
           }));
 
         } else {
 
-          item.text(self.text());
+          item.html(self.html());
 
         }
 
@@ -1408,7 +1412,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -1539,56 +1543,12 @@ summary {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -1637,8 +1597,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -1686,7 +1644,7 @@ div.tocify {
 <h3 class="subtitle">윈도우 10 - WSL (우분투 배쉬)</h3>
 <h4 class="author">xwMOOC</h4>
 <address class="author_afil">
-Tidyverse Korea<br><h4 class="date">2019-10-26</h4>
+Tidyverse Korea<br><h4 class="date">2019-11-05</h4>
 
 </div>
 
@@ -1850,16 +1808,6 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 </div>
 </div>
 </div>
-<div id="install-gitlab" class="section level1">
-<h1><span class="header-section-number">4</span> <code>gitlab</code> 설치 <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></h1>
-<p><code>gitlab</code> 설치에 앞서 <code>curl</code> 등 필요한 도구를 설치한다.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>sudo apt<span class="op">-</span>get update</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="op">$</span><span class="st"> </span>sudo apt install curl openssh<span class="op">-</span>server ca<span class="op">-</span>certificates postfix</a></code></pre></div>
-<p><code>gitlab</code>을 다운로드 받아 설치한다.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>curl <span class="op">-</span>sS https<span class="op">:</span><span class="er">//</span>packages.gitlab.com<span class="op">/</span>install<span class="op">/</span>repositories<span class="op">/</span>gitlab<span class="op">/</span>gitlab<span class="op">-</span>ce<span class="op">/</span>script.deb.sh <span class="op">|</span><span class="st"> </span>sudo bash</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="op">$</span><span class="st"> </span>sudo apt install gitlab<span class="op">-</span>ce <span class="co"># 시간이 조금 오래 걸림</span></a></code></pre></div>
-<p>이후 환경을 설정한다.</p>
-</div>
 <div class="footnotes">
 <hr />
 <ol>
@@ -1868,7 +1816,6 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 <li id="fn3"><p><a href="https://www.lesstif.com/pages/viewpage.action?pageId=71401661">정광섭, “WSL 2(Windows Subsystem For Linux 2) 사용하기”</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
 <li id="fn4"><p><a href="https://docs.microsoft.com/en-us/windows/wsl/initialize-distro">Initializing a newly installed distro</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
 <li id="fn5"><p><a href="https://devblogs.microsoft.com/commandline/a-guide-to-invoking-wsl/">A Guide to Invoking WSL</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p><a href="https://www.howtoforge.com/tutorial/how-to-install-and-configure-gitlab-on-ubuntu-16-04/">How to Install and Configure GitLab on Ubuntu 16.04</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 
@@ -1890,6 +1837,54 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

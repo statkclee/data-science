@@ -206,24 +206,3 @@ tidyverse
 `exit` 명령어로 WSL 배쉬쉘에서 빠져나와 다시 파워쉘 혹은 도스쉘로 빠져나온다.
 
 ![WSL 빠져나오기](fig/windows-wsl-exit.gif){#id .class width="100%"}
-
-# `gitlab` 설치 [^gitlab-install] {#install-gitlab}
-
-[^gitlab-install]: [How to Install and Configure GitLab on Ubuntu 16.04](https://www.howtoforge.com/tutorial/how-to-install-and-configure-gitlab-on-ubuntu-16-04/)
-
-`gitlab` 설치에 앞서 `curl` 등 필요한 도구를 설치한다.
-
-```{r install-gitlab, eval=FALSE}
-$ sudo apt-get update
-$ sudo apt install curl openssh-server ca-certificates postfix
-```
-
-`gitlab`을 다운로드 받아 설치한다.
-
-```{r install-gitlab-curl, eval=FALSE}
-$ curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
-$ sudo apt install gitlab-ce # 시간이 조금 오래 걸림
-```
-
-이후 환경을 설정한다.
-
