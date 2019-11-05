@@ -1703,6 +1703,31 @@ Tidyverse Korea<br><h4 class="date">2019-11-05</h4>
 </div>
 </div>
 </div>
+<div id="gitlab-common-workflow" class="section level1">
+<h1><span class="header-section-number">4</span> <code>gitlab</code> 작업흐름</h1>
+<div id="gitlab-common-workflows" class="section level2">
+<h2><span class="header-section-number">4.1</span> <code>gitlab</code> 기본작업 흐름</h2>
+<p><code>git add</code> → <code>git commit - m</code> → <code>git push origin master</code> 작업흐름이 가장 기본적인 <code>gitlab</code> 작업흐름이라고 할 수 있다.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>git add <span class="op">-</span>A</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="op">$</span><span class="st"> </span>git commit <span class="op">-</span>m <span class="st">&quot;added the most important feature ever before&quot;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="op">$</span><span class="st"> </span>git push origin master</a></code></pre></div>
+</div>
+<div id="gitlab-branch-workflows" class="section level2">
+<h2><span class="header-section-number">4.2</span> <code>gitlab</code> 가지따기(<code>branch</code>)</h2>
+<p><code>git</code> <code>master</code> 브랜치로 작업하는 것은 혼자서 모든 권한을 가지고 작업할 때 유용하다. 두 사람이상 여러명이 함께 개발작업을 할 경우 가지따기(<code>branch</code>) 즉 브랜치를 따서 작업하는 것이 유용하다.</p>
+<p><code>git checkout -b</code>로 브랜치를 생성하는 것부터 <code>git push origin :new_feature</code>까지 작업 완료 후 브랜치를 삭제한다.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>git checkout <span class="op">-</span>b new_feature <span class="co"># `new_feature` 브랜치 생성</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">... <span class="co"># `new_feature` 기능 구현</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="op">$</span><span class="st"> </span>git add <span class="op">-</span>A <span class="co"># 작업 결과 Staging Area 저장</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="op">$</span><span class="st"> </span>git commit <span class="op">-</span>m <span class="st">&quot;finish up the latest feature ever before&quot;</span> <span class="co"># 커밋</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="op">$</span><span class="st"> </span>git push origin new_feature <span class="co"># new_feature 브랜치에 결과 푸쉬</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="op">$</span><span class="st"> </span>git branch <span class="op">--</span>set<span class="op">-</span>upstream<span class="op">-</span>to origin<span class="op">/</span>new_feature </a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="op">$</span><span class="st"> </span>git checkout master <span class="co"># `master` 브랜치 작업 시작</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="op">$</span><span class="st"> </span>git branch <span class="op">--</span>delete new_feature <span class="co"># 로컬 `new_feature` 브랜치 삭제</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="op">$</span><span class="st"> </span>git branch <span class="op">-</span>D new_feature <span class="co"># 로컬 `new_feature` 브랜치 삭제</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="op">$</span><span class="st"> </span>git push origin <span class="op">:</span>new_feature <span class="co"># 호스팅된 `new_feature` 브래치 삭제</span></a></code></pre></div>
+</div>
+</div>
 <div class="footnotes">
 <hr />
 <ol>

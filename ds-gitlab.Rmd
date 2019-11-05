@@ -89,7 +89,33 @@ Gitlab 저장소를 `git clone`할 경우 `git`은 포트 22 대신, `https`를 
 
 ![제어판\사용자 계정\자격 증명 관리자](fig/gitlab-clone-https.png){#id .class width="100%"}
 
+# `gitlab` 작업흐름 {#gitlab-common-workflow}
 
+## `gitlab` 기본작업 흐름 {#gitlab-common-workflows} 
 
+`git add` &rarr; `git commit - m` &rarr; `git push origin master` 작업흐름이 가장 기본적인 `gitlab` 작업흐름이라고 할 수 있다.
 
+```{r gitlab-basic-workflow, eval=FALSE}
+$ git add -A
+$ git commit -m "added the most important feature ever before"
+$ git push origin master
+```
 
+## `gitlab` 가지따기(`branch`) {#gitlab-branch-workflows} 
+
+`git` `master` 브랜치로 작업하는 것은 혼자서 모든 권한을 가지고 작업할 때 유용하다. 두 사람이상 여러명이 함께 개발작업을 할 경우 가지따기(`branch`) 즉 브랜치를 따서 작업하는 것이 유용하다. 
+
+`git checkout -b`로 브랜치를 생성하는 것부터 `git push origin :new_feature`까지 작업 완료 후 브랜치를 삭제한다.
+
+```{r gitlab-brach-workflow, eval=FALSE}
+$ git checkout -b new_feature # `new_feature` 브랜치 생성
+... # `new_feature` 기능 구현
+$ git add -A # 작업 결과 Staging Area 저장
+$ git commit -m "finish up the latest feature ever before" # 커밋
+$ git push origin new_feature # new_feature 브랜치에 결과 푸쉬
+$ git branch --set-upstream-to origin/new_feature 
+$ git checkout master # `master` 브랜치 작업 시작
+$ git branch --delete new_feature # 로컬 `new_feature` 브랜치 삭제
+$ git branch -D new_feature # 로컬 `new_feature` 브랜치 삭제
+$ git push origin :new_feature # 호스팅된 `new_feature` 브래치 삭제
+```
