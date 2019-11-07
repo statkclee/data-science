@@ -26,10 +26,15 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
 
 ```
 
-# 들어가며 - 캐글 설문 {#ds-factor-forcats-kaggle}
+# 데이터셋 - 캐글 설문 {#ds-factor-forcats-kaggle}
 
-[Kaggle ML and Data Science Survey, 2017](https://www.kaggle.com/kaggle/kaggle-survey-2017) 설문조사 데이터의 학습플랫폼 설문문항이
-전형적인 설문문항의 한 사례가 될 수 있다.
+[Wrangling categorical data in R](https://www.semanticscholar.org/paper/Wrangling-categorical-data-in-R-McNamara-Horton/1064bf4b820a877043a3bfb6c8481b230afc5b2b)에 포함된 [GSS 데이터셋](https://raw.githubusercontent.com/dsscollection/factor-mgmt/master/data/GSScleaned.csv)이 요인(factor) 자료구조를 다루는데 마치 `mtcars`, `iris`, `titanic`, `mnist`와 같은 역할을 하고 있다.
+
+원데이터는 파일 크기가 20 메가바이트를 넘고 원본 데이터는 캐글 [Kaggle ML and Data Science Survey, 2017](https://www.kaggle.com/kaggle/kaggle-survey-2017) 설문조사 학습플랫폼 설문문항로 전형적인 설문문항의 한 사례로 볼 수 있다.
+
+
+--------
+
 
 데이터를 가져와서 특정 변수만 추출하고 `select(contains("LearningPlatformUsefulness"))`,
 폭넓은 자료형태(wide)를 긴 자료형태(long)로 변형시킨다.
@@ -380,3 +385,210 @@ gss_cat %>%
   print(n = Inf)
 ```
 
+
+# 요인 자료형 다루기 [^factor-gss] {#wrangling-factor-dataset}
+
+[^factor-gss]: [Wrangling categorical data in R](https://www.semanticscholar.org/paper/Wrangling-categorical-data-in-R-McNamara-Horton/1064bf4b820a877043a3bfb6c8481b230afc5b2b)
+
+요인(factor, 팩터) 자료형을 다룬다는 것은 다음을 의미한다. 하지만, `Base R`과 `tidyverse` 두가지 방식이 있어 두가지 구문에 대한 이해도 필요하다.
+
+- 요인 수준(factor level)에 대한 라벨(label) 바꿈 &rarr; `forcats::fct_recode`, `dplyr::recode`
+- 요인 수준 순서 바꾸기 &rarr; `fct_relevel()`
+- 요인 범주수준을 줄이기
+- 요인 변수 파생시켜 생성시킴.
+
+## 요인 수준별로 라벨 변경 {#change-factor-level-label}
+
+Base R에서 먼저 요인(factor)에 대한 데이터 분석 작업은 `levels()` 함수로 범주를 확인하고 `summary()` 함수로 시작된다.
+
+```{r tidyverse-gss}
+library(tidyverse)
+
+# download.file("https://raw.githubusercontent.com/dsscollection/factor-mgmt/master/data/GSScleaned.csv", destfile = "data/GSScleaned.csv")
+
+GSS <- read_csv("https://raw.githubusercontent.com/dsscollection/factor-mgmt/master/data/GSScleaned.csv") %>% 
+  mutate_if(is.character, as.factor)
+
+levels(GSS$LaborStatus)
+summary(GSS$LaborStatus)
+```
+
+요인 수준을 다른 형태로 조정하고 싶은데 `levels(GSS$LaborStatus)[1:5]` 앞에서 5개 범주는 그대로 둔 채로 나머지만 바꾸고자 하는 경우 다음과 같이 코드를 작성한다. 하지만, 이렇게 작성하는 것은 소프트웨어가 부서지기 쉬운(fragile software)의 전형적인 예가 된다.
+
+```{r tidyverse-gss-change-label}
+GSS$LaborStatus_backup <- GSS$LaborStatus
+
+levels(GSS$LaborStatus) <- c(levels(GSS$LaborStatus)[1:5],
+                             "Temporarily not working",
+                             "Unemployed, laid off",
+                             "Working full time",
+                             "Working part time")
+
+summary(GSS$LaborStatus)
+```
+
+또다른 방식으로 다소 코드가 길어지기는 하지만 강건한 방식으로 다음과 같이 코드를 작성할 수 있다. 순서가 아닌 범주가 맞는 경우만 라벨을 바꿔주는 것이라 강건하지만 데이터프레임(`GSS`)이 여러번, 변수(`LaborStatus`)도 중복되어 그다지 읽기 즐거운 코드는 아니다.
+
+```{r robust-but-verbose}
+GSS$LaborStatus <- GSS$LaborStatus_backup
+
+
+GSS$LaborStatus <- as.character(GSS$LaborStatus)
+GSS$LaborStatus[GSS$LaborStatus == "Temp not working"] <-
+  "Temporarily not working"
+GSS$LaborStatus[GSS$LaborStatus == "Unempl, laid off"] <-
+  "Unemployed, laid off"
+GSS$LaborStatus[GSS$LaborStatus == "Working fulltime"] <-
+  "Working full time"
+GSS$LaborStatus[GSS$LaborStatus == "Working parttime"] <-
+  "Working part time"
+GSS$LaborStatus <- factor(GSS$LaborStatus)
+
+summary(GSS$LaborStatus)
+```
+
+`dplyr` 팩키지 `recode()` 함수, 혹은 `forcats` 팩키지 `fct_recode()`를 사용해서 범주명을 다른 명칭으로 바꿀 수 있는데 코드가 깔끔한다. 
+
+```{r labor-status-tidyverse}
+GSS <- GSS %>%
+  mutate(tidyLaborStatus =
+    fct_recode(LaborStatus,
+           `Temp not working` = "Temporarily not working",
+           `Unempl, laid off` = "Unemployed, laid off",
+           `Working fulltime` = "Working full time",
+           `Working parttime ` =  "Working part time"))
+
+GSS %>% 
+  count(tidyLaborStatus2, sort=TRUE)
+```
+
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+**`trimws()` 함수 사용**
+
+범주가 동일하나 공백문자(whitespace)가 포함된 경우 수작업을 일일이 손대는 대신에 `trimws()` 함수를 사용하면 수월히 범주를 잘 정리할 수 있다.
+
+```{r fct-cats-whitespace}
+gender <- factor(c("male ", "male  ", "male   ",   "male"))
+levels(gender)
+
+gender <- factor(trimws(gender))
+levels(gender)
+```
+
+</div>
+
+## 요인 수준 순서 변경 {#change-factor-level-order}
+
+그 다음으로 요인 수준 범주 순서를 바꾸는 것이 많이 사용되는 기능이다.
+Base R에서는 알파벳 순으로 요인 수준 범주를 기본디폴트 설정되어 있다. 
+
+```{r change-factor-order}
+GSS$BaseOpinionOfIncome <- GSS$OpinionOfIncome
+summary(GSS$BaseOpinionOfIncome )
+```
+
+상기 순서를 다음과 같이 바꾸어 보자. 즉 소득에 대해서 순위형 범주로 순서를 넣어 정렬시키고자 한다.
+
+Far above average &rarr; Above average &rarr; Average &rarr; Below Average &rarr; Far below average &rarr; Don't know &rarr; No answer &rarr; NA's
+
+`factor()` 함수 내부에 `levels = ` 인자조정을 통해서 범주 순서를 재조정시킬 수 있다. 이와 같이 구문을 작성할 경우 `Average`의 경우 공백 때문에, `Below Average`는 대소문자로 인해 잘못 범주 구분이 되어 숫자가 맞지 않는다.
+
+```{r change-factor-order-fragile}
+GSS$BaseOpinionOfIncome <- factor(as.character(GSS$BaseOpinionOfIncome),
+         levels = c("Far above average", "Above average", "Average ", "Below Average",
+                    "Far below average", "Don't know", "No answer"))
+summary(GSS$BaseOpinionOfIncome )
+```
+
+소득에 대해서 순위형 범주로 순서를 넣어 정렬시키고자 할 때 다음과 같이 엽기(?)적으로 코딩을 할 수 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**원데이터 범주 순서**
+
+```{r change-factor-order-fragile-number}
+badApproach <- GSS$OpinionOfIncome
+summary(badApproach)
+```
+
+  </div>
+  <div class = "col-md-6">
+**엽기(?)적 범주 순서**
+
+```{r change-factor-order-fragile-level}
+levels(badApproach) <- levels(badApproach)[c(5,1:3,6,4,7)]
+summary(badApproach)
+```
+
+  </div>
+</div>
+
+
+
+<div class = "row">
+  <div class = "col-md-6">
+**원데이터 범주 순서**
+
+```{r change-factor-order-fragile-number2}
+library(forcats)
+summary(GSS$OpinionOfIncome)
+```
+
+
+  </div>
+  <div class = "col-md-6">
+**`tidyverse`로 깔끔한 범주 순서 정리**
+
+```{r change-factor-order-tidyverse}
+GSS <- GSS %>%
+  mutate(tidyOpinionOfIncome =
+           fct_relevel(OpinionOfIncome,
+                       "Far above average",
+                       "Above average",
+                       "Average",
+                       "Below average",
+                       "Far below average"))
+
+summary(GSS$tidyOpinionOfIncome)
+```
+
+  </div>
+</div>
+
+## 요인 범주수준 줄이기 {#factor-reduce-levels}
+
+범주형 변수를 다룰 때 많이 고려해야 하는 것 중에 하나가 요인 범주 수준을 줄이는 것이다. 
+예를 들어, 결혼 상태에 대한 다양한 경우의 수가 존재한다. 이를 혼인(`Married`)과 비혼(`Not Married`)으로 범주를 조정하고자 하는 작업을 살펴보자.
+
+- 결혼 상태코드: `MaritalStatus`
+    - Divorced, Married, Never married, No answer, Separated, Widowed
+- 혼인여부 상태코드: `BaseMarital`
+    - 혼인(`Married`), 비혼(`Not Married`)
+
+```{r GSS-martial-recode}
+GSS$BaseMarital <- GSS$MaritalStatus
+summary(GSS$BaseMarital)
+
+levels(GSS$BaseMarital) <- c("Not Married", "Married",
+                             "Not Married", "No answer",
+                             "Not Married", "Not Married", NA)
+summary(GSS$BaseMarital)
+```
+
+`tidyverse`로 깔끔하게 범주를 재지정하면 다음과 같다. 물론 `dplyr` 팩키지 `recode()` 함수를 사용한다.
+
+```{r GSS-martial-recode-tidyverse}
+GSS <- GSS %>%
+  mutate(tidyMaritalStatus = recode(MaritalStatus,
+    Divorced        = "Not Married",
+    `Never married` = "Not Married",
+    Widowed         = "Not Married",
+    Separated       = "Not Married"))
+
+summary(GSS$tidyMaritalStatus)
+```
