@@ -26,6 +26,64 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
 
 ```
 
+# 요인(factor) 기초 [^r4ds-factor] {#ds-factor-forcats-basic}
+
+[^r4ds-factor]: [R for Data Science, 15 Factors](http://r4ds.had.co.nz/factors.html)
+
+요인형 자료형을 문자형 대신 사용하게 되면 두가지 장점이 있는데, 가장 큰 장점은 아마도 오탈자로 생기는 새로운 유형 생성을 억제시킬 수 있다.
+즉, 월은 12개월 밖에 존재하지 않는다. 따라서, 오탈자로 인해 범주가 추가로 생성되는 것을 사전에 방지할 수 있다.
+그리고, 요인형을 자료형을 갖추게 되면 정렬을 쉽게 할 수도 있다.
+
+일반 문자형 벡터을 정렬하게 되면 알파벳순으로 정렬하는데 무의미하다.
+
+``` {r create-factor}
+library(tidyverse)
+x1 <- c("Dec", "Apr", "Jan", "Mar")
+sort(x1)
+```
+
+`levels` 인자로 수준을 정의하게 되면 오탈자로 인한 엉뚱한 범주가 추가되는 것을 방지하는 것과 더불어 
+정렬하게 되면 사람에게 좀더 의미있게 다가온다.
+
+``` {r create-level-in-factor}
+month_levels <- c(
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+y1 <- factor(x1, levels = month_levels)
+y1
+sort(y1)
+```
+
+`x2` 문자열 벡터에 `Jam` 범주가 들어가 있는데 이를 `levels`를 통해 범주를 설정하게 되면 
+오류를 방지할 수 있다. 특히, `parse_factor` 명령어를 사용하면 어디가 잘못되었는지 확인이 쉽다.
+
+``` {r detect-level-error}
+x2 <- c("Dec", "Apr", "Jam", "Mar")
+y2 <- factor(x2, levels = month_levels)
+y2
+y2 <- parse_factor(x2, levels = month_levels)
+```
+
+`levels`를 생략하게 되면 기본디폴트 설정으로 알파벳순으로 범주를 생성하여 수준을 정해버린다.
+
+``` {r default-levels-in-factor}
+factor(x1)
+```
+
+수준(levels) 순서를 맞추려면 `unique()` 혹은 `fct_inorder()` 함수를 사용한다.
+
+``` {r levels-in-order}
+f1 <- factor(x1, levels = unique(x1))
+f1
+
+f2 <- x1 %>% factor() %>% fct_inorder()
+f2
+
+levels(f2)
+```
+
+
 # 요인 자료형 다루기 [^factor-gss] {#wrangling-factor-dataset}
 
 [^factor-gss]: [Wrangling categorical data in R](https://www.semanticscholar.org/paper/Wrangling-categorical-data-in-R-McNamara-Horton/1064bf4b820a877043a3bfb6c8481b230afc5b2b)
@@ -38,6 +96,8 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
 - 파생 요인 변수 생성시킴 &rarr; `case_when()`
 
 ## 요인 수준별로 라벨 변경 {#change-factor-level-label}
+
+![요인 수준/범주별로 라벨 변경](fig/factor-label.png){#id .class width="57%"}
 
 Base R에서 먼저 요인(factor)에 대한 데이터 분석 작업은 `levels()` 함수로 범주를 확인하고 `summary()` 함수로 시작된다.
 
@@ -99,7 +159,7 @@ GSS <- GSS %>%
            `Working parttime ` =  "Working part time"))
 
 GSS %>% 
-  count(tidyLaborStatus2, sort=TRUE)
+  count(tidyLaborStatus, sort=TRUE)
 ```
 
 
@@ -123,6 +183,8 @@ levels(gender)
 </div>
 
 ## 요인 수준 순서 변경 {#change-factor-level-order}
+
+![요인 수준/범주별 순서 변경](fig/factor-relevel.png){#id .class width="57%"}
 
 그 다음으로 요인 수준 범주 순서를 바꾸는 것이 많이 사용되는 기능이다.
 Base R에서는 알파벳 순으로 요인 수준 범주를 기본디폴트 설정되어 있다. 
@@ -202,6 +264,8 @@ summary(GSS$tidyOpinionOfIncome)
 
 ## 요인 범주수준 줄이기 {#factor-reduce-levels}
 
+![요인 수준/범주 줄이기](fig/factor-ifelse.png){#id .class width="57%"}
+
 범주형 변수를 다룰 때 많이 고려해야 하는 것 중에 하나가 요인 범주 수준을 줄이는 것이다. 
 예를 들어, 결혼 상태에 대한 다양한 경우의 수가 존재한다. 이를 혼인(`Married`)과 비혼(`Not Married`)으로 범주를 조정하고자 하는 작업을 살펴보자.
 
@@ -233,7 +297,9 @@ GSS <- GSS %>%
 summary(GSS$tidyMaritalStatus)
 ```
 
-## 범주를 줄이기 {#forcats-bins}
+## 연속형 변수를 범주화 {#forcats-bins}
+
+![연속형 변수를 범주화](fig/factor-casewhen.png){#id .class width="57%"}
 
 범주가 많은 경우 이를 줄이거나, 숫자를 일정 범위로 묶어 범주화하는 경우가 많다.
 숫자형 변수지만 값에 "No answer" 혹은 "89 or order"와 같이 문자가 들어 있는 경우 전체가 문자형이 되고 Base R에서는 요인형 변수로 전환된다.
@@ -346,77 +412,6 @@ HELPsmall %>%
   </div>
 </div>
 
-
-# 데이터셋 - 캐글 설문 {#ds-factor-forcats-kaggle}
-
-[Wrangling categorical data in R](https://www.semanticscholar.org/paper/Wrangling-categorical-data-in-R-McNamara-Horton/1064bf4b820a877043a3bfb6c8481b230afc5b2b)에 포함된 [GSS 데이터셋](https://raw.githubusercontent.com/dsscollection/factor-mgmt/master/data/GSScleaned.csv)이 요인(factor) 자료구조를 다루는데 마치 `mtcars`, `iris`, `titanic`, `mnist`와 같은 역할을 하고 있다.
-
-원데이터는 파일 크기가 20 메가바이트를 넘고 원본 데이터는 캐글 [Kaggle ML and Data Science Survey, 2017](https://www.kaggle.com/kaggle/kaggle-survey-2017) 설문조사 학습플랫폼 설문문항로 전형적인 설문문항의 한 사례로 볼 수 있다.
-
-
---------
-
-
-데이터를 가져와서 특정 변수만 추출하고 `select(contains("LearningPlatformUsefulness"))`,
-폭넓은 자료형태(wide)를 긴 자료형태(long)로 변형시킨다.
-그리고 나서 `mutate_if()` 함수로 문자형자료형을 요인형자료형으로 변형시키고 나서 데이터를 정제시킨다.
-
-``` {r kaggle-case-forcats}
-# 0. 환경설정 -----
-library(tidyverse)
-library(extrafont)
-loadfonts()
-
-# 1. 데이터 -----
-
-# kaggle_dat <- read_csv("https://raw.githubusercontent.com/bkaniskan/KaggleDSsurvey/master/data/multipleChoiceResponses.csv")
-
-kaggle_dat <- read_csv("https://github.com/mbzhuang/Kaggle-ML-and-Data-Science-Survey-Analysis/blob/master/RawData/multipleChoiceResponses.csv?raw=true")
-
-## 1.1. 데이터 정제 -----
-kaggle_df <- kaggle_dat %>% 
-    select(contains("LearningPlatformUsefulness")) %>% 
-    gather(platform, value) %>% 
-    mutate_if(is.character, as.factor) %>% 
-    mutate(platform = str_remove(platform, "LearningPlatformUsefulness")) %>% 
-    filter(!is.na(value))
-```
-
-플랫폼별로 빈도수를 조사한 후에 요인형 변수를 수준(level) 조정을 하고 시각화가 깔끔하게 될 수 있도록 라벨명을 조정한다.
-
-``` {r kaggle-case-forcats-cleansing}
-## 1.2. 요인형 자료 -----
-kaggle_cat_df <- kaggle_df %>% 
-    group_by(platform) %>% 
-    count(value) %>% 
-    add_count(platform, wt=n, name="nn") %>%
-    mutate(pcnt = n / nn) %>% 
-    mutate(value = fct_relevel(value, "Not Useful", "Somewhat useful", "Very useful")) %>% 
-    mutate(value = case_when(
-        str_detect(value, "Somewhat") ~ "Somewhat",
-        str_detect(value, "Not") ~ "Not useful",
-        str_detect(value, "Very") ~ "Very useful"
-    ))
-```
-
-작은 창에 각 학습플랫폼별로 내용을 잘 나타날 수 있도록 시각화한다.
-
-``` {r kaggle-case-forcats-viz, fig.width=12, fig.height=9}
-# 2. 탐색적 데이터 분석 -----
-## 2.1. 시각화 -----
-kaggle_cat_df %>% 
-    ggplot(aes(x=value, y=pcnt, group=platform)) +
-      geom_line() +
-      geom_point() +
-      facet_wrap(~platform)  +
-      theme_minimal(base_family = "NanumGothic") +
-      scale_y_continuous(labels = scales::percent) +
-      labs(x="", y="응답 비율", title="캐글 설문조사", 
-           subtitle = "학습 플랫폼별 유용성 설문",
-           caption = "자료출처: Kaggle ML and Data Science Survey, 2017(https://www.kaggle.com/kaggle/kaggle-survey-2017)")
-```
-
-
 # `forcats` 팩키지 [^forcats-pkg] {#ds-factor-forcats}
 
 [^forcats-pkg]: [forcats: Tools for Working with Categorical Variables (Factors)](https://cran.r-project.org/web/packages/forcats/index.html)
@@ -429,62 +424,6 @@ kaggle_cat_df %>%
 범주형 데이터를 처리하는 요인(factor) 자료형을 이해하고, `tidyverse` 생태계에서 범주형 요인을 담당하는 `forcats` 팩키지를 통해서
 범주형 데이터를 자유자재로 다룰 수 있는 역량을 익히자.
 
-# 요인(factor) 기초 [^r4ds-factor] {#ds-factor-forcats-basic}
-
-[^r4ds-factor]: [R for Data Science, 15 Factors](http://r4ds.had.co.nz/factors.html)
-
-요인형 자료형을 문자형 대신 사용하게 되면 두가지 장점이 있는데, 가장 큰 장점은 아마도 오탈자로 생기는 새로운 유형 생성을 억제시킬 수 있다.
-즉, 월은 12개월 밖에 존재하지 않는다. 따라서, 오탈자로 인해 범주가 추가로 생성되는 것을 사전에 방지할 수 있다.
-그리고, 요인형을 자료형을 갖추게 되면 정렬을 쉽게 할 수도 있다.
-
-일반 문자형 벡터을 정렬하게 되면 알파벳순으로 정렬하는데 무의미하다.
-
-``` {r create-factor}
-library(tidyverse)
-x1 <- c("Dec", "Apr", "Jan", "Mar")
-sort(x1)
-```
-
-`levels` 인자로 수준을 정의하게 되면 오탈자로 인한 엉뚱한 범주가 추가되는 것을 방지하는 것과 더불어 
-정렬하게 되면 사람에게 좀더 의미있게 다가온다.
-
-``` {r create-level-in-factor}
-month_levels <- c(
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-
-y1 <- factor(x1, levels = month_levels)
-y1
-sort(y1)
-```
-
-`x2` 문자열 벡터에 `Jam` 범주가 들어가 있는데 이를 `levels`를 통해 범주를 설정하게 되면 
-오류를 방지할 수 있다. 특히, `parse_factor` 명령어를 사용하면 어디가 잘못되었는지 확인이 쉽다.
-
-``` {r detect-level-error}
-x2 <- c("Dec", "Apr", "Jam", "Mar")
-y2 <- factor(x2, levels = month_levels)
-y2
-y2 <- parse_factor(x2, levels = month_levels)
-```
-
-`levels`를 생략하게 되면 기본디폴트 설정으로 알파벳순으로 범주를 생성하여 수준을 정해버린다.
-
-``` {r default-levels-in-factor}
-factor(x1)
-```
-
-수준(levels) 순서를 맞추려면 `unique()` 혹은 `fct_inorder()` 함수를 사용한다.
-
-``` {r levels-in-order}
-f1 <- factor(x1, levels = unique(x1))
-f1
-
-f2 <- x1 %>% factor() %>% fct_inorder()
-f2
-
-levels(f2)
-```
 
 # GSS(General Social Survey) 사례 {#ds-factor-gss}
 
@@ -704,4 +643,69 @@ gss_cat %>%
   print(n = Inf)
 ```
 
+
+# 캐글 설문 데이터셋 {#ds-factor-forcats-kaggle}
+
+[Wrangling categorical data in R](https://www.semanticscholar.org/paper/Wrangling-categorical-data-in-R-McNamara-Horton/1064bf4b820a877043a3bfb6c8481b230afc5b2b)에 포함된 [GSS 데이터셋](https://raw.githubusercontent.com/dsscollection/factor-mgmt/master/data/GSScleaned.csv)이 요인(factor) 자료구조를 다루는데 마치 `mtcars`, `iris`, `titanic`, `mnist`와 같은 역할을 하고 있다.
+
+원데이터는 파일 크기가 20 메가바이트를 넘고 원본 데이터는 캐글 [Kaggle ML and Data Science Survey, 2017](https://www.kaggle.com/kaggle/kaggle-survey-2017) 설문조사 학습플랫폼 설문문항로 전형적인 설문문항의 한 사례로 볼 수 있다.
+
+데이터를 가져와서 특정 변수만 추출하고 `select(contains("LearningPlatformUsefulness"))`,
+폭넓은 자료형태(wide)를 긴 자료형태(long)로 변형시킨다.
+그리고 나서 `mutate_if()` 함수로 문자형자료형을 요인형자료형으로 변형시키고 나서 데이터를 정제시킨다.
+
+``` {r kaggle-case-forcats}
+# 0. 환경설정 -----
+library(tidyverse)
+library(extrafont)
+loadfonts()
+
+# 1. 데이터 -----
+
+# kaggle_dat <- read_csv("https://raw.githubusercontent.com/bkaniskan/KaggleDSsurvey/master/data/multipleChoiceResponses.csv")
+
+kaggle_dat <- read_csv("https://github.com/mbzhuang/Kaggle-ML-and-Data-Science-Survey-Analysis/blob/master/RawData/multipleChoiceResponses.csv?raw=true")
+
+## 1.1. 데이터 정제 -----
+kaggle_df <- kaggle_dat %>% 
+    select(contains("LearningPlatformUsefulness")) %>% 
+    gather(platform, value) %>% 
+    mutate_if(is.character, as.factor) %>% 
+    mutate(platform = str_remove(platform, "LearningPlatformUsefulness")) %>% 
+    filter(!is.na(value))
+```
+
+플랫폼별로 빈도수를 조사한 후에 요인형 변수를 수준(level) 조정을 하고 시각화가 깔끔하게 될 수 있도록 라벨명을 조정한다.
+
+``` {r kaggle-case-forcats-cleansing}
+## 1.2. 요인형 자료 -----
+kaggle_cat_df <- kaggle_df %>% 
+    group_by(platform) %>% 
+    count(value) %>% 
+    add_count(platform, wt=n, name="nn") %>%
+    mutate(pcnt = n / nn) %>% 
+    mutate(value = fct_relevel(value, "Not Useful", "Somewhat useful", "Very useful")) %>% 
+    mutate(value = case_when(
+        str_detect(value, "Somewhat") ~ "Somewhat",
+        str_detect(value, "Not") ~ "Not useful",
+        str_detect(value, "Very") ~ "Very useful"
+    ))
+```
+
+작은 창에 각 학습플랫폼별로 내용을 잘 나타날 수 있도록 시각화한다.
+
+``` {r kaggle-case-forcats-viz, fig.width=12, fig.height=9}
+# 2. 탐색적 데이터 분석 -----
+## 2.1. 시각화 -----
+kaggle_cat_df %>% 
+    ggplot(aes(x=value, y=pcnt, group=platform)) +
+      geom_line() +
+      geom_point() +
+      facet_wrap(~platform)  +
+      theme_minimal(base_family = "NanumGothic") +
+      scale_y_continuous(labels = scales::percent) +
+      labs(x="", y="응답 비율", title="캐글 설문조사", 
+           subtitle = "학습 플랫폼별 유용성 설문",
+           caption = "자료출처: Kaggle ML and Data Science Survey, 2017(https://www.kaggle.com/kaggle/kaggle-survey-2017)")
+```
 
