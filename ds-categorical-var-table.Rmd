@@ -23,12 +23,10 @@ editor_options:
 > * 표를 생성하고, 표현하고, 시각화 과정을 실습한다.
 
 ``` {r, categorical-setup, include=FALSE}
-library(ggplot2)
+library(tidyverse)
 library(rapportools)
 library(outliers)
 library(nycflights13)
-library(dplyr)
-library(readr)
 library(DescTools)
 ```
 
@@ -45,6 +43,93 @@ R로 표현되는 데이터 자료형이 다양하고, 기술적으로도 추상
 가지고 작업하는데 필요한 도구가 상당히 많이 존재하지만 완벽하지는 않는다. `DescTools` 팩키지에는 
 실무적인 측면에서 이런 간극을 매울 수 있는 도구를 일부 제공한다.
 
+# 범주형 데이터 자료구조 {#categorical-data-structure}
+
+표를 작성하는데 있어 가장 먼저 확인해야 되는 사항은 범주형 자료구조를 확인하는데 있다.
+
+1. **관측점 하나에 빈도수 하나인 경우(Case-by-Case)**: `data.frame` 혹은 행렬에 원자료에 각행에 사례 한가지만 기록되어 저장되어 있는 경우.
+
+`Untable()` 함수는 데이터프레임을 입력받아 관측점 하나에 빈도수 하나인 데이터프레임으로 변환시킨다.
+
+``` {r table-ubc-admission}
+Untable(UCBAdmissions) %>% head
+```
+
+2. **빈도수(Frequency)**
+
+각 요인별 조합을 유일무이한 값으로 계수하여 각 행에 저장함. 흔히 가중치(weights)라고도 하고,
+`Freq` 칼럼이 이에 해당함.
+
+``` {r}
+data.frame(UCBAdmissions) %>% head
+```
+
+3. **표(Table)**
+
+다차원 표, 배열, 행렬이 이에 해당.
+
+``` {r}
+UCBAdmissions[,,Dept=c("A", "B")]
+```
+
+세가지 범주형 데이터 표현방식은 각기 다른 사용도와 의미가 내포되어 있다. 예를 들어 2번 표현은 1번 표현보다 
+훨씬 적은 저장공간을 차지하게 되고, 1번 표현방식은 즉각적으로 데이터를 표로 작성하는데 용이하다.
+
+일반적으로 범주형 데이터를 구성하는데 사용되는 **표 자료구조(tabel data structure)**를 상호 비교해보자.
+
+<div class = "row">
+  <div class = "col-md-4">
+**단일 관측점(Single case)**
+
+```{r ubcadmin}
+DescTools::Untable(UCBAdmissions) %>% 
+  head()
+```
+
+  </div>
+  <div class = "col-md-4">
+**빈도수(Frequency)**
+
+```{r ubcadmin-freq}
+data.frame(UCBAdmissions) %>% 
+  head()
+```
+
+
+  </div>
+  <div class = "col-md-4">
+**표(table)**
+
+```{r ubcadmin-table}
+UCBAdmissions %>% 
+  DescTools::Untable() %>% 
+  filter(Dept %in% c("A", "B")) %>% 
+  droplevels() %>% 
+  table
+```
+
+  </div>
+</div>
+
+# 표 데이터 자료형 변환 {#table-to-dataframe}
+
+표데이터를 다음과 같이 `Case-by-Case`, `빈도수 가중치`, `표` 세가지 자료형이 존재한다.
+
+1. **관측점 하나에 빈도수 하나인 경우(Case-by-Case)**: `d_col <- Untable(HairEyeColor)`
+1. **빈도수(Frequency)**: `d.weight <- as.data.frame(HairEyeColor)`
+1. **표(Table)**: `tab <- HairEyeColor`
+
+- `사례별(Case-by-Case)` &rarr; `빈도수(Frequency)` :  `as.data.frame(table(d_col))`
+    - `사례별(Case-by-Case)` &rarr; 표(Table) &rarr; `빈도수(Frequency)` 변환시킴
+- `빈도수(Frequency)` &rarr; `사례별(Case-by-Case)` : `Untable(d.weight)`
+    - `library(DescTools)` 팩키지 `Untable()` 함수 사용
+- `사례별(Case-by-Case)` &rarr; `표(Table)` :  `table(d_col)`
+-  `표(Table)` &rarr; `사례별(Case-by-Case)` : `Untable(tab)`
+- `빈도수(Frequency)` &rarr; `표(Table)` : `xtabs(Freq ~ ., d.weight)`
+- `표(Table)` &rarr; `빈도수(Frequency)` : `as.data.frame(tab)`
+
+![사례별, 빈도수, 표 변환](fig/case-freq-table.png){#id .class width="100%"}
+
 # 표 생성 {#categorical-create-table}
 
 분할표(Contingency Table) 데이터를 R에 입력하는 방법은 다수 있다. 
@@ -57,7 +142,7 @@ R로 표현되는 데이터 자료형이 다양하고, 기술적으로도 추상
 | Gender| M	| 762     | 327         | 468	     |
 |       | F	| 484     | 239         | 477	     |
 
-1. `TextToTable()` 함수 활용 : `DescTools` 팩키지에서 지원되는 함수.
+1. `TextToTable()` 함수 활용 : `DescTools` 팩키지에서 지원되는 함수를 사용한다.
 
 ``` {r create-table}
 txt <- "
@@ -148,40 +233,6 @@ tab <- data.frame(expand.grid(
 tab %>% head
 ```
 
-# 범주형 데이터 구성 {#categorical-data-structure}
-
-표를 작성하는데 있어 가장 먼저 확인해야 되는 사항은 범주형 자료구조를 확인하는데 있다.
-
-1. **관측점 하나에 빈도수 하나인 경우(Case-by-Case)**: `data.frame` 혹은 행렬에 원자료에 각행에 사례 한가지만 기록되어 
-저장되어 있는 경우.
-
-`Untable()` 함수는 데이터프레임을 입력받아 관측점 하나에 빈도수 하나인 데이터프레임으로 변환시킨다.
-
-``` {r table-ubc-admission}
-Untable(UCBAdmissions) %>% head
-```
-
-2. **빈도수(Frequency)**
-
-각 요인별 조합을 유일무이한 값으로 계수하여 각 행에 저장함. 흔히 가중치(weights)라고도 하고,
-`Freq` 칼럼이 이에 해당함.
-
-``` {r}
-data.frame(UCBAdmissions) %>% head
-```
-
-3. **표(Table)**
-
-다차원 표, 배열, 행렬이 이에 해당.
-
-``` {r}
-UCBAdmissions[,,Dept=c("A", "B")]
-```
-
-세가지 범주형 데이터 표현방식은 각기 다른 사용도와 의미가 내포되어 있다. 예를 들어 2번 표현은 1번 표현보다 
-훨씬 적은 저장공간을 차지하게 되고, 1번 표현방식은 즉각적으로 데이터를 표로 작성하는데 용이하다.
-
-
 # 표 만들기(Tabulate) {#create-tablulate}
 
 `DescTools` 팩키지에 포함된 `HairEyeColor`객체는 `table` 자료형을 갖고 있다. 
@@ -191,21 +242,22 @@ UCBAdmissions[,,Dept=c("A", "B")]
 ## 단변량 범주형 변수 {#create-table-univariate}
 
 ``` {r HairEyeColor-univate}
-d.col <- Untable(HairEyeColor)
-d.col %>% dplyr::filter(Sex=="Male", Hair=="Blond", Eye=="Brown")
+d_col <- Untable(HairEyeColor)
+d_col %>% 
+  dplyr::filter(Sex=="Male", Hair=="Blond", Eye=="Brown")
 ```
 
 요인형 자료를 갖고 표를 생성시키는 방법은 `table` 함수로 빈도수, `prop.table` 함수로 백분율을 표로 표현한다.
 
 ``` {r HairEyeColor-pro-table}
-table(d.col$Hair)
-prop.table(table(d.col$Hair))
+table(d_col$Hair)
+prop.table(table(d_col$Hair))
 ```
 
 `Freq` 함수를 사용해서 단변량 범주형 변수의 경우 빈도수와 백분율을 간단히 표로 표현한다.
 
 ``` {r HairEyeColor-freq}
-Freq(d.col$Hair, ord="desc")
+Freq(d_col$Hair, ord="desc")
 ```
 
 ## 이변량 범주형 변수 {#create-bivariate}
@@ -218,21 +270,21 @@ Freq(d.col$Hair, ord="desc")
 - `margin=NULL` : 전체 백분율
 
 ``` {r create-tabl-old}
-with(d.col, table(Hair, Sex))
+with(d_col, table(Hair, Sex))
 ```
 
 혹은 `plyr`, `dplyr` 팩키지의 `count()` 함수를 사용하면 `table`, `as.data.frame` 단계를 거치지 않고 일관된 방식으로 
 표생성에 필요한 데이터를 만들어 낼 수 있다. 이를 `xtabs` 함수와 결합하여 표 
 
 ``` {r create-table-xtabs}
-dplyr_tbl <- d.col %>% count(Hair, Sex)
+dplyr_tbl <- d_col %>% count(Hair, Sex)
 xtabs(n~Hair+Sex, dplyr_tbl)
 ```
 
 ``` {r create-table-three-ways}
-with(d.col, prop.table(table(Hair, Eye), 1)) # 행기준
-with(d.col, prop.table(table(Hair, Eye), 2)) # 열기준  
-with(d.col, prop.table(table(Hair, Eye), margin=NULL)) # 전체
+with(d_col, prop.table(table(Hair, Eye), 1)) # 행기준
+with(d_col, prop.table(table(Hair, Eye), 2)) # 열기준  
+with(d_col, prop.table(table(Hair, Eye), margin=NULL)) # 전체
 ```
 
 `PercTable()` 함수를 `rfrq=` 인자를 상대빈도수를 제어한다. 
@@ -244,30 +296,11 @@ with(d.col, prop.table(table(Hair, Eye), margin=NULL)) # 전체
 
 
 ``` {r create-table-perctable}
-PercTable(Hair ~ Eye, data=d.col, rfrq="111", margins=c(1,2))
+PercTable(Hair ~ Eye, data=d_col, rfrq="111", margins=c(1,2))
 ```
 
 `Margins(HairEyeColor, ord="desc")` 명령어처럼 `Margins()` 함수가 있어 표 자료형을 입력받아 
 각 표차원별로 표를 신속하게 생성할 수 있다.
-
-
-# 표 데이터 자료형 변환 {#table-to-dataframe}
-
-표데이터를 다음과 같이 `Case-by-Case`, `빈도수 가중치`, `표` 세가지 자료형이 존재한다.
-
-1. **관측점 하나에 빈도수 하나인 경우(Case-by-Case)**: `d.col <- Untable(HairEyeColor)`
-1. **빈도수(Frequency)**: `d.weight <- as.data.frame(HairEyeColor)`
-1. **표(Table)**: `tab <- HairEyeColor`
-
-
-- `사례별(Case-by-Case)` &rarr; `빈도수(Frequency)` :  `as.data.frame(table(d.col))`
-    - `사례별(Case-by-Case)` &rarr; 표(Table) &rarr; `빈도수(Frequency)` 변환시킴
-- `빈도수(Frequency)` &rarr; `사례별(Case-by-Case)` : `Untable(d.weight)`
-    - `library(DescTools)` 팩키지 `Untable()` 함수 사용
-- `사례별(Case-by-Case)` &rarr; `표(Table)` :  `table(d.col)`
--  `표(Table)` &rarr; `사례별(Case-by-Case)` : `Untable(tab)`
-- `빈도수(Frequency)` &rarr; `표(Table)` : `xtabs(Freq ~ ., d.weight)`
-- `표(Table)` &rarr; `빈도수(Frequency)` : `as.data.frame(tab)`
 
 
 # 시각화 {#visualize-categorical}
@@ -309,3 +342,62 @@ cols <- c("moccasin", "salmon1",
           "burlywood", "sienna4")
 PlotCirc(t(tab), acol=cols)
 ```
+
+# 표 꾸미기 {#gt-formatable}
+
+## `formattable` {#gt-formatable-package}
+
+[`formattable`: Formattable Data Structures](https://github.com/renkun-ken/formattable) 팩키지를 사용하여 표를 꾸밀 수 있다.
+
+```{r formattable-example}
+library(formattable)
+
+data.frame(UCBAdmissions) %>% 
+  select(Dept, Gender, Freq, Admit) %>% 
+  mutate(Admit = ifelse(Admit == "Admitted", TRUE, FALSE)) %>% 
+  formattable(., list(
+    Gender = formatter("span", style = x ~ ifelse(x == "Male", 
+    style(color = "green", font.weight = "bold"), NA)),
+    area(col = c(Freq)) ~ normalize_bar("pink", 0.2),
+    Admit = formatter("span",
+    style = x ~ style(color = ifelse(x, "green", "red")),
+    x ~ icontext(ifelse(x, "ok", "remove"), ifelse(x, "Admitted", "Rejected")))
+  ))
+```
+
+## `gt` [^gt-github] [^gt-case-study] {#table-gt}
+
+[^gt-github]: [`gt`: Easily generate information-rich, publication-quality tables from R](https://github.com/rstudio/gt)
+
+[^gt-case-study]: [`gt`: Case Study - gtcars](https://gt.rstudio.com/articles/case-study-gtcars.html)
+
+[`gt`](https://gt.rstudio.com/) 팩키지는 표(table)을 각 부분으로 나눠서 `티블(tibble)` 혹은 `데이터프레임(data frame)` 객체를 `gt` 객체로 변환시킨 후에 `gt` 표(테이블)로 만들어서 각종 문서에 사용할 수 있다.
+
+먼저 `gt` 테이블 구성요소를 다음과 같이 구성할 수 있고, 이를 `gt` 작업흐름에 맞춰 작업한다.
+즉 표는 다음을 구성요소로 갖는다.
+
+- table header
+- stub 
+- stub head
+- column labels
+- table body
+- table footer
+
+![`gt` 테이블 구성요소](fig/gt_parts_of_a_table.svg)
+
+일반적인 `gt` 테이블 작업흐름은 앞서 언급한 것처럼 `tibble` 혹은 `data.frame` &rarr; `gt` 객체 &rarr; `gt` 테이블이 된다.
+
+![`gt 테이블 작업흐름`](fig/gt_workflow_diagram.svg)
+
+`UCBAdmissions` 데이터셋을 가지고 `gt` 테이블을 제작해 보자.
+
+```{r gt-table-workflow}
+# remotes::install_github("rstudio/gt")
+# library(gt)
+data.frame(UCBAdmissions) %>% 
+  select(Dept, Gender, Freq, Admit) %>% 
+  head()
+
+
+```
+
