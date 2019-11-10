@@ -23,11 +23,11 @@ editor_options:
 > * 표를 생성하고, 표현하고, 시각화 과정을 실습한다.
 
 ``` {r, categorical-setup, include=FALSE}
-library(tidyverse)
-library(rapportools)
-library(outliers)
-library(nycflights13)
-library(DescTools)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(reticulate)
+use_condaenv("anaconda3")
 ```
 
 # R로 표 작성 [^DescTools-table] {#categorical-desctools}
@@ -52,6 +52,9 @@ R로 표현되는 데이터 자료형이 다양하고, 기술적으로도 추상
 `Untable()` 함수는 데이터프레임을 입력받아 관측점 하나에 빈도수 하나인 데이터프레임으로 변환시킨다.
 
 ``` {r table-ubc-admission}
+library(tidyverse)
+library(DescTools)
+
 Untable(UCBAdmissions) %>% head
 ```
 
@@ -393,11 +396,14 @@ data.frame(UCBAdmissions) %>%
 
 ```{r gt-table-workflow}
 # remotes::install_github("rstudio/gt")
-# library(gt)
+library(gt)
+
 data.frame(UCBAdmissions) %>% 
   select(Dept, Gender, Freq, Admit) %>% 
-  head()
-
-
+  head() %>% 
+  gt() %>% 
+  tab_header(
+    title = "미국 버클리 대학 입학",
+    subtitle = "학과별, 성별, 입학 여부")
 ```
 
