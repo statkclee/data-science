@@ -1,27 +1,39 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 요인자료형 달인 - STAT545
+subtitle: "요인자료형 달인 - STAT545"
+author:
+    name: xwMOOC
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
 output:
   html_document: 
     toc: yes
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
 mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
 ---
 
 
 ```{r, include=FALSE}
-source("tools/chunk-options.R")
-library(dplyr)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(reticulate)
+use_condaenv("anaconda3")
 ```
-> ## 학습 목표 {.objectives}
+
+> **학습 목표**
 >
 > * 범주형 자료형의 특성과 핵심개념을 이해한다.
 > * `forcats` 팩키지를 활용하여 요인자료형 달인이 된다.
 
-### 요인 자료형 [^stat545-factors]
+
+# 요인 자료형 [^stat545-factors] {#stat545-factor}
 
 [^stat545-factors]: [Be the boss of your factors](http://stat545.com/block029_factors.html)
 
@@ -32,34 +44,38 @@ library(dplyr)
  일반적으로 수준은 사람이 읽을 수 있는 문자열로 표현되고, “male/female”, “control/treated”를 예로 들 수 있다.
  *절대로 잊지 말아야 되는 사실은* R에서는 정수 1,2,3... 으로 저장된다는 점이다.
 
- 요인형의 야누스적인 특성으로 말미암아 여러가지 불미스런 사건을 많이 일으키기도 하지만 **필요악**으로,
- 단점보다 훨씬 장점이 더 많다. 특히 모형개발이나 그래프를 생성할 때, 요인은 항상 따라다니고 잘 다뤄야 하는 필수적인 자료형이
- 요인형이다.
+ 요인형의 야누스적인 특성으로 말미암아 여러가지 불미스런 사건을 많이 일으키기도 하지만 **필요악**으로,  단점보다 훨씬 장점이 더 많다. 특히 모형개발이나 그래프를 생성할 때, 요인은 항상 따라다니고 잘 다뤄야 하는 필수적인 자료형이  요인형이다.
 
-가장 최악의 요인형은 탐지되지 않는 요인이다. 문자형이라고 생각했던 변수가 실제로 컴퓨터 R은 요인형(정수 숫자형)으로 이해하고 있다는 점이다.
-그럼 **탐지되지 않는 요인(stealth factor)**은 어디서 나온 것일까? Base R은 문자형 변수를 요인형으로 자동 변환하는데 데이터를 불러 읽어 들일 때 
+가장 최악의 요인형은 탐지되지 않는 요인이다. 문자형이라고 생각했던 변수가 실제로 컴퓨터 R은 요인형(정수 숫자형)으로 이해하고 있다는 점이다. 그럼 **탐지되지 않는 요인(stealth factor)**은 어디서 나온 것일까? Base R은 문자형 변수를 요인형으로 자동 변환하는데 데이터를 불러 읽어 들일 때 
 `read.table()` 함수와 친구들이 그런 특성을 기본디폴트 설정으로 갖는다. 이런 동작을 멈추게 하려면 `stringsAsFactors = FALSE` 인자를 명시적으로 넣어야 한다. 
-**`tidyverse`** 팩키지를 사용하면 그런 걱정은 사라진다. readr::read_csv(), readr::read_tsv() 함수를 사용해서 데이터를 불러 읽어오든지,
+**`tidyverse`** 팩키지를 사용하면 그런 걱정은 사라진다. `readr::read_csv()`, `readr::read_tsv()` 함수를 사용해서 데이터를 불러 읽어오든지,
 데이터 테이블 생성할 때 `data.frame()` 대신 `tibble::tibble()`을 사용한다.
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
 
 **요인형과 문자형에 대한 역사적 고찰과 의미**
 
 - [stringsAsFactors: An unauthorized biography](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/), Roger Peng
 - [stringsAsFactors =<sigh>](http://notstatschat.tumblr.com/post/124987394001/stringsasfactors-sigh), Thomas Lumley
 
+</div>
 
-### `forcats` 팩키지 불러오기
+# `forcats` 팩키지 불러오기 {#stat545-forcats}
 
-`tidyverse`의 핵심 팩키지가 아니라서 `install.packages("tidyverse")` 명령어로 설치하고 `library(forcats)` 명령어로 적재시켜야 한다.
-`fct_` 로 핵심함수명이 시작된다. 
+과거 `tidyverse`의 핵심 팩키지가 아니라서 `install.packages("tidyverse")` 명령어로 설치하고 `library(forcats)` 명령어로 적재시켜야 한다. 이제는 `tidyverse`의 일원이 되어서 `library(tidyverse)`로 손쉽게 작업할 수 있게 되었다. `forcats` 팩키지에서 범주형 변수를 다루기 위해서 `fct_` 함수명을 접두어로 두고 활용한다.
 
 ``` {r import-forcats}
-suppressMessages(library(tidyverse))
-suppressMessages(library(forcats))
-suppressMessages(library(gapminder))
+library(tidyverse) # 혹은, library(forcats)
+library(gapminder)
 ```
 
-### 요인(factor) 살펴보기 
+
+# `forcats` 요인 자료 다루기 {#stat545-forcats}
+
+## 요인(factor) 범주 살펴보기 {#stat545-forcats-glance}
 
 먼저 요인형 변수에 담긴 정보를 확인하는데 `levels`, `nlevels` 함수를 통해 수준정보를 확인한다. 
 
@@ -76,17 +92,29 @@ summary(gapminder$continent)
 `dplyr` 팩키지 `count()` 함수를 사용해서 유사한 결과를 도출할 수도 있고, `forcats` 팩키지
 `fct_count()` 함수를 사용해서도 동일한 결과를 얻을 수 있다.
 
+<div class = "row">
+  <div class = "col-md-6">
+**`dplyr` 팩키지 `count()` 함수**
 
 ``` {r inspect-factors-dplyr}
 gapminder %>% 
   count(continent)
 ```
 
+
+  </div>
+  <div class = "col-md-6">
+**`forcats` 팩키지 `fct_count()` 함수**
+
 ``` {r inspect-factors-forcats}
 fct_count(gapminder$continent)
 ```
 
-### 사용되지 않는 수준(level) 제거
+  </div>
+</div>
+
+
+## 사용되지 않는 수준(level) 제거 {#forcats-droplevels}
 
 특정 요인수준에 대응되는 관측점 혹은 행을 제거하게 되면, 문제가 발생된다.
 즉, 요인형 변수에 수준이 여전히 남아있게 되어, 요인형 변수에 대한 그래프를 도식화하게 되면
@@ -116,7 +144,7 @@ h_gap$country %>%
   levels()
 ```
 
-### 수준(level) 순서 변경
+## 수준(level) 순서 변경 {#forcats-relevel}
 
 기본디폴트 설정으로 요인수준은 알파벳순으로 정렬된다.
 수준(level)을 정렬하는 기준이 다음과 같이 제시된다.
@@ -173,8 +201,11 @@ fct_reorder(gapminder$country, gapminder$lifeExp, .desc = TRUE) %>%
 요인변수를 `x` 혹은 `y` 축에 매핑시킬 경우, 거의 항상 또다른 매핑되는 변수를 기준으로 재정렬시켜야 한다.
 
 ``` {r order-levels-reason, fig.show = 'hold', out.width = '49%'}
-gap_asia_2007 <- gapminder %>% filter(year == 2007, continent == "Asia")
-ggplot(gap_asia_2007, aes(x = lifeExp, y = country)) + geom_point()
+gap_asia_2007 <- gapminder %>% 
+  filter(year == 2007, continent == "Asia")
+ggplot(gap_asia_2007, 
+       aes(x = lifeExp, y = country)) + 
+  geom_point()
 ggplot(gap_asia_2007, aes(x = lifeExp, y = fct_reorder(country, lifeExp))) +
   geom_point()
 ```  
@@ -183,9 +214,11 @@ ggplot(gap_asia_2007, aes(x = lifeExp, y = fct_reorder(country, lifeExp))) +
 
 ``` {r order-levels-reason2, fig.show = 'hold', out.width = '49%'}
 h_countries <- c("Egypt", "Haiti", "Romania", "Thailand", "Venezuela")
+
 h_gap <- gapminder %>%
   filter(country %in% h_countries) %>% 
   droplevels()
+
 ggplot(h_gap, aes(x = year, y = lifeExp, color = country)) +
   geom_line()
 ggplot(h_gap, aes(x = year, y = lifeExp,
@@ -194,7 +227,7 @@ ggplot(h_gap, aes(x = year, y = lifeExp,
   labs(color = "country")
 ```
 
-### 특정 수준순위를 조정
+## 특정 수준순위를 조정 {#forcats-reorder}
 
 종종 특정 수준의 순위를 조정하고자 하는 경우가 있다. `fct_relevel()` 함수를 사용한다.
 
@@ -204,7 +237,7 @@ h_gap$country %>% levels()
 h_gap$country %>% fct_relevel("Romania", "Haiti") %>% levels()
 ```
 
-### 수준을 다시 정의
+## 수준 명칭변경 다시 정의 {#forcats-recode-label}
 
 범주 수준을 재정의하는 경우도 흔히 있다. 이런 경우 `fct_recode()` 함수를 사용한다.
 
@@ -216,4 +249,60 @@ i_gap$country %>% levels()
 
 i_gap$country %>%
   fct_recode("USA" = "United States", "Oz" = "Australia") %>% levels()
+```
+
+## 범주 요인 결합 {#forcats-combine}
+
+요인변수를 결합하는 경우 단순히 `c()`를 사용하게 되면 결합이 뜻한대로 되지 않는 경우가 있다. 이를 방지하기 위해서 `fct_c()` 함수를 사용하면 안전하게 결합시킬 수 있다.
+
+```{r forcats-grow-bad}
+df1 <- gapminder %>%
+  filter(country %in% c("United States", "Mexico"), year > 2000) %>%
+  droplevels()
+
+df2 <- gapminder %>%
+  filter(country %in% c("France", "Germany"), year > 2000) %>%
+  droplevels()
+
+levels(df1$country)
+levels(df2$country)
+```
+
+<div class = "row">
+  <div class = "col-md-6">
+**`c()` 범주형에 좋지 않아요!**
+
+`c()` 함수 사용 결과값 확인.
+
+```{r forcats-grow-bad-check}
+c(df1$country, df2$country)
+```
+
+  </div>
+  <div class = "col-md-6">
+
+**`fct_c()` 범주형에 좋아요!**
+
+`fct_c()` 함수 사용 결과값 확인.
+
+```{r forcats-grow-good}
+fct_c(df1$country, df2$country)
+```
+
+  </div>
+</div>
+
+
+마찬가지로 데이터프레임에 포함된 범주형 변수를 다룰 때 `bind_rows()` 함수와 `rbind()`는 다르게 동작 한다. 즉, `bind_rows()` 함수는 수준이 다르기 때문에 요인을 문자열로 변환시켜 후속 작업을 준비한다.
+
+```{r forcats-bind_rows}
+bind_rows_df <- bind_rows(df1, df2)
+bind_rows_df
+```
+
+반면에, `rbind()` 함수는 범주형 요인으로 계속 자료형을 유지한다.
+
+```{r forcats-rbind}
+rbind_df <- rbind(df1, df2)
+rbind_df
 ```
