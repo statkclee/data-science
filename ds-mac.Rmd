@@ -1,0 +1,52 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "데이터 과학 PC - 맥(Mac)"
+author:
+    name: xwMOOC
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(reticulate)
+use_condaenv("anaconda3")
+```
+
+# 데이터 과학 개발용 컴퓨터 {#data-science-computer}
+
+데이터 과학을 위한 전용 컴퓨터를 새로 구매한다고 가정할 때 맥북 노트북으로 장만했다면 다음과 같은 설정을 단계별로 가져가는 것이 필요합니다.
+
+어떤 소프트웨어도 설치된 적이 없는 맥북에 R 데이터 과학 개발환경을 설정하는 방식은 다음과 같다.
+
+1. 터미널 확인: `bash` 혹은 `zsh` 쉘 중 어떤 쉘을 사용하고 있는지 확인한다.
+1. 텍스트 편집기 확인: 나노(`nano`), `vi` 편집기가 쉘에서 기본적으로 활용할 수 있지만, GUI 텍스트 전용 편집기를 준비한다. [아톰(atom)](https://atom.io/), [써브라임 텍스트 3(sublime Text 3)](https://www.sublimetext.com/) 등 다양한 편집기가 있으니, 저작권과 사용경험담등을 참조하여 본인 텍스트 편집기를 설치한다.
+1. R과 RStudio 설치: R과 RStudio를 다운로드 받아 설치한다.
+    - R 윈도우 다운로드: https://cran.r-project.org/bin/windows/base/
+    - RStudio 다운로드: https://rstudio.com/products/rstudio/download/
+1. 공개키/개인키 설정: 버전 제어 및 협업을 위해서 꼭 필요한 기능 [^mac-git-ssh]
+    - [`gitlab`](https://statkclee.github.io/data-science/ds-gitlab.html#31_ssh_3) 사례 참조
+1. Git, Gitlab, Github 설정
+    - Git 설치: `brew install git`
+    - `Gitlab`, `Github` 회원 가입 후 환경설정
+
+[^mac-git-ssh]: [devYurim (AUGUST 8, 2018), "Git 설치와 초기 설정 for Mac OS X"](https://devyurim.github.io/development%20environment/git/2018/08/08/git-1.html)
+
+![깡통 맥에 R 데이터 과학 개발환경 구축](fig/bare-metal-mac.png){#id .class width="100%"}
+
+
+

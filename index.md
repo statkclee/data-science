@@ -62,13 +62,14 @@ title: 데이터 과학
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)
     - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html) 
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
+    - [데이터 과학 PC - 맥(Mac)](ds-mac.html)
     - [윈도우 10 - WSL (우분투 배쉬)](ds-windows-bash.html)
     - [`gitlab` 환경설정과 기본사용법](ds-gitlab.html)
-    - **[RStudio 개발환경 - 프로젝트](rstudio-project.html)**
+    - [RStudio 개발환경 - 프로젝트](rstudio-project.html)
         - [RStudio 개발환경(IDE)과 단축키](rstudio.html)
         - [윈도우 환경 가상 R 개발환경](ds-virtual-window.html)
         - [한글처리 가능한 RStudio 개발환경](toolchain-shiny-rstudio.html)        
-    - [빅데이터 - 스파크(Spark)](https://statkclee.github.io/bigdata/)
+    - [빅데이터 - 스파크(Spark)](https://statkclee.github.io/bigdata/) &larr; 하둡/스파크
     - [도커(Docker) 기초](toolchain-docker-basic.html)
         - [도커(Docker) - Dockerfile](toolchain-docker-dockerfile.html)
         - [데이터 과학 도커 - R](toolchain-docker-r.html)  
