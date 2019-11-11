@@ -36,6 +36,7 @@ use_condaenv("anaconda3")
 1. 터미널 확인: `bash` 혹은 `zsh` 쉘 중 어떤 쉘을 사용하고 있는지 확인한다.
 1. 텍스트 편집기 확인: 나노(`nano`), `vi` 편집기가 쉘에서 기본적으로 활용할 수 있지만, GUI 텍스트 전용 편집기를 준비한다. [아톰(atom)](https://atom.io/), [써브라임 텍스트 3(sublime Text 3)](https://www.sublimetext.com/) 등 다양한 편집기가 있으니, 저작권과 사용경험담등을 참조하여 본인 텍스트 편집기를 설치한다.
 1. R과 RStudio 설치: R과 RStudio를 다운로드 받아 설치한다.
+    - R 맥 다운로드: https://cran.r-project.org/bin/macosx/
     - R 윈도우 다운로드: https://cran.r-project.org/bin/windows/base/
     - RStudio 다운로드: https://rstudio.com/products/rstudio/download/
 1. 공개키/개인키 설정: 버전 제어 및 협업을 위해서 꼭 필요한 기능 [^mac-git-ssh]
@@ -48,5 +49,36 @@ use_condaenv("anaconda3")
 
 ![깡통 맥에 R 데이터 과학 개발환경 구축](fig/bare-metal-mac.png){#id .class width="100%"}
 
+# CLI R & RStudio 설치 {#install-cli-R-RStudio}
 
+먼저 [HomeBrew](https://brew.sh/index_ko)를 설치한다. 명령어는 웹사이트에 나와 있듯이 간단히 다음 명령어를 터미널에 복사형 붙여 넣고 엔터친다.
+
+```{r homebrew-install, eval = FALSE}
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+**hadley commented on 19 Oct 2018**
+
+I think the basic advice is NEVER INSTALL R FROM BREW (unless you really know what you are doing). [Github Issues](https://github.com/tidyverse/tidyverse/issues/154#issuecomment-494434428)
+
+</div>
+
+`tidyverse` 설치 시 의존성 때문에 `libxml2`는 설치한다.
+
+```{r libxml2-install, eval = FALSE}
+$ brew install libxml2
+```
+
+순차적으로 R과 RStudio를 다운로드 받아 설치한다.
+
+- R 맥 다운로드: https://cran.r-project.org/bin/macosx/
+- RStudio 다운로드: https://rstudio.com/products/rstudio/download/
+
+마지막으로 [`tidyverse`](https://tidyverse.tidyverse.org/) 팩키지를 설치한다.
 
