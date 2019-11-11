@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
                       comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
 
 library(reticulate)
-use_condaenv("anaconda3")
+# use_condaenv("anaconda3")
 ```
 
 # 데이터 과학 개발용 컴퓨터 {#data-science-computer}
@@ -81,4 +81,82 @@ $ brew install libxml2
 - RStudio 다운로드: https://rstudio.com/products/rstudio/download/
 
 마지막으로 [`tidyverse`](https://tidyverse.tidyverse.org/) 팩키지를 설치한다.
+
+
+# D2-coding 폰트 설치 [^mac-install-setup] {#install-D2-coding-fonts}
+
+[^mac-install-setup]: ["맥 개발 환경 설정하기 - 나의 개발 환경 세팅을 위한 정리"](https://blog.dizy.dev/dev/2016/06/30/setting-up-the-development-environment-for-mac.html)
+
+[네이버 D2 Coding 글꼴](https://github.com/naver/d2codingfont) 웹사이트에서 직접 D2-coding 폰트를 다운로드 받아 압축을 풀어 설치한다. `finder`에서 압축을 푼 폰트를 더블 클릭하여 설치하면 된다.
+
+```{r install-D2-coding-font, eval = FALSE}
+$ brew cask install font-d2coding
+```
+
+# 자바 설치 [^install-java] {#install-java}
+
+[^install-java]: [HOW TO SET JAVA_HOME ON MAC OS X](http://www.sajeconsultants.com/how-to-set-java_home-on-mac-os-x/)
+
+최신 자바 버전을 설치하면 R 팩키지중 `rJava`를 통해 구현된 라이브러리가 수행되지 않는 문제가 있으니 가능하면 낮은 버전 예를 들어 9 등을 설치한다.
+
+1. [OpenJDK](https://jdk.java.net/archive/) 에서 OpenJDK를 다운로드 받는다. 다양한 버전이 있지만, 9버전을 다운로드 받는다. 다운로드 받은 파일이 예를 들어, `openjdk-9.0.4_osx-x64_bin.tar.gz`인 경우 압축을 풀어 이동시킨다. 압축을 풀게 되면 `jdk-9.0.4.jdk/` 디렉토리 아래 파일과 디렉토리가 풀리게 된다.
+
+```{r java-install-step-01, eval = FALSE}
+$ cd ~/Downloads
+$ tar xf openjdk-9.0.4_osx-x64_bin.tar.gz
+```
+
+2. 압축을 푼 디렉토리를 `/Library/Java/JavaVirtualMachines/`으로 이동시킨다.
+
+```{r java-install-step-02, eval = FALSE}
+$ sudo mv jdk-9.0.4.jdk/ /Library/Java/JavaVirtualMachines/
+```
+
+3. 쉘 환경설정 파일(`.bash_profile`)에  `JAVA_HOME` 설정한다.
+
+`which java` 명령어로 `java` 설치를 확인한다. `.bash_profile` 파일에 `JAVA_HOME` 경로를 등록시킨다. `/Library/Java/JavaVirtualMachines/` 디렉토리 아래 앞서 이동시킨 자바 프로그램이 복사되어 이동되었다.
+
+이를 확인하는 방법은 `which java`로 확인이 가능하다.
+
+```{bash java-install-step-03, eval = TRUE}
+which java
+```
+
+`JAVA_HOME` 환경변수를 통해 설정된 값은 다음 명령어를 통해 확인한다.
+
+```{bash java-install-step-04, eval = FALSE}
+bash-3.2$ $JAVA_HOME/bin/java --version
+openjdk 9.0.4
+OpenJDK Runtime Environment (build 9.0.4+11)
+OpenJDK 64-Bit Server VM (build 9.0.4+11, mixed mode)
+```
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
+
+**`.bash_profile` 파일 자바환경 추가**
+
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home <br>
+export JAVA_HOME;
+
+</div>
+
+4. `sudo R CMD javareconf` 명령어로 확인
+
+`sudo R CMD javareconf` 명령어로 설정된 값을 다시 환경에 반영시킨다.
+
+```{bash rconf-cmd, eval = FALSE}
+sudo R CMD javareconf
+```
+
+5. R에 `JAVA_HOME` 설정
+
+마지막으로 R에 `JAVA_HOME` 설정을 `Sys.setenv()` 명령어로 수행한다.
+
+```{r r-conf}
+Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home")
+```
+
 

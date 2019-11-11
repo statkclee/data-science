@@ -1288,7 +1288,7 @@ window.initializeCodeFolding = function(show) {
 
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
-    if (show)
+    if (show || $(this)[0].classList.contains('fold-show'))
       div.addClass('in');
     var id = 'rcode-643E0F36' + currentIndex++;
     div.attr('id', id);
@@ -1469,7 +1469,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1697,10 +1696,59 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 </ul>
 <p>마지막으로 <a href="https://tidyverse.tidyverse.org/"><code>tidyverse</code></a> 팩키지를 설치한다.</p>
 </div>
+<div id="install-D2-coding-fonts" class="section level1">
+<h1><span class="header-section-number">3</span> D2-coding 폰트 설치 <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h1>
+<p><a href="https://github.com/naver/d2codingfont">네이버 D2 Coding 글꼴</a> 웹사이트에서 직접 D2-coding 폰트를 다운로드 받아 압축을 풀어 설치한다. <code>finder</code>에서 압축을 푼 폰트를 더블 클릭하여 설치하면 된다.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>brew cask install font<span class="op">-</span>d2coding</a></code></pre></div>
+</div>
+<div id="install-java" class="section level1">
+<h1><span class="header-section-number">4</span> 자바 설치 <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></h1>
+<p>최신 자바 버전을 설치하면 R 팩키지중 <code>rJava</code>를 통해 구현된 라이브러리가 수행되지 않는 문제가 있으니 가능하면 낮은 버전 예를 들어 9 등을 설치한다.</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://jdk.java.net/archive/">OpenJDK</a> 에서 OpenJDK를 다운로드 받는다. 다양한 버전이 있지만, 9버전을 다운로드 받는다. 다운로드 받은 파일이 예를 들어, <code>openjdk-9.0.4_osx-x64_bin.tar.gz</code>인 경우 압축을 풀어 이동시킨다. 압축을 풀게 되면 <code>jdk-9.0.4.jdk/</code> 디렉토리 아래 파일과 디렉토리가 풀리게 된다.</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>cd <span class="op">~</span><span class="er">/</span>Downloads</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="op">$</span><span class="st"> </span>tar xf openjdk<span class="dv">-9</span>.<span class="fl">0.4</span>_osx<span class="op">-</span>x64_bin.tar.gz</a></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>압축을 푼 디렉토리를 <code>/Library/Java/JavaVirtualMachines/</code>으로 이동시킨다.</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="op">$</span><span class="st"> </span>sudo mv jdk<span class="dv">-9</span>.<span class="dv">0</span>.<span class="fl">4.</span>jdk<span class="op">/</span><span class="st"> </span><span class="er">/</span>Library<span class="op">/</span>Java<span class="op">/</span>JavaVirtualMachines<span class="op">/</span></a></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>쉘 환경설정 파일(<code>.bash_profile</code>)에 <code>JAVA_HOME</code> 설정한다.</li>
+</ol>
+<p><code>which java</code> 명령어로 <code>java</code> 설치를 확인한다. <code>.bash_profile</code> 파일에 <code>JAVA_HOME</code> 경로를 등록시킨다. <code>/Library/Java/JavaVirtualMachines/</code> 디렉토리 아래 앞서 이동시킨 자바 프로그램이 복사되어 이동되었다.</p>
+<p>이를 확인하는 방법은 <code>which java</code>로 확인이 가능하다.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="fu">which</span> java</a></code></pre></div>
+<pre><code>/usr/bin/java</code></pre>
+<p><code>JAVA_HOME</code> 환경변수를 통해 설정된 값은 다음 명령어를 통해 확인한다.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="ex">bash-3.2</span>$ <span class="va">$JAVA_HOME</span>/bin/java --version</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="ex">openjdk</span> 9.0.4</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="ex">OpenJDK</span> Runtime Environment (build 9.0.4+11)</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="ex">OpenJDK</span> 64-Bit Server VM (build 9.0.4+11, mixed mode)</a></code></pre></div>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class="blue">
+<p><strong><code>.bash_profile</code> 파일 자바환경 추가</strong></p>
+<p>JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home <br> export JAVA_HOME;</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li><code>sudo R CMD javareconf</code> 명령어로 확인</li>
+</ol>
+<p><code>sudo R CMD javareconf</code> 명령어로 설정된 값을 다시 환경에 반영시킨다.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="fu">sudo</span> R CMD javareconf</a></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>R에 <code>JAVA_HOME</code> 설정</li>
+</ol>
+<p>마지막으로 R에 <code>JAVA_HOME</code> 설정을 <code>Sys.setenv()</code> 명령어로 수행한다.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">Sys.setenv</span>(<span class="dt">JAVA_HOME =</span> <span class="st">&quot;/Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home&quot;</span>)</a></code></pre></div>
+</div>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://devyurim.github.io/development%20environment/git/2018/08/08/git-1.html">devYurim (AUGUST 8, 2018), “Git 설치와 초기 설정 for Mac OS X”</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://blog.dizy.dev/dev/2016/06/30/setting-up-the-development-environment-for-mac.html">“맥 개발 환경 설정하기 - 나의 개발 환경 세팅을 위한 정리”</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="http://www.sajeconsultants.com/how-to-set-java_home-on-mac-os-x/">HOW TO SET JAVA_HOME ON MAC OS X</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 
