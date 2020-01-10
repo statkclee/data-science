@@ -1,0 +1,64 @@
+---
+layout: page
+title: "데이터 과학 (Data Science)"
+subtitle: "빅데이터 민주화"
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: Tidyverse Korea
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+
+``` {r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+```
+
+# 이광춘 {#kclee}
+
+- [RStudio Certified Instructor](https://education.rstudio.com/trainers/#intro)
+    - [이광춘](https://education.rstudio.com/trainers/people/lee+kwangchun/)
+- [Software Carpentry Instructor](https://carpentries.org/instructors/)
+    - 검색어: Kwangchun Lee
+    - [Instructor Map](https://carpentries.org/instructors-map/)
+- 특강 및 강의자료
+    - [데이터 과학 기고문과 발표자료](https://statkclee.github.io/ds-authoring/)
+
+# 소프트웨어 카펜트리 {#software-carpentry}
+
+- 소프트웨어 카펜트리
+    - <https://software-carpentry.org/>
+    - 소개 동영상: <http://swcarpentry.github.io/slideshows/introducing-software-carpentry/#slide-0>
+- 소프트웨어 카펜트리 시즌2
+    - <https://datayanolja.github.io/speakers/kwangchun2.html>
+    - 발표자료: <https://statkclee.github.io/ds-authoring/ds_software_carpentry_2018.html>
+- 한림대학교 카펜트리 워크샵
+    - <https://statkclee.github.io/2018-10-27-hallym/>
+
+# 연세대 데이터 과학 강의 {#yonsei}
+
+- **2019년** 
+    - 1학기: [데이터 사이언스 입문](https://statkclee.github.io/yonsei/)
+    - 2학기: [데이터 공학](https://statkclee.github.io/yonsei2)
+- **2020년** 
+    - 1학기: [데이터 사이언스 입문](https://statkclee.github.io/ds-intro-2020/) &larr; DataCamp
+
+# 데이터 사이언스 미트업
+
+- [데이터 사이언스 미트업](https://tidyverse-korea.github.io/r-meetup-x-presser/)
+- [Enterprise R](https://web.facebook.com/groups/tidyverse)
+
