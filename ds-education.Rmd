@@ -402,8 +402,13 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
 
 ## 우수 데이터 과학 교육 {#data-science-lecture}
 
+- 데이터 과학 입문 &larr; **데이터 과학 논문 제작**
+    - [데이터 과학 입문(2019): 봄학기](https://statkclee.github.io/yonsei/)
+    - [데이터 과학 입문(2020): 봄학기](https://statkclee.github.io/ds-intro-2020/) &larr; 대폭 보강 예정 ^^
+- 데이터 과학을 위한 소프트웨어 공학(Software Engineering for Data Science) &larr; **데이터 과학 제품 제작**
+    - [Software Engineering for Data Science (2019): 가을학기](https://statkclee.github.io/yonsei2/)
 - [문건웅 교수님 Shiny 강의](https://github.com/cardiomoon/shinyLecture2)
-    + 강사님이 대학교수로 전문 교육인
+    + 강사님이 대학교수로 전문 교육인 
     + R전문가를 대상으로 R Meetup에서 무료 진행
     + 라이브 코딩으로 3시간 동안 수강생에게 실도움이 되도록 강의를 진행
 - [김재광 교수님 유튜브 강의](https://www.youtube.com/channel/UC9K0bDBTcuzvQK72Tftn-VA)
