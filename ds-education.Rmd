@@ -55,7 +55,7 @@ library(tidyverse)
 데이터가 엄청 많아지고 유용한 가치를 많이 지니고 있는 것은 알겠는데 데이터로 할 수 있는 것은 무엇인지 알아보자.
 
 1. 현재 상태를 객관적으로 파악할 수 있다.
-    - 기술통계량, 대쉬보드 등
+    - 기술통계량, 시각화, 대쉬보드 등
 1. 비정상적인 사건을 탐지할 수 있음
     - 이상점(outlier), 이상점 탐지(Anomaly Detection), 사기 탐지(fraud detection) 
 1. 특정 사건과 행태에 대한 원인을 파악하고 진단을 내릴 수 있음.
@@ -63,31 +63,16 @@ library(tidyverse)
 1. 장래 사건을 예측할 수 있음
     - 예측모형(predictive model), 기계학습
 
-## 통계학 [^statistics] {#data-science-education-definition}
-
-[^statistics]: [김충락 부산대 통계학과 교수 한국통계학회장, "통계를 ‘권력의 시녀’로 만들려는 유혹"](https://news.joins.com/article/22939324)
-
-통계학은 영어로 ‘Statistics’인데 이는 국가(State)를 통치하는 데 필요한 학문이라는 어원을 갖고 있고, 통계학은 크게 세 단계로 정의된다.
-
-1. 자료를 수집 (sampling), 
-1. 자료를 분석 (analysis), 
-1. 이를 바탕으로 일반화된 결론을 끌어냄(generalization)
-
-“자료 그 자체에 충실하라(Let the data speak for  themselves)”는 말이 있다.
-과학적 성과의 입증이나 정부의 정책을 뒷받침하는 과정에서 자료나 통계가 조금이라도 왜곡되거나 조작되면 안 된다. 이를 흔히 우리는 **통계의 중립성**과 **독립성**이라 부른다. 
-
-과거 통계학이 경제학의 보조학문 정도로 사용됐으나 현재는 경제학·의학·생물학·공학·사회과학 등 여러 학문 분야에서 통계학적 기법을 빌어서 활용하고 있다. 국가 통계 담당 통계청의 역사는 다음과 같다.
-
-- 1948년: 공보처 통계국으로 시작
-- 1955년: 내무부 통계국
-- 1961년: 경제기획원 조사통계국
-- 1990년: 12월 통계청 
-
-##  데이터 사이언스 작업흐름도 {#ds-workflow}
-
-데이터 사이언스 작업흐름은 데이터를 수집하고 이를 이해하는 과정과 추상화하는 과정을 거쳐 최종 산출물로 사람이 최종 소비자가 되는 보고서/대쉬보드와 기계가 최종 소비자가 되는 API/코드 형태로 최종 작업이 이뤄지게 된다.
-
-<img src="fig/data-science-workflow.png" alt="데이터 사이언스 작업흐름" width="100%" />
+- [손씻기 그리고 통계 - 제멜바이스](https://statkclee.github.io/statistics/stat-hand-washing.html)
+- [기념비적인 시각화 역작모음](https://statkclee.github.io/viz/viz-history.html)
+- [독일 V2로켓 영국 폭격](https://statkclee.github.io/statistics/stat-flying-bomb-poisson.html)
+- [러시아 월드컵(2018) - 한국 vs 독일](https://statkclee.github.io/viz/viz-worldcup-germany.html)
+- [코에이(Koei) 삼국지 국력비교](https://statkclee.github.io/data-product/dp-koei-three-kingdoms-powers.html)
+- [저출산과 소요예산 - 상관관계](https://statkclee.github.io/viz/viz-low-birth-rate.html)
+- [지진해일 대피소 - `crosstalk`](https://statkclee.github.io/viz/viz-earthquake-shelter.html)
+- [일본 캐릭터와 미디어 프랜차이즈](https://statkclee.github.io/data-product/dp-media-franchise.html)
+- [서울대학교 경제학과 - 국내박사배출](https://statkclee.github.io/data-product/data-journalism-snu.html)
+- [국세 세금 데이터 분석](https://statkclee.github.io/election/election_tax_EDA.html)
 
 ## 데이터 과학의 불편한 진실 [^data-science-fun-fact] {#data-science-fact}
 
@@ -107,21 +92,160 @@ library(tidyverse)
 1. All models are false, but some are useful. (모든 모델은 틀렸다, 하지만 몇몇은 유용하다)
 1. There is no fully automated Data Science. You need to get your hands dirty (완전 자동화된 데이터 과학같은 것은 없다. 인간이 개입되어야 할 부분이 있다)
 
+# 데이터 {#data-science-data}
+
+컴퓨터(Computer)라는 말은 라틴어 "computare"에 기원하는데 계산하고 더한다는 의미를 지니지만, 오늘날 컴퓨터는 거대한 계산기 이상이다. 컴퓨터는 도서관도 될 수 있으며, 컴퓨터로 글을 작성할 수 있으며, 정보를 찾고, 음악을 연주하고, 영화를 보기도 한다. 그런데 컴퓨터는 이렇게 많은 모든 정보를 어떻게 저장할까? 믿든 믿지 않든, 컴퓨터는 단지 두 가지만을 사용한다. 영('0')과 일('1')이다.
+
+빅데이터 시대를 맞이하여 데이터는 도처에 널려있지만, 오랜 세월을 거치면서 데이터는 나름대로 각자의 서식지를 가지게 되었다. 과거 중요한 정보를 관계형 데이터베이스에서 체계적으로 관리를 했다면 빅데이터를 저장하고, 처리하고, 활용할 수 있는 기술은 비약적으로 발전하여 최근에는 이를 기계학습과 딥러닝 기법을 적용하여 혁신을 통해 가치를 창출하는 단계로 넘어가고 있다.
+
+![정형데이터와 비정형 데이터, 그리고 기계학습](fig/intree-xy-f.png){#id .class width="77%"}
+
+## 데이터 라이선스 {#data-license}
+
+데이터는 사방에 널려 있지만, 데이터를 특정 기준으로 나눠서 살펴보는 것은 향후 지적재산과 연관된 다양한 법적인 문제를 푸는데도 큰 도움이 된다.
+
+- 데이터
+    - 공공 데이터 (public open data): 오픈되서 누구나 사용할 수 있는 공개된 데이터
+        - API 형태로 제공되는 데이터: [금융감독원 DART](https://dart.fss.or.kr/dsap001/intro.do), [공공데이터 포털 API](https://www.data.go.kr/), 위키백과사전, ...
+        - 공공 데이터
+            - 국제기구: [Federal Reserve Bank](https://research.stlouisfed.org/docs/api/fred/), UN, WTO, 월드 뱅크, ...
+        - 통계청: 인구총조사 및 다양한 조사 [KOSIS](http://kosis.kr/index/index.do)
+        - 정부기관: 기상청, 환경부, 국토부 ... [공공데이터 포털](https://www.data.go.kr/)
+    - 회사 데이터 (private company data): 특정 회사가 수집하여 의사결정을 내리기 위한 목적으로 수집된 비공개 상용 데이터
+        - 회사 운영에 필요한 내부 ERP 데이터
+        - 온라인 웹사이트를 운영할 경우 웹로그 데이터
+        - SNS도 운영할 경우 페이스북, 유튜브, 트위터 등 SNS 데이터
+        - 콜센터도 운영할 경우 콜센터에서 수집되는 데이터
+        - 채봇도 운영할 경우 채팅관련 텍스트 및 관련 비정형 데이터
+        - 고객 설문: 제품과 서비스 판매 및 고객 만족도 향상을 위한 전통적인 설문 데이터
+
+## 데이터 유형과 크기 {#data-types}
+
+다양한 데이터 원자재를 산업화하는 과정은 다양한 실험을 통해서 성공했던 과학기술이 비로소 사업화와 접목되어야만 가능하다. 데이터 원자재를 엑셀과 같은 형태의 직사각형 정형데이터로 가정한다면 이를 사업화하여 얻을 수 있는 실익은 크지 않다. 하지만, 데이터 원자재를 정형 데이터 뿐만 아니라, 이미지, 텍스트, 소리, 로드 등 비정형 데이터를 아우르게 되면 데이터의 양과 질, 그리고 속도에서 비교가 되지 않는 고도의 기술을 필요로 한다.
+
+- [직사각형 데이터](https://statkclee.github.io/data-science/)
+    - 양적자료(量的資料, quantitative data): 측정할 수 있는 자료, 예를 들어 키, 몸무게, 속도 등
+    - 질적자료(質的資料, qualitative data): 관측은 되지만, 측정할 수 없는 자료, 예를 들어, 색상, 성별 등
+- [텍스트 데이터](https://statkclee.github.io/text/)
+- [네트워크 데이터](https://statkclee.github.io/network/)
+- [지리정보 데이터](https://statkclee.github.io/spatial/)
+- [이미지 데이터](https://statkclee.github.io/trilobite/)
+- 오디오/소리 데이터
+- ...
+
+빅데이터(Big Data)를 일반적으로 통칭해서 말하고 있지만, 보통 노트북이나 PC에 저장해서 메모리로 불러 작업할 수 있는 데이터를 Small Data, 성능 좋은 서버에 데이터를 저장하고 RDMBS 등으로 관리하여 필요한 경우 SQL로 가져오는데 적합한 데이터를 중간 데이터라고 한다. 빅데이터는 처리에 많은 비용이 수반되기 때문에 클라우드 저장소 예를 들어 S3와 같이 저렴(?)한 Object Storage에 저장하고 클러스터를 구축하여 임시로 데이터를 분석, 모형개발 등 작업을 마친 후에 동원된 컴퓨팅 자원을 회수하는 방식으로 처리되는 데이터를 빅데이터로 통칭한다.
+
+|       구분     |               데이터 크기                                     |
+|----------------|---------------------------------------------------------------|
+| 작은 데이터    | 노트북 컴퓨터 메모리에 저장할 수 있는 크기 : **10 GB 이하**       |
+| 중간 데이터    | 서버 컴퓨터 메모리에 저장할 수 있는 크기 : **10 GB -- 5 TB**  |
+| 매우 큰 데이터 | 컴퓨터 한대 메모리에 저장될 수 없는 크기 : **5 TB이상**          |
+
+## 데이터 공학 {#data-science-data-engineering}
+
+본격적으로 데이터 과학을 시작하려면 데이터 저장부터 시작해야 한다. 이를 위해서 데이터 유형을 먼저 파악하고 이에 맞는 적절한 저장방법을 찾아야 한다.
+
+- 정형 데이터: 관계형 데이터베이스(Relational Database)
+    - 쿼리 언어: SQL
+- 비정형 데이터: 문서 데이터베이스(Document Database)
+    - 쿼리 언어: NoSQL
+
+이제 데이터를 추출하고, 변환하고, 적재하는 ETL(Extract Transform Load) 작업을 유닉스 쉘의 CRON 혹은 아파치 Airflow 등을 통해서 자동화 시킨다. 관련된 자세한 사항은 다음 링크를 참조한다.
+
+[데이터 공학(Data Engineering)](https://statkclee.github.io/sw4ds/data-engineering.html)
+
+
+# 통계학 [^statistics] {#data-science-education-definition}
+
+[^statistics]: [김충락 부산대 통계학과 교수 한국통계학회장, "통계를 ‘권력의 시녀’로 만들려는 유혹"](https://news.joins.com/article/22939324)
+
+통계학은 영어로 ‘Statistics’인데 이는 국가(State)를 통치하는 데 필요한 학문이라는 어원을 갖고 있고, 통계학은 크게 세 단계로 정의된다.
+
+1. 자료를 수집 (sampling), 
+1. 자료를 분석 (analysis), 
+1. 이를 바탕으로 일반화된 결론을 끌어냄(generalization)
+
+“자료 그 자체에 충실하라(Let the data speak for  themselves)”는 말이 있다.
+과학적 성과의 입증이나 정부의 정책을 뒷받침하는 과정에서 자료나 통계가 조금이라도 왜곡되거나 조작되면 안 된다. 이를 흔히 우리는 **통계의 중립성**과 **독립성**이라 부른다. 
+
+과거 통계학이 경제학의 보조학문 정도로 사용됐으나 현재는 경제학·의학·생물학·공학·사회과학 등 여러 학문 분야에서 통계학적 기법을 빌어서 활용하고 있다. 국가 통계 담당 통계청의 역사는 다음과 같다.
+
+- 1948년: 공보처 통계국으로 시작
+- 1955년: 내무부 통계국
+- 1961년: 경제기획원 조사통계국
+- 1990년: 12월 통계청 
+
+## 연역적/귀납적 사고 {#data-science-thinking}
+
+논리적 사고의 근간을 이루는 가장 중요한 밥법론이 귀납법과 연역법이다. 개별적인 특수한 사실이나 원리를 전제로 하여, 즉 데이터를 바탕으로 하여 일반적인 사실이나 원리로서의 결론을 이끌어 내는 연구 방법으로 인과 관계를 확정하는 데에 주로 사용된다. 반면 연역에 따른 추리의 방법은 일반적 사실이나 원리를 전제로 하여 개별적인 특수한 사실이나 원리를 결론으로 이끌어 내는 추리 방법으로 경험에 의하지 않고 논리상 필연적인 결론을 도출하는 것이 가능하고, 흔히 삼단 논법이 그 대표적인 형식으로 자리 잡고 있다. 하지만, 최근에 통계검증과 결합하여 논리적 사고에 따른 오류를 바로잡고 새로운 인사이트를 찾고자 하는 시도가 일반적이다.
+
+![귀납법과 연역법 그리고 데이터](fig/inductive-deductive.png){#id .class width="100%"}
+
+## 관측/실험 데이터 {#data-science-data-experiment-obs}
+
+자료 그 자체에 충실하기 위해서는 데이터가 만들어지는 과정에 대한 이해가 반듯이 필요하다. 데이터는 **관측 데이터(Observational data)**와 **실험 데이터(Experimental Data)**로 나뉜다. 데이터 자체가 두집단을 표현하더라도 생성과정이 달라 이를 통해서 얻을 수 있는 추론 결과도 다르게 된다.
+
+![관측데이터와 실험데이터](fig/observation-experiment.png){#id .class width="100%"}
+
+## 데이터로부터 추론 {#data-science-inference}
+
+무작위 추출을 하게 되면 일반화(Generalization)가 가능하지만, 무작위 표본 추출이 아닌 데이터에서 얻은 정보는 일반화를 하면 안된다.
+유사하게 무작위 할당을 해서 얻게 된 정보를 바탕으로 인과관계를 도출할 수 있지만, 무작위 할당을 하지 않은 경우는 인과관계를 예단할 수는 없다.
+
+- **무작위 추출(random sampling)**은 모집단에서 표본을 추출할 때 아무나 골라서 무작위로 뽑는 것을 의미한다.
+- **무작위 할당(random assignment)**은 표본을 집단에 집어넣을 때 무작위로 각 집단에 할당하는 것을 뜻한다.
+
+![추론의 범위](fig/scope-of-inference.png){#id .class width="77%"}
+
+## 심슨의 역설 {#simpson-paradox}
+
+- [데이터 과학 – 기초 통계 :" 심슨의 역설(Simpson Paradox)"](https://statkclee.github.io/statistics/stat-simpson.html)
+
+
+#  데이터 사이언스 작업흐름도 {#ds-workflow}
+
+데이터 사이언스 작업흐름은 데이터를 수집하고 이를 이해하는 과정과 추상화하는 과정을 거쳐 최종 산출물로 사람이 최종 소비자가 되는 보고서/대쉬보드와 기계가 최종 소비자가 되는 API/코드 형태로 최종 작업이 이뤄지게 된다.
+
+
+![데이터 사이언스 작업흐름](fig/data-science-workflow.png){#id .class width="100%"}
+
 ## 데이터 사이언스 팀구성원 {#data-science-team}
 
 데이터 사이언스 팀은 크게 3가지 역할로 나눌 수 있다. 
 
 1. 데이터 엔지니어 (Data Engineer): 데이터를 저장하고 관리, SQL/자바/스칼라/파이썬
 1. 데이터 분석가 (Data Analyst): 탐색적 데이터 분석, 스프레드쉬트/SQL/상용 대쉬보드 도구
-1. 기계학습 데이터 과학자 (Machine Learning Data Scientist): 기계학습 모형 개발, R/파이썬
+1. 데이터 과학자 (Data Scientist): 통계학 기반 실험과 통계 모형 개발, 자료 추출 SQL, 실험과 모형 R/파이썬
+1. 기계학습 데이터 과학자 (Machine Learning Scientist): 기계학습 모형 개발, R/파이썬
 
 데이터 엔지니어는 기본적으로 대량의 데이터를 수집하고, 저장하고, 관리하는 역할을 주된 업무로 한다. 이를 위해서 `SQL`이 기본 기술이고 데이터 수집과 자동 처리를 위해서 자바, 스칼라, 파이썬이 필요한 주된 기술로 전산 기본기가 특히 중요하다.
 
+- 데이터 엔지니어 기본 역량 &rarr; 데이터 저장하고 관리하는 것이 주업무
+    - 클라우드 컴퓨팅: 대용량 데이터를 저장하고 처리하는 컴퓨팅 자원을 다루는 기술 (애저, AWS, GCP)
+    - 유닉스 쉘: 데이터 작업을 자동화하는 CLI 유닉스 쉘
+    - SQL: 데이터를 저장하고 관리하는데 필요한 데이터에 대한 기본 기술
+    - 파이썬/자바/스칼라: 대용량 데이터를 처리하는데 사용되는 프로그래밍 인어
+
 데이터 분석가는 대쉬보드를 생성하고, 가설 검정, 데이터 시각화를 주된 업으로 하며 일차적으로 누군가 혹은 특정 장소에 저장된 데이터를 바탕으로 탐색적 데이터 분석을 수행하는 것을 업으로 한다. 이런 업무를 무리없이 수행하기 위해서 엑셀 혹은 구글 쉬트와 같은 스프레이쉬트를 자유자제로 다룰 수 있는 기본기가 필요하고, 데이터를 추출하기 위해서 SQL 쿼리 기술, 대쉬보드 작성을 위해 루커(looker), 타블로(Tableau), 파워 BI (Power BI) 더 나아가 R Shiny 대쉬보드를 활용할 수 있어야 한다.
+
+- 데이터 분석가 기본 역량 &rarr; 데이터를 기술하고 시각화하는 것이 주업무
+    - BI 도구: 대쉬보드와 시각화를 위한 도구 사용법, 루커(looker), 타블로(Tableau), 파워 BI (Power BI), R Shiny 대쉬보드
+    - 스프레드쉬트(엑셀/구글 쉬트/Numbers/Calc): 엑셀 닌자, 엑셀 장인, 혹은 `vloopup`, 매크로 등을 다루는 역량
+    - SQL: 파일, RDBMS에서 데이터를 가져오거나 총계를 내서 분석 가능형태로 변환시킬 수 있는 기술
+    - R/파이썬: 데이터를 불러 간단한 탐색적 데이터 분석을 수행.
+
+데이터 과학자(Data Scientist)는 오랜 동안 통계학을 공부하여 주로 A/B 테스트와 같은 실험을 설계하고 운영하며 결과를 토대고 인과(causality)를 추론하고 전통적인 기계학습(traditional machine learning) 즉 정형 RDBMS에서 SQL을 사용해서 데이터를 추출하여 통계 모형 개발을 개발하는 업무를 주로한다. 
+
+- 데이터 과학자 기본 역량 &rarr; 데이터에서 인사이트를 얻는 것이 주업무
+    - SQL: 정형/비정형 데이터 저장소에서 데이터를 분석 가능한 형태로 가져올 수 있는 역량
+    - R/파이썬: R `tidyverse`를 기반으로 다양한 보고서(interactive, parameterized documents)를 제작하고, A/B 테스트 등 데이터에 기반한 인과관계를 추론할 수 있는 실험을 설계하고 운영하고 의사결정을 할 수 있는 강한 통계지식과 회귀분석, 다변량 분석, 시계열 분석, 공간통계 모형, 네트워크 모형 등을 이해하고, 개발 및 배포할 수 있는 역량
 
 기계학습 데이터 과학자는 예측(Prediction & Extraploation)과 분류를 주된 업으로 하고 최근 들어 강조되고 있는 비정형 데이터 이미지와 텍스트를 딥러닝 방법론을 활용하여 개발하는 작업을 주된 업무로 한다. 이를 위해서 R과 파이썬을 주된 프로그래밍 언어로 강한 통계, 확률, 미적분, 선형대수 지식을 갖춰야 한다.
 
-
+- 기계학습 과학자(Machine Learning Scientist) 기본 역량 &rarr; 데이터를 사용해서 예측하는 것이 주업무
+    - 파이썬/R: 대용량 데이터를 스파크(`spark`)로 다룰 수 있는 역량과 딥러닝 모형을 텐서플로우(`tensorflow`) 등 라이브러리를 사용해서 텍스트 혹은 이미지를 데이터 자원으로 사용해서 딥러닝 모형을 개발하고 배포할 수 있는 역량
+    
+![데이터 과학 작업흐름과 데이터 전문가의 역할 비교](fig/role-skillset.png){#id .class width="100%"}
 
 ## 데이터 사이언스 업무 세분화 [^airbnb-data-science] {#data-science-specialization}
 
@@ -152,18 +276,18 @@ library(tidyverse)
 
 데이터를 원재료로 이를 공학적으로 제품과 서비스를 개발하는데 있어 크게 3가지 기능이 필요하고 이를 어떻게 조합하냐에 따라 데이터 사이언스 팀구조가 다음과 같이 나눠진다. 먼저 데이터 엔지니어로 구성된 팀, 데이터를 통해 뭔가 유용한 제품과 서비스를 만들어 내는 공학팀, 데이터 사이언스 제품과 서비스를 설계하고 기획하는 팀으로 명확히 구분된 데이터 사이언스 조직을 운영할 수 있다.
 
-<img src="fig/ds-team-isolated.png" alt="격리 구조를 갖는 팀구조" width="100%" />
+<img src="fig/ds-team-isolated.png" alt="격리 구조를 갖는 팀구조" width="57%" />
 
 다른 대안으로 데이터 엔지니어, 데이터 과학자, 기획자가 각각 팀을 이뤄 다양한 데이터 제품과 서비스를 기획하는 것도 가능한 형태다.
 
-<img src="fig/ds-team-embedded.png" alt="임베디드된 구조를 갖는 팀구조" width="100%" />
+<img src="fig/ds-team-embedded.png" alt="임베디드된 구조를 갖는 팀구조" width="57%" />
 
 마지막으로 상기 두 조직을 합친 형태로 데이터 사이언스 팀구조를 가져가는 것도 가능하다. 즉, 매트릭스 형태로 각 기능별 특징은 유지하면서 데이터 엔지니어와 분석가/모형 개발자, 그리고 제품 기획자가 하나의 팀으로 구성된 사례를 들 수 있다.
 
-<img src="fig/ds-matrix-organization.png" alt="임베디드된 구조를 갖는 팀구조" width="100%" />
+<img src="fig/ds-matrix-organization.png" alt="임베디드된 구조를 갖는 팀구조" width="57%" />
 
 
-## 데이터 사이언스 응용 {#data-science-applications}
+# 데이터 사이언스 응용 {#data-science-applications}
 
 데이터 사이언스 응용분야로 최근 떠오르는 분야를 포함하면 다음과 같다.
 
@@ -185,7 +309,6 @@ library(tidyverse)
     - 나이 성별 주소 등이 포함된 인구 통계, 날씨 범죄율 등 공공데이터, 거래내역, SNS 등 정형 비정형 데이터셋
     
 전통적인 기계학습 알고리즘 방식을 기반으로 응용분야가 기존 전산 시스템을 넘어 IoT 기기를 통해서 확산되고 과거 정형데이터에서 이미지와 자연어를 다룰 수 있게 됨에 따라 파급력을 급격히 확대시켜 나가고 있다.
-
 
 
 # R의 파이썬 대비 우수성 [^linkedin-r-python] {#data-science-education-r}
@@ -237,6 +360,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
 
   </div>
   <div class = "col-md-6">
+  
 **영어 원문**
 
 1. Its focus in science, statistics, mathematics and engineering. It is intense to the point that it is required from you to apply scientific rigor on the work you do in R.
@@ -257,7 +381,7 @@ Alfonso R. Reyes는 matplotlib을 오랜동안 사용했지만, 비표준 그래
 
 # 데이터 과학 교육 {#data-science-education}
 
-과연 우리나라에서 좋은 데이터과학은 어떤 것일까에 대한 고민이 [한국 Tidyverse](https://www.facebook.com/groups/1404219106509417)에서 
+과연 우리나라에서 좋은 데이터과학은 어떤 것일까에 대한 고민이 [한국 Tidyverse](https://www.facebook.com/groups/tidyverse)에서 
 **"대중의 지혜(wisdom of the crowd)"**를 동원하여 풀어보고자 하네요.
 
 지금(`r Sys.Date()`)까지 논의된 사항을 정리하면 다음과 같습니다.
@@ -310,6 +434,14 @@ A Tidy Approach"](https://www.tidytextmining.com/)
 - 심화학습
     - [Hadley Wickham, "Advanced R"](http://adv-r.had.co.nz/)
     - ["The R in Spark: Learning Apache Spark with R"](https://therinspark.com/)
+
+## 대쉬보드(Dashboard) {#dashboard}
+
+데이터를 시각화해서 **인지부하(cognitive load)**를 줄여 인사이트를 얻거나 의사결정에 도움이 되지만, 시각화 산출물이 정말 많은 경우 어떻게 할 것인가? 먼저 데이터에서 시각화하는 사례를 다양한 방법을 살펴보자.
+
+- [데이터 과학 - 시각화](https://statkclee.github.io/viz/)
+
+다음 대쉬보드를 잘 만드는 방법 &rarr; 작업 중...
 
 # 구글 추세로 본 데이터 과학 {#data-science-google-trends}
 
