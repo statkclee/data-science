@@ -1,10 +1,10 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: "데이터 과학 PC - 맥(Mac)"
+subtitle: "데이터 과학 PC (Java) - 맥(Mac)"
 author:
-    name: xwMOOC
-    affiliation: Tidyverse Korea
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+    affiliation: 
 date: "`r Sys.Date()`"
 output:
   html_document: 
@@ -23,8 +23,6 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
                       comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
 
-library(reticulate)
-# use_condaenv("anaconda3")
 ```
 
 # 데이터 과학 개발용 컴퓨터 {#data-science-computer}
@@ -159,4 +157,126 @@ sudo R CMD javareconf
 Sys.setenv(JAVA_HOME = "/Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home")
 ```
 
+# `rJava` 설치 [^rstudio-rJava] {#install-rJava-from-source}
+
+[^rstudio-rJava]: [Zuo, Z., (APRIL 12, 2018), "Installing rJava on macOS"](https://zhiyzuo.github.io/installation-rJava/)
+
+[`rJava`](http://www.rforge.net/rJava/)는 R을 자바에 연결시켜주는 인터페이스로 역할을 한다. 오라클이 선마이크로시스템즈를 인수한 이후 정말 다양한 변화가 생겼으며 `rJava`를 써야 되는 기존 자바로 개발된 프로그램을 데이터 과학에 활용하고자 할 경우 설치에 많은 노력이 요구된다.
+<center>
+![](fig/env-hiearchy.png){#id .class width="57%"}
+</center>
+
+
+## R 동작, RStudio 비동작 {#install-rJava-from-source-dyn}
+
+`rJava`가 R에서는 잘 동작하지만, RStudio에서 동작하지 않는 경우 다음 명령어를 실행시킨다.
+
+```{r dyn-load}
+dyn.load('/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre/lib/server/libjvm.dylib')
+```
+
+이를 위해서 다음 명령어로 제대로 설치되었는지 확인하고 만약, 본인 컴퓨터에 이런 설정이 되어 있지 않는 경우 자바부터 차근히 `rJava`를 설치한다.
+
+```{bash find-java-home}
+ls /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre/lib/server/
+```
+
+## `java`, `gcc` 설치  {#install-rJava-from-source-gcc}
+
+`java`, `gcc`가 `rJava`를 설치를 위해서 사전 전제조건으로 필요하다.
+`gcc`가 설치되지 않는 경우 `brew install gcc` 명령어로 쉽게 설치된다.
+
+```{bash, check-gcc}
+gcc --version
+```
+
+`java`의 경우 `openjdk`도 있고, `java8`도 있고 몇가지 대안이 있다. 가능하면 `openjdk` 그리고 버전도 8로 하는 것을 추천한다. [^install-openjdk-on-mac]
+
+[^install-openjdk-on-mac]: [Soo Story (2019-01-20), "homebrew로 opendjk 설치하기"](https://findstar.pe.kr/2019/01/20/install-openjdk-by-homebrew/)
+
+`brew install openjdk`가 되면 얼마나 좋겠는가 현실은 앞서 얘기한 오라클이 선마이크로시스템즈를 인수하기 이전과 이후 자바로 나눠지고 이에 따라 버전도 달라진다. 따라서 다음과 같이 `brew tap` 이후 `brew cask` 명령어로 설치한다.
+
+```{bash install-openjdk, eval=FALSE}
+brew tap AdoptOpenJDK/openjdk
+brew cask install doptopenjdk8
+```
+
+`java -version` 명령어와 `/usr/libexec/java_home` 명령어로 자바홈(`JAVA_HOME`)도 함께 확인한다.
+
+```{bash, check-java}
+java -version
+/usr/libexec/java_home
+```
+
+
+## `jenv` 설치  {#install-rJava-from-source-jenv}
+
+자바가 설치되었다면 자바 환경설정을 돕는 [`jenv`](http://www.jenv.be/) 도구를 사용하여 `JAVA_HOME`환경 변수를 설정한다. `brew install jenv` 명령어로 `jenv`를 설치하고 `jenv`환경을 `.bash_profile` 파일에 등록한다.
+
+```{r install-jenv, eval=FALSE}
+brew install jenv
+echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bash_profile
+echo 'eval "$(jenv init -)"' >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+`jenv`를 사용해서 `brew`로 설치한 `openjdk8` 환경을 등록한다. 
+전역변수로 등록이 되어 이제 `JAVA_HOME`을 찾아 자바로 제작된 프로그램을 호출해서 사용할 수 있게 된다.
+
+```{bash register-openjdk, eval=FALSE}
+jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/ openjdk64-1.8.0.242 added
+jenv global openjdk64-1.8.0.242
+```
+
+## `gcc` 컴파일 설정 {#compile-rJava-gcc-makevars}
+
+마지막 단계로 `install.packages("rJava", type="source")`로 `rJava`를 컴파일시켜 팩키지를 설치하는 경우 다음 과정을 거쳐야 된다. `~` 사용자 홈디렉토리에서 `.R` 디렉토리를 생성시키고 나서 `Makevars`라는 텍스트 파일을 생성하고 다음내용을 기술한다.
+
+```{r rjava-makevar, eval=FALSE}
+~$ mkdir .R
+~$ cd .R
+~$ touch Makevars
+~$ open Makevars
+```
+
+다음 명령어로 `gcc` 버전을 확인할 수 있고, 해당 버전을 컴파일러로 사용할 예정이라 해당 버전을 `Makevars` 파일에 반영시킨다.
+
+```{bash check-makevars-file}
+ls /usr/local/Cellar/gcc/ 
+```
+
+다음은 `gcc` 버전이 `9.3.0` 이라 이것을 반영한 것이다.
+
+```{r makevars-file, eval = FALSE}
+CC=/usr/local/Cellar/gcc/9.3.0/bin/gcc-9
+CXX=/usr/local/Cellar/gcc/9.3.0/bin/g++-9
+CXX11=/usr/local/Cellar/gcc/9.3.0/bin/g++-9
+CXX14=/usr/local/Cellar/gcc/9.3.0/bin/g++-9
+cxx17=/usr/local/cellar/gcc/9.3.0/bin/g++-9
+cxx1X=/usr/local/cellar/gcc/9.3.0/bin/g++-9
+LDFLAGS=-L/usr/local/Cellar/gcc/9.3.0/lib
+```
+
+## `rJava` 컴파일 {#compile-rJava}
+
+`R CMD javareconf` 명령어로 R에서 `JAVA_HOME`을 제대로 인식시키는 작업을 필히 선행시킨다.
+
+```{bash compile-rjava, eval = FALSE}
+R CMD javareconf 
+```
+
+그리고 나서 `install.packages('rJava', type='source')` 명령어로 `rJava`를 앞서 설정한 `gcc` 컴파일러를 사용해서 컴파일시킨다.
+
+```{r rJava-compile-again, eval = FALSE}
+install.packages('rJava', type='source')
+```
+
+`.jinit()`으로 제대로 설치된 `rJava` 헬로월드를 찍어본다.
+
+```{r rjava-helloworld}
+library(rJava)
+.jinit()
+hello_string <- .jnew("java/lang/String", "Hello World")
+print(hello_string)
+```
 
