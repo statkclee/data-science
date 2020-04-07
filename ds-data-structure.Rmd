@@ -2,20 +2,28 @@
 layout: page
 title: 데이터 과학
 subtitle: 측도와 R 자료구조
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
 output:
   html_document: 
-    keep_md: yes
-  pdf_document:
-    latex_engine: xelatex
+    toc: yes
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
 mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
 ---
 
-
 ```{r, include=FALSE}
-source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
 ```
 
-> ## 학습 목표 {.objectives}
+> # 학습 목표 {-#data-structure-objectives}
 >
 > * 통계학에서 다루는 측정에 대해 살펴보고, 측정 척도에 대한 이론적 배경을 이해한다.
 > * 원자벡터와 리스트 차이를 살펴본다.
@@ -23,20 +31,19 @@ source("tools/chunk-options.R")
 > * 범주형 자료를 표현하는 요인 자료형을 이해한다.
 
 
-### 1. 측정 변수의 구분 [^stevens-measurement] [^winner-measurement]
-
-
-<img src="fig/stat-stevens-measurement.png" alt="측정 분류" width="77%" />
-
-명목형, 순서형, 구간형, 비율형 네가지로 측정 척도를 구분한다.
-측정 척도에 따라 유의미한 통계량도 함께 정해진다. 자세한 사항은  [Stevens, Stanley Smith. "On the theory of scales of measurement." (1946).](http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf) 논문을 참조한다.
-
+# 측정 변수의 구분 [^stevens-measurement] [^winner-measurement] {#data-type-for-data-science}
 
 [^stevens-measurement]: [Stevens, Stanley Smith. "On the theory of scales of measurement." (1946).](http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf)
 
 [^winner-measurement]: Wiener, Norbert. "A new theory of measurement: a study in the logic of mathematics." Proceedings of the London Mathematical Society 2.1 (1921): 181-205.
 
-### 2. 자료구조 기본
+![측정 분류](fig/stat-stevens-measurement.png)
+
+명목형, 순서형, 구간형, 비율형 네가지로 측정 척도를 구분한다.
+측정 척도에 따라 유의미한 통계량도 함께 정해진다. 자세한 사항은  [Stevens, Stanley Smith. "On the theory of scales of measurement." (1946).](http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf) 논문을 참조한다.
+
+
+# 자료구조 기본 {#data-type-basics}
 
 R에서 기본으로 사용하는 벡터 자료형은 **원자 벡터(Atomic Vector)** 와 **리스트(List)** 로 나눠진다.
 원자 벡터에는 6가지 자료형이 있고, logical, integer, double, character, complex, raw, 총 6 개가 있으며
@@ -59,13 +66,13 @@ R에서 기본으로 사용하는 벡터 자료형은 **원자 벡터(Atomic Vec
 
 모든 벡터는 두가지 성질(Property)을 갖는데, 자료형과 길이로 이를 확인하는데 `typeof()`와 `length()` 함수를 사용해서 확인한다.
  
-``` {r fp-data-structure-typeof, warning=FALSE, tidy=FALSE}  
-a <- list(
-    a = 1:3,
-	b = "a string",
-	c = pi,
-	d = list(-1, -5)
-)
+``` {r fp-data-structure-typeof}  
+library(tidyverse)
+
+a <- list(a = 1:3,
+	        b = "a string",
+	        c = pi,
+	        d = list(-1, -5) )
   
 typeof(a)
 length(a)  
@@ -74,23 +81,32 @@ length(a)
 모드 함수는 객체의 모드를 리턴하고, 클래스 함수는 클래스를 리턴한다. 
 가장 흔하게 만나는 객체 모드는 숫자, 문자, 로직 모드다. 
 때때로 리스트와 데이터프레임과 같이 하나의 객체안에 여러 모드를 포함하기도 한다.   
-리스트(List)는 데이터를 저장하는 유연하며 강력한 방법으로 `sapply` 함수와 함께 가장 빈번하게 사용되는 자료형이다. 
+리스트(List)는 데이터를 저장하는 유연하며 강력한 방법으로 과거 리스트 자료구조를 처리하는 `sapply` 함수와 함께 가장 빈번하게 사용되는 자료형이다. 현재는 `purrr` 팩키지 `map_*()`함수를 사용한다.
 리스트형 자료 `a`를 세가지 숫자형, 문자형, 숫자형, 리스트 네가지 자료형을 포함하게 작성한다. 
-`sapply` 함수를 이용하여 `mode`와 `class` 인자를 넣어줌으로써, 각각 자료형의 모드와 자료형을 확인한다.
+`sapply()`, `map_chr()` 함수를 이용하여 `mode`와 `class` 인자를 넣어줌으로써, 각각 자료형의 모드와 자료형을 확인한다.
 
-``` {r fp-data-structure-mode, warning=FALSE, tidy=FALSE}  
+<div class = "row">
+  <div class = "col-md-6">
+**`sapply` 함수**
+
+``` {r fp-data-structure-mode-sapply}  
 sapply(a, mode)
 sapply(a, class)
 ```
 
-``` {r fp-data-structure-subset, warning=FALSE, tidy=FALSE}  
-str(a[4])
-str(a[[4]])
+  </div>
+  <div class = "col-md-6">
+**`map_chr()` 함수**
+
+``` {r fp-data-structure-mode-map}  
+map_chr(a, mode)
+map_chr(a, class)
 ```
 
-<img src="fig/ds-fp-list.png" alt="리스트에서 하위 리스트 뽑아내기" width="50%" />
+  </div>
+</div>
 
-
+리스트에서 원소를 뽑아내는 의미를 살펴보자. 시각적으로 표현하면 다음과 같다.
 리스트는 이질적인 객체를 담을 수 있다는 점에서 동질적인 것만 담을 수 있어 한계가 있는 원자벡터보다 쓰임새가 다르다.
 회귀분석 결과 산출되는 `lm` 결과값은 다양한 정보를 담을 수 있는 리스트로 표현된다.
 
@@ -98,42 +114,98 @@ str(a[[4]])
 * 하위 리스트 추출 : `[`
 * 리스트에 담긴 원소값 추출 : `[[`, `$` &rarr; 연산작업을 통해 위계를 갖는 구조를 제거한다.
 
+<div class = "row">
+  <div class = "col-md-6">
+**리스트 원소 1개**
+
+``` {r fp-data-structure-subset-case-one}  
+str(a[4])
+```
+
+  </div>
+  <div class = "col-md-6">
+**리스트 원소 2개**
+
+``` {r fp-data-structure-subset-case-two}  
+str(a[[4]])
+```
+
+  </div>
+</div>
+
+<img src="fig/ds-fp-list.png" alt="리스트에서 하위 리스트 뽑아내기" width="50%" />
+
+
+
 
 범주형 자료를 R에 저장하기 위해서 요인(Factor) 클래스를 사용하며 요인 클래스를 사용하여 자료를 저장할 경우 저장공간을 절약할 수 있다. 
 요인은 내부적으로 숫자(value)로 저장을 하고 레이블(value label)을 사용하여 표시하여 저장공간을 절약한다.
 
-날짜와 시간도 중요한 R에서 자주 사용되는 중요한 데이터 자료형으로 별도로 다룬다.
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "blue">
 
-> #### 자료형 확인 {.callout}
-> 
-> 각각의 데이터 형식에 맞는지를 다양한 테스트 함수(`is.`)를 이용하여 데이터 형식을 확인할 수 있다. 
-> 
-> * `is.list` : 리스트 형식인 확인
-> * `is.factor` : 팩터 형식인지 확인
-> * `is.numeric` : 숫자형인지 확인
-> * `is.data.frame` : 데이터 프레임형인지 확인
-> * `is.character` : 문자형인지 확인
+**자료형 확인**
+ 
+각각의 데이터 형식에 맞는지를 다양한 테스트 함수(`is.`)를 이용하여 데이터 형식을 확인할 수 있다. 
 
-#### 2.2. `NULL`과 `NA` 결측벡터와 결측값
+* `is.list` : 리스트 형식인 확인
+* `is.factor` : 팩터 형식인지 확인
+* `is.numeric` : 숫자형인지 확인
+* `is.data.frame` : 데이터 프레임형인지 확인
+* `is.character` : 문자형인지 확인
+
+</div>
+
+## 자료형 확장 {#extended-data-type}
+
+요인, 텍스트, 날짜와 시간도 중요한 R에서 자주 사용되는 중요한 데이터 자료형으로 별도로 다뤄진다. 이를 위해서 `stringr`, `lubridate`, `forcats` 팩키지를 사용해서 데이터 정제작업은 물론 기계학습 예측모형 개발에 활용한다.
+
+![데이터 과학 중요 자료구조](fig/data-type-in-r.png)
+
+| R 자료형        |   자료형   | 예제 |
+|-----------------|------------|------------------------|
+|  `logical`      | 부울       | 부도여부(Y/N), 남여    |
+|  `integer`      | 정수       | 코로나19 감염자수      |
+|  `factor`       | 범주       | 정당, 색상             |
+|  `numeric`      | 실수       | 키, 몸무게, 주가, 환율 |
+|  `character`    | 텍스트     | 주소, 이름, 책제목     |
+|  `Date`         | 날짜       | 생일, 투표일           |
+
+## `NULL`과 `NA` 결측값 {#is-na-null}
 
 결측되었다는 없다는 것을 표시하는 방법이 두가지 필요하다. 하나는 벡터가 없다는 `NULL`이고,
-벡터 내부에 값이 결측되었다는 `NA` 다. `dataframe$variable <- NULL` 명령문을 사용하면 데이터프레임(`dataframe`)에 
-변수(`variable`)를 날려보내는 효과가 있다.
+벡터 내부에 값이 결측되었다는 `NA` 다. `dataframe$variable <- NULL` 명령문을 사용하면 데이터프레임(`dataframe`)에 변수(`variable`)를 날려보내는 효과가 있다.
+예를 들어 책장이 아예 없다는 의미(`NULL`)와 책장에 책이 없다(`NA`)는 다른 개념을 지칭하고 쓰임새가 다르다.
 
-``` {r fp-data-structure-null, warning=FALSE, tidy=FALSE}  
+<div class = "row">
+  <div class = "col-md-6">
+**`NULL`**
+
+``` {r fp-data-structure-null}  
 # NULL 자료형과 길이
 typeof(NULL)
 length(NULL)
+```
 
+  </div>
+  <div class = "col-md-6">
+**`NA`**
+
+``` {r fp-data-structure-null-na}  
 # NA 자료형과 길이
 typeof(NA)
 length(NA)
 ```
 
+  </div>
+</div>
+
 `NA`의 중요한 특징은 전염된다는 것이다. 즉, `NA`에 연산을 가하면 연산결과는 무조건 `NA`가 된다.
 `NA`가 7보다 큰지, 7을 더하고 빼고, 부울 연산을 하든 `NA`와 연산결과는 무조건 `NA`가 된다.
 
-``` {r fp-data-structure-na, warning=FALSE, tidy=FALSE}  
+``` {r fp-data-structure-na}  
 NA + 7
 NA / 7
 NA > 7
@@ -141,10 +213,9 @@ NA > 7
 NA == NA
 ```
 
+# 데이터프레임(Dataframe) {#data-type-dataframe}
 
-### 3. 데이터프레임(Dataframe)
-
-### 3.1. 벡터, 행렬, 배열, 데이터프레임
+## 벡터, 행렬, 배열, 데이터프레임 {#data-type-vector}
 
 가장 많이 사용되는 논리형, 문자형, 숫자형을 통해 자료분석 및 모형개발을 진행하게 되고, 경우에 따라서 
 동일한 자료형을 모은 경우 이를 행렬로 표현할 수 있고, 행렬을 모아 RGB 시각 데이터를 위한 배열(Array)로 표현한다.
@@ -153,7 +224,7 @@ NA == NA
 <img src="fig/ds-data-structure-pictogram.png" alt="R 자료구조" width="77%" />
 
 
-### 3.2. 데이터프레임
+## 데이터프레임 {#data-type-dataframe-in-r}
 
 **R** 은 6가지 기본 벡터로 자료를 저장하지만, 이외에 행렬(matrix), 데이터프레임(data.frame), 리스트(list) 자료구조가 있다.
 하지만, 자료분석을 위해서 데이터를 데이터셋의 형태로 구성을 해야한다. 
@@ -182,7 +253,7 @@ rings <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
 planets_df <-data.frame(name, type, diameter, rotation, rings)
 ```
 
-### 3.2. 범주형, 순서형 자료형
+## 범주형, 순서형 자료형 {#data-type-factor}
 
 범주형, 순서형 자료형을 생성하는 경우 주의를 기울여야 한다. `factor` 함수를 사용해서 요인형 자료형을 생성하는데,
 내부적으로 저장공간을 효율적으로 사용하고 속도를 빠르게 하는데 유용한다.
