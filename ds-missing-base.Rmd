@@ -1,0 +1,103 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "결측데이터 - Base R 시각화"
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+    lib_dir: gapminder
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, include=FALSE}
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(here)
+
+```
+
+
+# 결측값 문제점 {#problems-in-missing-values}
+
+결측값이 존재하는 경우 적절한 결측값 처리를 하지 않고 모형을 만들고 시각화 등 후속작업을 이어나갈 경우 추론한 결론은 물론이고 전혀 다른 분석과 모형을 개발하는 결과를 초래할 수 있다.
+`NHANES` "US National Health and Nutrition Examination Study"에서 도출된 데이터를 바탕으로 사례로 살펴보자. 먼저, 각 변수별로 결측값을 살펴보자. 이를 위해서 `is.na()` 함수로 전체 데이터프레임의 결측값을 판별하는데 출력값이 행렬(`matrix`)이라 이를 티블 데이터프레임으로 변환시킨 후에 신규로 `dplyr` 팩키지 `across()` 함수를 사용해서 결측값을 계산한다.
+
+```{r nhanes-dataset-problem}
+library(tidyverse)
+library(NHANES)
+library(broom)
+
+nhanes <- NHANES %>% 
+  janitor::clean_names() %>% 
+  select(poverty, age, weight, tot_chol, education)
+
+nhanes %>% 
+  is.na() %>% as_tibble() %>% 
+  summarise(across(everything(), sum))
+```
+
+`lm()` 선형회귀모형에서 결측치에 대해 어떤 작업도 하지 않았기 때문에 실제 `base_lm` 모형과 `edu_lm` 모형에서 사용된 회귀모형이 다른 데이터셋을 가지고 학습된 것을 확인할 수 있다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**기본 회귀모형**
+
+```{r nhanes-dataset-problem-base}
+base_lm <- lm(poverty ~ age + weight, data = nhanes)
+
+base_lm_summary <- summary(base_lm)
+
+base_lm_summary$na.action %>% length
+```
+
+
+  </div>
+  <div class = "col-md-6">
+**교육을 고려한 모형**
+
+```{r nhanes-dataset-problem-education}
+edu_lm <- lm(poverty ~ age + weight + education, data = nhanes)
+
+edu_lm_summary <- summary(edu_lm)
+
+edu_lm_summary$na.action %>% length
+```
+
+  </div>
+</div>
+
+# 결측값 분류 {#three-missing-classifier}
+
+결측값은 다음 세가지 경우로 구분되고 분류된 결측값 범주에 따라 적절한 조치를 취한다.
+
+- **MCAR(Missing Completely At Random)**: 모든 정보가 데이터에 담겨있어 결측값이 문제가 되지 않는 경우.
+    - 데이터셋의 결측값의 위치가 다른 어떤 데이터에도 의존하지 않고 순전히 랜덤인 경우.
+    - 기상관측에 사용되는 온도 풍향 센서가 기계적인 고장으로 데이터를 보내지 못하는 경우. 
+- **MAR(Missing At Random)**: 더 이해하기 쉬운 명칭은 Missing Conditionally at Random으로 결측조건이 다른 변수에 따라 조건부로 발생되는 경우. 결측값이 관측된 데이터가 아닌 관측되지 않는 데이터에 따라 결정.
+    - 예를 들어, 남성이 여성보다 더 솔찍하게 나이, 몸무게 등을 밝힐 듯 싶다.
+    - 기상관측에 사용되는 온도 풍향 센서가 점검을 위해 동작을 멈출 때, 대부분 주말에는 작업자가 휴일이라 결측값은 특별한 사유가 아니면 주중에 정기점검으로 발생된다.
+- **MNAR(Missing Not At Random)**: 결측값이 무작위가 아니라서 주도면밀한 추가 조사가 필요한 경우. 
+    - 예를 들어, 작업장에서 결측된 사람들 대부분은 아마도 몸이 아파 조사에서 결측되고, 교육수준이 낮은 사람이 교육조사에 결측될 듯 싶다.
+    - 기상관측에 사용되는 온도 풍향 센서의 경우 온도가 매우 낮거나 매우 높은 경우 데이터가 수집되지 않는 경우가 발생된다. 이런 경우는 온도 센서 그 값 자체문제로 결측이 발생된다.
+    
+만약 결측값을 관측점별로 삭제를 하게 되면 다음과 같은 문제가 발생된다.
+
+- **MCAR**: 정보 손실
+- **MAR, MNAR**: 제거된 관측점에 기반하여 모형이나 시각화를 하게 되면 편향이 발생
+- 대부분의 치환방법은 **MAR**을 가정하고 있어 이를 사전에 탐지하는 것이 중요!!!
+
+# 
+
+
