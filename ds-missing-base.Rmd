@@ -25,7 +25,6 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
                     comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
 
 library(here)
-
 ```
 
 
@@ -41,7 +40,7 @@ library(broom)
 
 nhanes <- NHANES %>% 
   janitor::clean_names() %>% 
-  select(poverty, age, weight, tot_chol, education)
+  select(poverty, age, weight, tot_chol, education, gender, race1,  home_rooms, bmi)
 
 nhanes %>% 
   is.na() %>% as_tibble() %>% 
@@ -98,6 +97,150 @@ edu_lm_summary$na.action %>% length
 - **MAR, MNAR**: 제거된 관측점에 기반하여 모형이나 시각화를 하게 되면 편향이 발생
 - 대부분의 치환방법은 **MAR**을 가정하고 있어 이를 사전에 탐지하는 것이 중요!!!
 
-# 
+
+# 결측값 시각화 {#missing-viz}
+
+결측값을 시각화하는 것이 통계적 검증을 수행할 경우 p-값 해킹하는 여러 문제점도 있어 시각적으로 빠르게 확인하는 것도 큰 도움이 된다.
+
+- `aggr()`: 데이터프레임 전체 현황을 파악
+- `spineMiss()`
+- `mosaicMiss()`
+
+## DF 수준 시각화 {#missing-viz-dataframe}
+
+`aggr()` 함수를 사용해서 데이터프레임 전체 현황을 파악하는데 `aggr()` 함수를 사용해서 각 변수별 결측값의 분포와 변수를 조합했을 때 발생된 결측값 비율을 동시에 확인한다.
+
+```{r VIM-viz-aggr}
+library(VIM)
+
+nhanes_aggr <- nhanes  %>%  
+  aggr(combined = FALSE, numbers = TRUE, col = "skyblue")
+
+summary(nhanes_aggr)
+```
+
+## 변수 수준 시각화 {#missing-viz-spine}
+
+한단계 더 들어가서 변수별 결측값 함유정도를 파악할 수 있는데 이런 경우 `spineMiss()` 함수를 사용해서 시각화한다.
+
+```{r VIM-viz-spine, error=TRUE}
+nhanes %>% 
+  select(education, tot_chol) %>% 
+  as.data.frame() %>% 
+  VIM::spineMiss()
+```
+
+
+## `mosaicMiss` 모자이크 플롯 {#missing-viz-mosaic}
+
+두 범주형 변수(`gender`, `education`)를 고려한 상태에서 연속형 변수(`tot_chol`)에 대한 결측값 정보를 파악할 수 있다.
+
+```{r VIM-viz-mosaicMiss, error=TRUE}
+nhanes %>% 
+  VIM::mosaicMiss(highlight = "tot_chol", plotvars = c("gender", "education"))
+```
+
+## `histMiss` 모자이크 플롯 {#missing-viz-hist}
+
+범주형 변수(`education`)를 고려한 상태에서 연속형 변수(`tot_chol`)에 대한 결측값 정보를 파악할 수 있다.
+
+```{r VIM-viz-histMiss, error=TRUE}
+nhanes %>% 
+  select(tot_chol, education) %>% 
+  as.data.frame() %>% 
+  VIM::histMiss(only.miss = FALSE)
+```
+
+## `bartMiss` 모자이크 플롯 {#missing-viz-hist}
+
+범주형 변수(`education`)를 고려한 상태에서 연속형 변수(`tot_chol`)에 대한 결측값 정보를 파악할 수 있다.
+
+```{r VIM-viz-barMiss, error=TRUE}
+nhanes %>% 
+  select(education, tot_chol) %>% 
+  as.data.frame() %>% 
+  VIM::barMiss(only.miss = FALSE)
+```
+
+# MAR - `t-`검정 {#mar-ttest}
+
+특정 변수에 따라 결측값이 패턴을 가지는지 여부를 파악하기 위해서 `t-`검정을 시도해본다. 이를 위해서 특정변수 콜레스테롤값(`tot_chol`)의 결측여부를 표식하는 가변수(dummy variable)를 생성하고 나서 이를 남성 여성 벡터로 만들어 `t.test()` 함수에 넣어 `t-`검정작업을 수행한다.
+
+<div class = "row">
+  <div class = "col-md-6">
+**Base R 문법**
+
+```{r mar-ttest}
+# 콜레스테롤 결측값 표식 
+nhanes <- nhanes %>% 
+  mutate(chol_dummy = ifelse(is.na(tot_chol), TRUE, FALSE))
+
+# 남성 
+nhanes_male <- nhanes %>% 
+  filter(gender == "male") %>% 
+  pull(chol_dummy)
+  
+# 여성
+nhanes_female <- nhanes %>% 
+  filter(gender == "female") %>% 
+  pull(chol_dummy)
+
+# t-검정
+t.test(nhanes_male, nhanes_female)
+```
+
+  </div>
+  <div class = "col-md-6">
+**`dplyr` 티블 방식**
+
+```{r mar-ttest-dplyr}
+# 콜레스테롤 결측값 표식 
+nhanes_ttest_df <- nhanes %>% 
+  mutate(chol_dummy = ifelse(is.na(tot_chol), TRUE, FALSE)) %>% 
+  select(gender, chol_dummy) %>% 
+  group_by(gender) %>% 
+  summarise(na_value = list(chol_dummy)) %>% 
+  spread(gender, na_value)
+
+nhanes_ttest_df %>% 
+  mutate(ttest = list( t.test(unlist(female), unlist(male)))) %>% 
+  mutate(p_value = map_dbl(ttest, "p.value"),
+         t_stat = map_dbl(ttest, "statistic"))
+```
+
+  </div>
+</div>
+
+
+# 결측값 치환 {#base-r-imputation}
+
+결측값을 **치환(imputation)**한다는 것은 나름 합리적 근거를 가지고 결측값을 유의미하게 채워넣는 것을 의미하는 것으로 결측값 치환은 크게 두가지 방식으로 나눌 수 있다. 
+
+- 기부 방식 (donor-based imputation): 다른 관측점을 활용해서 결측값을 합리적으로 채워넣음
+    - 평균, 핫덱(hot-deck), kNN 등
+- 모형 방식 (model-based imputation): 통계 혹은 기계학습 모형을 활용하여 결측값을 합리적으로 예측하여 채워넣음.
+    - GLM, CART 등
+    
+## 기부방식: 평균/중위수 {#impute-mean}
+
+평균을 기부받아 결측값을 채워넣게 되면 다음과 같이 `ifelse()` 함수를 사용해서 가능하다. 결측값인 경우 각 변수별로 결측값을 빼고 평균을 계산해서 치환한다. 이를 시각화하는데 `marginplot()`을 사용하여 평균이나 중위수를 치환하는데 `tot_chol` 변수 관점에서 보면 특정 값으로 치환되고, 마찬가지로 `bmi` 변수 관점에서 봐도 동일하게 평균이나 중위수로 치환된다.
+
+```{r impute-median}
+nhanes_mean_imp <- nhanes %>% 
+  mutate(bmi_imp = ifelse(is.na(bmi), TRUE, FALSE),
+         tot_chol_imp = ifelse(is.na(tot_chol), TRUE, FALSE)) %>% 
+  mutate(bmi = ifelse(is.na(bmi), mean(bmi, na.rm = TRUE), bmi),
+         tot_chol = ifelse(is.na(tot_chol), mean(tot_chol, na.rm = TRUE), tot_chol)) %>% 
+  select(matches("bmi|tot_chol"))
+
+nhanes_mean_imp %>% 
+  as.data.frame() %>% 
+  marginplot(delimiter = "imp")
+```
+
+## 기부방식: 핫덱(hot-deck) {#impute-hotdeck}
+
+**MCAR**
+
 
 
