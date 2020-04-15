@@ -302,6 +302,7 @@ nhanes_knn %>%
 # 모형방식 {#impute-model}
 
 관측점 대신 변수를 활용하여 모형을 만들고 모형 예측값을 결측값에 치환하는 방식이다.
+앞서 살펴본바와 같이 결측값이 있는 경우 선형회귀모형을 통한 치환은 여전히 결측값을 담고 있다.
 
 ```{r imputation-linear}
 library(simputation)
@@ -309,14 +310,78 @@ library(simputation)
 nhanes <- nhanes %>% 
   select(-matches("imp"))
 
-nhanes_imp <- impute_lm(nhanes, height + weight ~ .)
+nhanes_lm_imp <- impute_lm(nhanes, height + weight ~ .)
+```
 
-nhanes_imp %>% is.na() %>% colSums()
+<div class = "row">
+  <div class = "col-md-6">
+**회귀로 치환전**
+
+```{r imputation-linear-comp}
 nhanes %>% is.na() %>% colSums()
-
 ```
 
 
+  </div>
+  <div class = "col-md-6">
+**회귀로 치환후**
 
+```{r imputation-linear-comp2}
+nhanes_lm_imp %>% is.na() %>% colSums()
+```
+
+  </div>
+</div>
+
+## 모형원리 {#basic-intuition}
+
+회귀모형을 통해 치환하는 방식은 A변수 결측값을 회귀모형으로 추정하여 채워넣고 B변수 결측값을 회귀모형으로 추정하여 채워넣고 더이상 변동이 없거나 매우 적은 경우 계산을 멈추는 방식이다.
+
+
+
+```{r missing-lm}
+# 핫덱으로 초기화
+nhanes_imp <- hotdeck(nhanes)
+
+# 결측값 마스크
+missing_tot_chol <- nhanes_imp$tot_chol_imp
+
+# Step 1: 적절한 횟수만큼 반복 !!!
+# for (i in 1:3) {
+#   # 원래 결측값을 NA 치환 후 회귀모형 적합
+#   nhanes_imp$tot_chol[missing_tot_chol] <- NA
+#   nhanes_imp <- impute_lm(nhanes_imp, tot_chol ~ age + gender + bmi)
+# }
+
+calc_improvement <- function(prev, curr) {
+  mean(abs(curr - prev)/prev, na.rm=TRUE)
+}
+
+# Step 2: 치환값 추적 !!!
+# for (i in 1:3) {
+#   # 기준값
+#   prev_nhanes <- nhanes_imp
+#   # 원래 결측값을 NA 치환 후 회귀모형 적합
+#   nhanes_imp$tot_chol[missing_tot_chol] <- NA
+#   nhanes_imp <- impute_lm(nhanes_imp, tot_chol ~ age + gender + bmi)
+#   # 전후 향상도 출력
+#   cat("processing: ", calc_improvement(nhanes_imp$tot_chol, prev_nhanes$tot_chol), "\n")
+# }
+
+# Step 3: 치환값 자동추적 !!!
+eps <- 0
+
+while(eps < 0.01) {
+  # 기준값
+  prev_nhanes <- nhanes_imp
+  # 원래 결측값을 NA 치환 후 회귀모형 적합
+  nhanes_imp$tot_chol[missing_tot_chol] <- NA
+  nhanes_imp <- impute_lm(nhanes_imp, tot_chol ~ age + gender + bmi)
+  # 전후 향상도 출력
+  eps <- calc_improvement(nhanes_imp$tot_chol, prev_nhanes$tot_chol)
+  cat("processing: ", eps, "\n")
+}
+
+```
 
 
