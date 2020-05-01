@@ -66,6 +66,7 @@ title: 데이터 과학
     - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html) 
 1. **R 개발 환경 인프라** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
     - [데이터 과학 PC (Java) - 맥(Mac)](ds-mac.html) &larr; 자바(Java)
+    - [데이터 과학 PC (Java) - 윈도우)](ds-windows.html) &larr; 자바(Java)    
     - [윈도우 10 - WSL (우분투 배쉬)](ds-windows-bash.html)
     - [`gitlab` 환경설정과 기본사용법](ds-gitlab.html)
     - [RStudio 개발환경 - 프로젝트](rstudio-project.html)

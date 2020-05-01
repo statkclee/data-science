@@ -1,0 +1,102 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "데이터 과학 PC (Java) - 윈도우"
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+    affiliation: 
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+```
+
+# `Rtools` {#install-Rtools}
+
+윈도우 사용자의 경우 [Rtools](https://cran.r-project.org/bin/windows/Rtools/)를 설치한다.
+
+# `multilinguer` {#install-multilinguer}
+
+[multilinguer](https://github.com/mrchypark/multilinguer)를 사용해서 자바를 디폴트 기본설정으로 설치할 경우 `corretto/jdk11.0.7_10`와 같이 JDK 11 버전이 설치되어 `tabulizer`와 같은 자바 의존성을 갖는 일부 팩키지와 하위호환에 문제가 생겨 정상적인 설치가 어려운 경우도 생긴다. 
+
+```{r multilinguer, eval = FALSE}
+library(multilinguer)
+install_java()
+```
+
+
+
+
+# 자바 설치 [^install-java] {#install-java}
+
+[^install-java]: [HOW TO SET JAVA_HOME ON MAC OS X](http://www.sajeconsultants.com/how-to-set-java_home-on-mac-os-x/)
+
+최신 자바 버전을 설치하면 R 팩키지중 `rJava`를 통해 구현된 라이브러리가 수행되지 않는 문제가 있으니 가능하면 낮은 버전 예를 들어 9 등을 설치한다.
+
+1. [OpenJDK](https://jdk.java.net/archive/) 에서 OpenJDK를 다운로드 받는다. 다양한 버전이 있지만, 9버전을 다운로드 받는다. 다운로드 받은 파일이 예를 들어, `openjdk-9.0.4_osx-x64_bin.tar.gz`인 경우 압축을 풀어 이동시킨다. 압축을 풀게 되면 `jdk-9.0.4.jdk/` 디렉토리 아래 파일과 디렉토리가 풀리게 된다.
+
+```{r java-install-step-01, eval = FALSE}
+$ cd ~/Downloads
+$ tar xf openjdk-9.0.4_osx-x64_bin.tar.gz
+```
+
+2. 압축을 푼 디렉토리를 `C:\Users\<사용자명>`으로 이동시킨다. 즉, `jdk-9.0.4\` 디렉토리를 복사하거나 이동시켜  `C:\Users\<사용자명>\jdk-9.0.4` 에 위치시켜 두고 나중에 `JAVA_HOME`으로 환경등록 시킨다.
+
+3. 윈도우즈 "설정"을 열고 검색창에 "환경" 이라고 치면 "시스템 환경 변수 편집"을 선택하고 "환경 변수"에서 변수로 `JAVA_HOME`을 상기 디렉토리로 저정한다.
+
+`which java` 명령어가 윈도우에서는 `where java`라 `java` 설치를 확인한다. 
+
+```{bash java-install-step-03, eval = FALSE}
+where java
+C:\Users\<사용자명>\jdk-9.0.4\bin\java.exe
+```
+
+4. R에 `JAVA_HOME` 설정
+
+마지막으로 R에 `JAVA_HOME` 설정을 `Sys.setenv()` 명령어로 수행한다. 혹은 `usethis::edit_r_environ()` 기능을 사용해서 `.Renviron` 파일에 "JAVA_HOME=C:/Users/<사용자명>/jdk-9.0.4"을 지정한다. 혹은, 
+
+```{r r-conf, eval = FALSE}
+Sys.setenv(JAVA_HOME='C:/Users/<사용자명>/jdk-9.0.4')
+```
+
+# `rJava` 설치 [^rstudio-rJava] {#install-rJava-from-source}
+
+[^rstudio-rJava]: [Zuo, Z., (APRIL 12, 2018), "Installing rJava on macOS"](https://zhiyzuo.github.io/installation-rJava/)
+
+[`rJava`](http://www.rforge.net/rJava/)는 R을 자바에 연결시켜주는 인터페이스로 역할을 한다. 오라클이 선마이크로시스템즈를 인수한 이후 정말 다양한 변화가 생겼으며 `rJava`를 써야 되는 기존 자바로 개발된 프로그램을 데이터 과학에 활용하고자 할 경우 설치에 많은 노력이 요구된다.
+
+<center>
+![](fig/env-hiearchy.png){#id .class width="57%"}
+</center>
+
+
+
+`install.packages('rJava', type='source')` 명령어로 `rJava`을 설치한다.
+
+```{r rJava-compile-again, eval = FALSE}
+install.packages('rJava')
+```
+
+`.jinit()`으로 제대로 설치된 `rJava` 헬로월드를 찍어본다.
+
+```{r rjava-helloworld}
+library(rJava)
+.jinit()
+hello_string <- .jnew("java/lang/String", "Hello World")
+print(hello_string)
+```
+
