@@ -125,17 +125,19 @@ write.csv(citation_history, 'data/citations.csv', row.names = F)
 ```{r spss-decline-data}
 library(tidyverse)
 library(ggthemes)
+library(extrafont)
+loadfonts()
 
 citation_df <- read_csv("data/citations.csv")
 
 citation_df %>% 
+  mutate(year = lubridate::make_date(year = year)) %>% 
   ggplot(aes(x=year, y=citations, color=software)) +
     geom_line() +
     geom_point(size=2) +
-    theme_tufte() +
+    theme_tufte(base_family = "NanumGothic") +
     labs(x="", y="논문 인용수", title="SPSS 몰락과 R의 비약", color="통계팩키지") +
-    scale_y_continuous(labels = scales::comma) 
-
+    scale_y_sqrt(labels = scales::comma) 
 ```
 
 

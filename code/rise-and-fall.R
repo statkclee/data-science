@@ -3,7 +3,7 @@ library(httr)
 library(tidyverse)
 
 # Settings
-years = 2010:2018
+years = 2010:2019
 searches = list(
   R = '"the R software" OR "the R project" OR "r-project.org" OR "R development core" OR "bioconductor" OR "lme4" OR "nlme" OR "lmeR function" OR "ggplot2" OR "Hmisc" OR "r function" OR  "r package" OR "mass package" OR "plyr package" OR "mvtnorm"',
   SPSS = 'SPSS -"SPSS Modeler" -"Amos"',
