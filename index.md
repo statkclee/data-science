@@ -33,6 +33,7 @@ title: 데이터 과학
         - [범주형 변수와 표](ds-categorical-var-table.html)
         - [요인자료형 달인 - STAT545](ds-factor-stat545.html)
         - [범주형 데이터 시각화 기초](ds-factor-dplyr-mosaic.html)
+        - [표: `gt`와 `kable`](ds-table-gt-kable.html)
     - **결측 데이터(Missing Data)**
         - [결측데이터 - Base R 시각화](ds-missing-base.html)
         - [결측데이터 - `ggplot` 시각화](ds-missing.html)

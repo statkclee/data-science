@@ -1,0 +1,155 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "표: `gt`와 `kable`"
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+output:
+  bookdown::html_document2: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+    lib_dir: gapminder
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, include=FALSE}
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(here)
+```
+
+# R마크다운 표 [^kable] {#table-kable}
+
+[^kable]: [Yihui Xie and Christophe Dervieux (2020-05-18), "R Markdown Cookbook"](https://bookdown.org/yihui/rmarkdown-cookbook/kable.html)
+
+[kableExtra](https://cran.r-project.org/web/packages/kableExtra/), [`knitr::kable()`](https://rdrr.io/cran/knitr/man/kable.html) 함수는 통해 R마크다운 문서에 포함되는 표를 원하는 방향으로 작성할 수 있다.
+
+R마크다운 표 기능을 시연하는데 `mtcars` 데이터프레임을 기본 데이터로 많이 사용한다. 
+
+## 헬로우 월드 표 {#rmarkdown-kable-table}
+
+`mtcars` 데이터프레임에서 시연목적으로 관측점 5개와 열 4개를 뽑아내서 `kable()`함수에 넣고 출력형식을 `markdown`으로 지정한다. `markdown`외에도 `html`, `pandoc`, `latex`, `rst`등이 있다.
+
+```{r knitr-kable-table}
+library(tidyverse)
+library(knitr)
+
+mtcars %>% 
+  sample_n(5) %>% 
+  select(mpg, cyl, disp, hp) %>% 
+  kable("markdown")
+```
+
+## 표 칼럼명 지정 {#rmarkdown-table-columns}
+
+`kable()` 함수 내부에 `col.names =`에 칼럼명을 넣어주면 표의 칼럼명을 원하는 방식으로 변경시킬 수 있다.
+
+- `r names(iris)`
+- `r str_replace(names(iris), "\\.", " ")`
+
+```{r rmarkdown-table-columns}
+iris %>% 
+  sample_n(5) %>% 
+  kable(col.names = str_replace(names(iris), "\\.", " "))
+```
+
+
+## 표 칼럼 정렬 {#rmarkdown-table-columns-arrange}
+
+`align=` 인자를 조정해서 칼럼별로 정렬을 달리 할 수 있다.
+
+```{r rmarkdown-table-columns-arrange}
+iris %>% 
+  sample_n(5) %>% 
+  kable(align=c("rclcr"))
+```
+
+## 표 칼럼 캡션 {#rmarkdown-table-columns-caption}
+
+`align=` 인자를 조정해서 칼럼별로 정렬을 달리 할 수 있다. `\@ref(tab:rmd-table-columns-caption)`와 같이 표 \@ref(tab:rmd-table-columns-caption)을 상호참조할 수 있게 제작할 수 있다.
+
+```{r rmd-table-columns-caption}
+opts_current$append(list(label = "tw"))
+iris %>% 
+  sample_n(5) %>% 
+  kable(caption = "붓꽃 원자료 자막입니다.")
+```
+
+## 표를 루프 돌리기 {#rmd-kable-loop}
+
+품종별로 각각 표를 만들 필요가 있을 때 `for` 루프를 돌려 해당 품종별로 표를 제작한다. 이를 위해서 ` ```{r show-iris-species, results='asis'}`와 같이 R 코드청크를 제작한다.
+
+```{r show-iris-species, results='asis'}
+library(glue)
+
+species <- unique(iris$Species)
+
+for (i in seq_along(species)) {
+  species_tbl <- iris %>% 
+    filter(Species == species[i]) %>% 
+    head() %>% 
+    kable(caption = glue('붓꽃 품종: {species[i]}'))
+  print(species_tbl)
+  cat('\n\n<!-- -->\n\n')
+}
+```
+
+
+## 기타 {#rmarkdown-table-columns-etc}
+
+`kable()`의 기본 기능에 다음 기능을 추가로 할 수 있다.
+
+- 숫자형 칼럼 자리숫 및 천단위 구분자 추가
+- 결측값
+- 특수 문자 이스케이프(escape)
+
+# `kableExtra` 멋내기 {#rmd-kableExtra}
+
+[kableExtra](https://cran.r-project.org/web/packages/kableExtra/) 팩키지를 활용하여 [Create Awesome HTML Table with knitr::kable and kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)와 같이 멋진 표를 만들어낼 수 있다.
+
+# `gt` {#rmd-gt}
+
+그래프 문법(grammar of graphics)처럼 표 문법(grammar of table) [`gt`](https://github.com/rstudio/gt/) 팩키지가 등장했다. 표를 분해하면 다음과 같고 이를 `tibble` 혹은 데이터프레임을 입력받아 GT 객체로 변환시킨 후에 GT 표를 HTML로 출력하는 작업흐름을 갖는다.
+
+```{r gt-image}
+webshot2::webshot("https://blog.rstudio.com/2020/04/08/great-looking-tables-gt-0-2/", selector = "body > div.container > main > p:nth-child(10) > img", "fig/gt-concept.png")
+```
+
+## `gt` 맛보기 [^gt-rstudio-blog] {#rmd-gt-taste}
+
+[^gt-rstudio-blog]: [Richard Iannone (2020-04-08), "Great Looking Tables: gt (v0.2)"](https://blog.rstudio.com/2020/04/08/great-looking-tables-gt-0-2/)
+
+`gt` 팩키지에 내장된 `exibble` 데이터셋은 $8 \times 9$ 구조를 갖는 단순한 데이터셋이지만 표와 관련된 다양한 형태를 개발에 사용할 주요한 정보를 담고 있다.
+
+```{r rmd-gt-taste-dataset}
+library(gt)
+
+exibble %>% 
+  kable()
+```
+
+`fmt_` 함수와 `tab_` 함수처럼 `tidyverse` 생태계를 구성하고 있는 다양한 팩키지와 동일한 사고체계와 문법을 따르고 있는 것을 확인할 수 있다.
+
+```{r rmd-gt-taste}
+exibble %>%
+  gt() %>%
+  fmt_number(columns = vars(num), decimals = 2) %>%
+  fmt_date(columns = vars(date), date_style = 6) %>%
+  fmt_time(columns = vars(time), time_style = 4) %>%
+  fmt_datetime(columns = vars(datetime), date_style = 6, time_style = 4) %>%
+  fmt_currency(columns = vars(currency), currency = "EUR") %>% 
+  tab_header(
+    title = md("This is the `exibble` dataset in **gt**"),
+    subtitle = "It is one of six datasets in the package"
+  ) %>%
+  tab_source_note(md("More information is available at `?exibble`."))
+```
