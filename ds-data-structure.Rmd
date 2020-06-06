@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 데이터 과학
-subtitle: 측도와 R 자료구조
+subtitle: "측도와 R 자료구조"
 author:
     name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
 date: "`r Sys.Date()`"
@@ -31,16 +31,32 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
 > * 범주형 자료를 표현하는 요인 자료형을 이해한다.
 
 
-# 측정 변수의 구분 [^stevens-measurement] [^winner-measurement] {#data-type-for-data-science}
+# 측정 변수의 구분 [^stevens-measurement] [^winner-measurement] [^office-of-statistics] {#data-type-for-data-science}
 
 [^stevens-measurement]: [Stevens, Stanley Smith. "On the theory of scales of measurement." (1946).](http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf)
 
 [^winner-measurement]: Wiener, Norbert. "A new theory of measurement: a study in the logic of mathematics." Proceedings of the London Mathematical Society 2.1 (1921): 181-205.
 
+[^office-of-statistics]: 이경화 외 (2020), "고등학교 실용통계", 통계청 통계교육원
+
+자료가 갖는 고유한 특성을 숫자료 표현한 측정 척도에 따라, 명목형, 순서형, 구간형, 비율형 네가지로 구분된다.
+측정 척도에 따라 유의미한 통계량도 함께 정해진다. 자세한 사항은  [Stevens, Stanley Smith. "On the theory of scales of measurement." (1946).](http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf) 논문을 참조한다.
+
+- 명목척도(Nominal): 단순히 개체 특성 분류를 위해 숫자나 부호를 부여한 척도
+    - 남자: M, 여자: F 혹은 월: 1, 화: 2, ... 일:7
+- 순서척도(Ordinal): 명목척도에 부가적으로 "순서(서열)" 정보가 추가된 척도
+    - 군대계급: 사병, 장교, 장군 등
+- 구간척도(Interval): 순서척도에 부가적으로 "등간격" 정보가 추가된 척도
+    - 온도가 서울 10도, 제주 20도는 제주가 서울보다 온도가 2배 높음.
+    - 온도, 시력, IQ 지수, 물가지수 등
+- 비율척도(Ratio): 구간척도에 "비율" 비교특성이 추가된 척도로 "비율 등간격" 특성이 포함됨.
+    - 절대 '0'을 가지고 사칙연산이 가능함.
+    - 연령, 월소득, TV 시청률 등.
+
+
 ![측정 분류](fig/stat-stevens-measurement.png)
 
-명목형, 순서형, 구간형, 비율형 네가지로 측정 척도를 구분한다.
-측정 척도에 따라 유의미한 통계량도 함께 정해진다. 자세한 사항은  [Stevens, Stanley Smith. "On the theory of scales of measurement." (1946).](http://psychology.okstate.edu/faculty/jgrice/psyc3214/Stevens_FourScales_1946.pdf) 논문을 참조한다.
+
 
 
 # 자료구조 기본 {#data-type-basics}
