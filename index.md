@@ -13,6 +13,7 @@ title: 데이터 과학
 
 1. **[데이터 과학과 R 언어](ds-r-lang.html)**
     - [**데이터 과학 교육**](ds-education.html)
+    - [펭귄 vs 붓꽃 데이터](ds-iris-penguin.html)
     - [도와줘요 - `reprex`](ds-r-reprex.html) 
     - [R 환경설정과 업데이트, 파일-객체 크기](ds-r-environment.html) 
     - [R 구문평가 - tidyeval](ds-r-tidyeval.html) 
