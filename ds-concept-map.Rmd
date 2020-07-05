@@ -72,3 +72,18 @@ concept_content <- pptx_summary(concept_pptx)
 concept_content %>%  head()
 ```
 
+# PDF 파일 {#pdf-concept-map}
+
+```{r pdf-concept-map}
+library(pdftools)
+
+concept_pdf <- pdf_data("data/Data Science Concept Maps.pdf")
+
+concept_text <- pdf_text("data/Data Science Concept Maps.pdf")
+
+concept_text %>% tbl_df() %>% 
+  slice(5:n()) %>% 
+  mutate(title = str_trim(value))
+```
+
+
