@@ -12,6 +12,7 @@ title: 데이터 과학
 ### R, RStudio, `tidyverse`, 스파크, AWS 와 함께하는 데이터 과학 
 
 1. **[데이터 과학과 R 언어](ds-r-lang.html)**
+    - [데이터 과학 개념도(concept map)](ds-concept-map.html)
     - [**데이터 과학 교육**](ds-education.html)
     - [펭귄 vs 붓꽃 데이터](ds-iris-penguin.html)
     - [도와줘요 - `reprex`](ds-r-reprex.html) 

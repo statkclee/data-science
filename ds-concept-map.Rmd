@@ -1,0 +1,74 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "[데이터 과학 개념도(concept map)"
+author:
+    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tag: ["데이터 과학", "tidyverse", "데이터 사이언스", "개념도", "concept map"]
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+bibliography: bibliography.bib
+csl: biomed-central.csl
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+```
+
+
+# 개념도 데이터셋 {#concept-map-dataset}
+
+[Data Science Concept Maps](https://docs.google.com/presentation/d/1ForBjP0pVhljBLuqOyYfyHw_1rrwJzpWW1ZHzCqAJpU/edit#slide=id.p) 교육을 위한 개념 지도(concept map)가 공개되었다. 이를 통해 각자 데이터 과학 주요 개념을 머리속에 어떻게 각자 넣고 있는지 살펴볼 수 있는 수중한 자료가 아니까 싶다.
+
+# 개념도 살펴보기 {#concept-map-dataset-preview}
+
+```{r concept-map-preview}
+library(tidyverse)
+library(slickR)
+
+concept_files <- list.files(path ="fig/concept_map/")
+
+concept_path_files <- glue::glue("fig/concept_map/{concept_files}")
+
+concept_df <- tibble(path_file = concept_path_files,
+                     slide = glue::glue("slide_{1:length(concept_files)}"))
+
+concept_num <- htmlwidgets::JS("function(slick,index) {
+                            return '<a>'+(index+1)+'</a>';
+                       }")
+
+concept_opts <- settings(arrows = TRUE,
+                        slidesToShow = 3,
+                        slidesToScroll = 1,
+                        centerMode = TRUE, 
+                        focusOnSelect = TRUE,
+                        initialSlide = 0)
+
+slickR(concept_df$path_file, height = 600) %synch% 
+  (slickR(concept_df$path_file, height = 100) + concept_opts)
+
+```
+
+# 슬라이드 정리 {#slide-summarize}
+
+```{r convert-google-to-powerpoint, eval = FALSE}
+library(officer)
+
+concept_pptx <- read_pptx("data/Data Science Concept Maps.pptx")
+
+concept_content <- pptx_summary(concept_pptx) 
+
+concept_content %>%  head()
+```
+
