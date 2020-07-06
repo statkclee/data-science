@@ -9,6 +9,9 @@ author:
 date: "`r Sys.Date()`"
 output:
   html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
     toc: yes
     toc_depth: 2
     toc_float: true
@@ -309,6 +312,13 @@ library(tidyverse)
     - 나이 성별 주소 등이 포함된 인구 통계, 날씨 범죄율 등 공공데이터, 거래내역, SNS 등 정형 비정형 데이터셋
     
 전통적인 기계학습 알고리즘 방식을 기반으로 응용분야가 기존 전산 시스템을 넘어 IoT 기기를 통해서 확산되고 과거 정형데이터에서 이미지와 자연어를 다룰 수 있게 됨에 따라 파급력을 급격히 확대시켜 나가고 있다.
+
+## 데이터 과학 기업 활용방안 {#enterprise-data-science}
+
+'데이터 과학(Data Science)’은 석유 자원에 경제적 가치를 부여하는 정제 프로세스에 비유될 수 있습니다. 원유가 여러 단계의 공정을 거쳐 플라스틱, 섬유, 고무와 같은 상품으로 재탄생하듯이, 데이터 자원도 여러 단계를 거치면서 기존에 없던 가치를 창출합니다. 기업은 데이터 업무 수행 단계별(수집, 저장, 처리, 분석, 활용) 이슈 사항의 검토를 통해, 효과적인 운영 혁신을 추진할 수 있습니다.
+
+- [삼정KPMG 경제연구원 (2020-03-06), "기업 운영 혁신을 위한 데이터 과학: 기업의 활용 방안"](https://home.kpmg/kr/ko/home/insights/2020/03/issue-monitor-121.html)
+    - [PDF 다운로드](https://assets.kpmg/content/dam/kpmg/kr/pdf/2020/kr-im-data-20200306.pdf)
 
 
 # R의 파이썬 대비 우수성 [^linkedin-r-python] {#data-science-education-r}
