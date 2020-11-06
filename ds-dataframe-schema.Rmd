@@ -1,0 +1,138 @@
+---
+layout: page
+title: "데이터 과학 (Data Science)"
+subtitle: "데이터프레임 스키마(Dataframe Schema)"
+author:
+    name: "이광춘"
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+
+``` {r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+```
+
+# in-memory 데이터프레임 스키마 {#dataframe-schema}
+
+데이터분석을 위해서 데이터프레임 자료형을 파악하는 것이 무엇보다 중요하다. 
+먼저, `palmerpenguins` 팩키지 `penguins` 데이터프레임을 통해 이미 메모리에 올라온 데이터프레임 자료형을 파악해보자.
+
+```{r dataframe-penguins}
+library(tidyverse)
+library(palmerpenguins)
+
+map_df(palmerpenguins::penguins, class) %>% 
+  pivot_longer(species:year, names_to = "var_name", values_to = "data_type")
+```
+
+
+# `.csv` 파일 &rarr; 데이터프레임 {#dataframe-schema-coltypes}
+
+[`palmerpenguins`](https://github.com/allisonhorst/palmerpenguins) 팩키지에 담긴 `.csv` 파일을 데이터프레임으로 불러읽어들인다.
+그리고 나서 앞서 `palmerpenguins::penguins` 데이터프레임의 스키마를 그대로 재현한다.
+
+먼저, 모든 칼럼을 문자형으로 불러읽어 드린 후에 변수별로 자료형을 변환시킨다.
+`col_names =` 인자를 넣어 변수명도 변경할 수 있다.
+모두 소문자인 변수명을 첫 알파벳만 대문자로 변경시킨 변수명을 적용시켜본다.
+
+```{r dataframe-penguins-csv}
+penguin_colnames <- palmerpenguins::penguins %>% names %>% dput %>% str_to_title
+
+penguin_raw_df <- read_csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/inst/extdata/penguins.csv", 
+         col_types = cols(.default = col_character()),
+         col_names = penguin_colnames,
+         locale = locale(encoding = "UTF-8"))
+
+map_df(penguin_raw_df, class) %>% 
+  pivot_longer(Species:Year, names_to = "var_name", values_to = "data_type")
+```
+
+`mutate_at()` 함수로 변수를 지정하여 범주형(`as.factor`) 혹은 정수형(`as.integer`) 으로 변환시키고 나서
+나머지 모든 문자형은 `mutate_if()` 함수로 숫자형(`as.numeric`)으로 변환시킨다.
+
+```{r dataframe-penguins-csv-transform}
+penguin_raw_df <- read_csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/inst/extdata/penguins.csv", 
+         col_types = cols(.default = col_character()),
+         locale = locale(encoding = "UTF-8"))
+
+penguin_schema_df <- penguin_raw_df %>% 
+  mutate_at(vars(species, island, sex), as.factor) %>% 
+  mutate_at(vars(flipper_length_mm, body_mass_g, year), as.integer) %>% 
+  mutate_if(is.character, as.numeric)
+
+map_df(penguin_schema_df, class) %>% 
+  pivot_longer(species:year, names_to = "var_name", values_to = "data_type")
+```
+
+앞서 데이터 스키마를 텍스트 형태로 추출할 경우 다음과 같이 모두 문자형(`c`)으로 지정하여 데이터프레임으로 준비한다.
+
+```{r schema-character-col_types}
+penguin_schema_df <- read_csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/inst/extdata/penguins.csv", 
+         col_types = "cccccccc",
+         locale = locale(encoding = "UTF-8"))
+
+map_df(penguin_schema_df, class) %>% 
+  pivot_longer(species:year, names_to = "var_name", values_to = "data_type")
+
+```
+
+앞서 정의한 모든 변수를 문자형(`c`)으로 지정하는 대신 변수별로 앞서 정의된 자료형에 맞춰 스키마를 지정하여 데이터프레임을 생성시킨다.
+
+- `c`: 문자형
+- `f`: 범주형
+- `n`: 숫자형
+- `i`: 정수형
+- `l`: 논리형
+- `d`: 날짜형
+
+
+```{r schema-character-col_types-evolution}
+penguin_schema_df <- read_csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/inst/extdata/penguins.csv", 
+         col_types = "ffnniifi",
+         locale = locale(encoding = "UTF-8"))
+
+map_df(penguin_schema_df, class) %>% 
+  pivot_longer(species:year, names_to = "var_name", values_to = "data_type")
+```
+
+
+```{r dataframe-schema-extraction}
+type_convert(palmerpenguins::penguins)
+```
+
+## 스키마 추측 {#dataframe-schema-coltypes-schema}
+
+`spec_csv()` 함수로 스키마를 추축할 수 있다. 또한, 스키마를 `col_types = ` 에 넣어 스키마를 반영할 수도 있다.
+
+```{r generate-spec}
+penguin_spec <- spec_csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/inst/extdata/penguins.csv",
+                         guess_max = 100)
+penguin_spec
+
+penguin_spec_df <- read_csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/master/inst/extdata/penguins.csv", 
+         col_types = penguin_spec,
+         locale = locale(encoding = "UTF-8"))
+ 
+# type_convert(penguin_spec_df)
+```
+
+
