@@ -3,63 +3,83 @@ layout: page
 title: 데이터 사이언스
 subtitle: "깔끔한 데이터(tidy data)"
 author:
-    name: xwMOOC
+    name: 이광춘
     url: https://www.facebook.com/groups/tidyverse/
-    affiliation: Tidyverse Korea
+    affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
 date: "`r Sys.Date()`"
 output:
   html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
     toc: yes
+    toc_depth: 2
     toc_float: true
     highlight: tango
-    code_folding: show
     number_section: true
-    self_contained: true
+    code_folding: show
+mainfont: NanumGothic
 editor_options: 
   chunk_output_type: console
 ---
  
-``` {r, include=FALSE}
-# source("tools/chunk-options.R")
-
+``` {r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
                     comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
 
 library(tidyverse)
 ```
 
-# 데이터 깔끔화 [^tidy-data] [^wrangling-webinar] {#tidy-data}
-
-[^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
-
-깔끔한 데이터(Tidy datasets)이 준비되면, 데이터를 조작하고, 모형화하고, 시각화가 용이하다.
-또한 깔끔한 데이터는 특정한 구조를 갖추고 있는데 **변수** 는 열(column)이고, **관측점** 은 행(row)이며, 
-**관측단위에 대한 형태** 는 테이블(table)로 구성된다.
-
-깔끔한 데이터 원칙은 코드(Codd) 박사의 **관계대수(relational algebra)** 와 깊은 관련이 있지만,
-통계학 전공자에게 친숙한 언어로 표현된다.
-
 <style>
 div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 </style>
 <div class = "blue">
 
-**깔끔한 데이터 관련 R 팩키지**
- 
-- `reshape`, `reshape2` ([Wickham 2007](http://www.jstatsoft.org/v21/i12/))
-- `ggplot2` (Wickham 2009)[^wickham-2009]
-- `plyr` ([Wickham 2011](http://www.jstatsoft.org/v40/i01/))
+**톨스토이** 장편소설 "안나 카레니나"에 나오는 유명한 문구로 **행복한 가정** 원칙이 있다.
+
+> “행복한 가정은 모두 비슷한 이유로 행복하지만 불행한 가정은 저마다의 이유로 불행하다.”
+> ("Все счастливые семьи похожи друг на друга, каждая несчастливая семья несчастлива по-своему",
+> Happy families are all alike, but every unhappy family is unhappy in its own way.)
+
+**유발 하라리**도 이를 차용하여 "세상에 실패한 국가의 유형도 각기 저마다의 이유로 다르지만, 성공한 국가는 비슷한 이유를 갖는다"라고 주장했고, **해들리 위컴(Hadley Wickham)**도 "Like families, tidy datasets are all alike but every messy dataset is messy in its own way." [Tidy Data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)에 대한 정의를 내리면서 동일한 주장을 했다.
 
 </div>
 
 
+# 데이터 깔끔화 [^tidy-data] [^wrangling-webinar] {#tidy-data}
+
+[^wrangling-webinar]: [Data wrangling with R and RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/)
+
 [^tidy-data]: [Tidy Data - Journal of Statistical Software](https://www.jstatsoft.org/article/view/v059i10)
-[^wickham-2009]: Wickham H (2009). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag, New York.
+
+깔끔한 데이터(Tidy datasets)이 준비되면, 데이터를 조작하고, 모형화하고, 시각화가 용이하다.
+또한 깔끔한 데이터는 특정한 구조를 갖추고 있는데 **변수** 는 열(column)이고, **관측점** 은 행(row)이며, 행과 열이 교차하는 셀(Cell)은 **값(Value)**이 위치하게 되고 **관측단위에 대한 형태** 는 테이블(table)로 구성된다.
+
+깔끔한 데이터 원칙은 코드(Codd) 박사의 **관계대수(relational algebra)** 와 깊은 관련이 있지만, 통계학 전공자에게 친숙한 언어로 표현된다.
 
 해당 데이터셋에 관측점과 변수를 각각 식별하는 것이 쉽게 생각되지만, 
 일반적으로 변수와 관측점을 정확하게 정의하는 것이 놀랍게도 어렵다.
 따라서, 행과 행보다는 변수간 **기능적 관계(functional relationship)**를 기술하는 것이 더 쉽다.
 또한, 칼럼 그룹집단과 집단보다는 관측점 그룹집단 사이 비교를 하는 것이 더 쉽다. 
+
+## 깔끔한 데이터 {#tidy-data-setup}
+
+깔끔한 데이터는 데이터셋의 의미를 구조에 매칭하는 표준적인 방식이다. 
+행, 열, 테이블이 관측점, 변수, 형식에 매칭되는 방식에 따라 데이터셋이 깔끔하거나 깔끔하지 않은 것으로 나뉜다.
+
+**깔끔한 데이터(tidy data)** 는 결국 데이터분석을 쉽게 할 수 있는 데이터다.
+
+1. 각 변수가 칼럼이 된다.
+1. 각 관측점은 행이 된다.
+1. 각 셀은 값이 된다.
+1. 관측 단위에 대한 형태가 테이블을 구성한다.
+
+|       저장 구분          |     의미    |
+|--------------------------|-------------|
+| 테이블/파일(table/file)  | 데이터셋 (dataset) |
+| 행(row)                  | 관측점 (observation)  |
+| 열(column)               | 변수 (variable)  |
+| 셀(Cell)                 | 값 (value)  |
 
 <style>
 div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
@@ -75,24 +95,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 
 </div>
 
-
-# 깔끔한 데이터 {#tidy-data-setup}
-
-깔끔한 데이터는 데이터셋의 의미를 구조에 매칭하는 표준적인 방식이다. 
-행, 열, 테이블이 관측점, 변수, 형식에 매칭되는 방식에 따라 데이터셋이 깔끔하거나 깔끔하지 않은 것으로 나뉜다.
-
-**깔끔한 데이터(tidy data)** 는 결국 데이터분석을 쉽게 할 수 있는 데이터다.
-
-1. 각 변수가 칼럼이 된다.
-1. 각 관측점은 행이 된다.
-1. 관측 단위에 대한 형태가 테이블을 구성한다.
-
-|       저장 구분          |     의미    |
-|--------------------------|-------------|
-| 테이블/파일(table/file)  | 데이터셋 (dataset) |
-| 행(row)                  | 관측점 (observation)  |
-| 열(column)               | 변수 (variable)  |
-
+## 엉망진창 데이터 (Messy Data) {#messy-data-definition} 
 
 **깔끔하지 않는 데이터(messy data)** 는 위와는 다른 형태의 데이터를 지칭한다. 
 중요한 것은 컴퓨터 과학에서 말하는 코드 제3 정규형이지만, 통계적 언어로 다시 표현한 것이다.
@@ -103,6 +106,14 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 변수와 관측점의 순서가 분석에 영향을 끼치는 것은 아니지만, 순위를 잘 맞춰 놓으면 값을 스캔해서 검색하는 것이 용이하다.
 고정된 변수(fixed variable)가 실험계획법에 기술되듯이 먼저 나오고 측정된 값이 뒤에 나오는 것처럼 
 이와 같이 변수와 값에 대한 순위를 잘 맞춰 정리해 놓는 것이 장점이 많다.
+
+깔끔하지 않은 데이터의 대표적인 문제점을 다음과 같이 5가지로 유형화시켜 정리할 수 있다.
+
+1. 칼럼 헤더에 변수명이 아닌 값이 온다.
+1. 변수 다수가 한 칼럼에 저장되어 있다.
+1. 변수가 행과 열에 모두 저장되어 있다.
+1. 관측 단위에 대한 다양한 형태가 동일한 테이블에 저장되어 있다.
+1. 한가지 관측 단위가 테이블 다수에 흩어져 저장되어 있다.
 
 <div class = "row">
   <div class = "col-md-6">
@@ -139,13 +150,23 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 </div>
 
 
-5가지 깔끔하지 않은 데이터 문제점
+## 동사(Verbs)와 팩키지 {#tidyr-verbs}
 
-1. 칼럼 헤더에 변수명이 아닌 값이 온다.
-1. 변수 다수가 한 칼럼에 저장되어 있다.
-1. 변수가 행과 열에 모두 저장되어 있다.
-1. 관측 단위에 대한 다양한 형태가 동일한 테이블에 저장되어 있다.
-1. 한가지 관측 단위가 테이블 다수에 흩어져 저장되어 있다.
+깔끔한 데이터(Tidy Data)를 만드는데 동원되는 동사에 해당되는 함수는 다음과 같다. 다음 함수들을 이용하여 엉망진창인 데이터(Messy Data)를 깔끔한 데이터로 만들어서 후속 작업에 큰 도움이 될 수 있다. `tidyr` 팩키지에 Tidy Data 관련 핵심을 이루는 함수로 다음을 꼽을 수 있다.
+
+- `pivot_longer()`
+- `pivot_wider()`
+- `separate()`, `separate_rows()`
+- `unite()`
+- `expand_grid()`
+
+
+**깔끔한 데이터 관련 R 팩키지**는 해드릴 위컴이 주축이 되어 10년 이상 발전시켜 완성한 개념으로 그 단계 단계마다 개발된 팩키지가 있고 개념을 구현한 함수들도 점점 진화되고 있다.
+ 
+- `tidyr` ([Wickham 2013](https://www.jstatsoft.org/article/view/v059i10))
+- `plyr` ([Wickham 2011](http://www.jstatsoft.org/v40/i01/))
+- `reshape`, `reshape2` ([Wickham 2007](http://www.jstatsoft.org/v21/i12/))
+
 
 # 깔끔한 데이터 변형 사례 {#tidy-data-case-study}
 
@@ -193,7 +214,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 </div>
 
 
-#### 깔끔한 데이터 만드는 R 코드
+## 깔끔한 데이터 제작 코드 {#make-tidy-data-code}
 
 다운로드 받은 `pew.sav` 파일을 데이터프레임으로 만든 후 범주형 자료분석을 위해서 요인형(factor) 변수로 수준을 정리한 후 `count` 함수를 빈도수를 산출한다.
 
@@ -205,42 +226,40 @@ library(foreign)
 pew <- read.spss("data/pew.sav")
 pew <- as.data.frame(pew)
 
-religion <- pew[c("q16", "reltrad", "income")]
-religion$reltrad <- as.character(religion$reltrad)
-religion$reltrad <- str_replace(religion$reltrad, " Churches", "")
-religion$reltrad <- str_replace(religion$reltrad, " Protestant", " Prot")
-religion$reltrad[religion$q16 == " Atheist (do not believe in God) "] <- "Atheist"
-religion$reltrad[religion$q16 == " Agnostic (not sure if there is a God) "] <- "Agnostic"
-religion$reltrad <- str_trim(religion$reltrad)
-religion$reltrad <- str_replace_all(religion$reltrad, " \\(.*?\\)", "")
-
-religion$income <- c("Less than $10,000" = "<$10k", 
-  "10 to under $20,000" = "$10-20k", 
-  "20 to under $30,000" = "$20-30k", 
-  "30 to under $40,000" = "$30-40k", 
-  "40 to under $50,000" = "$40-50k", 
-  "50 to under $75,000" = "$50-75k",
-  "75 to under $100,000" = "$75-100k", 
-  "100 to under $150,000" = "$100-150k", 
-  "$150,000 or more" = ">150k", 
-  "Don't know/Refused (VOL)" = "Don't know/refused")[religion$income]
-
-religion$income <- factor(religion$income, levels = c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k", "$50-75k", "$75-100k", "$100-150k", ">150k", "Don't know/refused"))
+religion <- pew %>% 
+  select(q16, reltrad, income) %>% 
+  mutate(reltrad = as.character(reltrad) %>% str_trim(.)) %>% 
+  mutate(reltrad = str_replace(reltrad, " Churches", "")) %>% 
+  mutate(reltrad = str_replace(reltrad, " Protestant", " Prot")) %>% 
+  mutate(reltrad = str_replace_all(reltrad, " \\(.*?\\)", "")) %>% 
+  mutate(reltrad = case_when(q16 == " Atheist (do not believe in God) " ~ "Atheist",
+                             q16 == " Agnostic (not sure if there is a God) " ~ "Atheist",
+                          TRUE ~ reltrad)) %>% 
+  mutate(income = case_when(income == "Less than $10,000" ~ "<$10k", 
+                            income == "10 to under $20,000" ~ "$10-20k", 
+                            income == "20 to under $30,000" ~ "$20-30k", 
+                            income == "30 to under $40,000" ~ "$30-40k", 
+                            income == "40 to under $50,000" ~ "$40-50k", 
+                            income == "50 to under $75,000" ~ "$50-75k",
+                            income == "75 to under $100,000" ~ "$75-100k", 
+                            income == "100 to under $150,000" ~ "$100-150k", 
+                            income == "$150,000 or more" ~ ">150k", 
+                            income == "Don't know/Refused (VOL)" ~ "Don't know/refused")) %>% 
+  mutate(income = factor(income, levels = c("<$10k", "$10-20k", "$20-30k", "$30-40k", "$40-50k", "$50-75k", "$75-100k", "$100-150k", ">150k", "Don't know/refused")))
 
 counts <- religion %>% 
-  count(reltrad, income)
-
-names(counts)[1] <- "religion"
+  count(reltrad, income) %>% 
+  dplyr::rename("religion" = reltrad)
 
 counts %>% 
   DT::datatable()
 ```
 
-사람이 보기 편한 형태 `wide` 표형태 데이터는 다음과 같이 나타낼 수 있다.
+사람이 보기 편한 형태 `wide` 표형태 데이터는 다음과 같이 나타낼 수 있다. 과거 `spread()` 동사를 사용했다면 직관적인 함수인 `pivot_wider()`를 사용하는 것이 좋다. 인자도 `names_from=`, `values_from=` 을 사용해서 머릿속에 담긴 내용이 코드에 직관적으로 담기도록 코딩한다.
 
 ```{r religion-tidy-data-spread} 
 counts %>% 
-  spread(income, n) %>% 
+  pivot_wider(names_from=income, values_from = n) %>% 
   DT::datatable()
 ```
 
@@ -256,21 +275,33 @@ counts %>%
 
 ## 데이터 조작(Manipulation) {#tidydata-manipulate}
 
-**plyr** 팩키지의 `subset()`, `transform()`, `aggregate()`, `summarise()`, `arrange()` 함수를 통해 
+과거 **plyr** 팩키지의 `subset()`, `transform()`, `aggregate()`, `summarise()`, `arrange()` 함수를 통해 
 데이터 조작 기능을 구현했고 이는 `dplyr` 팩키지에 그대로 이어서 기능과 구문작성이 개선되어 오늘에 이르고 있다.
+`dplyr` 팩키지의 [데이터 변환 - `dplyr`](https://statkclee.github.io/data-science/data-handling-dplyr.html)을 참고한다. 핵심 동사/함수는 `filter`, `select`, `arrange`, `mutate`, `summarise`가 있고 이를 확장한 `across()` 동사가 최근에 추가되어 데이터 조작의 깊이와 폭을 넓히고 있다.
 
-<style>
-div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
-</style>
-<div class = "blue">
+<div class = "row">
+  <div class = "col-md-6">
 
-**데이터 조작 4가지 경우**
+**데이터 조작 5가지 경우: `dplyr`**
 
+`filter` (관측점 필터링) : 특정 기준을 만족하는 행을 추출한다.
+`select` (변수 선택하기) : 변수명으로 특정 칼럼을 추출한다.
+`arrange` (다시 정렬하기) : 행을 다시 정렬한다.
+`mutate` (변수 추가하기) : 새로운 변수를 추가한다.
+`summarise` (변수를 값으로 줄이기) : 변수를 값(스칼라)으로 요약한다.
+
+  </div>
+  <div class = "col-md-6">
+
+**데이터 조작 5가지 경우: `plyr`**
+
+- 선택(Select): 데이터프레임에서 필요한 변수를 선택해서 뽑아냄
 - 필터링(Filtering): 특정 조건으로 관측점을 제거하거나 부분집합을 뽑아냄
 - 변환(Translform): 변수 추가 혹은 변경 (단일 변수 혹은 변수 다수를 사용하기도 함)
 - 총합(Aggregate): 다수 값을 값 하나로 축약 (예, 합계 혹은 평균)
 - 정렬(Sort): 관측점 순서를 오름차순 혹은 내림차순으로 변경
 
+  </div>
 </div>
 
 
@@ -288,11 +319,11 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 데이터를 스프라인(spline) 함수 기저에 투영하는 과정이 포함된다. 
 깔끔한 데이터를 받아 모형에 적합시킨 후에 깔끔한 데이터 형식으로 출력해야 하지만,
 다양한 형태로 구현되어 이러한 문제 대응하기 위해서 나온 대표적인 움직임이 
-`broom`이다.
+`broom` [^tidy-workflow] 이다.
 
 [^tidy-workflow]: [broom: a package for tidying statistical models into data frames](http://www.r-bloggers.com/broom-a-package-for-tidying-statistical-models-into-data-frames/)
 
-# `pivot_*()` 인텍스(index)와 데카르트 평면(Cartesian) [^yutani-tokyor] [^tidyr-vignette] [^martin-fight] {#pivot-revolution}
+# `pivot_*()` 동사 [^yutani-tokyor] [^tidyr-vignette] [^martin-fight] {#pivot-revolution}
 
 [^yutani-tokyor]: [tidyr 1.0.0の新機能 pivot_*() / tidyr-pivot](https://speakerdeck.com/yutannihilation/tidyr-pivot)
 
@@ -310,7 +341,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">New (draft) pivot_long() and pivot_wide() draw inspirations from improvements to the state of the art by <a href="https://twitter.com/MattDowle?ref_src=twsrc%5Etfw">@MattDowle</a> and John Mount &amp; Nina Zumel</p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/1108108205656363008?ref_src=twsrc%5Etfw">March 19, 2019</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-# 데카르트 &rarr; 인덱스: `pivot_longer()` {#pivot-longer-example}
+# 데카르트 평면 &rarr; 인덱스: `pivot_longer()` {#pivot-longer-example}
 
 `pivot_longer()` 함수를 사용해서 데카르트 평면과 같이 넓은 데이터(wide)를 인덱스가 붙은 긴 형태(long) 데이터로 변환시킬 수 있다. `relig_income` 데이터는 `gather/spread` 시절부터 자주 예제 데이터로 사용되던 예제 데이터셋이다.
 
@@ -398,7 +429,7 @@ billboard %>%
     names_to = "주간", 
     values_to = "순위",
     names_prefix = "wk",
-    names_ptypes = list(`주간` = integer()),
+    names_ptypes = list(`주간` = as.character()),
     values_drop_na = TRUE
   )
 ```
@@ -618,4 +649,157 @@ contacts
 contacts %>% 
   pivot_wider(names_from = field, values_from = value)
 ```
+
+# `separate()`와 `unite()` {#separate-unite-verbs}
+
+## 칼럼에 변수 두개 포함 {#separate-columns}
+
+칼럼 하나에 다수 변수가 포함된 경우를 흔히 발견할 수 있다. `dplyr` 팩키지에는 `starwars` 데이터셋에 등장하는 인물에 대한 인적정보가 담겨있다. 예를 들어, `name` 칼럼은 두 변수가 숨어 있다. 하나는 성(`last name`) 다른 하나는 이름(`first name`)이다. 이를 두개로 쪼개어 두는 것이 Tidy Data를 만든다고 볼 수 있다. 꼭 그런 것은 아니고 경우에 따라 차이가 있지만, 개념적으로 그렇다는 것이다. 상황에 맞춰 유연하게 사용한다. 
+
+```{r separate-unite-verbs}
+starwars_name_df <- starwars %>% 
+  select(name, species, height, mass) %>% 
+  filter(str_detect(species, "Human"))
+
+starwars_name_df
+```
+
+`separate()` 함수를 사용해서 칼럼을 두개로 쪼갠다. 이런 경우 `sep=` 인자를 통해 구분자를 지정한다. 공백, `;`, `,` 등 문제에 따라 구분자를 달리 사용한다.
+
+```{r separate-unite-verbs-again}
+starwars_name_df %>% 
+  separate(name, into = c("first_name", "last_name"), sep=" ")
+```
+
+## 칼럼에 변수 다수 포함 {#separate-columns-many}
+
+TidyTuesday에서 나왔던 칵테일 데이터를 보게 되면 각 칵테일을 제작하는데 필요한 재표가 `ingredient` 칼럼 안에 콤마(`,`)로 묶여있다. 이런 데이터는 절대로 Tidy한 데이터가 아니라서 적절한 조치가 필요하다.
+
+```{r many-variables-in-column-messy}
+cocktail_data <- tidytuesdayR::tt_load('2020-05-26')
+
+cocktail_df <- cocktail_data$cocktails %>% 
+  select(drink, ingredient)
+
+cocktail_tbl <- cocktail_df %>% 
+  group_by(drink) %>% 
+  nest() %>% 
+  mutate(ingredient_tmp = map(data, function(df) df %>%  select(ingredient) %>% pull) ) %>% 
+  mutate(ingredient = map_chr(ingredient_tmp, paste, collapse = ", ")) %>% 
+  ungroup 
+
+cocktail_tbl %>% 
+  select(drink, ingredient)
+```
+
+먼저 `stringr` 팩키지 `str_split()` 함수로 `ingredient` 칼럼을 `, `을 구분자로 삼아 쪼갠 후에 list-column 형태 칼럼(`ingredient_lc`)으로 저장시킨다. 그리고 나서 `unnest()` 함수로 중첩된 것을 풀게 되면 다음과 같은 티블 데이터프레임이 되어 Tidy Data로 변환된다.
+
+```{r many-variables-in-column-messy-tidy}
+cocktails_tbl <- cocktail_tbl %>% 
+  select(drink, ingredient) %>% 
+  mutate(ingredient_lc = str_split(ingredient, ", ")) %>% 
+  unnest(ingredient_lc)
+
+cocktails_tbl
+```
+
+자, 이제 깔끔한 데이터의 힘을 느껴보자. 칵테일 중에 가장 다양한 재료가 포함된 칵테일은 무엇인가? 라는 질문에 단순한 `dplyr` 동사로 확인이 바로 가능하다.
+
+```{r many-variables-in-column-cocktail}
+cocktails_tbl %>% 
+  group_by(drink) %>% 
+  summarise(num_ingredients = n()) %>% 
+  arrange(desc(num_ingredients))
+```
+
+## `separate_rows()` 함수로 빠르게 {#separete-rows-quickly}
+
+상기 과정이 다소 많은 동사를 조합해서 결과를 도출하고 있다고 생각된다면 `separate_rows()` 함수를 사용해서 깔끔한 데이터를 만든 후에 `count` 함수와 `sort = TRUE`를 활용하여 동일한 작업을 간단히 마무리 할 수 있다.
+
+```{r quickly-separate-rows}
+cocktail_tbl %>% 
+  separate_rows(ingredient, sep = ", ") %>% 
+  count(drink, sort = TRUE)
+```
+
+# 결측 데이터 {#fix-missing-data}
+
+[data.world Nuclear Weapon Explosions BY THOMAS DRÄBING](https://data.world/tdreabing/nuclear-weapon-explosions) 웹사이트에서 핵폭탄 실험 데이터를 다운로드 받을 수 있다. 데이터는 완벽하지만 논리상 문제가 생긴다. 즉 1945년 이후 데이터를 보자면 결측값이 보인다. 
+확인이 안된 것 한건 빼면 7개국이 핵폭탄 실험을 한 것으로 나오는데 1945년에는 아무런 기록이 없다. 데이터프레임에는 정상인 깔끔한 데이터지만 사실 1945년 0 건이 예를 들어 중국이나 러시아가 포함되어 있는 것이 맞다. 
+
+```{r nuclear-testing-data}
+library(lubridate)
+
+nuclear_df <- read_csv("data/nuclear_weapon_explosions_1945-1998.csv")
+
+nuclear_bombs_df <- nuclear_df %>% 
+  janitor::clean_names() %>% 
+  mutate(date_time = lubridate::parse_date_time(datetime, orders = c("%m/%d/%Y %H:%M:%S %p"))) %>% 
+  mutate(year = year(date_time)) %>% 
+  count(country, year, name = "n_bombs") %>% 
+  arrange(year) %>% 
+  filter(year <= 1954)
+
+nuclear_bombs_df 
+```
+
+## `expand_grid()` {#expand-grid-comes-in}
+
+상기와 같은 문제를 해결하기 위해 `expand_grid()` 함수를 사용해서 핵실험을 수행한 모든 국가에 대해 해당 년도를 모두 생성할 필요가 있다. 
+3개 국가에 대해 10년을 `expand_grid()` 함수로 조합하게 되면 30개 관측점이 생기는데 미국이 핵실험을 하지 않은 1947년의 경우 `NA` 값이 생긴다. 이를 채워주어야 한다.
+
+```{r expand-grid-nuclear}
+country_year_df <- expand_grid(country = c("USA", "Russia", "England"),
+            year = seq(1945, 1954, 1))
+
+nuclear_full_df <- country_year_df %>% 
+  left_join(nuclear_bombs_df)
+
+nuclear_full_df
+```
+
+## `replace_na()` {#expand-grid-comes-in-replace_na}
+
+앞서 `expand_grid()` 함수로 생성된 Tidy Data를 염두에 두고 이를 `left_join()` 함수와 조인을 걸어 나중에 치환시킬 데이터프레임을 사전 제작한다.
+결측값을 특정 값으로 채워 넣고자 하는 경우 `replace_na()` 함수를 사용한다.
+먼저 `replace_na()` 함수를 사용해서 `n_bombs` 변수에 `NA` 결측값을 0으로 채워넣는다.
+
+```{r fill-na-with-replace-na}
+nuclear_full_df %>% 
+  replace_na(list(n_bombs = 0))
+```
+
+## `fill()` {#expand-grid-comes-in-fill}
+
+또 다른 사례로 발생되는 결측값의 유형으로 위와 같이 특정 결측값으로 채워넣는 대신 누적합과 같은 경우 이전 값이나 이후 값을 참조하여 채워넣는 것이 더 유의미한 결측값을 채워넣는 사례가 된다. 
+
+```{r nuclear-cumsum_df}
+nuclear_cumsum_df <- nuclear_bombs_df %>%
+  arrange(country, year) %>% 
+  group_by(country) %>% 
+  mutate(cumsum_bombs = cumsum(n_bombs))
+
+nuclear_cumsum_df  
+```
+
+연도별 누적 핵폭탄 투하 실험 횟수는 `fill()` 함수에 `.direction = "down"`을 넣어 방향도 지정하여 의미있는 결측값 치완방식이 되도록 코드를 작업한다.
+
+```{r nuclear-cumsum-df-fill}
+country_year_df %>% 
+  left_join(nuclear_cumsum_df) %>% 
+  fill(cumsum_bombs, .direction = "down") %>% 
+  replace_na(list(n_bombs = 0))
+```
+
+
+## `drop_na()` {#expand-grid-comes-in-drop}
+
+다른 것 다 모르겠고 데이터프레임에 결측값이 있으면 안되기 때문에 그냥 제거한다.
+이럴 때 사용하는 함수가 `drop_na()`다.
+
+```{r nuclear-drop-dataset}
+nuclear_full_df %>% 
+  drop_na(n_bombs)
+```
+
 
