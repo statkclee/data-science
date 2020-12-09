@@ -44,7 +44,7 @@ title: 데이터 과학
         - [대용량 데이터 표본추출](http://statkclee.github.io/ml/ml-random-sampling.html)    
         - [데이터테이블](data-handling-datatable.html)
     - [**데이터 정제(Data Cleaning)**: 데이터 과학자가 아니라 청소부](ds-janitor.html)
-1. **관계형 데이터베이스(RDBMS)**    
+1. [**관계형 데이터베이스(RDBMS)**](ds-rdbms.html)
     - [`dplyr` Database - 헬로월드](ds-dplyr-sql.html)
     - [R 데이터베이스 추상화 - DBI](ds-database-dbi.html)
         - [xwMOOC 딥러닝 - "R 개발자가 알아야 되는 보안, 마리아 DB (MariaDB)"](http://statkclee.github.io/deep-learning/r-security.html#maria-db)
