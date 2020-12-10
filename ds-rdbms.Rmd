@@ -107,3 +107,79 @@ ETL은 추출, 변환, 적재(Extract, Transform, Load)의 약자로 동일 기�
 
 
 ![](fig/data-lake-data-swamp.png)
+
+# 데이터베이스 설계 {#db-design}
+
+데이터베이스 설계(Database Design)는 데이터를 논리적으로 저장하는 방식으로 데이터베이스 모델(Database Model)을 사용한다. 
+데이터베이스 모델(Database Model)은 데이터베이스 구조에 대한 최상위 사양서의 역할을 한다. 일반적으로 관계형 데이터베이스 모형(Relational Database Model)을 사용하지만 NoSQL, 객체지향 DB 모형, 네트워크 DB 모델 등이 있다.
+데이터베이스의 청사진으로 스키마를 사용해서 테이블, 필드, 관계, 인덱스, 뷰로 구성하여 작성한다.
+
+1. 데이터 (Data) &larr; 논리 모형
+1. 데이터베이스 모형 &larr; 데이터 구조에 대한 사양서
+1. 스키마 &larr; 레고 블럭(Table, Field, Relation, Index, View 등)으로 데이터베이스 설계
+        
+즉, 데이터를 체계적으로 구조화하는 논리모형을 먼저 구상하고 나서 사양서를 작성하고 실제 데이터베이스 설계로 들어간다.
+
+## 데이터 모형(Data Modeling) {#db-design-in-practice}
+
+데이터를 저장하는 방식에 대해 데이터 모형(Data Model)을 제작하는 단계는 다음과 같다.
+
+1. 개념 데이터 모형(Concept Data Model): Entity, Relationship, Attributes
+    - ERD(Entity Relational Diagram), UML 다이어그램
+1. 논리 데이터 모형(Logical Data Model): 테이블, 칼럼, 관계
+    - 데이터베이스 스키마와 모형: 관계형 모형, 스타 스키마(Star Sceman)
+1. 물리 데이터 모형(Physical Data Model): 물리적 저장장치
+    - 백업 시스템, 파티션, CPU, 저장공간 등
+
+
+# `chinook` 데이터베이스 {#chinook-database} 
+
+
+[`chinook`](https://archive.codeplex.com/?p=chinookdatabase) 데이터베이스는 Northwind 데이터베이스에서 유래되었으며, 
+[치눅(chinooks)](https://en.wikipedia.org/wiki/Chinook_wind)은 캐나다 프레리(Canadian Prairies)과 미국 대평원(Great Plains)에서 발생되는 푄 바람(fohn winds)라고 한다. [`lerocha/chinook-database`](https://github.com/lerocha/chinook-database) GitHub 저장소에 다양한 데이터베이스에 사용될 수 있도록 교육용으로 잘 준비되어 있다.
+
+## `chinook` ERD {#chinook-database-erd} 
+
+`chinook` ERD는 다음과 같다. [`chinook` Database](http://schemaspy.org/sample/relationships.html) [SchemaSpy](http://schemaspy.org/)에서 잘 정리해 두어 이를 통해 전반적인 `chinook` 데이터베이스 구조를 살펴본다.
+
+![](fig/chinook-erd.png)
+
+## `chinook` 논리 데이터 모형 {#chinook-database-logical-model}
+
+`chinook` ERD에 기초하여 논리 데이터 모델을 다음과 같이 [YugaByte DB](https://docs.yugabyte.com/latest/sample-data/chinook/)에서 확인할 수 있다.
+
+![](fig/chinook-er-diagram.png)
+
+## 헬로 월드 [^all-about-sqlite3] {#chinook-helloworld}
+
+[^all-about-sqlite3]: [John Atten (2014-12-07), "Installing and Using SQLite on Windows"](http://johnatten.com/2014/12/07/installing-and-using-sqlite-on-windows/)
+
+먼저,  [sqlite3 chinooks](https://github.com/lerocha/chinook-database) 데이터베이스를 다운로드 한다.
+
+```{r helloworld, eval = FALSE}
+download.file(url = "https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite.sql", destfile = "data/Chinook_Sqlite.sql")
+```
+
+쉘에서 아래 명령어로 sqlite3 데이터베이스를 생성시킨다.
+
+`sqlite3 chinook.db < Chinook_Sqlite.sql`
+
+`DBI` 연결시켜 `chinook.db`를 R에서 작업할 수 있도록 준비시킨다.
+
+```{r sqlite3-chinooks}
+library(tidyverse)
+library(DBI)
+library(RSQLite)
+
+chinook <- dbConnect(RSQLite::SQLite(), dbname = "data/chinook.db")
+```
+
+
+R 마크다운에서 제대로 되는지 테스트 한다.
+
+```{sql sql-code-chunk, connection = chinook}
+SELECT * FROM Artist LIMIT 10;
+```
+
+
+
