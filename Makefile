@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3
+
 PANDOC ?= pandoc
 PANDOC_FLAGS = --smart
 
@@ -15,7 +17,7 @@ DST_HTML = $(patsubst %.md,%.html,$(SRC_MD))
 DST_ALL = $(DST_HTML)
 
 # Pandoc filters.
-FILTERS = $(wildcard tools/filters/*.py)
+# FILTERS = $(wildcard tools/filters/*.py)
 
 # Inclusions.
 INCLUDES = \

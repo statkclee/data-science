@@ -68,7 +68,7 @@ title: 데이터 과학
     - [데이터 다수 다루기 - 파케이](ds-manip-multiple-data.html)        
 1. [깔끔한 데이터와 모형 -- `broom`](ds-broom-tidy-model.html)
     - [UN 투표 데이터를 통해 본 한국과 주변 강대국](ds-viz-un.html) 
-1. **[데이터 과학 개발 환경: R+파이썬](ds-languages.html)** [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
+1. **[데이터 과학 개발 환경: R+파이썬](ds-languages.html)**, [데이터 과학 툴체인 - 파이썬](http://statkclee.github.io/raspberry-pi/raspberry-pi-programming-science.html)
     - [데이터 과학 PC (Java) - 맥(Mac)](ds-mac.html) &larr; 자바(Java)
     - [데이터 과학 PC (Java) - 윈도우)](ds-windows.html) &larr; 자바(Java)    
     - [윈도우 10 - WSL (우분투 배쉬)](ds-windows-bash.html)
