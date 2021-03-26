@@ -5,7 +5,7 @@ library(tidyverse)
 # Settings
 years = 2010:2020
 searches = list(
-  R = '"tidyverse" OR "the R software" OR "the R project" OR "r-project.org" OR "R development core" OR "bioconductor" OR "lme4" OR "nlme" OR "lmeR function" OR "ggplot2" OR "Hmisc" OR "r function" OR  "r package" OR "mass package" OR "plyr package" OR "mvtnorm"',
+  R = '"tidyverse" OR "the R software" OR "the R project" OR "r-project.org" OR "R development core" OR "bioconductor" OR "lme4" OR "nlme" OR "lmeR function" OR "ggplot2" OR "Hmisc" OR "r function" OR "tidymodels" OR "dplyr" OR  "r package" OR "mass package" OR "plyr package" OR "mvtnorm"',
   SPSS = 'SPSS -"SPSS Modeler" -"Amos"',
   SAS = '"SAS Institute" -JMP -"Enterprise Miner"',
   STATA = '("stata" "college station") OR "StataCorp" OR "Stata Corp" OR "Stata Journal" OR "Stata Press" OR "stata command" OR "stata module"'
@@ -73,5 +73,8 @@ citation_history = citation_history %>%
     citations = get_citations(software, year)
   )
 
+citation_history %>% 
+  write_csv("data/citations_2021.csv")
+
 # Save it so you don't have to repeat in case Scholar locks you out
-write.csv(citation_history, 'data/citations.csv', row.names = F)
+# write.csv(citation_history, 'data/citations.csv', row.names = F)

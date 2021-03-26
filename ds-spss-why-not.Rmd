@@ -133,7 +133,7 @@ library(ggthemes)
 library(extrafont)
 loadfonts()
 
-citation_df <- read_csv("data/citations_2020.csv")
+citation_df <- read_csv("data/citations_2021.csv")
 
 citation_df %>% 
   mutate(year = lubridate::make_date(year = year)) %>% 
