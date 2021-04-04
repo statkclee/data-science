@@ -3,17 +3,22 @@ layout: page
 title: 데이터 과학
 subtitle: "SPSS가 죽어가네요!!! "
 author:
-    name: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+    name: 이광춘
+    url: https://www.facebook.com/groups/tidyverse/
+    affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
 date: "`r Sys.Date()`"
 output:
   html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
     toc: yes
+    toc_depth: 2
     toc_float: true
     highlight: tango
-    code_folding: show
     number_section: true
-    self_contained: true
-    lib_dir: gapminder
+    code_folding: show
+mainfont: NanumGothic
 editor_options: 
   chunk_output_type: console
 ---
@@ -128,7 +133,7 @@ library(ggthemes)
 library(extrafont)
 loadfonts()
 
-citation_df <- read_csv("data/citations.csv")
+citation_df <- read_csv("data/citations_2021.csv")
 
 citation_df %>% 
   mutate(year = lubridate::make_date(year = year)) %>% 
