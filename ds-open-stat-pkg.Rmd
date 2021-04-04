@@ -60,25 +60,58 @@ name: data-science-case
 
 .pull-left[
 
+통계가 수학과 영어, 컴퓨팅 사고와 함게 누구나 갖춰야하는 기본소양으로 자리잡으면서 
+이를 한글화하여 무료로 제공된 .warmyellow[통계 팩키지]를 살펴본다.
+
+데이터 사이언스가 빅데이터와 인공지능시대를 맞아 관심을 받으면서 떠오른
+대표적인 .pink[데이터 사이언스 언어 R]을 코어로 파생된 통계 팩키지도 살펴본다.
+
+데이터를 다루는 패러다임이 바뀐 상황에
+그에 맞는 오픈 통계팩키지를 .black[서울 R 사용자 그룹]에서 준비중인
+.green[**오픈 통계 팩키지**]를 제안한다.
 
 ]
 
 .pull-right[   
 .left[
 
-1\. **[.green[데이터 과학 사례]](#data-science-case)**
+1\. **[.warmyellow[통계 팩키지]](#data-science-case)**
 
-2\. [데이터 과학](#data-science)
+2\. [데이터 과학 언어 R](#data-science)
 
-3\. [데이터 과학 전쟁](#language-war)
+3\. [오픈 통계 팩키지](#language-war)
 
-4\. [데이터 과학 어벤저스](#data-science-avengers)
-
-5\. [글쓰기](#writing)
-
-6\. [마무리](#goodbye) 
+4\. [마무리](#goodbye) 
 ]
 ] <!--end of right-column-->
 
-<!-------------------------- 데이터 과학 사례 --------------------------------------->
+<!-------------------------- 통계 팩키지 --------------------------------------->
+
+```{r child = "stat_pkg/pkg-stat-pkg.Rmd"}
+
+```
+
+---
+name: pkg-features
+# 통계 팩키지: SRC-STAT
+
+```{r pkg-src-stat, eval = FALSE}
+library(tidyverse)
+library(slickR)
+
+src_filenames <- fs::dir_ls(path = "fig/src-stat/", glob = "fig/src-stat/*.png")
+
+src_tbl <- tibble(file_path = src_filenames)
+
+src_tbl <- src_tbl %>% 
+  mutate(features = str_remove_all(file_path, pattern = "(fig/src-stat/)"))
+
+slickR(obj = src_tbl$file_path, height = "400px", width = "100%") %synch%
+  ( slickR(src_tbl$features, slideType = 'p') + settings(arrows = FALSE) )
+```
+
+.footnote[
+[데이터 과학 - "통계 팩키지"](https://statkclee.github.io/data-science/ds-korean-stat-pkg.html)
+]
+
 

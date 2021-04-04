@@ -41,23 +41,35 @@ library(tidyverse)
 
 <http://web-r.org/>
 
-## 주요기능 {#main-features}
+## 정회원 접속서버 {#main-features}
 
-1.  웹에서 하는 ggplot2: cardiomoon.shinyapps.io/ggplot2new
+1. 웹에서 하는 R 통계 4.0 정회원용
+ 
+- <https://cardiomoon.shinyapps.io/webr>
+- <https://cardiomoon.shinyapps.io/webr1>
+- <https://cardiomoon.shinyapps.io/webr2>
+  
+2. 웹에서 하는 R 통계 4.0 중 생존분석과 PSM
+ 
+- <https://cardiomoon.shinyapps.io/survival>
+- <https://cardiomoon.shinyapps.io/survival1>
+ 
+3. 조건부과정분석
 
-2.  웹에서 하는 R 통계 4.0 무료버젼 :
+<https://cardiomoon.shinyapps.io/processR>
+ 
+4. ROC 분석, Classification (Decision tree, Survival tree), Reclassification(NRI,IDI), AutomaticTransformation
+ 
+<https://cardiomoon.shinyapps.io/webrROC>
+ 
+5. 메타분석
+ 
+<https://cardiomoon.shinyapps.io/metaNew>
+ 
+6. PubMed wordcloud
+ 
+<https://cardiomoon.shinyapps.io/pubmed>
 
-    -   cardiomoon.shinyapps.io/reg1
-    -   cardiomoon.shinyapps.io/reg2
-    -   cardiomoon.shinyapps.io/reg3
-
-3.  propensity score matching: cardiomoon.shinyapps.io/psmatching
-
-4.  강의용 앱 : p값, 카이제곱분포, t분포: cardiomoon.shinyapps.io/ttest
-
-5.  강의용앱 : 다중검정의 문제: cardiomoon.shinyapps.io/multiplicity
-
-6.  샘플수의 계산: cardiomoon.shinyapps.io/sampleSize
 
 ## 스크린샷 {#screenshot}
 
@@ -67,6 +79,7 @@ library(magick)
 library(slickR)
 
 webr_filenames <- fs::dir_ls(path = "fig/web-r/", glob = "fig/web-r/*.png")
+webr_filenames <- setdiff(webr_filenames, "fig/web-r/tong.png")
 
 webr_tbl <- tibble(file_path = webr_filenames)
 
