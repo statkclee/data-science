@@ -30,6 +30,7 @@ title: 데이터 과학
         - [소프트웨어 카펜트리 워크샵 - googlesheets](ds-googlesheets.html)
     - [SPSS가 죽어가네요!!!](ds-spss-why-not.html)
     - [통계 팩키지](ds-korean-stat-pkg.html)
+        - [오픈 통계 팩키지](ds-open-stat-pkg.html)
 1. [측도와 R 자료구조](ds-data-structure.html)
     - [데이터프레임 스키마(Dataframe Schema)](ds-dataframe-schema.html)
     - [날짜/시간 데이터](https://statkclee.github.io/finance/): **`2018-06-23`일부터 금융, 시계열로 이동**
