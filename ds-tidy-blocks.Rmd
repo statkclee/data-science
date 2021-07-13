@@ -49,7 +49,7 @@ library(tidyverse)
 
 ## 실행결과 {#install-result}
 
-설치를 완료한 후에 안내에 따라 `tidyblocks` 디렉토리로 이동해서 로컬서버에 서비스를 띄우고 웹브라우저로 결과를 확인할 수 있다. 
+설치를 완료한 후에 안내에 따라 `tidyblocks` 디렉토리로 이동해서 로컬서버에 서비스를 띄우고 웹브라우저로 결과를 확인할 수 있다.
 
 ```{r run-tidyblocks, eval = FALSE}
 C:\xxx\tidyblocks (master -> origin) (tidyblocks@0.1.0)
@@ -85,3 +85,40 @@ Watching…
 ```
 
 ![](fig/tidyblocks-helloworld.png)
+
+# 유튜브 동영상 {#youtube-tutorial}
+
+-   [1littlecoder (2020. 8. 26.) "TidyBlocks - Scratch-like Visual Programming to teach/learn Tidy Data Analytics"](https://www.youtube.com/watch?v=9hEVpbSvaiA)
+-   [Maya Gans (February 4, 2020), "TidyBlocks: using the language of the Tidyverse in a blocks-based interface", RSTUDIO::CONF 2020 LIGHTNING TALKS](https://www.rstudio.com/resources/rstudioconf-2020/tidyblocks-using-the-language-of-the-tidyverse-in-a-blocks-based-interface/)
+
++:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:+:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:+
+| <iframe width="300" height="180" src="https://www.youtube.com/embed/9hEVpbSvaiA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen> | [![](fig/tidyblocks-rstudio.png){width="300"}](https://www.rstudio.com/resources/rstudioconf-2020/tidyblocks-using-the-language-of-the-tidyverse-in-a-blocks-based-interface/) |
+|                                                                                                                                                                                                                                                 |                                                                                                                                                                                |
+| </iframe>                                                                                                                                                                                                                                       |                                                                                                                                                                                |
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+# 헬로월드 {#helloworld}
+
+[`TidyBlocks`](https://tidyblocks.tech/) 웹사이트에서 기본 제공되는 팔마펭귄 데이터를 활용하여 블록 데이터 분석방식과 코딩 데이터 분석방식으로 데이터 과학을 실천해 보자.
+
+::: {.row}
+::: {.col-md-6}
+**블록 데이터 분석**
+
+![](fig/tidyblocks-penguin.png)
+:::
+
+::: {.col-md-6}
+**코딩 데이터 분석**
+
+```{r ggplot-penguine-code}
+library(tidyverse)
+library(palmerpenguins)
+
+penguins %>% 
+  group_by(species) %>% 
+  summarise(bill_length_mm_mean = mean(bill_length_mm, na.rm = TRUE)) %>% 
+  ungroup()
+```
+:::
+:::
