@@ -1,0 +1,85 @@
+---
+layout: page
+title: 데이터 과학
+subtitle: "한국 R 컨퍼런스 - 발표자 사진 포함"
+author:
+- name: "이광춘"
+  affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["데이터 과학", "Data Science", "데이터 사이언스", "R", "파이썬", "python", "reticulate", "통계팩키지", "통계", "팩키지", "tidy blocks", "표", "한국 R 컨퍼런스", "rconf"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+    self_contained: true
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(reticulate)
+library(tidyverse)
+
+```
+
+# [한국 R 컨퍼런스](https://use-r.kr/) 발표자 {#rconf-speakers}
+
+[한국 R 컨퍼런스](https://use-r.kr/) 발표자를 직사각형 데이터로 만들어서 프로필 사진을 담을 수 있는 표를 제작해보자.
+[`gt`](https://github.com/rstudio/gt/) 팩키지를 사용해서 간단하게 정적 표를 제작한다.
+
+```{r profile-table}
+library(tidyverse)
+library(readxl)
+library(gt)
+
+speakers <- read_excel("data/rconf/발표자_대쉬보드.xlsx") %>% 
+  mutate(iso2 = ifelse(국가 == "한국", "kr", "us")) %>% 
+  mutate(flag_URL = glue::glue('data/rconf/worldflags/{iso2}.png')) %>% 
+  select(순, flag_URL, everything())
+
+speakers %>% 
+  gt()
+```
+
+
+# 국기 표현 [^flag-in-r] {#rconf-speakers-country}
+
+[^flag-in-r]: <https://stackoverflow.com/questions/64422095/produce-country-flag-using-emoji-in-r-in-gt-table>
+
+[한국 R 컨퍼런스](https://use-r.kr/) 발표자중 일부 발표자는 한국이 아니라 외국에서 발표를 해주시기로 했다. 이를 국기를 통해 2020년 도쿄 올림픽 기념으로 표에 담아보자.
+
+```{r profile-table-flag}
+
+speakers %>% 
+  gt() %>% 
+  gt::text_transform(
+    #Apply a function to a column
+    locations = cells_body(vars(flag_URL)),
+    fn = function(x) {
+      #Return an image of set dimensions
+      web_image(
+        url = x,
+        height = 12
+      )
+    }
+  ) %>% 
+  #Hide column header flag_URL and reduce width
+  cols_width(vars(flag_URL) ~ px(30)) %>% 
+  cols_label(flag_URL = "")
+```
+
+
+
+
+
