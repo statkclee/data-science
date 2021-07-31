@@ -33,20 +33,19 @@ library(tidyverse)
 
 ```
 
+![](fig/rconf-program.png)
+
 # [한국 R 컨퍼런스](https://use-r.kr/) 발표자 {#rconf-speakers}
 
 [한국 R 컨퍼런스](https://use-r.kr/) 발표자를 직사각형 데이터로 만들어서 프로필 사진을 담을 수 있는 표를 제작해보자.
-[`gt`](https://github.com/rstudio/gt/) 팩키지를 사용해서 간단하게 정적 표를 제작한다.
+[`gt`](https://github.com/rstudio/gt/) 팩키지를 사용해서 간단하게 정적 표를 제작한다. 표에 국기를 담기 위해 [FAMFAMFAM - Flag Icons](http://www.famfamfam.com/lab/icons/flags/)를 다운로드 받아 ISO2 국가 코드에 맞춰 국기가 표시되도록 준비한다.
 
 ```{r profile-table}
 library(tidyverse)
 library(readxl)
 library(gt)
 
-speakers <- read_excel("data/rconf/발표자_대쉬보드.xlsx") %>% 
-  mutate(iso2 = ifelse(국가 == "한국", "kr", "us")) %>% 
-  mutate(flag_URL = glue::glue('data/rconf/worldflags/{iso2}.png')) %>% 
-  select(순, flag_URL, everything())
+speakers <- read_excel("data/rconf/발표자_대쉬보드.xlsx") 
 
 speakers %>% 
   gt()
@@ -57,29 +56,122 @@ speakers %>%
 
 [^flag-in-r]: <https://stackoverflow.com/questions/64422095/produce-country-flag-using-emoji-in-r-in-gt-table>
 
-[한국 R 컨퍼런스](https://use-r.kr/) 발표자중 일부 발표자는 한국이 아니라 외국에서 발표를 해주시기로 했다. 이를 국기를 통해 2020년 도쿄 올림픽 기념으로 표에 담아보자.
+[한국 R 컨퍼런스](https://use-r.kr/) 발표자중 일부 발표자는 한국이 아니라 외국에서 발표를 해주시기로 했다. 이를 국기를 통해 2020년 도쿄 올림픽 기념으로 표에 담아보자. 
 
 ```{r profile-table-flag}
 
-speakers %>% 
+speakers %>%
+  mutate(iso2 = ifelse(국가 == "한국", "kr", "us")) %>% 
+  mutate(flag_URL = glue::glue('data/rconf/worldflags/{iso2}.png')) %>% 
+  select(순, flag_URL, 발표자명, 소속)  %>% 
   gt() %>% 
   gt::text_transform(
-    #Apply a function to a column
+    # Apply a function to a column
     locations = cells_body(vars(flag_URL)),
     fn = function(x) {
-      #Return an image of set dimensions
+      # Return an image of set dimensions
       web_image(
         url = x,
         height = 12
       )
     }
   ) %>% 
-  #Hide column header flag_URL and reduce width
-  cols_width(vars(flag_URL) ~ px(30)) %>% 
+  # Hide column header flag_URL and reduce width
+  cols_width(vars(flag_URL) ~ px(50)) %>% 
   cols_label(flag_URL = "")
 ```
 
+# 프로필 사진 {#rconf-speakers-country-profile}
+
+프로필 사진을 표에 담아보자. 앞에서 국기를 표에 담은 것과 동일한 방식으로 표현한다.
+로컬 파일에 있는 발표자 사진을 `gt` 팩키지 `web_image()` 함수를 사용해서 처리한다.
 
 
+```{r profile-table-figure}
+speakers %>% 
+  mutate(figure = glue::glue('data/rconf/{파일명}')) %>% 
+  select(발표자명, 소속, figure) %>% 
+  gt() %>% 
+    text_transform(
+      locations = cells_body(vars(figure)),
+      fn = function(x) {
+        web_image(
+          url = x,
+          height = 50
+        )
+      }
+    )
+```
 
+# 국기 + 프로필 사진 {#rconf-speakers-country-profile}
 
+프로필 사진을 표에 담아보자. 앞에서 국기를 표에 담은 것과 동일한 방식으로 표현한다.
+로컬 파일에 있는 발표자 사진을 `gt` 팩키지 `web_image()` 함수를 사용해서 처리한다.
+
+```{r profile-table-figure-all}
+speakers_tbl <- speakers %>%
+  ## ISO2 국기 -----------------------------------------
+  mutate(iso2 = ifelse(국가 == "한국", "kr", "us")) %>% 
+  mutate(flag_URL = glue::glue('data/rconf/worldflags/{iso2}.png')) %>% 
+  ## 발표자 사진  -----------------------------------------
+  mutate(figure = glue::glue('data/rconf/{파일명}')) %>% 
+  ## 표에 표시할 칼럼  -----------------------------------------
+  select(순, flag_URL, figure, 발표자명, 소속, 발표제목)  %>% 
+  ## ISO2 국기 표에 삽입 -----------------------------------------
+  gt() %>% 
+    gt::text_transform(
+      # Apply a function to a column
+      locations = cells_body(columns = c(flag_URL)),
+      fn = function(x) {
+        # Return an image of set dimensions
+        web_image(
+          url = x,
+          height = 12
+        )
+      }
+    ) %>% 
+    # Hide column header flag_URL and reduce width
+    cols_width(columns = c(flag_URL) ~ px(50)) %>% 
+    cols_label(flag_URL = "") %>% 
+  ## 발표자 사진 표에 삽입 -----------------------------------------
+    text_transform(
+      locations = cells_body(columns = c(figure)),
+      fn = function(x) {
+        web_image(
+          url = x,
+          height = 50
+        )
+      }
+    ) %>% 
+    cols_width(columns = c(figure) ~ px(50)) %>% 
+    cols_label(figure = "")
+
+speakers_tbl  
+```
+
+# 표 외양 {#rconf-speakers-table-style}
+
+마지막으로 표를 보기 좋게 외양을 가꿔보자.
+
+```{r profile-style}
+speakers_tbl %>% 
+  tab_header(
+    title = md("**&#x2600; 한국 R 컨퍼런스 발표자 &#x2600;**"),
+    subtitle = md("*NLP, 웹앱, 예측, 재현가능 과학, 산업현장, 사회과학 ...*")
+  ) %>% 
+  tab_source_note(
+    source_note = md("한국 R 컨퍼런스: <https://use-r.kr/>")
+  ) %>% 
+  tab_options(
+    heading.background.color = "#e8fc03",
+    heading.title.font.size = "32px",
+    column_labels.background.color = "#a5fc03",
+    column_labels.font.weight = "bold",
+    stub.background.color = "#bcbddc",
+    stub.font.weight = "bold"
+  ) %>% 
+  cols_align(
+    align = "center",
+    columns = everything()
+  )  
+```
