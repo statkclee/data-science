@@ -6,7 +6,6 @@ date: "`r Sys.Date()`"
 author: xwMOOC
 output:
   html_document: 
-    keep_md: yes
     toc: yes
   pdf_document:
     latex_engine: xelatex

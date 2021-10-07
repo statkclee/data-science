@@ -41,6 +41,7 @@ title: 데이터 과학
         - [범주형 데이터 시각화 기초](ds-factor-dplyr-mosaic.html)
         - [표: `gt`와 `kable`](ds-table-gt-kable.html)
         - [한국 R 컨퍼런스 - 발표자 사진 포함](ds-rconf-profile.html)
+        - [표 고급기능: `ganitor` + `gt` + ...](ds-gt-advanced.html)
     - **결측 데이터(Missing Data)**
         - [결측데이터 - Base R 시각화](ds-missing-base.html)
         - [결측데이터 - `ggplot` 시각화](ds-missing.html)

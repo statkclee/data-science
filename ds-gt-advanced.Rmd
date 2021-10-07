@@ -1,0 +1,109 @@
+---
+layout: page
+title: "데이터 과학"
+subtitle: "표 고급기능: `ganitor` + `gt` + ..."
+author:
+- name: "이광춘"
+  affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["데이터 과학", "Data Science", "데이터 사이언스", "R", "파이썬", "python", "reticulate", "통계팩키지", "통계", "팩키지", "tidy blocks", "표", "한국 R 컨퍼런스", "rconf", "gt", "janitor"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+    self_contained: true
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(reticulate)
+library(tidyverse)
+
+```
+
+
+# 단변량 범주형 [^janitor] {#univariate-categorical-data}
+
+[^janitor]: [`janitor` - tabyls: a tidy, fully-featured approach to counting things](https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html)
+
+단변량 범주형 데이터를 다양한 형태의 표로 간단히 제작하는 방법을 살펴보자.
+`starwarsdb` 데이터 팩키지에 포함된 스타워즈 관련 데이터셋부터 시작해보자.
+
+## 데이터 살펴보기 {#univariate-categorical-starwars}
+
+스타워즈 영화에 출연한 캐릭터와 캐릭터의 눈 색깔을 살펴보자.
+
+```{r janitor-univariate}
+library(janitor)
+library(tidyverse)
+library(starwarsdb)
+
+starwarsdb::people %>%
+  select(name, eye_color)
+```
+
+## 범주형 데이터 요약 {#univariate-categorical-starwars-summary}
+
+스타워즈 영화에 출연한 캐릭터와 캐릭터의 눈 색깔을 살펴보자.
+`NA` 값이 존재하기 때문에 이를 제거해보자.
+
+```{r janitor-univariate-summary}
+starwars_table <- starwarsdb::people %>%
+  select(name, eye_color) %>% 
+  janitor::tabyl(eye_color) %>% 
+  na.omit()
+
+starwars_table
+```
+
+
+## 범주형 데이터 요약 [^gt-janitor] {#univariate-categorical-starwars-viz}
+
+[^gt-janitor]: ["R NOTES TO MYSELF", "cleaning penguins with the janitor package"](http://jenrichmond.rbind.io/post/digging-into-the-janitor-package/)
+
+`janitor` 표 결과물을 `gt` 팩키지에 연결시켜 표를 시각적으로 가치있게 제작한다.
+
+```{r janitor-univariate-viz}
+library(gt)
+
+starwars_table %>% 
+  select(-starts_with("valid")) %>% 
+  gt() %>% 
+    fmt_percent(
+      columns = percent,
+      decimals =1
+    ) %>% 
+    tab_header(
+      title = md("**&#9755; 범주형 데이터 훈련 &#9754;**"),
+      subtitle = md("*`gt`, `janitor`*")
+    ) %>% 
+    tab_source_note(
+      source_note = md("http://jenrichmond.rbind.io/post/digging-into-the-janitor-package/")) %>% 
+    cols_align(
+      align = "center",
+      columns = eye_color
+    ) %>% 
+    tab_options(
+      table.width = pct(50),
+      heading.background.color = "#1E61B0", # R logo 파란색
+      heading.title.font.size = "32px",
+      column_labels.background.color = "#F7F7F7", # R logo 회색 
+      column_labels.font.weight = "bold",
+      stub.background.color = "#ffffff",
+      stub.font.weight = "bold"
+    )  
+  
+
+```
