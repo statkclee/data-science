@@ -69,7 +69,7 @@ starwars_table
 ```
 
 
-## 범주형 데이터 요약 [^gt-janitor] {#univariate-categorical-starwars-viz}
+## 멋진 `gt` 외양 [^gt-janitor] {#univariate-categorical-starwars-viz}
 
 [^gt-janitor]: ["R NOTES TO MYSELF", "cleaning penguins with the janitor package"](http://jenrichmond.rbind.io/post/digging-into-the-janitor-package/)
 
@@ -105,5 +105,64 @@ starwars_table %>%
       stub.font.weight = "bold"
     )  
   
+```
+
+# 표 합계 [^gtsummary] {#univariate-categorical-sum}
+
+[^gtsummary]: [Daniel D. Sjoberg, "Introduction to {gt} + {gtsummary} Packages"](http://www.danieldsjoberg.com/gt-and-gtsummary-presentation/)
+
+범주형 데이터 표를 제작하게 되면 각종 합계를 행과 열을 기준으로 작성하고 행과 열에서 비율도 계산할 필요가 있다.
+
+```{r table-adorn}
+starwars_ttl_table <- 
+  starwarsdb::people %>%
+    select(name, eye_color) %>% 
+    janitor::tabyl(eye_color) %>% 
+    na.omit() %>% 
+    select(-percent, percent = valid_percent) %>% 
+    adorn_totals(c("row"), name = "합계")
+
+starwars_ttl_table
+```
+
+```{r}
+starwars_ttl_table %>% 
+  gt() %>% 
+    fmt_percent(
+      columns = percent,
+      decimals =1
+    ) %>% 
+    tab_header(
+      title = md("**&#9755; 범주형 데이터 훈련 &#9754;**"),
+      subtitle = md("*`gt`, `janitor`*")
+    ) %>% 
+    tab_source_note(
+      source_note = md("http://jenrichmond.rbind.io/post/digging-into-the-janitor-package/")) %>% 
+    cols_align(
+      align = "center",
+      columns = eye_color
+    ) %>% 
+    tab_options(
+      table.width = pct(70),
+      heading.background.color = "#1E61B0", # R logo 파란색
+      heading.title.font.size = "32px",
+      column_labels.background.color = "#F7F7F7", # R logo 회색 
+      column_labels.font.weight = "bold",
+      stub.background.color = "#ffffff",
+      stub.font.weight = "bold"
+    )  %>% 
+  tab_spanner(label = "요약 통계량", columns = vars(n, percent)) %>% 
+  tab_style(
+    style = list(
+      cell_fill(color = "skyblue"),
+      cell_text(
+        align = "right",
+        size = "large",
+        weight = "bold")
+      ),
+    locations = cells_body(rows = eye_color == "합계"))
 
 ```
+
+
+
